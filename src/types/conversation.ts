@@ -1,5 +1,5 @@
 
-interface Conversation {
+export interface Conversation {
   conversation_id: string
   creator_id: string
   category: string
@@ -13,30 +13,30 @@ interface Conversation {
   participants: Participant[]
 }
 
-type ConversationCategory = "CONTACT" | "GROUP"
-type ConversationAction = "CREATE" | "ADD" | "REMOVE" | "JOIN" | "EXIT" | "ROLE"
-type ConversationRole = "OWNER" | "ADMIN" | ""
+export type ConversationCategory = "CONTACT" | "GROUP"
+export type ConversationAction = "CREATE" | "ADD" | "REMOVE" | "JOIN" | "EXIT" | "ROLE"
+export type ConversationRole = "OWNER" | "ADMIN" | ""
 
-interface Participant {
+export interface Participant {
   user_id: string
   type?: "participant"
   role?: ConversationRole
   created_at?: string
 }
 
-interface ConversationCreateParmas {
+export interface ConversationCreateParmas {
   category: ConversationCategory
   name: string
   conversation_id: string
   participants: Participant[]
 }
 
-interface ConversationUpdateParams {
+export interface ConversationUpdateParams {
   name?: string
   announcement?: string
 }
 
-interface ConversationClientRequest {
+export interface ConversationClientRequest {
   createConversation(params: ConversationCreateParmas): Promise<Conversation>
   updateConversation(conversationID: string, params: ConversationUpdateParams): Promise<Conversation>
   createContactConversation(userID: string): Promise<Conversation>

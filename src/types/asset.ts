@@ -1,4 +1,4 @@
-interface Asset {
+export interface Asset {
   asset_id: string
   chain_id: string
   asset_key?: string

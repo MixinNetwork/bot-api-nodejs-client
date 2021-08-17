@@ -1,5 +1,5 @@
 
-type MessageCategory = "PLAIN_TEXT" |
+export type MessageCategory = "PLAIN_TEXT" |
   "PLAIN_POST" |
   "PLAIN_IMAGE" |
   "PLAIN_DATA" |
@@ -14,13 +14,13 @@ type MessageCategory = "PLAIN_TEXT" |
   "SYSTEM_ACCOUNT_SNAPSHOT"
 
 
-type MessageStatus = "SENT" | "DELIVER" | "READ"
+export type MessageStatus = "SENT" | "DELIVER" | "READ"
 
-interface RecallMessage {
+export interface RecallMessage {
   message_id: string
 }
 
-interface ImageMessage {
+export interface ImageMessage {
   attachment_id: string
   mime_type: string
   width: number
@@ -29,23 +29,23 @@ interface ImageMessage {
   thumbnail: string
 }
 
-interface DataMessage {
+export interface DataMessage {
   attachment_id: string
   mime_type: string
   size: number
   name: string
 }
 
-interface StickerMessage {
+export interface StickerMessage {
   name: string
   album_id: string
 }
 
-interface ContactMesage {
+export interface ContactMesage {
   user_id: string
 }
 
-interface AppCardMessage {
+export interface AppCardMessage {
   app_id: string
   icon_url: string
   title: string
@@ -53,7 +53,7 @@ interface AppCardMessage {
   action: string
 }
 
-interface AudioMessage {
+export interface AudioMessage {
   attachment_id: string
   mime_type: string
   wave_form: string
@@ -61,14 +61,14 @@ interface AudioMessage {
   duration: number
 }
 
-interface LiveMessage {
+export interface LiveMessage {
   width: number
   height: number
   thumb_url: string
   url: string
 }
 
-interface VideoMessage {
+export interface VideoMessage {
   attachment_id: string
   mime_type: string
   wave_form: string
@@ -79,20 +79,20 @@ interface VideoMessage {
   thumbnail: string
 }
 
-interface LocationMessage {
+export interface LocationMessage {
   name: string
   address: string
   longitude: number
   latitude: number
 }
 
-interface AppButtonMessage {
+export interface AppButtonMessage {
   label: string
   action: string
   color: string
 }
 
-interface MessageRequest {
+export interface MessageRequest {
   conversation_id: string
   recipient_id: string
   message_id: string
@@ -102,7 +102,7 @@ interface MessageRequest {
   quote_message_id: string
 }
 
-interface MessageClientRequest {
+export interface MessageClientRequest {
   sendMessage(message: MessageRequest): Promise<{}>
   sendMessages(messages: MessageRequest[]): Promise<{}>
 }

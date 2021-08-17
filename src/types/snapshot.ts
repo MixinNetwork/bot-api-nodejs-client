@@ -1,4 +1,5 @@
-interface Snapshot {
+import { Asset } from './asset'
+export interface Snapshot {
   snapshot_id: string
   created_at: string
   trace_id: string

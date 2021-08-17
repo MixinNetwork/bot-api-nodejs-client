@@ -1,3 +1,3 @@
 
-interface Circle {
+export interface Circle {
 }

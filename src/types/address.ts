@@ -1,5 +1,5 @@
 
-interface Address {
+export interface Address {
   address_id: string
   asset_id: string
   label: string
@@ -9,7 +9,7 @@ interface Address {
   dust: number
 }
 
-interface AddressCreateParams {
+export interface AddressCreateParams {
   asset_id: string
   destination: string
   tag?: string

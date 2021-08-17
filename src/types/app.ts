@@ -1,5 +1,5 @@
 
-interface App {
+export interface App {
   updated_at: string
   app_id: string
   app_number: string
@@ -15,7 +15,7 @@ interface App {
   app_secret: string
 }
 
-interface FavoriteApp {
+export interface FavoriteApp {
   user_id: string
   app_id: string
   created_at: string
