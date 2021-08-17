@@ -4,6 +4,7 @@ import { KeystoreAuth } from '../mixin/keystore'
 import { signRequest } from '../mixin/sign'
 import { delay } from '../mixin/tools'
 import { v4 as uuid } from 'uuid'
+import { Keystore } from '../types'
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one']
 

@@ -1,4 +1,4 @@
-interface User {
+export interface User {
   type: 'user'
   user_id: string
   identity_number: string
@@ -25,7 +25,7 @@ interface User {
   device_status: string
 }
 
-interface UserClientRequest {
+export interface UserClientRequest {
   userMe(): Promise<User>
   readUser(userIdOrIdentityNumber: string): Promise<User>
   readBlockUsers(): Promise<User[]>
@@ -37,8 +37,8 @@ interface UserClientRequest {
   modifyRelationships(relationship: UserRelationship): Promise<User>
 }
 
-type operation = "ADD" | "REMOVE" | "BLOCK" | "UNBLOCK"
-interface UserRelationship {
+export type operation = "ADD" | "REMOVE" | "BLOCK" | "UNBLOCK"
+export interface UserRelationship {
   user_id: string
   action: operation
   full_name?: string

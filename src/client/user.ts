@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios'
+import { UserClientRequest, User, UserRelationship } from '../types/user'
 
 export class ClientUserRequest implements UserClientRequest {
   request!: AxiosInstance

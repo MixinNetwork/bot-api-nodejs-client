@@ -1,5 +1,5 @@
 
-interface Keystore {
+export interface Keystore {
   client_id: string
   client_secret: string
   session_id: string
@@ -10,7 +10,7 @@ interface Keystore {
 }
 
 
-interface ErrorResponse {
+export interface ErrorResponse {
   status: number
   code: number
   description: string

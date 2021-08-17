@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { request } from '../services/request'
 import { ClientUserRequest } from './user'
-
+import { UserClientRequest, User, UserRelationship, Keystore } from '../types'
 
 export class Client implements UserClientRequest {
   request: AxiosInstance
@@ -21,7 +21,6 @@ export class Client implements UserClientRequest {
   modifyRelationships!: (relationship: UserRelationship) => Promise<User>
   readBlockUsers!: () => Promise<User[]>
 
-  
 }
 _extends(Client, ClientUserRequest)
 
