@@ -22,8 +22,8 @@ describe('user', () => {
   })
 
   it('searchUser', async () => {
-    const user1 = await client.searchUser("+8617718523520")
-    expect(user1.identity_number).toEqual("30265")
+    // const user1 = await client.searchUser("+8613801380138")
+    // expect(user1.identity_number).toEqual("7000")
     const user2 = await client.searchUser("30265")
     expect(user2.identity_number).toEqual("30265")
   })

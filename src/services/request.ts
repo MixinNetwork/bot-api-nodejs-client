@@ -37,7 +37,6 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
     }
     return data
   }, async (e: any) => {
-    console.log(e)
     if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
       ins.defaults.baseURL = e.config.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0]
     }

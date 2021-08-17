@@ -55,7 +55,6 @@ export const signRequest = (method: string, url: string, body: object | string =
   if (url.startsWith('https://mixin-api.zeromesh.net')) url = url.replace('https://mixin-api.zeromesh.net', '')
   if (typeof body === 'object') body = JSON.stringify(body)
   method = method.toUpperCase()
-  console.log(method, url, body)
   return md.sha256.create().update(method + url + body, 'utf8').digest().toHex()
 }
 function signEncryptEd25519PIN(pinToken: any, privateKey: string) {
