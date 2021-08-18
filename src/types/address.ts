@@ -24,3 +24,8 @@ export interface AddressClientRequest {
   readAddresses(asset_id: string): Promise<Address[]>
   deleteAddress(address_id: string, pin?: string): Promise<void>
 }
+
+export interface AddressRequest {
+  readAddress(token: string, address_id: string): Promise<Address>
+  readAddresses(token: string, asset_id: string): Promise<Address[]>
+}

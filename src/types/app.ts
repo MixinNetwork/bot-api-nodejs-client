@@ -20,3 +20,21 @@ export interface FavoriteApp {
   app_id: string
   created_at: string
 }
+
+export interface UpdateAppRequest {
+  redirect_uri: string
+  home_uri: string
+  name: string
+  description: string
+  icon_base64: string
+  session_secret: string
+  category: string
+  capabilities: string[]
+  resource_patterns: string[]
+}
+
+export interface AppClientRequest {
+  updateApp(appID: string, params: UpdateAppRequest): Promise<App>
+  readFavoriteApps(userID: string): Promise<FavoriteApp[]>
+  favoriteApp(appID: string): Promise<FavoriteApp>
+}

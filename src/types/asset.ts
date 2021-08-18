@@ -16,3 +16,30 @@ export interface Asset {
   confirmations: number
   capitalization: number
 }
+
+export interface ExchangeRate {
+  code: string
+  rate: string
+}
+
+
+export interface AssetClientRequest {
+  readAsset(asset_id: string): Promise<Asset>
+  readAssets(): Promise<Asset[]>
+  readAssetFee(asset_id: string): Promise<number>
+
+  ReadExchangeRates(): Promise<ExchangeRate[]>
+}
+
+export interface AssetRequest {
+  readAsset(asset_id: string): Promise<Asset>
+  readAssets(): Promise<Asset[]>
+  readAssetFee(asset_id: string): Promise<number>
+
+  ReadExchangeRates(): Promise<ExchangeRate[]>
+}
+
+export interface AssetClient {
+  readAsset(token: string, asset_id: string): Promise<Asset>
+  readAssets(token: string): Promise<Asset[]>
+}

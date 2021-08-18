@@ -102,7 +102,14 @@ export interface MessageRequest {
   quote_message_id: string
 }
 
+export interface AcknowledgementRequest {
+  message_id: string
+  status: string
+}
+
 export interface MessageClientRequest {
+  sendAcknowledgements(messages: AcknowledgementRequest[]): Promise<void>
+  sendAcknowledgement(message: AcknowledgementRequest): Promise<void>
   sendMessage(message: MessageRequest): Promise<{}>
   sendMessages(messages: MessageRequest[]): Promise<{}>
 }

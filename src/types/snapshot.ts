@@ -21,3 +21,15 @@ export interface Snapshot {
   data?: string
 }
 
+
+export interface SnapshotClientRequest {
+  ReadSnapshots(asset_id?: string, offset?: string, order?: string, limit?: number): Promise<Snapshot[]>
+  ReadNetworkSnapshots(asset_id?: string, offset?: string, order?: string, limit?: number): Promise<Snapshot[]>
+  ReadSnapshot(snapshot_id: string): Promise<Snapshot>
+  ReadNetworkSnapshot(snapshot_id: string): Promise<Snapshot>
+}
+
+export interface SnapshotRequest {
+  ReadSnapshots(token: string, asset_id?: string, offset?: string, order?: string, limit?: number): Promise<Snapshot[]>
+  ReadSnapshot(token: string, snapshot_id: string): Promise<Snapshot>
+}
