@@ -1,3 +1,4 @@
+import { App } from './app'
 export interface User {
   type: 'user'
   user_id: string
@@ -23,6 +24,9 @@ export interface User {
   accept_search_source: string
   fiat_currency: string
   device_status: string
+
+  publick_key?: string
+  private_key?: string
 }
 
 export interface UserClientRequest {
@@ -32,7 +36,7 @@ export interface UserClientRequest {
   readUsers(userIDs: string[]): Promise<User[]>
   searchUser(identityNumberOrPhone: string): Promise<User>
   readFriends(): Promise<User[]>
-  createUser(): Promise<User>
+  createUser(full_name:string, session_secret?:string): Promise<User>
   modifyProfile(full_name: string, avatar_base64: string): Promise<User>
   modifyRelationships(relationship: UserRelationship): Promise<User>
 }

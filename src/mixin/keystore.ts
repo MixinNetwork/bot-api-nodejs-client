@@ -1,7 +1,6 @@
 import { sign } from 'jsonwebtoken'
 import { getEd25519Sign, toBuffer } from './sign'
 import { Keystore } from '../types'
-
 export class KeystoreAuth {
   keystore?: Keystore
 

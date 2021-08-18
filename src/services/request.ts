@@ -1,5 +1,5 @@
 // @ts-ignore
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { KeystoreAuth } from '../mixin/keystore'
 import { signRequest } from '../mixin/sign'
 import { delay } from '../mixin/tools'
@@ -18,22 +18,22 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
   let k: KeystoreAuth
   if (keystore) k = new KeystoreAuth(keystore)
 
-  ins.interceptors.request.use((config: any) => {
+  ins.interceptors.request.use((config: AxiosRequestConfig) => {
     const { method, data } = config
     const uri = ins.getUri(config)
     const requestID = uuid()
-    config.headers['x-request-id'] = requestID
+    config.headers['X-Request-Id'] = requestID
     let jwtToken = ''
     if (token) jwtToken = token
-    else jwtToken = k.signToken(signRequest(method, uri, data), requestID)
+    else jwtToken = k.signToken(signRequest(method!, uri, data), requestID)
     config.headers.Authorization = 'Bearer ' + jwtToken
     return config
   })
 
-  ins.interceptors.response.use((res: any) => {
+  ins.interceptors.response.use((res: AxiosResponse) => {
     let { data, error } = res.data
     if (error) {
-      error.request_id = res.headers['x-request-id']
+      error.request_id = res.headers['X-Request-Id']
       return error
     }
     return data

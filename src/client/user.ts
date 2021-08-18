@@ -1,7 +1,8 @@
 import { AxiosInstance } from 'axios'
 import { UserClientRequest, User, UserRelationship } from '../types/user'
+import forge from 'node-forge'
 
-export class ClientUserRequest implements UserClientRequest {
+export class UserClient implements UserClientRequest {
   request!: AxiosInstance
   userMe(): Promise<User> {
     return this.request.get(`/me`)
@@ -21,9 +22,14 @@ export class ClientUserRequest implements UserClientRequest {
   searchUser(identityNumberOrPhone: string): Promise<User> {
     return this.request.get(`/search/${identityNumberOrPhone}`)
   }
-  createUser(): Promise<User> {
-    // TODO
-    return this.request.get(`/users`)
+  async createUser(full_name: string, session_secret?: string): Promise<User> {
+    if (session_secret) return this.request.post(`/users`, { full_name, session_secret })
+    const { publicKey, privateKey } = forge.pki.ed25519.generateKeyPair()
+    const params = { full_name, session_secret: Buffer.from(publicKey).toString('base64') }
+    const u: User = await this.request.post(`/users`, params)
+    u.publick_key = publicKey.toString('base64')
+    u.private_key = privateKey.toString('base64')
+    return u
   }
   modifyProfile(full_name: string, avatar_base64: string): Promise<User> {
     return this.request.post(`/me`, { full_name, avatar_base64 })

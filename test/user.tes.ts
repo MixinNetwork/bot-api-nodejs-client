@@ -1,9 +1,9 @@
-import { client, keystore } from './common'
+import { client } from './common'
 
 describe('user', () => {
   it('userMe', async () => {
     const user = await client.userMe()
-    expect(user.user_id).toEqual(keystore.client_id)
+    expect(user.user_id).toEqual(client.keystore.client_id)
   })
 
   it('readUser', async () => {
@@ -31,5 +31,19 @@ describe('user', () => {
   it('readFriends', async () => {
     const user = await client.readFriends()
     expect(Array.isArray(user)).toBeTruthy()
+  })
+
+  it('createUser', async () => {
+    const user = await client.createUser("测试...")
+    expect(user.full_name).toEqual("测试...")
+  })
+
+  it('modifyProfile', async () => {
+    let user = await client.userMe()
+    let name = user.full_name
+    user = await client.modifyProfile("测试...")
+    expect(user.full_name).toEqual("测试...")
+    user = await client.modifyProfile(name)
+    expect(user.full_name).toEqual(name)
   })
 })
