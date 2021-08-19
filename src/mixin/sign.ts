@@ -1,8 +1,10 @@
 import { randomBytes, createCipheriv, createHash } from 'crypto'
 import { pki, util, md } from 'node-forge'
 import { Uint64LE } from 'int64-buffer'
+import { Keystore } from '../types'
 
-export const getSignPIN = (session_id: string, pin_token: string, private_key: string, pin: any, iterator?: any) => {
+export const getSignPIN = (keystore: Keystore, pin: any, iterator?: any) => {
+  const { session_id, private_key, pin_token } = keystore
   const blockSize = 16
 
   let _privateKey: any = toBuffer(private_key, 'base64')

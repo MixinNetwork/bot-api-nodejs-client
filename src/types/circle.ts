@@ -1,3 +1,4 @@
 
-export interface Circle {
+export interface CircleClientRequest {
+
 }

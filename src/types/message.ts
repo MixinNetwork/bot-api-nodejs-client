@@ -94,12 +94,12 @@ export interface AppButtonMessage {
 
 export interface MessageRequest {
   conversation_id: string
-  recipient_id: string
   message_id: string
   category: string
   data: string
-  representative_id: string
-  quote_message_id: string
+  recipient_id?: string
+  representative_id?: string
+  quote_message_id?: string
 }
 
 export interface AcknowledgementRequest {

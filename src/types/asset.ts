@@ -28,7 +28,7 @@ export interface AssetClientRequest {
   readAssets(): Promise<Asset[]>
   readAssetFee(asset_id: string): Promise<number>
 
-  ReadExchangeRates(): Promise<ExchangeRate[]>
+  readExchangeRates(): Promise<ExchangeRate[]>
 }
 
 export interface AssetRequest {

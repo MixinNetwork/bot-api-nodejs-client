@@ -26,9 +26,9 @@ export interface Participant {
 
 export interface ConversationCreateParmas {
   category: ConversationCategory
-  name: string
   conversation_id: string
   participants: Participant[]
+  name?: string
 }
 
 export interface ConversationUpdateParams {
@@ -43,5 +43,8 @@ export interface ConversationClientRequest {
   createGroupConversation(conversationID: string, name: string, participant: Participant[]): Promise<Conversation>
   readConversation(conversationID: string): Promise<Conversation>
   managerConversation(conversationID: string, action: ConversationAction, participant: Participant[]): Promise<Conversation>
+  addParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>
+  removeParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>
+  adminParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>
   rotateConversation(conversationID: string): Promise<Conversation>
 }
