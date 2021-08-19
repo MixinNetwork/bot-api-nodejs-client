@@ -3,8 +3,10 @@ import { pki, util, md } from 'node-forge'
 import { Uint64LE } from 'int64-buffer'
 import { Keystore } from '../types'
 
-export const getSignPIN = (keystore: Keystore, pin: any, iterator?: any) => {
-  const { session_id, private_key, pin_token } = keystore
+export const getSignPIN = (keystore: Keystore, pin?: any, iterator?: any) => {
+  const { session_id, private_key, pin_token, pin: _pin } = keystore
+  pin = pin || _pin
+  if (!pin) throw new Error('PIN is required')
   const blockSize = 16
 
   let _privateKey: any = toBuffer(private_key, 'base64')

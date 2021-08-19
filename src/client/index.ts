@@ -13,6 +13,9 @@ import {
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction,
   MessageClientRequest, AcknowledgementRequest, MessageRequest,
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
+  PINClientRequest, Turn,
+  SnapshotClientRequest, Snapshot,
+  TransferClientRequest, TransferInput, Payment, GhostInput, GhostKeys, WithdrawInput, RawTransaction,
   UserClientRequest, User, UserRelationship, Keystore
 } from '../types'
 import { AppClient } from './app'
@@ -21,6 +24,9 @@ import { AttachmentClient } from './attachment'
 import { ConversationClient } from './conversation'
 import { MessageClient } from './message'
 import { MultisigsClient } from './multisigs'
+import { PINClient } from './pin'
+import { SnapshotClient } from './snapshot'
+import { TransferClient } from './transfer'
 
 export class Client implements
   AddressClientRequest,
@@ -29,6 +35,9 @@ export class Client implements
   ConversationClientRequest,
   MessageClientRequest,
   MultisigClientRequest,
+  PINClientRequest,
+  SnapshotClientRequest,
+  TransferClientRequest,
   UserClientRequest {
   request: AxiosInstance
   keystore: Keystore
@@ -85,6 +94,29 @@ export class Client implements
   cancelMultisig!: (request_id: string) => Promise<void>
   unlockMultisig!: (request_id: string, pin: string) => Promise<void>
 
+  // Pin...
+
+  verifyPin!: (pin: string) => Promise<void>
+  modifyPin!: (pin: string, newPin: string) => Promise<void>
+  readTurnServers!: () => Promise<Turn[]>
+
+  // Snapshot...
+
+  readSnapshots!: (asset_id?: string, offset?: string, order?: string, limit?: number) => Promise<Snapshot[]>
+  readNetworkSnapshots!: (asset_id?: string, offset?: string, order?: string, limit?: number) => Promise<Snapshot[]>
+  readSnapshot!: (snapshot_id: string) => Promise<Snapshot>
+  readNetworkSnapshot!: (snapshot_id: string) => Promise<Snapshot>
+
+  // Transfer...
+
+  verifyPayment!: (params: TransferInput) => Promise<Payment>
+  transfer!: (params: TransferInput, pin?: string) => Promise<Snapshot>
+  readTransfer!: (trace_id: string) => Promise<Snapshot>
+  transaction!: (params: TransferInput, pin?: string) => Promise<RawTransaction>
+  readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>
+  batchReadGhostKeys!: (input: GhostInput[]) => Promise<GhostKeys[]>
+  withdraw!: (params: WithdrawInput, pin?: string) => Promise<Snapshot>
+
   // User...
   userMe!: () => Promise<User>
   readUser!: (userIdOrIdentityNumber: string) => Promise<User>
@@ -95,7 +127,6 @@ export class Client implements
   modifyProfile!: (full_name?: string, avatar_base64?: string) => Promise<User>
   modifyRelationships!: (relationship: UserRelationship) => Promise<User>
   readBlockUsers!: () => Promise<User[]>
-
 
   newUUID(): string {
     return uuid()
@@ -127,6 +158,9 @@ export class Client implements
   ConversationClient,
   MessageClient,
   MultisigsClient,
+  PINClient,
+  SnapshotClient,
+  TransferClient,
   UserClient,
 ].forEach(client => _extends(Client, client))
 

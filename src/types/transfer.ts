@@ -46,6 +46,8 @@ export interface TransferInput {
     receivers: string[]
     threshold: number
   }
+
+  pin?: string
 }
 
 export interface GhostKeys {
@@ -65,14 +67,16 @@ export interface WithdrawInput {
   amount: string
   trace_id?: string
   memo?: string
+
+  pin?: string
 }
 
-export interface TransferClientResponse {
-  VerifyPayment(): Promise<Payment>
-  Transfer(params: TransferInput, pin?: string): Promise<Snapshot>
-  ReadTransfer(trace_id: string): Promise<Snapshot>
-  Transaction(params: TransferInput, pin?: string): Promise<RawTransaction>
-  ReadGhostKeys(receivers: string[], index: number): Promise<GhostKeys>
-  BatchReadGhostKeys(input: GhostInput[]): Promise<GhostKeys[]>
-  Withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>
+export interface TransferClientRequest {
+  verifyPayment(params: TransferInput): Promise<Payment>
+  transfer(params: TransferInput, pin?: string): Promise<Snapshot>
+  readTransfer(trace_id: string): Promise<Snapshot>
+  transaction(params: TransferInput, pin?: string): Promise<RawTransaction>
+  readGhostKeys(receivers: string[], index: number): Promise<GhostKeys>
+  batchReadGhostKeys(input: GhostInput[]): Promise<GhostKeys[]>
+  withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>
 }

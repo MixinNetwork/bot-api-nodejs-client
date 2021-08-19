@@ -19,8 +19,6 @@ export class MultisigsClient implements MultisigClientRequest {
     return this.request.post(`/multisigs`, { action, raw })
   }
   signMultisig(request_id: string, pin?: string): Promise<MultisigRequest> {
-    if (!pin) pin = this.keystore.pin
-    if (!pin) return Promise.reject(new Error("PIN required"))
     pin = getSignPIN(this.keystore, pin)
     return this.request.post(`/multisigs/${request_id}/sign`, { pin })
   }
@@ -28,8 +26,6 @@ export class MultisigsClient implements MultisigClientRequest {
     return this.request.post(`/multisigs/${request_id}/cancel`)
   }
   unlockMultisig(request_id: string, pin: string): Promise<void> {
-    if (!pin) pin = this.keystore.pin
-    if (!pin) return Promise.reject(new Error("PIN required"))
     pin = getSignPIN(this.keystore, pin)
     return this.request.post(`/multisigs/${request_id}/unlock`, { pin })
   }
