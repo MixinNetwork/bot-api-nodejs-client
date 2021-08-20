@@ -1,5 +1,6 @@
 {
-  "version": "0.0.3",
+  "name": "mixin-node-sdk",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -10,6 +11,21 @@
   "engines": {
     "node": ">=10"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MixinNetwork/bot-api-nodejs-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MixinNetwork/bot-api-nodejs-client/issues"
+  },
+  "homepage": "https://github.com/MixinNetwork/bot-api-nodejs-client#readme",
+  "keywords": [
+    "mixin",
+    "node",
+    "blockchain",
+    "crypto",
+    "js"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
@@ -31,8 +47,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "mixin-node-sdk-beta",
-  "author": "Neo",
+  "author": "neooosky@gmail.com",
   "module": "dist/mixin-node-sdk.esm.js",
   "size-limit": [
     {

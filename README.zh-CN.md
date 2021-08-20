@@ -1,23 +1,23 @@
 # bot-api-nodejs-client
-The nodejs version of the mixin SDK
+mixin 的 nodejs 版 sdk
 
-## New version features
-1. More friendly type and code hints
-2. More standardized function naming
-3. More comprehensive test coverage
+## 新版本特性
+1. 更友好的类型和代码提示
+2. 更规范的函数命名
+3. 更全面的测试覆盖
 
-## Install
+## 安装
 ```shell
 npm install mixin-node-sdk
 ```
-If you use `yarn`
+如果你使用 `yarn`
 ```shell
 yarn add mixin-node-sdk
 ```
 
-## Useage
+## 使用
 ```js
-const {Client} = require('mixin-node-sdk')
+const { Client } = require('mixin-node-sdk')
 const client = new Client({
   "client_id": "",
   "session_id": "",
@@ -26,10 +26,10 @@ const client = new Client({
   "pin": "",
   "client_secret": ""
 })
-// Use Promise
+// 使用 Promise
 client.userMe().then(console.log)
 
-// use async await
+// 使用 async await
 async function getMe() {
   const me = await client.userMe()
   console.log(me)
@@ -38,17 +38,17 @@ async function getMe() {
 
 
 
-## Note
-1. If you are using the version of `mixin-node-sdk@2.xx.xx`, please see [https://github.com/liuzemei/mixin-node-sdk](https://github.com /liuzemei/mixin-node-sdk)
+## 注意
+1. 如果你使用的是 `mixin-node-sdk@2.xx.xx` 的版本，请看 [https://github.com/liuzemei/mixin-node-sdk](https://github.com/liuzemei/mixin-node-sdk)
 
 
 
-## Contribute
+## 贡献
 
-Acceptable PRs.
+可接受 PRs.
 
 
-## Related articles or links
+## 相关文章或链接
 > 1. [https://developers.mixin.one/document](https://developers.mixin.one/document)
 > 2. [https://github.com/fox-one/mixin-sdk-go](https://github.com/fox-one/mixin-sdk-go)
 > 3. [https://mixin.one](https://mixin.one)
@@ -58,3 +58,6 @@ Acceptable PRs.
 ## License
 
 MIT © Richard McRichface
+
+
+
