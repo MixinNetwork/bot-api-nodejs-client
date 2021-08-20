@@ -61,6 +61,7 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^5.0.2",
+    "@types/ws": "^7.4.7",
     "husky": "^7.0.1",
     "size-limit": "^5.0.2",
     "tsdx": "^0.14.1",
@@ -76,6 +77,8 @@
     "int64-buffer": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "node-forge": "^0.10.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "ws": "^8.2.0",
+    "zlib": "^1.0.5"
   }
 }

@@ -1,2 +1,3 @@
 import { Client } from './client'
-export { Client }
+import { BlazeClient } from './client/blaze'
+export { Client, BlazeClient }

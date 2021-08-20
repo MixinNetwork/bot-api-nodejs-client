@@ -1,6 +1,7 @@
 import { sign } from 'jsonwebtoken'
 import { getEd25519Sign, toBuffer } from './sign'
 import { Keystore } from '../types'
+import { v4 } from 'uuid'
 export class KeystoreAuth {
   keystore?: Keystore
 
@@ -11,6 +12,7 @@ export class KeystoreAuth {
   signToken(signatrue: string, requestID: string): string {
     const { client_id, session_id, private_key, scope } = this.keystore!
     let issuedAt = Math.floor(Date.now() / 1000)
+    if (!requestID) requestID = v4()
     let payload = {
       uid: client_id,
       sid: session_id,

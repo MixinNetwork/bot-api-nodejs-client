@@ -14,7 +14,7 @@ export type MessageCategory = "PLAIN_TEXT" |
   "SYSTEM_ACCOUNT_SNAPSHOT"
 
 
-export type MessageStatus = "SENT" | "DELIVER" | "READ"
+export type MessageStatus = "SENT" | "DELIVERED" | "READ"
 
 export interface RecallMessage {
   message_id: string
@@ -26,7 +26,7 @@ export interface ImageMessage {
   width: number
   height: number
   size: number
-  thumbnail: string
+  thumbnail?: string
 }
 
 export interface DataMessage {
@@ -95,7 +95,7 @@ export interface AppButtonMessage {
 export interface MessageRequest {
   conversation_id: string
   message_id: string
-  category: string
+  category: MessageCategory
   data: string
   recipient_id?: string
   representative_id?: string
@@ -112,5 +112,8 @@ export interface MessageClientRequest {
   sendAcknowledgement(message: AcknowledgementRequest): Promise<void>
   sendMessage(message: MessageRequest): Promise<{}>
   sendMessages(messages: MessageRequest[]): Promise<{}>
+
+  sendMessageText(userID: string, text: string): Promise<{}>
+  sendMessagePost(userID: string, text: string): Promise<{}>
 }
 

@@ -1,9 +1,11 @@
 import { AxiosInstance } from "axios";
-import { AcknowledgementRequest, MessageClientRequest, MessageRequest } from "../types";
+import { AcknowledgementRequest, Keystore, MessageClientRequest, MessageRequest } from "../types";
 
 export class MessageClient implements MessageClientRequest {
+  keystore!: Keystore
   request!: AxiosInstance
-
+  newUUID!: () => string
+  uniqueConversationID!: (userID: string, recipientID: string) => string
   sendAcknowledgements(messages: AcknowledgementRequest[]): Promise<void> {
     return this.request.post('/acknowledgements', messages)
   }
@@ -15,5 +17,24 @@ export class MessageClient implements MessageClientRequest {
   }
   sendMessages(messages: MessageRequest[]): Promise<{}> {
     return this.request.post('/messages', messages)
+  }
+
+  sendMessageText(userID: string, text: string): Promise<{}> {
+    return this.sendMessage({
+      conversation_id: this.uniqueConversationID(this.keystore.client_id, userID),
+      message_id: this.newUUID(),
+      recipient_id: userID,
+      data: Buffer.from(text).toString('base64'),
+      category: 'PLAIN_TEXT'
+    })
+  }
+  sendMessagePost(userID: string, text: string): Promise<{}> {
+    return this.sendMessage({
+      conversation_id: this.uniqueConversationID(this.keystore.client_id, userID),
+      message_id: this.newUUID(),
+      recipient_id: userID,
+      data: Buffer.from(text).toString('base64'),
+      category: 'PLAIN_POST'
+    })
   }
 }

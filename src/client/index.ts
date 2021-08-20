@@ -84,6 +84,8 @@ export class Client implements
   sendAcknowledgement!: (message: AcknowledgementRequest) => Promise<void>
   sendMessage!: (message: MessageRequest) => Promise<{}>
   sendMessages!: (messages: MessageRequest[]) => Promise<{}>
+  sendMessageText!: (userID: string, text: string) => Promise<{}>
+  sendMessagePost!: (userID: string, text: string) => Promise<{}>
 
   // Multisigs...
 
