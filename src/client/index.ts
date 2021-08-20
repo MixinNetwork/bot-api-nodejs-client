@@ -16,7 +16,7 @@ import {
   PINClientRequest, Turn,
   SnapshotClientRequest, Snapshot,
   TransferClientRequest, TransferInput, Payment, GhostInput, GhostKeys, WithdrawInput, RawTransaction,
-  UserClientRequest, User, UserRelationship, Keystore
+  UserClientRequest, User, UserRelationship, Keystore, AssetClientRequest, Asset, ExchangeRate
 } from '../types'
 import { AppClient } from './app'
 import { AssetClient } from './asset'
@@ -31,6 +31,7 @@ import { TransferClient } from './transfer'
 export class Client implements
   AddressClientRequest,
   AppClientRequest,
+  AssetClientRequest,
   AttachmentClientRequest,
   ConversationClientRequest,
   MessageClientRequest,
@@ -60,13 +61,19 @@ export class Client implements
   favoriteApp!: (appID: string) => Promise<FavoriteApp>
   unfavoriteApp!: (appID: string) => Promise<void>
 
-  //Attachment...
+  // Asset...
+  readAsset!: (asset_id: string) => Promise<Asset>
+  readAssets!: () => Promise<Asset[]>
+  readAssetFee!: (asset_id: string) => Promise<number>
 
+  readExchangeRates!: () => Promise<ExchangeRate[]>
+
+  // Attachment...
   createAttachment!: () => Promise<Attachment>
   showAttachment!: (attachment_id: string) => Promise<Attachment>
   uploadFile!: (file: File) => Promise<Attachment>
 
-  //Conversation...
+  // Conversation...
   createConversation!: (params: ConversationCreateParmas) => Promise<Conversation>
   updateConversation!: (conversationID: string, params: ConversationUpdateParams) => Promise<Conversation>
   createContactConversation!: (userID: string) => Promise<Conversation>
@@ -79,7 +86,6 @@ export class Client implements
   rotateConversation!: (conversationID: string) => Promise<Conversation>
 
   // Message...
-
   sendAcknowledgements!: (messages: AcknowledgementRequest[]) => Promise<void>
   sendAcknowledgement!: (message: AcknowledgementRequest) => Promise<void>
   sendMessage!: (message: MessageRequest) => Promise<{}>
@@ -88,7 +94,6 @@ export class Client implements
   sendMessagePost!: (userID: string, text: string) => Promise<{}>
 
   // Multisigs...
-
   readMultisigs!: (offset: string, limit: number) => Promise<MultisigUTXO[]>
   readMultisigOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<MultisigUTXO[]>
   createMultisig!: (action: string, raw: string) => Promise<MultisigRequest>
@@ -97,7 +102,6 @@ export class Client implements
   unlockMultisig!: (request_id: string, pin: string) => Promise<void>
 
   // Pin...
-
   verifyPin!: (pin: string) => Promise<void>
   modifyPin!: (pin: string, newPin: string) => Promise<void>
   readTurnServers!: () => Promise<Turn[]>
