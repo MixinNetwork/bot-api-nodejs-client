@@ -41,7 +41,7 @@ async function getMe() {
 
 
 ## Note
-1. If you are using the version of `mixin-node-sdk@2.xx.xx`, please see [https://github.com/liuzemei/mixin-node-sdk](https://github.com /liuzemei/mixin-node-sdk)
+1. If you are using the version of `mixin-node-sdk@2.xx.xx`, please see [https://github.com/liuzemei/mixin-node-sdk](https://github.com/liuzemei/mixin-node-sdk)
 
 
 
