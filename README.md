@@ -1,5 +1,6 @@
 # bot-api-nodejs-client
 [中文版](./README.zh-CN.md)
+
 The nodejs version of the mixin SDK
 
 ## New version features
@@ -16,7 +17,7 @@ If you use `yarn`
 yarn add mixin-node-sdk
 ```
 
-## Useage
+## Usage
 ```js
 const {Client} = require('mixin-node-sdk')
 const client = new Client({
