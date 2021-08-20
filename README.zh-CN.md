@@ -16,6 +16,7 @@ yarn add mixin-node-sdk
 ```
 
 ## 使用
+1. 仅使用 Mixin 的 Api
 ```js
 const { Client } = require('mixin-node-sdk')
 const client = new Client({
@@ -35,6 +36,28 @@ async function getMe() {
   console.log(me)
 }
 ```
+
+2. 使用 Mixin 的消息功能()
+```js
+const { BlazeClient } = require('mixin-node-sdk')
+const client = new BlazeClient({
+  "client_id": "",
+  "session_id": "",
+  "pin_token": "",
+  "private_key": "",
+  "pin": "",
+  "client_secret": ""
+}, {parse: true, syncAck: true})
+
+client.loopBlaze({
+  onMessage(msg){
+    console.log(msg)
+  },
+})
+
+
+```
+> BlazeClient 直接继承了 Client，所以所有 Client 的方法 BlazeClient 都可以直接调用。
 
 
 

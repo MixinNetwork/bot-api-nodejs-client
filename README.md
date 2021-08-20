@@ -18,6 +18,7 @@ yarn add mixin-node-sdk
 ```
 
 ## Usage
+1. Use Mixin Api
 ```js
 const {Client} = require('mixin-node-sdk')
 const client = new Client({
@@ -37,7 +38,27 @@ async function getMe() {
   console.log(me)
 }
 ```
+2. Use Mixin's message
+```js
+const {BlazeClient} = require('mixin-node-sdk')
+const client = new BlazeClient({
+   "client_id": "",
+   "session_id": "",
+   "pin_token": "",
+   "private_key": "",
+   "pin": "",
+   "client_secret": ""
+}, {parse: true, syncAck: true})
 
+client.loopBlaze({
+   onMessage(msg){
+     console.log(msg)
+   },
+})
+
+
+```
+> BlazeClient directly inherits Client, so all Client methods BlazeClient can be called directly.
 
 
 ## Note
