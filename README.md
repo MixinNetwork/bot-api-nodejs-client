@@ -1,4 +1,5 @@
 # bot-api-nodejs-client
+[中文版](./README.zh-CN.md)
 The nodejs version of the mixin SDK
 
 ## New version features
