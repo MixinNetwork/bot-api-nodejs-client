@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid'
 import { AxiosInstance } from 'axios'
-import { request } from '../services/request'
+import { mixinRequest, request } from '../services/request'
 import { UserClient } from './user'
 import { AddressClient } from './address'
 
@@ -9,14 +9,15 @@ import { AddressClient } from './address'
 import {
   AddressClientRequest, AddressCreateParams, Address,
   AppClientRequest, UpdateAppRequest, App, FavoriteApp,
+  AssetClientRequest, Asset, ExchangeRate, NetworkTicker,
   Attachment, AttachmentClientRequest,
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction,
   MessageClientRequest, AcknowledgementRequest, MessageRequest,
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
   PINClientRequest, Turn,
-  SnapshotClientRequest, Snapshot,
+  SnapshotClientRequest, Snapshot, SnapshotQuery,
   TransferClientRequest, TransferInput, Payment, GhostInput, GhostKeys, WithdrawInput, RawTransaction,
-  UserClientRequest, User, UserRelationship, Keystore, AssetClientRequest, Asset, ExchangeRate
+  UserClientRequest, User, UserRelationship, Keystore
 } from '../types'
 import { AppClient } from './app'
 import { AssetClient } from './asset'
@@ -65,6 +66,7 @@ export class Client implements
   readAsset!: (asset_id: string) => Promise<Asset>
   readAssets!: () => Promise<Asset[]>
   readAssetFee!: (asset_id: string) => Promise<number>
+  readAssetNetworkTicker!: (asset_id: string, offset?: string) => Promise<NetworkTicker>
 
   readExchangeRates!: () => Promise<ExchangeRate[]>
 
@@ -107,14 +109,12 @@ export class Client implements
   readTurnServers!: () => Promise<Turn[]>
 
   // Snapshot...
-
-  readSnapshots!: (asset_id?: string, offset?: string, order?: string, limit?: number) => Promise<Snapshot[]>
-  readNetworkSnapshots!: (asset_id?: string, offset?: string, order?: string, limit?: number) => Promise<Snapshot[]>
+  readSnapshots!: (params: SnapshotQuery) => Promise<Snapshot[]>
+  readNetworkSnapshots!: (params: SnapshotQuery) => Promise<Snapshot[]>
   readSnapshot!: (snapshot_id: string) => Promise<Snapshot>
   readNetworkSnapshot!: (snapshot_id: string) => Promise<Snapshot>
 
   // Transfer...
-
   verifyPayment!: (params: TransferInput) => Promise<Payment>
   transfer!: (params: TransferInput, pin?: string) => Promise<Snapshot>
   readTransfer!: (trace_id: string) => Promise<Snapshot>
@@ -133,6 +133,17 @@ export class Client implements
   modifyProfile!: (full_name?: string, avatar_base64?: string) => Promise<User>
   modifyRelationships!: (relationship: UserRelationship) => Promise<User>
   readBlockUsers!: () => Promise<User[]>
+
+
+  // Oauth...
+  authorizeToken(code: string, client_secret?: string, code_verifier?: string): Promise<{ access_token: string, scope: string }> {
+    if (!client_secret) client_secret = this.keystore.client_secret
+    if (!client_secret) return Promise.reject(new Error('client_secret required'))
+    return this.request.post('/oauth/token', {
+      client_secret, code, code_verifier,
+      client_id: this.keystore.client_id,
+    })
+  }
 
   newUUID(): string {
     return uuid()
@@ -175,3 +186,6 @@ function _extends(origin: any, target: any) {
     origin.prototype[key] = target.prototype[key]
   };
 }
+
+export const authorizeToken = (client_id: string, code: string, client_secret: string, code_verifier?: string): Promise<{ access_token: string, scope: string }> =>
+  mixinRequest.get('/oauth/token', { params: { client_id, code, code_verifier, client_secret } })

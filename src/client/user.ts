@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { UserClientRequest, User, UserRelationship } from '../types/user'
 import forge from 'node-forge'
+import { request } from '../services/request'
 
 export class UserClient implements UserClientRequest {
   request!: AxiosInstance
@@ -38,3 +39,12 @@ export class UserClient implements UserClientRequest {
     return this.request.post(`/relationships`, relationship)
   }
 }
+
+export const userMe = (token: string): Promise<User> =>
+  request(undefined, token).get('/me')
+
+export const readFriends = (token: string): Promise<User[]> =>
+  request(undefined, token).get(`/friends`)
+
+export const readBlockUsers = (token: string): Promise<User[]> =>
+  request(undefined, token).get(`/blocking_users`)

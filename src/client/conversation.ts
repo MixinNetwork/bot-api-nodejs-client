@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { request } from "../services/request";
 import {
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction, Keystore
 } from '../types'
@@ -51,3 +52,6 @@ export class ConversationClient implements ConversationClientRequest {
     return this.request.post(`/conversations/${conversationID}/rotate`)
   }
 }
+
+export const readConversation = (token: string, conversation_id: string): Promise<Conversation> =>
+  request(undefined, token).get(`conversations/${conversation_id}`)

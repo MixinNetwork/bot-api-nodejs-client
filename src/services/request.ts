@@ -47,3 +47,4 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
   return ins
 }
 
+export const mixinRequest = request()
