@@ -25,7 +25,7 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
     config.headers['X-Request-Id'] = requestID
     let jwtToken = ''
     if (token) jwtToken = token
-    else jwtToken = k.signToken(signRequest(method!, uri, data), requestID)
+    else if (k) jwtToken = k.signToken(signRequest(method!, uri, data), requestID)
     config.headers.Authorization = 'Bearer ' + jwtToken
     return config
   })
