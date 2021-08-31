@@ -11,8 +11,8 @@ export class AttachmentClient implements AttachmentClientRequest {
     return this.request.get(`/attachments/${attachment_id}`)
   }
   async uploadFile(file: File): Promise<Attachment> {
-    const { view_url, attachment_id } = await this.createAttachment()
-    await uploadAttachmentTo(view_url, file)
+    const { view_url, upload_url, attachment_id } = await this.createAttachment()
+    await uploadAttachmentTo(upload_url!, file)
     return { view_url, attachment_id }
   }
 }
@@ -26,8 +26,8 @@ export async function uploadAttachmentTo(uploadURL: string, file: File): Promise
     headers: {
       'x-amz-acl': 'public-read',
       'Content-Type': 'application/octet-stream',
-      'Content-Length': file.size
     },
+    maxContentLength: 2147483648,
   })
 }
 

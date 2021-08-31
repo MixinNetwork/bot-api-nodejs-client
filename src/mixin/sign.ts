@@ -45,11 +45,11 @@ export function getEd25519Sign(payload: any, privateKey: any) {
   const header = toBuffer({ alg: 'EdDSA', typ: 'JWT' }).toString('base64')
   payload = base64url(toBuffer(payload))
   const result = [header, payload]
-  const sign = base64url(pki.ed25519.sign({
+  const sign = base64url(Buffer.from(pki.ed25519.sign({
     message: result.join('.'),
     encoding: 'utf8',
     privateKey,
-  }))
+  })).toString('base64'))
   result.push(sign)
   return result.join('.')
 }

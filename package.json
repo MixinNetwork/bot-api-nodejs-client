@@ -1,6 +1,6 @@
 {
   "name": "mixin-node-sdk",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -61,6 +61,7 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^5.0.2",
+    "@types/pako": "^1.0.2",
     "@types/ws": "^7.4.7",
     "husky": "^7.0.1",
     "size-limit": "^5.0.2",
@@ -77,8 +78,8 @@
     "int64-buffer": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "node-forge": "^0.10.0",
+    "pako": "^2.0.4",
     "uuid": "^8.3.2",
-    "ws": "^8.2.0",
-    "zlib": "^1.0.5"
+    "ws": "^8.2.0"
   }
 }

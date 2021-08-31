@@ -1,10 +1,11 @@
-import { Client } from "../client";
-import { KeystoreAuth } from "../mixin/keystore";
-import { signRequest } from "../mixin/sign";
-import { Keystore } from "../types";
+import { Client } from "../client"
+import { KeystoreAuth } from "../mixin/keystore"
+import { signRequest } from "../mixin/sign"
+import { Keystore } from "../types"
 import WebSocket from 'ws'
-import zlib from 'zlib'
-import { BlazeMessage, MessageView } from "../types/blaze";
+import { BlazeMessage, MessageView } from "../types/blaze"
+import { gzip, ungzip } from 'pako'
+
 
 const zeromeshUrl = 'wss://mixin-blaze.zeromesh.net'
 const oneUrl = 'wss://blaze.mixin.one/'
@@ -51,7 +52,7 @@ export class BlazeClient extends Client {
     }
     this.ws = new WebSocket(this.url, "Mixin-Blaze-1", { headers, handshakeTimeout: 3000 })
     this.ws.onmessage = async (event) => {
-      let msg = await this.decode(event.data as ArrayBuffer)
+      let msg = await this.decode(event.data as Uint8Array)
       if (!msg) return
       if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && this.h.onAckReceipt) await this.h.onAckReceipt(msg)
       else if (msg.category === 'SYSTEM_CONVERSATION' && this.h.onConversation) await this.h.onConversation(msg)
@@ -92,33 +93,31 @@ export class BlazeClient extends Client {
   }
 
 
-  decode(data: ArrayBuffer): Promise<MessageView> {
-    return new Promise((resolve, reject) => {
-      zlib.gunzip(data, (err, unzipped) => {
-        if (err) return reject(err)
-        const msgObj = JSON.parse(unzipped.toString());
-        if (this.options?.parse && msgObj.data && msgObj.data.data) {
-          msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString()
-          try {
-            msgObj.data.data = JSON.parse(msgObj.data.data)
-          } catch (e) { }
-        }
-        resolve(msgObj.data);
-      });
-    });
+  decode(data: Uint8Array): Promise<MessageView> {
+    return new Promise((resolve) => {
+      const t = ungzip(data, { to: 'string' })
+      const msgObj = JSON.parse(t)
+      if (this.options?.parse && msgObj.data && msgObj.data.data) {
+        msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString()
+        try {
+          msgObj.data.data = JSON.parse(msgObj.data.data)
+        } catch (e) { }
+      }
+      resolve(msgObj.data)
+
+    })
   }
 
   send_raw(message: BlazeMessage) {
     return new Promise((resolve) => {
-      const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
-      zlib.gzip(buffer, (_, zipped) => {
-        if (this.ws!.readyState === WebSocket.OPEN) {
-          this.ws!.send(zipped);
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-    });
+      const buffer = Buffer.from(JSON.stringify(message), 'utf-8')
+      const zipped = gzip(buffer)
+      if (this.ws!.readyState === WebSocket.OPEN) {
+        this.ws!.send(zipped)
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
   }
 }
