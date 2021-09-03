@@ -5,6 +5,7 @@ export type MessageCategory = "PLAIN_TEXT" |
   "PLAIN_DATA" |
   "PLAIN_STICKER" |
   "PLAIN_LIVE" |
+  "PLAIN_LOCATION" |
   "PLAIN_VIDEO" |
   "PLAIN_CONTACT" |
   "APP_CARD" |

@@ -10,7 +10,7 @@ export class AppClient implements AppClientRequest {
   }
 
   readFavoriteApps(userID: string): Promise<FavoriteApp[]> {
-    return this.request.get(`/users/${userID}/apps/favorites`)
+    return this.request.get(`/users/${userID}/apps/favorite`)
   }
 
   favoriteApp(appID: string): Promise<FavoriteApp> {
