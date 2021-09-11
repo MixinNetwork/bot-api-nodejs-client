@@ -1,5 +1,7 @@
+import { MessageView } from './blaze'
 
 export type MessageCategory = "PLAIN_TEXT" |
+  "PLAIN_AUDIO" |
   "PLAIN_POST" |
   "PLAIN_IMAGE" |
   "PLAIN_DATA" |
@@ -38,8 +40,9 @@ export interface DataMessage {
 }
 
 export interface StickerMessage {
-  name: string
-  album_id: string
+  sticker_id: string
+  name?: string
+  album_id?: string
 }
 
 export interface ContactMesage {
@@ -52,14 +55,15 @@ export interface AppCardMessage {
   title: string
   description: string
   action: string
+  shareable?: boolean
 }
 
 export interface AudioMessage {
   attachment_id: string
   mime_type: string
-  wave_form: string
   size: number
   duration: number
+  wave_form?: string
 }
 
 export interface LiveMessage {
@@ -67,24 +71,24 @@ export interface LiveMessage {
   height: number
   thumb_url: string
   url: string
+  shareable?: boolean
 }
 
 export interface VideoMessage {
   attachment_id: string
   mime_type: string
-  wave_form: string
   width: number
   height: number
   size: number
   duration: number
-  thumbnail: string
+  thumbnail?: string
 }
 
 export interface LocationMessage {
-  name: string
-  address: string
   longitude: number
   latitude: number
+  address?: string
+  name?: string
 }
 
 export interface AppButtonMessage {
@@ -111,10 +115,24 @@ export interface AcknowledgementRequest {
 export interface MessageClientRequest {
   sendAcknowledgements(messages: AcknowledgementRequest[]): Promise<void>
   sendAcknowledgement(message: AcknowledgementRequest): Promise<void>
-  sendMessage(message: MessageRequest): Promise<{}>
-  sendMessages(messages: MessageRequest[]): Promise<{}>
+  sendMessage(message: MessageRequest): Promise<MessageView>
+  sendMessages(messages: MessageRequest[]): Promise<undefined>
 
-  sendMessageText(userID: string, text: string): Promise<{}>
-  sendMessagePost(userID: string, text: string): Promise<{}>
+  sendMessageText(userID: string, text: string): Promise<MessageView>
+  sendMessagePost(userID: string, text: string): Promise<MessageView>
+
+  sendTextMsg(userID: string, text: string): Promise<MessageView>
+  sendPostMsg(userID: string, text: string): Promise<MessageView>
+  sendImageMsg(userID: string, image: ImageMessage): Promise<MessageView>
+  sendDataMsg(userID: string, data: DataMessage): Promise<MessageView>
+  sendStickerMsg(userID: string, sticker: StickerMessage): Promise<MessageView>
+  sendContactMsg(userID: string, contact: ContactMesage): Promise<MessageView>
+  sendAppCardMsg(userID: string, appCard: AppCardMessage): Promise<MessageView>
+  sendAudioMsg(userID: string, audio: AudioMessage): Promise<MessageView>
+  sendLiveMsg(userID: string, live: LiveMessage): Promise<MessageView>
+  sendVideoMsg(userID: string, video: VideoMessage): Promise<MessageView>
+  sendLocationMsg(userID: string, location: LocationMessage): Promise<MessageView>
+  sendAppButtonMsg(userID: string, appButton: AppButtonMessage[]): Promise<MessageView>
+  sendRecallMsg(userID: string, message: RecallMessage): Promise<MessageView>
 }
 

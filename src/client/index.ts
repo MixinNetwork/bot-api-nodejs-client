@@ -12,7 +12,8 @@ import {
   AssetClientRequest, Asset, ExchangeRate, NetworkTicker,
   Attachment, AttachmentClientRequest,
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction,
-  MessageClientRequest, AcknowledgementRequest, MessageRequest,
+  MessageClientRequest, AcknowledgementRequest, MessageRequest, MessageView,
+  ImageMessage, DataMessage, StickerMessage, ContactMesage, AppCardMessage, AudioMessage, LiveMessage, LocationMessage, VideoMessage, AppButtonMessage, RecallMessage,
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
   PINClientRequest, Turn,
   SnapshotClientRequest, Snapshot, SnapshotQuery,
@@ -90,11 +91,23 @@ export class Client implements
   // Message...
   sendAcknowledgements!: (messages: AcknowledgementRequest[]) => Promise<void>
   sendAcknowledgement!: (message: AcknowledgementRequest) => Promise<void>
-  sendMessage!: (message: MessageRequest) => Promise<{}>
-  sendMessages!: (messages: MessageRequest[]) => Promise<{}>
-  sendMessageText!: (userID: string, text: string) => Promise<{}>
-  sendMessagePost!: (userID: string, text: string) => Promise<{}>
-
+  sendMessage!: (message: MessageRequest) => Promise<MessageView>
+  sendMessages!: (messages: MessageRequest[]) => Promise<undefined>
+  sendMessageText!: (userID: string, text: string) => Promise<MessageView>
+  sendMessagePost!: (userID: string, text: string) => Promise<MessageView>
+  sendTextMsg!: (userID: string, text: string) => Promise<MessageView>
+  sendPostMsg!: (userID: string, text: string) => Promise<MessageView>
+  sendImageMsg!: (userID: string, image: ImageMessage) => Promise<MessageView>
+  sendDataMsg!: (userID: string, data: DataMessage) => Promise<MessageView>
+  sendStickerMsg!: (userID: string, sticker: StickerMessage) => Promise<MessageView>
+  sendContactMsg!: (userID: string, contact: ContactMesage) => Promise<MessageView>
+  sendAppCardMsg!: (userID: string, appCard: AppCardMessage) => Promise<MessageView>
+  sendAudioMsg!: (userID: string, audio: AudioMessage) => Promise<MessageView>
+  sendLiveMsg!: (userID: string, live: LiveMessage) => Promise<MessageView>
+  sendVideoMsg!: (userID: string, video: VideoMessage) => Promise<MessageView>
+  sendLocationMsg!: (userID: string, location: LocationMessage) => Promise<MessageView>
+  sendAppButtonMsg!: (userID: string, appButton: AppButtonMessage[]) => Promise<MessageView>
+  sendRecallMsg!: (userID: string, message: RecallMessage) => Promise<MessageView>
   // Multisigs...
   readMultisigs!: (offset: string, limit: number) => Promise<MultisigUTXO[]>
   readMultisigOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<MultisigUTXO[]>
@@ -150,21 +163,21 @@ export class Client implements
   }
 
   uniqueConversationID(userID: string, recipientID: string): string {
-    let [minId, maxId] = [userID, recipientID];
+    let [minId, maxId] = [userID, recipientID]
     if (minId > maxId) {
-      [minId, maxId] = [recipientID, userID];
+      [minId, maxId] = [recipientID, userID]
     }
 
-    const hash = crypto.createHash('md5');
-    hash.update(minId);
-    hash.update(maxId);
-    const bytes = hash.digest();
+    const hash = crypto.createHash('md5')
+    hash.update(minId)
+    hash.update(maxId)
+    const bytes = hash.digest()
 
-    bytes[6] = (bytes[6] & 0x0f) | 0x30;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    bytes[6] = (bytes[6] & 0x0f) | 0x30
+    bytes[8] = (bytes[8] & 0x3f) | 0x80
 
-    const digest = Array.from(bytes, byte => `0${(byte & 0xff).toString(16)}`.slice(-2)).join('');
-    return `${digest.slice(0, 8)}-${digest.slice(8, 12)}-${digest.slice(12, 16)}-${digest.slice(16, 20)}-${digest.slice(20, 32)}`;
+    const digest = Array.from(bytes, byte => `0${(byte & 0xff).toString(16)}`.slice(-2)).join('')
+    return `${digest.slice(0, 8)}-${digest.slice(8, 12)}-${digest.slice(12, 16)}-${digest.slice(16, 20)}-${digest.slice(20, 32)}`
   }
 }
 [
