@@ -22,25 +22,6 @@ export class MessageClient implements MessageClientRequest {
     return this.request.post('/messages', messages)
   }
 
-  sendMessageText(userID: string, text: string): Promise<MessageView> {
-    return this.sendMessage({
-      conversation_id: this.uniqueConversationID(this.keystore.client_id, userID),
-      message_id: this.newUUID(),
-      recipient_id: userID,
-      data: Buffer.from(text).toString('base64'),
-      category: 'PLAIN_TEXT'
-    })
-  }
-  sendMessagePost(userID: string, text: string): Promise<MessageView> {
-    return this.sendMessage({
-      conversation_id: this.uniqueConversationID(this.keystore.client_id, userID),
-      message_id: this.newUUID(),
-      recipient_id: userID,
-      data: Buffer.from(text).toString('base64'),
-      category: 'PLAIN_POST'
-    })
-  }
-
   sendMsg(recipient_id: string, category: MessageCategory, data: any): Promise<MessageView> {
     if (typeof data === 'object') data = JSON.stringify(data)
     return this.sendMessage({
@@ -51,6 +32,12 @@ export class MessageClient implements MessageClientRequest {
     })
   }
 
+  sendMessageText(userID: string, text: string): Promise<MessageView> {
+    return this.sendMsg(userID, "PLAIN_TEXT", text)
+  }
+  sendMessagePost(userID: string, text: string): Promise<MessageView> {
+    return this.sendMsg(userID, "PLAIN_POST", text)
+  }
   sendTextMsg(userID: string, text: string): Promise<MessageView> {
     return this.sendMsg(userID, "PLAIN_TEXT", text)
   }
