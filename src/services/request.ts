@@ -22,7 +22,7 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
     const { method, data } = config
     const uri = ins.getUri(config)
     const requestID = uuid()
-    config.headers['X-Request-Id'] = requestID
+    config.headers['x-request-id'] = requestID
     let jwtToken = ''
     if (token) jwtToken = token
     else if (k) jwtToken = k.signToken(signRequest(method!, uri, data), requestID)
@@ -33,7 +33,7 @@ export const request = (keystore?: Keystore, token = ''): AxiosInstance => {
   ins.interceptors.response.use((res: AxiosResponse) => {
     let { data, error } = res.data
     if (error) {
-      error.request_id = res.headers['X-Request-Id']
+      error.request_id = res.headers['x-request-id']
       return error
     }
     return data
