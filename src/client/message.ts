@@ -72,9 +72,9 @@ export class MessageClient implements MessageClientRequest {
     return this.sendMsg(userID, "PLAIN_LOCATION", location)
   }
   sendAppButtonMsg(userID: string, appButton: AppButtonMessage[]): Promise<MessageView> {
-    return this.sendMsg(userID, "APP_CARD", appButton)
+    return this.sendMsg(userID, "APP_BUTTON_GROUP", appButton)
   }
   sendRecallMsg(userID: string, message: RecallMessage): Promise<MessageView> {
-    return this.sendMsg(userID, "APP_BUTTON_GROUP", message)
+    return this.sendMsg(userID, "MESSAGE_RECALL", message)
   }
 }
