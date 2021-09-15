@@ -41,8 +41,8 @@ class Encoder {
   }
 
   encodeInput(i: Input) {
-    this.write(Buffer.from(i.hash, 'hex'))
-    this.writeInt(i.index)
+    this.write(Buffer.from(i.hash!, 'hex'))
+    this.writeInt(i.index!)
 
     if (!i.genesis) i.genesis = ""
     this.writeInt(i.genesis.length)
@@ -82,12 +82,12 @@ class Encoder {
   encodeOutput(o: Output) {
     if (!o.type) o.type = 0
     this.write(Buffer.from([0x00, o.type]))
-    this.writeInteger(o.amount)
-    this.writeInt(o.keys.length)
-    
-    o.keys.forEach(k => this.write(Buffer.from(k, 'hex')))
+    this.writeInteger(o.amount!)
+    this.writeInt(o.keys!.length)
 
-    this.write(Buffer.from(o.mask, 'hex'))
+    o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')))
+
+    this.write(Buffer.from(o.mask!, 'hex'))
     if (!o.script) o.script = []
     this.writeInt(o.script.length)
     this.write(Buffer.from(o.script))
@@ -175,16 +175,16 @@ function getIntBytes(x: number) {
 
 export function dumpTransaction(signed: Transaction) {
   let enc = new Encoder(magic)
-  enc.write(Buffer.from([0x00, signed.version]))
+  enc.write(Buffer.from([0x00, signed.version!]))
   enc.write(Buffer.from(signed.asset, 'hex'))
 
-  const il = signed.inputs.length
+  const il = signed.inputs!.length
   enc.writeInt(il)
-  signed.inputs.forEach(i => enc.encodeInput(i))
+  signed.inputs!.forEach(i => enc.encodeInput(i))
 
-  const ol = signed.outputs.length
+  const ol = signed.outputs!.length
   enc.writeInt(ol)
-  signed.outputs.forEach(o => enc.encodeOutput(o))
+  signed.outputs!.forEach(o => enc.encodeOutput(o))
 
   if (!signed.extra) signed.extra = ""
   const el = signed.extra.length
@@ -199,7 +199,7 @@ export function dumpTransaction(signed: Transaction) {
     if (sl == maxEcodingInt) throw new Error('signatures overflow')
     enc.writeInt(sl)
     if (sl > 0) {
-      Object.values(signed.signatures).forEach(s => enc.write(Buffer.from(s, 'hex')))
+      Object.values(signed.signatures!).forEach(s => enc.write(Buffer.from(s, 'hex')))
     }
   }
   return enc.buf
