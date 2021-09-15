@@ -1,4 +1,6 @@
-import { Asset } from './asset'
+import { Asset } from '.'
+
+
 export interface NetworkChain {
   chain_id: string
   icon_url: string

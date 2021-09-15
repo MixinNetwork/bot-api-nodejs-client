@@ -11,9 +11,9 @@ export interface MultisigUTXO {
   utxo_id: string
   asset_id: string
   transaction_hash: string
-  output_index: string
+  output_index: number
   amount: string
-  threshold: string
+  threshold: number
   members: string[]
   memo: string
   state: UTXOState

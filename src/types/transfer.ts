@@ -14,21 +14,21 @@ export interface Payment {
   code_id: string
 }
 
-export interface Transaction {
-  type: 'transaction'
-  transaction_id: string
-  transaction_hash: string
-  sender: string
-  chain_id: string
-  asset_id: string
-  amount: string
-  destination: string
-  tag: string
-  created_at: string
-  output_index: number,
-  confirmations: number,
-  threshold: number,
-}
+// export interface Transaction {
+//   type: 'transaction'
+//   transaction_id: string
+//   transaction_hash: string
+//   sender: string
+//   chain_id: string
+//   asset_id: string
+//   amount: string
+//   destination: string
+//   tag: string
+//   created_at: string
+//   output_index: number,
+//   confirmations: number,
+//   threshold: number,
+// }
 
 export interface RawTransaction {
   type: string
