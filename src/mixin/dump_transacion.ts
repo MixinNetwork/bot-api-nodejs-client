@@ -1,4 +1,5 @@
-import { AggregatedSignature, Input, Output, Transaction } from '../types'
+import { Aggregated, Input, Output, Transaction } from '../types'
+import { BigNumber } from 'bignumber.js'
 
 const maxEcodingInt = 0xFFFF
 const aggregatedSignaturePrefix = 0xFF01
@@ -18,7 +19,7 @@ class Encoder {
       throw new Error('int overflow')
     }
     let buf = Buffer.alloc(2)
-    buf.writeInt16BE(i)
+    buf.writeUInt16BE(i)
     this.write(buf)
   }
 
@@ -51,16 +52,17 @@ class Encoder {
     if (typeof d === 'undefined') {
       this.write(empty)
     } else {
+      // TODO... to test...
       this.write(magic)
       this.write(Buffer.from(d.chain, 'hex'))
 
-      if (!d.asset) d.asset = ""
-      this.writeInt(d.asset.length)
-      this.write(Buffer.from(d.asset))
+      const asset = Buffer.from(d.asset)
+      this.writeInt(asset.byteLength)
+      this.write(asset)
 
-      if (!d.transaction) d.transaction = ""
-      this.writeInt(d.transaction.length)
-      this.write(Buffer.from(d.transaction))
+      const tx = Buffer.from(d.transaction)
+      this.writeInt(tx.byteLength)
+      this.write(tx)
 
       this.wirteUint64(d.index)
       this.writeInteger(d.amount)
@@ -82,38 +84,41 @@ class Encoder {
   encodeOutput(o: Output) {
     if (!o.type) o.type = 0
     this.write(Buffer.from([0x00, o.type]))
-    this.writeInteger(o.amount!)
+    this.writeInteger(new BigNumber(1e8).times(o.amount!).toNumber())
     this.writeInt(o.keys!.length)
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')))
 
     this.write(Buffer.from(o.mask!, 'hex'))
-    if (!o.script) o.script = []
-    this.writeInt(o.script.length)
-    this.write(Buffer.from(o.script))
+
+    const s = Buffer.from(o.script!, 'hex')
+    this.writeInt(s.byteLength)
+    this.write(s)
 
     const w = o.withdrawal
     if (typeof w === 'undefined') {
       this.write(empty)
     } else {
+      // TODO... not check...
       this.write(magic)
       this.write(Buffer.from(w.chain, 'hex'))
 
-      if (!w.asset) w.asset = ""
-      this.writeInt(w.asset.length)
-      this.write(Buffer.from(w.asset))
+      const asset = Buffer.from(w.asset)
+      this.writeInt(asset.byteLength)
+      this.write(asset)
 
       if (!w.address) w.address = ""
-      this.writeInt(w.address.length)
-      this.write(Buffer.from(w.address))
 
-      if (!w.tag) w.tag = ""
-      this.writeInt(w.tag.length)
-      this.write(Buffer.from(w.tag))
+      const addr = Buffer.from(w.address)
+      this.writeInt(addr.byteLength)
+      this.write(addr)
+
+      const tag = Buffer.from(w.tag)
+      this.writeInt(tag.byteLength)
+      this.write(tag)
     }
   }
-  // TODO... not check...
-  encodeAggregatedSignature(js: AggregatedSignature) {
+  encodeAggregatedSignature(js: Aggregated) {
     this.writeInt(maxEcodingInt)
     this.writeInt(aggregatedSignaturePrefix)
     this.write(Buffer.from(js.signature, 'hex'))
@@ -134,15 +139,17 @@ class Encoder {
     })
 
     const max = js.signers[js.signers.length - 1]
-    if (max / 8 + 1 > js.signature.length * 2) {
+
+    if (((max / 8 | 0) + 1 | 0) > js.signature.length * 2) {
+      // TODO... not check...
       this.write(Buffer.from([0x01]))
       this.writeInt(js.signature.length)
       js.signers.forEach(m => this.writeInt(m))
       return
     }
 
-    const masks = Buffer.alloc((max / 8 + 1) | 0)
-    js.signers.forEach(m => masks[m / 8] ^= 1 << (m % 8))
+    const masks = Buffer.alloc(((max / 8 | 0) + 1) | 0)
+    js.signers.forEach(m => masks[(m / 8) | 0] ^= 1 << ((m % 8) | 0))
     this.write(Buffer.from([0x00]))
     this.writeInt(masks.length)
     this.write(masks)
@@ -173,7 +180,7 @@ function getIntBytes(x: number) {
   return bytes
 }
 
-export function dumpTransaction(signed: Transaction) {
+export function dumpTransaction(signed: Transaction): string {
   let enc = new Encoder(magic)
   enc.write(Buffer.from([0x00, signed.version!]))
   enc.write(Buffer.from(signed.asset, 'hex'))
@@ -186,21 +193,19 @@ export function dumpTransaction(signed: Transaction) {
   enc.writeInt(ol)
   signed.outputs!.forEach(o => enc.encodeOutput(o))
 
-  if (!signed.extra) signed.extra = ""
-  const el = signed.extra.length
-  enc.writeInt(el)
-  enc.write(Buffer.from(signed.extra))
+  const e = Buffer.from(signed.extra!, 'base64')
+  enc.writeInt(e.byteLength)
+  enc.write(e)
 
-  if (signed.aggregated_signature) {
-    enc.encodeAggregatedSignature(signed.aggregated_signature)
+  if (signed.aggregated) {
+    enc.encodeAggregatedSignature(signed.aggregated)
   } else {
-
     const sl = signed.signatures ? Object.keys(signed.signatures).length : 0
     if (sl == maxEcodingInt) throw new Error('signatures overflow')
     enc.writeInt(sl)
     if (sl > 0) {
-      Object.values(signed.signatures!).forEach(s => enc.write(Buffer.from(s, 'hex')))
+      enc.encodeSignature(signed.signatures!)
     }
   }
-  return enc.buf
+  return enc.buf.toString('hex')
 }

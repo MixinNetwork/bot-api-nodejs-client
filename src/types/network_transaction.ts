@@ -33,14 +33,14 @@ export interface Input {
 
 export interface Output {
   type?: number
-  amount?: number
+  amount?: string
   keys?: string[]
   withdrawal?: WithdrawData
-  script?: number[]
+  script?: string
   mask?: string
 }
 
-export interface AggregatedSignature {
+export interface Aggregated {
   signers: number[]
   signature: string
 }
@@ -50,7 +50,7 @@ export interface Transaction {
   signatures?: {
     [key: number]: string
   }
-  aggregated_signature?: {
+  aggregated?: {
     signers: number[]
     signature: string
   }
@@ -73,16 +73,5 @@ export interface TransactionInput {
 export interface TransactionOutput {
   receivers: string[]
   threshold: number
-  amount: number
-}
-
-export interface GhostInput {
-  receivers: string[]
-  index: number
-  hint: string
-}
-
-export interface GhostKeys {
-  keys: string[]
-  mask: string
+  amount: string
 }

@@ -1,4 +1,4 @@
-
+import { GhostKeys, GhostInput, TransactionInput } from '.'
 export type UTXOState = "unspent" | "signed" | "spent"
 
 export type MultisigAction = "sign" | "unlock"
@@ -50,4 +50,7 @@ export interface MultisigClientRequest {
   signMultisig(request_id: string, pin: string): Promise<MultisigRequest>
   cancelMultisig(request_id: string): Promise<void>
   unlockMultisig(request_id: string, pin: string): Promise<void>
+  readGhostKeys(receivers: string[], index: number): Promise<GhostKeys>
+  batchReadGhostKeys(inputs: GhostInput[]): Promise<GhostKeys[]>
+  makeMultisignTransaction(txInput: TransactionInput): Promise<string>
 }

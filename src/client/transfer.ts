@@ -1,7 +1,7 @@
-import { AxiosInstance } from "axios";
-import { getSignPIN } from "../mixin/sign";
-import { Keystore, Snapshot } from "../types";
-import { GhostInput, GhostKeys, Payment, RawTransaction, TransferClientRequest, TransferInput, WithdrawInput } from "../types/transfer";
+import { AxiosInstance } from "axios"
+import { getSignPIN } from "../mixin/sign"
+import { Keystore, Snapshot } from "../types"
+import { Payment, RawTransaction, TransferClientRequest, TransferInput, WithdrawInput } from "../types/transfer"
 
 
 export class TransferClient implements TransferClientRequest {
@@ -21,12 +21,6 @@ export class TransferClient implements TransferClientRequest {
   transaction(params: TransferInput, pin?: string): Promise<RawTransaction> {
     params.pin = getSignPIN(this.keystore, pin)
     return this.request.post("/transactions", params)
-  }
-  readGhostKeys(receivers: string[], index: number): Promise<GhostKeys> {
-    return this.request.post("/outputs", { receivers, index, hint: "" })
-  }
-  batchReadGhostKeys(input: GhostInput[]): Promise<GhostKeys[]> {
-    return this.request.post("/outputs", input)
   }
   withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot> {
     params.pin = getSignPIN(this.keystore, pin)

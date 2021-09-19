@@ -63,18 +63,6 @@ export interface TransferInput {
   pin?: string
 }
 
-export interface GhostKeys {
-  mask: string
-  keys: string[]
-}
-
-export interface GhostInput {
-  receivers: string[]
-  index: number
-  hint: string
-}
-
-
 export interface WithdrawInput {
   asset_id: string
   amount: string
@@ -89,7 +77,5 @@ export interface TransferClientRequest {
   transfer(params: TransferInput, pin?: string): Promise<Snapshot>
   readTransfer(trace_id: string): Promise<Snapshot>
   transaction(params: TransferInput, pin?: string): Promise<RawTransaction>
-  readGhostKeys(receivers: string[], index: number): Promise<GhostKeys>
-  batchReadGhostKeys(input: GhostInput[]): Promise<GhostKeys[]>
   withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>
 }
