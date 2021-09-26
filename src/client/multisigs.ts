@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import {
   Keystore,
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
-  MultisigAction, TransactionInput, Transaction, GhostInput, GhostKeys,
+  MultisigAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
 } from "../types"
 import { dumpTransaction } from '../mixin/dump_transacion'
 
@@ -46,7 +46,7 @@ export class MultisigsClient implements MultisigClientRequest {
   batchReadGhostKeys(inputs: GhostInput[]): Promise<GhostKeys[]> {
     return this.request.post(`/outputs`, inputs)
   }
-  async makeMultisignTransaction(txInput: TransactionInput): Promise<string> {
+  async makeMultisignTransaction(txInput: RawTransactionInput): Promise<string> {
     // validate ...
     let { inputs, memo, outputs } = txInput
     const tx: Transaction = {

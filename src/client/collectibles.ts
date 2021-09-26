@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import {
   Keystore,
   CollectiblesClientRequest, CollectiblesRequest, CollectiblesUTXO,
-  CollectiblesAction, TransactionInput, Transaction, GhostInput, GhostKeys,
+  CollectiblesAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
 } from "../types"
 import { dumpTransaction } from '../mixin/dump_transacion'
 
@@ -43,7 +43,7 @@ export class CollectiblesClient implements CollectiblesClientRequest {
     pin = getSignPIN(this.keystore, pin)
     return this.request.post(`/collectibles/requests/${request_id}/unlock`, { pin })
   }
-  async makeCollectiblesTransaction(txInput: TransactionInput): Promise<string> {
+  async makeCollectiblesTransaction(txInput: RawTransactionInput): Promise<string> {
     // validate ...
     let { inputs, memo, outputs } = txInput
     const tx: Transaction = {

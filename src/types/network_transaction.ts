@@ -62,15 +62,15 @@ export interface Transaction {
   extra: string
 }
 
-export interface TransactionInput {
+export interface RawTransactionInput {
   memo: string
   inputs: MultisigUTXO[]
-  outputs: TransactionOutput[]
+  outputs: RawTransactionOutput[]
   hint: string
 }
 
 
-export interface TransactionOutput {
+export interface RawTransactionOutput {
   receivers: string[]
   threshold: number
   amount: string

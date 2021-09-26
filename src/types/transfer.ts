@@ -1,6 +1,7 @@
 import { User } from './user'
 import { Asset } from './asset'
 import { Snapshot } from './snapshot'
+import { TransactionInput } from '.'
 export interface Payment {
   recipient: User
   asset: Asset
@@ -48,17 +49,10 @@ export interface RawTransaction {
 
 export interface TransferInput {
   asset_id: string
-  opponent_id?: string
+  opponent_id: string
   amount?: string
   trace_id?: string
   memo?: string
-
-  // OpponentKey used for raw transaction
-  opponent_key?: string
-  opponent_multisig?: {
-    receivers: string[]
-    threshold: number
-  }
 
   pin?: string
 }
@@ -73,9 +67,9 @@ export interface WithdrawInput {
 }
 
 export interface TransferClientRequest {
-  verifyPayment(params: TransferInput): Promise<Payment>
+  verifyPayment(params: TransferInput | TransactionInput): Promise<Payment>
   transfer(params: TransferInput, pin?: string): Promise<Snapshot>
   readTransfer(trace_id: string): Promise<Snapshot>
-  transaction(params: TransferInput, pin?: string): Promise<RawTransaction>
+  transaction(params: TransactionInput, pin?: string): Promise<RawTransaction>
   withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>
 }
