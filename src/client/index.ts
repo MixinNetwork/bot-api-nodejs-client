@@ -11,14 +11,15 @@ import {
   AppClientRequest, UpdateAppRequest, App, FavoriteApp,
   AssetClientRequest, Asset, ExchangeRate, NetworkTicker,
   Attachment, AttachmentClientRequest,
+  CollectiblesUTXO, CollectiblesRequest,
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction,
   MessageClientRequest, AcknowledgementRequest, MessageRequest, MessageView,
   ImageMessage, DataMessage, StickerMessage, ContactMesage, AppCardMessage, AudioMessage, LiveMessage, LocationMessage, VideoMessage, AppButtonMessage, RecallMessage,
-  MultisigClientRequest, MultisigRequest, MultisigUTXO,
+  TransactionInput, RawTransactionInput, MultisigClientRequest, MultisigRequest, MultisigUTXO,
   PINClientRequest, Turn,
   SnapshotClientRequest, Snapshot, SnapshotQuery,
   TransferClientRequest, TransferInput, Payment, GhostInput, GhostKeys, WithdrawInput, RawTransaction,
-  UserClientRequest, User, UserRelationship, Keystore
+  UserClientRequest, User, UserRelationship, Keystore,
 } from '../types'
 import { AppClient } from './app'
 import { AssetClient } from './asset'
@@ -29,12 +30,14 @@ import { MultisigsClient } from './multisigs'
 import { PINClient } from './pin'
 import { SnapshotClient } from './snapshot'
 import { TransferClient } from './transfer'
+import { CollectiblesClient } from './collectibles'
 
 export class Client implements
   AddressClientRequest,
   AppClientRequest,
   AssetClientRequest,
   AttachmentClientRequest,
+  CollectiblesClient,
   ConversationClientRequest,
   MessageClientRequest,
   MultisigClientRequest,
@@ -76,6 +79,16 @@ export class Client implements
   showAttachment!: (attachment_id: string) => Promise<Attachment>
   uploadFile!: (file: File) => Promise<Attachment>
 
+  // Collectibles...
+
+  readCollectible!: (id: string) => Promise<CollectiblesUTXO[]>
+  readCollectibleOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<CollectiblesUTXO[]>
+  createCollectible!: (action: string, raw: string) => Promise<CollectiblesRequest>
+  signCollectible!: (request_id: string, pin: string) => Promise<CollectiblesRequest>
+  cancelCollectible!: (request_id: string) => Promise<void>
+  unlockCollectible!: (request_id: string, pin: string) => Promise<void>
+  makeCollectiblesTransaction!: (txInput: RawTransactionInput) => Promise<string>
+
   // Conversation...
   createConversation!: (params: ConversationCreateParmas) => Promise<Conversation>
   updateConversation!: (conversationID: string, params: ConversationUpdateParams) => Promise<Conversation>
@@ -108,6 +121,7 @@ export class Client implements
   sendLocationMsg!: (userID: string, location: LocationMessage) => Promise<MessageView>
   sendAppButtonMsg!: (userID: string, appButton: AppButtonMessage[]) => Promise<MessageView>
   sendRecallMsg!: (userID: string, message: RecallMessage) => Promise<MessageView>
+
   // Multisigs...
   readMultisigs!: (offset: string, limit: number) => Promise<MultisigUTXO[]>
   readMultisigOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<MultisigUTXO[]>
@@ -115,6 +129,9 @@ export class Client implements
   signMultisig!: (request_id: string, pin: string) => Promise<MultisigRequest>
   cancelMultisig!: (request_id: string) => Promise<void>
   unlockMultisig!: (request_id: string, pin: string) => Promise<void>
+  readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>
+  batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>
+  makeMultisignTransaction!: (txInput: RawTransactionInput) => Promise<string>
 
   // Pin...
   verifyPin!: (pin: string) => Promise<void>
@@ -128,12 +145,10 @@ export class Client implements
   readNetworkSnapshot!: (snapshot_id: string) => Promise<Snapshot>
 
   // Transfer...
-  verifyPayment!: (params: TransferInput) => Promise<Payment>
+  verifyPayment!: (params: TransferInput | TransactionInput) => Promise<Payment>
   transfer!: (params: TransferInput, pin?: string) => Promise<Snapshot>
   readTransfer!: (trace_id: string) => Promise<Snapshot>
-  transaction!: (params: TransferInput, pin?: string) => Promise<RawTransaction>
-  readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>
-  batchReadGhostKeys!: (input: GhostInput[]) => Promise<GhostKeys[]>
+  transaction!: (params: TransactionInput, pin?: string) => Promise<RawTransaction>
   withdraw!: (params: WithdrawInput, pin?: string) => Promise<Snapshot>
 
   // User...
@@ -192,6 +207,7 @@ export class Client implements
   SnapshotClient,
   TransferClient,
   UserClient,
+  CollectiblesClient,
 ].forEach(client => _extends(Client, client))
 
 function _extends(origin: any, target: any) {

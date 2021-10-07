@@ -4,8 +4,8 @@ import { getSignPIN } from "../mixin/sign"
 import { BigNumber } from 'bignumber.js'
 import {
   Keystore,
-  MultisigClientRequest, MultisigRequest, MultisigUTXO,
-  MultisigAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
+  CollectiblesClientRequest, CollectiblesRequest, CollectiblesUTXO,
+  CollectiblesAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
 } from "../types"
 import { dumpTransaction } from '../mixin/dump_transacion'
 
@@ -14,39 +14,36 @@ const TxVersion = 0x02
 const OperatorSum = 0xfe
 const OperatorCmp = 0xff
 
-export class MultisigsClient implements MultisigClientRequest {
+export class CollectiblesClient implements CollectiblesClientRequest {
   keystore!: Keystore
   request!: AxiosInstance
-  readMultisigs(offset: string, limit: number): Promise<MultisigUTXO[]> {
-    return this.request.get(`/multisigs`, { params: { offset, limit } })
+  readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>
+  batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>
+
+  readCollectible(id: string): Promise<CollectiblesUTXO[]> {
+    return this.request.get(`/collectibles/tokens/${id}`)
   }
-  readMultisigOutputs(members: string[], threshold: number, offset: string, limit: number): Promise<MultisigUTXO[]> {
+  readCollectibleOutputs(members: string[], threshold: number, offset: string, limit: number): Promise<CollectiblesUTXO[]> {
     if (members.length > 0 && threshold < 1 || threshold > members.length) return Promise.reject(new Error("Invalid threshold or members"))
     const params: any = { threshold: Number(threshold), offset, limit }
     params.members = hashMember(members)
-    return this.request.get(`/multisigs/outputs`, { params })
+    return this.request.get(`/collectibles/outputs`, { params })
   }
-  createMultisig(action: MultisigAction, raw: string): Promise<MultisigRequest> {
-    return this.request.post(`/multisigs`, { action, raw })
+  createCollectible(action: CollectiblesAction, raw: string): Promise<CollectiblesRequest> {
+    return this.request.post(`/collectibles/requests`, { action, raw })
   }
-  signMultisig(request_id: string, pin?: string): Promise<MultisigRequest> {
+  signCollectible(request_id: string, pin?: string): Promise<CollectiblesRequest> {
     pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/multisigs/${request_id}/sign`, { pin })
+    return this.request.post(`/collectibles/requests/${request_id}/sign`, { pin })
   }
-  cancelMultisig(request_id: string): Promise<void> {
-    return this.request.post(`/multisigs/${request_id}/cancel`)
+  cancelCollectible(request_id: string): Promise<void> {
+    return this.request.post(`/collectibles/requests/${request_id}/cancel`)
   }
-  unlockMultisig(request_id: string, pin: string): Promise<void> {
+  unlockCollectible(request_id: string, pin: string): Promise<void> {
     pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/multisigs/${request_id}/unlock`, { pin })
+    return this.request.post(`/collectibles/requests/${request_id}/unlock`, { pin })
   }
-  readGhostKeys(receivers: string[], index: number): Promise<GhostKeys> {
-    return this.request.post("/outputs", { receivers, index, hint: "" })
-  }
-  batchReadGhostKeys(inputs: GhostInput[]): Promise<GhostKeys[]> {
-    return this.request.post(`/outputs`, inputs)
-  }
-  async makeMultisignTransaction(txInput: RawTransactionInput): Promise<string> {
+  async makeCollectiblesTransaction(txInput: RawTransactionInput): Promise<string> {
     // validate ...
     let { inputs, memo, outputs } = txInput
     const tx: Transaction = {
