@@ -1,5 +1,5 @@
-import { mixinRequest } from "../services/request";
-import { Asset, Snapshot, SnapshotQuery, Transaction } from "../types";
+import { mixinRequest } from "../services/request"
+import { Asset, NetworkTicker, Snapshot, SnapshotQuery, Transaction } from "../types"
 
 export const readNetworkChains = (): Promise<Asset[]> => mixinRequest.get("/network/chains")
 
@@ -19,3 +19,5 @@ export const readNetworkAsset = (id: string): Promise<Asset> => mixinRequest.get
 export const searchNetworkAsset = (assetNameOrSymbol: string): Promise<Asset[]> => mixinRequest.get(`/network/assets/search/${assetNameOrSymbol}`)
 
 export const readExternalAddressesCheck = (params: SnapshotQuery): Promise<boolean> => mixinRequest.get(`/external/addresses/check`, { params })
+
+export const readNetworkTicker = (asset_id: string, offset?: string): Promise<NetworkTicker> => mixinRequest.get(`/network/ticker`, { params: { asset: asset_id, offset } })
