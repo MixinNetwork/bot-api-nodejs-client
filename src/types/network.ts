@@ -57,5 +57,6 @@ export interface NetworkRequest {
   readTopNetworkAssets(): Promise<Asset[]>
 
   ReadExternalTransactions(asset_id: string, destination: string, tag: string): Promise<ExternalTransaction[]>
+  sendExternalProxy(method: string, params: any[]): Promise<any>
 }
 

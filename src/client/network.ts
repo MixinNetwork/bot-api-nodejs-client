@@ -21,3 +21,5 @@ export const searchNetworkAsset = (assetNameOrSymbol: string): Promise<Asset[]> 
 export const readExternalAddressesCheck = (params: SnapshotQuery): Promise<boolean> => mixinRequest.get(`/external/addresses/check`, { params })
 
 export const readNetworkTicker = (asset_id: string, offset?: string): Promise<NetworkTicker> => mixinRequest.get(`/network/ticker`, { params: { asset: asset_id, offset } })
+
+export const sendExternalProxy = (method: string, params: any[]): Promise<any> => mixinRequest.post(`/external/proxy`, { method, params })

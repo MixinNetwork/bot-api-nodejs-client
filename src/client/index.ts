@@ -11,7 +11,7 @@ import {
   AppClientRequest, UpdateAppRequest, App, FavoriteApp,
   AssetClientRequest, Asset, ExchangeRate, NetworkTicker,
   Attachment, AttachmentClientRequest,
-  CollectiblesUTXO, CollectiblesRequest,
+  CollectiblesParams, CollectibleToken, CollectibleAction, CollectibleRequest, CollectibleOutput, RawCollectibleInput,
   ConversationClientRequest, ConversationCreateParmas, Conversation, ConversationUpdateParams, Participant, ConversationAction,
   MessageClientRequest, AcknowledgementRequest, MessageRequest, MessageView,
   ImageMessage, DataMessage, StickerMessage, ContactMesage, AppCardMessage, AudioMessage, LiveMessage, LocationMessage, VideoMessage, AppButtonMessage, RecallMessage,
@@ -80,14 +80,15 @@ export class Client implements
   uploadFile!: (file: File) => Promise<Attachment>
 
   // Collectibles...
+  newMintCollectibleTransferInput!: (p: CollectiblesParams) => TransactionInput
 
-  readCollectible!: (id: string) => Promise<CollectiblesUTXO[]>
-  readCollectibleOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<CollectiblesUTXO[]>
-  createCollectible!: (action: string, raw: string) => Promise<CollectiblesRequest>
-  signCollectible!: (request_id: string, pin: string) => Promise<CollectiblesRequest>
-  cancelCollectible!: (request_id: string) => Promise<void>
-  unlockCollectible!: (request_id: string, pin: string) => Promise<void>
-  makeCollectiblesTransaction!: (txInput: RawTransactionInput) => Promise<string>
+  readCollectibleToken!: (id: string) => Promise<CollectibleToken>
+  readCollectibleOutputs!: (members: string[], threshold: number, offset: string, limit: number) => Promise<CollectibleOutput[]>
+  makeCollectibleTransactionRaw!: (txInput: RawCollectibleInput) => Promise<string>
+  createCollectibleRequest!: (action: CollectibleAction, raw: string) => Promise<CollectibleRequest>
+  signCollectibleRequest!: (requestId: string, pin?: string) => Promise<CollectibleRequest>
+  cancelCollectibleRequest!: (requestId: string) => Promise<void>
+  unlockCollectibleRequest!: (requestId: string, pin?: string) => Promise<void>
 
   // Conversation...
   createConversation!: (params: ConversationCreateParmas) => Promise<Conversation>
