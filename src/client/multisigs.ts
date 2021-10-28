@@ -1,4 +1,3 @@
-import { SHA3 } from 'sha3'
 import { AxiosInstance } from "axios"
 import { getSignPIN } from "../mixin/sign"
 import { BigNumber } from 'bignumber.js'
@@ -7,12 +6,9 @@ import {
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
   MultisigAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
 } from "../types"
-import { dumpTransaction } from '../mixin/dump_transacion'
-
-const TxVersion = 0x02
-
-const OperatorSum = 0xfe
-const OperatorCmp = 0xff
+import { DumpOutputFromGhostKey, dumpTransaction } from '../mixin/dump_transacion'
+import { hashMember, newHash } from '../mixin/tools'
+import { TxVersion } from '../mixin/encoder'
 
 export class MultisigsClient implements MultisigClientRequest {
   keystore!: Keystore
@@ -27,18 +23,18 @@ export class MultisigsClient implements MultisigClientRequest {
     return this.request.get(`/multisigs/outputs`, { params })
   }
   createMultisig(action: MultisigAction, raw: string): Promise<MultisigRequest> {
-    return this.request.post(`/multisigs`, { action, raw })
+    return this.request.post(`/multisigs/requests`, { action, raw })
   }
   signMultisig(request_id: string, pin?: string): Promise<MultisigRequest> {
     pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/multisigs/${request_id}/sign`, { pin })
+    return this.request.post(`/multisigs/requests/${request_id}/sign`, { pin })
   }
   cancelMultisig(request_id: string): Promise<void> {
-    return this.request.post(`/multisigs/${request_id}/cancel`)
+    return this.request.post(`/multisigs/requests/${request_id}/cancel`)
   }
   unlockMultisig(request_id: string, pin: string): Promise<void> {
     pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/multisigs/${request_id}/unlock`, { pin })
+    return this.request.post(`/multisigs/requests/${request_id}/unlock`, { pin })
   }
   readGhostKeys(receivers: string[], index: number): Promise<GhostKeys> {
     return this.request.post("/outputs", { receivers, index, hint: "" })
@@ -70,24 +66,9 @@ export class MultisigsClient implements MultisigClientRequest {
     outputs.forEach((output, idx) => ghostInputs.push({ receivers: output.receivers, index: idx, hint: txInput.hint }))
     // get ghost keys
     let ghosts = await this.batchReadGhostKeys(ghostInputs)
-    outputs.forEach((output, idx) => {
-      const { mask, keys } = ghosts[idx]
-      tx.outputs!.push({
-        mask,
-        keys,
-        amount: Number(output.amount).toFixed(8),
-        script: Buffer.from([OperatorCmp, OperatorSum, output.threshold]).toString('hex')
-      })
-    })
+    outputs.forEach((output, idx) =>
+      tx.outputs!.push(DumpOutputFromGhostKey(ghosts[idx], output.amount, output.threshold))
+    )
     return dumpTransaction(tx)
   }
-}
-
-function hashMember(ids: string[]) {
-  ids = ids.sort((a, b) => a > b ? 1 : -1)
-  return newHash(ids.join(''))
-}
-
-function newHash(str: string) {
-  return new SHA3(256).update(str).digest('hex')
 }

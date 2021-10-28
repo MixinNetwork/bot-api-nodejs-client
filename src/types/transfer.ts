@@ -58,11 +58,11 @@ export interface TransferInput {
 }
 
 export interface WithdrawInput {
-  asset_id: string
+  address_id: string
   amount: string
   trace_id?: string
+  
   memo?: string
-
   pin?: string
 }
 

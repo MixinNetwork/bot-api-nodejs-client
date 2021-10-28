@@ -1,90 +1,86 @@
-import { SHA3 } from 'sha3'
 import { AxiosInstance } from "axios"
-import { getSignPIN } from "../mixin/sign"
-import { BigNumber } from 'bignumber.js'
 import {
-  Keystore,
-  CollectiblesClientRequest, CollectiblesRequest, CollectiblesUTXO,
-  CollectiblesAction, RawTransactionInput, Transaction, GhostInput, GhostKeys,
+  Keystore, TransactionInput, GhostInput, GhostKeys,
+  CollectiblesClientRequest, CollectiblesParams, CollectibleToken, RawCollectibleInput, Transaction, CollectibleAction, CollectibleRequest, CollectibleOutput,
 } from "../types"
-import { dumpTransaction } from '../mixin/dump_transacion'
+import { DumpOutputFromGhostKey, dumpTransaction } from '../mixin/dump_transacion'
+import { hashMember } from '../mixin/tools'
+import { TxVersion } from '../mixin/encoder'
+import { getSignPIN } from '../mixin/sign'
+import { buildMintCollectibleMemo } from '../mixin/nfo'
 
-const TxVersion = 0x02
-
-const OperatorSum = 0xfe
-const OperatorCmp = 0xff
-
+const MintAssetID = "c94ac88f-4671-3976-b60a-09064f1811e8"
+const MintMinimumCost = "0.001"
+const GroupMembers = [
+  "4b188942-9fb0-4b99-b4be-e741a06d1ebf",
+  "dd655520-c919-4349-822f-af92fabdbdf4",
+  "047061e6-496d-4c35-b06b-b0424a8a400d",
+  "acf65344-c778-41ee-bacb-eb546bacfb9f",
+  "a51006d0-146b-4b32-a2ce-7defbf0d7735",
+  "cf4abd9c-2cfa-4b5a-b1bd-e2b61a83fabd",
+  "50115496-7247-4e2c-857b-ec8680756bee",
+]
+const GroupThreshold = 5
 export class CollectiblesClient implements CollectiblesClientRequest {
   keystore!: Keystore
   request!: AxiosInstance
-  readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>
   batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>
-
-  readCollectible(id: string): Promise<CollectiblesUTXO[]> {
-    return this.request.get(`/collectibles/tokens/${id}`)
+  newMintCollectibleTransferInput(p: CollectiblesParams): TransactionInput {
+    const { trace_id, collection_id, token_id, content } = p
+    if (!trace_id || !collection_id || !token_id || !content) throw new Error("Missing parameters")
+    let input: TransactionInput = {
+      asset_id: MintAssetID,
+      amount: MintMinimumCost,
+      trace_id,
+      memo: buildMintCollectibleMemo(collection_id, token_id, content),
+      opponent_multisig: {
+        receivers: GroupMembers,
+        threshold: GroupThreshold,
+      }
+    }
+    return input
   }
-  readCollectibleOutputs(members: string[], threshold: number, offset: string, limit: number): Promise<CollectiblesUTXO[]> {
-    if (members.length > 0 && threshold < 1 || threshold > members.length) return Promise.reject(new Error("Invalid threshold or members"))
-    const params: any = { threshold: Number(threshold), offset, limit }
-    params.members = hashMember(members)
-    return this.request.get(`/collectibles/outputs`, { params })
+  readCollectibleToken(id: string): Promise<CollectibleToken> {
+    return this.request.get(`/collectibles/tokens/` + id)
   }
-  createCollectible(action: CollectiblesAction, raw: string): Promise<CollectiblesRequest> {
-    return this.request.post(`/collectibles/requests`, { action, raw })
+  readCollectibleOutputs(_members: string[], threshold: number, offset: string, limit: number): Promise<CollectibleOutput[]> {
+    const members = hashMember(_members)
+    return this.request.get(`/collectibles/outputs`, { params: { members, threshold, offset, limit } })
   }
-  signCollectible(request_id: string, pin?: string): Promise<CollectiblesRequest> {
-    pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/collectibles/requests/${request_id}/sign`, { pin })
-  }
-  cancelCollectible(request_id: string): Promise<void> {
-    return this.request.post(`/collectibles/requests/${request_id}/cancel`)
-  }
-  unlockCollectible(request_id: string, pin: string): Promise<void> {
-    pin = getSignPIN(this.keystore, pin)
-    return this.request.post(`/collectibles/requests/${request_id}/unlock`, { pin })
-  }
-  async makeCollectiblesTransaction(txInput: RawTransactionInput): Promise<string> {
-    // validate ...
-    let { inputs, memo, outputs } = txInput
+  async makeCollectibleTransactionRaw(txInput: RawCollectibleInput): Promise<string> {
+    const { token, output, receivers, threshold } = txInput
     const tx: Transaction = {
       version: TxVersion,
-      asset: newHash(inputs[0].asset_id),
-      extra: Buffer.from(memo).toString('base64'),
-      inputs: [],
-      outputs: []
+      asset: token.mixin_id!,
+      extra: token.nfo!,
+      inputs: [
+        {
+          hash: output.transaction_hash!,
+          index: output.output_index!
+        }
+      ]
     }
-    // add input
-    for (const input of inputs) {
-      tx.inputs!.push({
-        hash: input.transaction_hash,
-        index: input.output_index
-      })
-    }
-    let change = inputs.reduce((sum, input) => sum.plus(input.amount), new BigNumber(0))
-    for (const output of outputs) change = change.minus(output.amount)
-    if (change.isGreaterThan(0)) outputs.push({ receivers: inputs[0].members, threshold: inputs[0].threshold, amount: change.toString() })
-    const ghostInputs: GhostInput[] = []
-    outputs.forEach((output, idx) => ghostInputs.push({ receivers: output.receivers, index: idx, hint: txInput.hint }))
-    // get ghost keys
-    let ghosts = await this.batchReadGhostKeys(ghostInputs)
-    outputs.forEach((output, idx) => {
-      const { mask, keys } = ghosts[idx]
-      tx.outputs!.push({
-        mask,
-        keys,
-        amount: Number(output.amount).toFixed(8),
-        script: Buffer.from([OperatorCmp, OperatorSum, output.threshold]).toString('hex')
-      })
-    })
+    const ghostInputs = await this.batchReadGhostKeys([{
+      receivers,
+      index: 0,
+      hint: output.output_id!
+    }])
+    tx.outputs = [DumpOutputFromGhostKey(ghostInputs[0], output.amount!, threshold)]
     return dumpTransaction(tx)
+  }
+  createCollectibleRequest(action: CollectibleAction, raw: string): Promise<CollectibleRequest> {
+    return this.request.post(`/collectibles/requests`, { action, raw })
+  }
+  signCollectibleRequest(requestId: string, pin?: string): Promise<CollectibleRequest> {
+    pin = getSignPIN(this.keystore, pin)
+    return this.request.post(`/collectibles/requests/${requestId}/sign`, { pin })
+  }
+  cancelCollectibleRequest(requestId: string): Promise<void> {
+    return this.request.post(`/collectibles/requests/${requestId}/cancel`)
+  }
+  unlockCollectibleRequest(requestId: string, pin?: string): Promise<void> {
+    pin = getSignPIN(this.keystore, pin)
+    return this.request.post(`/collectibles/requests/${requestId}/unlock`, { pin })
   }
 }
 
-function hashMember(ids: string[]) {
-  ids = ids.sort((a, b) => a > b ? 1 : -1)
-  return newHash(ids.join(''))
-}
-
-function newHash(str: string) {
-  return new SHA3(256).update(str).digest('hex')
-}
