@@ -218,4 +218,4 @@ function _extends(origin: any, target: any) {
 }
 
 export const authorizeToken = (client_id: string, code: string, client_secret: string, code_verifier?: string): Promise<{ access_token: string, scope: string }> =>
-  mixinRequest.get('/oauth/token', { params: { client_id, code, code_verifier, client_secret } })
+  mixinRequest.post('/oauth/token', { client_id, code, code_verifier, client_secret })

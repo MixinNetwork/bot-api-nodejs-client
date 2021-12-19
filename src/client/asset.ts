@@ -1,6 +1,6 @@
-import { AxiosInstance } from "axios";
-import { request } from "../services/request";
-import { Asset, AssetClientRequest, ExchangeRate, NetworkTicker } from "../types";
+import { AxiosInstance } from "axios"
+import { request } from "../services/request"
+import { Asset, AssetClientRequest, ExchangeRate, NetworkTicker } from "../types"
 
 
 export class AssetClient implements AssetClientRequest {
@@ -22,8 +22,8 @@ export class AssetClient implements AssetClientRequest {
     return this.request.get('/fiats')
   }
 
-  readAssetNetworkTicker(asset_id: string, offset?: string): Promise<NetworkTicker> {
-    return this.request.get(`/network/ticker`, { params: { offset, asset_id } })
+  readAssetNetworkTicker(asset: string, offset?: string): Promise<NetworkTicker> {
+    return this.request.get(`/network/ticker`, { params: { offset, asset } })
   }
 }
 
