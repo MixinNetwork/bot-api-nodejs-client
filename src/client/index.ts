@@ -71,8 +71,6 @@ export class Client implements
   readAssets!: () => Promise<Asset[]>
   readAssetFee!: (asset_id: string) => Promise<number>
   readAssetNetworkTicker!: (asset_id: string, offset?: string) => Promise<NetworkTicker>
-  readTopAssets!: () => Promise<Asset[]>
-  searchAssets!: (query: string) => Promise<Asset[]>
 
   readExchangeRates!: () => Promise<ExchangeRate[]>
 

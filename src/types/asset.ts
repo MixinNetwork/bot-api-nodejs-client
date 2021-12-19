@@ -38,8 +38,6 @@ export interface AssetClientRequest {
   readAssetFee(asset_id: string): Promise<number>
   readAssetNetworkTicker(asset_id: string, offset?: string): Promise<NetworkTicker>
   readExchangeRates(): Promise<ExchangeRate[]>
-  readTopAssets(): Promise<Asset[]>
-  searchAssets(query: string): Promise<Asset[]>
 }
 
 export interface AssetRequest {

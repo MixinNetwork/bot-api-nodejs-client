@@ -25,14 +25,6 @@ export class AssetClient implements AssetClientRequest {
   readAssetNetworkTicker(asset: string, offset?: string): Promise<NetworkTicker> {
     return this.request.get(`/network/ticker`, { params: { offset, asset } })
   }
-
-  readTopAssets(): Promise<Asset[]> {
-    return this.request.get('/network/assets/top')
-  }
-
-  searchAssets(query: string): Promise<Asset[]> {
-    return this.request.get(`/network/assets/search/${query}`)
-  }
 }
 
 export const readAssets = (token: string): Promise<Asset[]> =>
