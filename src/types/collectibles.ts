@@ -1,4 +1,4 @@
-import { Transaction, TransactionInput } from '.'
+import { TransactionInput } from '.'
 
 
 export type CollectibleOutputState = "unspent" | "signed" | "spent"
