@@ -1,6 +1,5 @@
 import { AxiosInstance } from "axios"
 import { getSignPIN } from "../mixin/sign"
-import { BigNumber } from 'bignumber.js'
 import {
   Keystore,
   MultisigClientRequest, MultisigRequest, MultisigUTXO,
@@ -9,6 +8,7 @@ import {
 import { DumpOutputFromGhostKey, dumpTransaction } from '../mixin/dump_transacion'
 import { hashMember, newHash } from '../mixin/tools'
 import { TxVersion } from '../mixin/encoder'
+import { BN } from "bn.js"
 
 export class MultisigsClient implements MultisigClientRequest {
   keystore!: Keystore
@@ -59,9 +59,9 @@ export class MultisigsClient implements MultisigClientRequest {
         index: input.output_index
       })
     }
-    let change = inputs.reduce((sum, input) => sum.plus(input.amount), new BigNumber(0))
-    for (const output of outputs) change = change.minus(output.amount)
-    if (change.isGreaterThan(0)) outputs.push({ receivers: inputs[0].members, threshold: inputs[0].threshold, amount: change.toString() })
+    let change = inputs.reduce((sum, input) => sum.add(new BN(input.amount)), new BN(0))
+    for (const output of outputs) change = change.sub(new BN(output.amount))
+    if (change.gt(new BN(0))) outputs.push({ receivers: inputs[0].members, threshold: inputs[0].threshold, amount: change.toString() })
     const ghostInputs: GhostInput[] = []
     outputs.forEach((output, idx) => ghostInputs.push({ receivers: output.receivers, index: idx, hint: txInput.hint }))
     // get ghost keys

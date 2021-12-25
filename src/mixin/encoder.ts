@@ -1,6 +1,6 @@
 
 import { Aggregated, Input, Output } from '../types'
-import { BigNumber } from 'bignumber.js'
+import { BN } from 'bn.js'
 const aggregatedSignaturePrefix = 0xFF01
 const empty = Buffer.from([0x00, 0x00])
 
@@ -98,7 +98,7 @@ export class Encoder {
   encodeOutput(o: Output) {
     if (!o.type) o.type = 0
     this.write(Buffer.from([0x00, o.type]))
-    this.writeInteger(new BigNumber(1e8).times(o.amount!).toNumber())
+    this.writeInteger(new BN(1e8).mul(new BN(o.amount!)).toNumber())
     this.writeInt(o.keys!.length)
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')))
