@@ -1,18 +1,18 @@
-import { User } from './user'
-import { Asset } from './asset'
-import { Snapshot } from './snapshot'
-import { TransactionInput } from '.'
+import { User } from './user';
+import { Asset } from './asset';
+import { Snapshot } from './snapshot';
+import { TransactionInput } from '.';
 export interface Payment {
-  recipient: User
-  asset: Asset
-  asset_id: string
-  amount: string
-  trace_id: string
-  status: string
-  memo: string
-  receivers: string
-  threshold: string
-  code_id: string
+  recipient: User;
+  asset: Asset;
+  asset_id: string;
+  amount: string;
+  trace_id: string;
+  status: string;
+  memo: string;
+  receivers: string;
+  threshold: string;
+  code_id: string;
 }
 
 // export interface Transaction {
@@ -32,44 +32,43 @@ export interface Payment {
 // }
 
 export interface RawTransaction {
-  type: string
-  snapshot: string
-  opponent_key: string
-  asset_id: string
-  amount: string
-  trace_id: string
-  memo: string
-  state: string
-  created_at: string
-  transaction_hash: string
-  snapshot_hash: string
-  snapshot_at: string
+  type: string;
+  snapshot: string;
+  opponent_key: string;
+  asset_id: string;
+  amount: string;
+  trace_id: string;
+  memo: string;
+  state: string;
+  created_at: string;
+  transaction_hash: string;
+  snapshot_hash: string;
+  snapshot_at: string;
 }
 
-
 export interface TransferInput {
-  asset_id: string
-  opponent_id: string
-  amount?: string
-  trace_id?: string
-  memo?: string
+  asset_id: string;
+  opponent_id: string;
+  amount?: string;
+  trace_id?: string;
+  memo?: string;
 
-  pin?: string
+  pin?: string;
 }
 
 export interface WithdrawInput {
-  address_id: string
-  amount: string
-  trace_id?: string
-  
-  memo?: string
-  pin?: string
+  address_id: string;
+  amount: string;
+  trace_id?: string;
+
+  memo?: string;
+  pin?: string;
 }
 
 export interface TransferClientRequest {
-  verifyPayment(params: TransferInput | TransactionInput): Promise<Payment>
-  transfer(params: TransferInput, pin?: string): Promise<Snapshot>
-  readTransfer(trace_id: string): Promise<Snapshot>
-  transaction(params: TransactionInput, pin?: string): Promise<RawTransaction>
-  withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>
+  verifyPayment(params: TransferInput | TransactionInput): Promise<Payment>;
+  transfer(params: TransferInput, pin?: string): Promise<Snapshot>;
+  readTransfer(trace_id: string): Promise<Snapshot>;
+  transaction(params: TransactionInput, pin?: string): Promise<RawTransaction>;
+  withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>;
 }
