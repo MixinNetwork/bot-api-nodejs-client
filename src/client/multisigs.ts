@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { getSignPIN } from '../mixin/sign';
+import { base64url, getSignPIN } from '../mixin/sign';
 import { BigNumber } from 'bignumber.js';
 import {
   Keystore,
@@ -70,7 +70,7 @@ export class MultisigsClient implements MultisigClientRequest {
     const tx: Transaction = {
       version: TxVersion,
       asset: newHash(inputs[0].asset_id),
-      extra: Buffer.from(memo).toString('base64'),
+      extra: base64url(Buffer.from(memo)),
       inputs: [],
       outputs: [],
     };

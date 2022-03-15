@@ -67,6 +67,8 @@ import {
   User,
   UserRelationship,
   Keystore,
+  MvmClientRequest,
+  InvokeCodeParams,
 } from '../types';
 import { AppClient } from './app';
 import { AssetClient } from './asset';
@@ -81,19 +83,19 @@ import { CollectiblesClient } from './collectibles';
 
 export class Client
   implements
-    AddressClientRequest,
-    AppClientRequest,
-    AssetClientRequest,
-    AttachmentClientRequest,
-    CollectiblesClient,
-    ConversationClientRequest,
-    MessageClientRequest,
-    MultisigClientRequest,
-    PINClientRequest,
-    SnapshotClientRequest,
-    TransferClientRequest,
-    UserClientRequest
-{
+  AddressClientRequest,
+  AppClientRequest,
+  AssetClientRequest,
+  AttachmentClientRequest,
+  CollectiblesClient,
+  ConversationClientRequest,
+  MessageClientRequest,
+  MultisigClientRequest,
+  PINClientRequest,
+  SnapshotClientRequest,
+  TransferClientRequest,
+  MvmClientRequest,
+  UserClientRequest {
   request: AxiosInstance;
   keystore: Keystore;
 
@@ -246,6 +248,9 @@ export class Client
   readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>;
   batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>;
   makeMultisignTransaction!: (txInput: RawTransactionInput) => Promise<string>;
+
+  // Mvm...
+  getInvokeCode!: (params: InvokeCodeParams) => Promise<Payment>;
 
   // Pin...
   verifyPin!: (pin: string) => Promise<void>;
