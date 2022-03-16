@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { getSignPIN } from '../mixin/sign';
+import { mixinRequest } from '../services/request';
 import { Keystore, Snapshot, TransactionInput } from '../types';
 import {
   Payment,
@@ -32,3 +33,7 @@ export class TransferClient implements TransferClientRequest {
     return this.request.post('/withdrawals', params);
   }
 }
+
+export const verifyPayment = (
+  params: TransactionInput | TransferInput
+): Promise<Snapshot[]> => mixinRequest.post('/payments', params);
