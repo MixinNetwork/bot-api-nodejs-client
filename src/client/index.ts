@@ -4,7 +4,6 @@ import { AxiosInstance } from 'axios';
 import { mixinRequest, request } from '../services/request';
 import { UserClient } from './user';
 import { AddressClient } from './address';
-
 import {
   AddressClientRequest,
   AddressCreateParams,
@@ -67,8 +66,6 @@ import {
   User,
   UserRelationship,
   Keystore,
-  MvmClientRequest,
-  InvokeCodeParams,
 } from '../types';
 import { AppClient } from './app';
 import { AssetClient } from './asset';
@@ -80,6 +77,11 @@ import { PINClient } from './pin';
 import { SnapshotClient } from './snapshot';
 import { TransferClient } from './transfer';
 import { CollectiblesClient } from './collectibles';
+export {
+  getMvmTransaction,
+  abiParamsGenerator,
+  extraGeneratByInfo,
+} from './mvm'
 
 export class Client
   implements
@@ -94,7 +96,6 @@ export class Client
   PINClientRequest,
   SnapshotClientRequest,
   TransferClientRequest,
-  MvmClientRequest,
   UserClientRequest {
   request: AxiosInstance;
   keystore: Keystore;
@@ -248,9 +249,6 @@ export class Client
   readGhostKeys!: (receivers: string[], index: number) => Promise<GhostKeys>;
   batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>;
   makeMultisignTransaction!: (txInput: RawTransactionInput) => Promise<string>;
-
-  // Mvm...
-  getInvokeCode!: (params: InvokeCodeParams) => Promise<Payment>;
 
   // Pin...
   verifyPin!: (pin: string) => Promise<void>;
