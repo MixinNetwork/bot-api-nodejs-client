@@ -1,9 +1,10 @@
 import { TransactionInput, InvokeCodeParams } from "../types"
-import { v4 as newUUID, parse } from 'uuid'
+import { v4 as newUUID, parse, stringify } from 'uuid'
 import { Encoder } from "../mixin/encoder"
 import { base64url } from "../mixin/sign"
-import { utils } from "ethers"
+import { ethers, utils } from "ethers"
 import { JsonFragment } from "@ethersproject/abi"
+import { registryAbi, registryAddress, registryProcess } from "../mixin/mvm_registry"
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1
@@ -17,11 +18,10 @@ const members = [
   "3e72ca0c-1bab-49ad-aa0a-4d8471d375e7"
 ]
 
-const RegistryProcess = "60e17d47-fa70-3f3f-984d-716313fe838a"
-
 const threshold = 3
 
 
+// 获取 mvm 的交易输入
 export const getMvmTransaction = (params: InvokeCodeParams): TransactionInput => {
   return {
     asset_id: params.asset,
@@ -31,10 +31,11 @@ export const getMvmTransaction = (params: InvokeCodeParams): TransactionInput =>
       receivers: members,
       threshold
     },
-    memo: encodeMemo(params.extra, params.process),
+    memo: encodeMemo(params.extra, params.process || registryProcess),
   }
 }
 
+// 根据 abi 获取 extra
 export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[]): { [method: string]: Function } => {
   const res: { [method: string]: Function } = {}
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2)
@@ -52,6 +53,7 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
   return res
 }
 
+// 根据调用信息获取 extra
 export const extraGeneratByInfo = (contractAddress: string, methodName: string, types?: string[], values?: any[]): string => {
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2)
   if (!types || !values) return (contractAddress + utils.id(methodName + '()').slice(2, 10)).toLowerCase()
@@ -61,16 +63,43 @@ export const extraGeneratByInfo = (contractAddress: string, methodName: string, 
   return (contractAddress + methodId + abiCoder.encode(types, values).slice(2)).toLowerCase()
 }
 
+export const getContractByUserIDOrAssetID = (id: string): Promise<string> => {
+  const registry = getRegistryContract()
+  const _idx = '0x' + Buffer.from(parse(id) as Buffer).toString('hex')
+  return registry.contracts(_idx)
+}
+
+export const getAssetIDByAddress = async (contract_address: string): Promise<string> => {
+  const registry = getRegistryContract()
+  let res = await registry.assets(contract_address)
+  if (res.isZero()) return ""
+  res = res._hex.slice(2)
+  return stringify(Buffer.from(res, 'hex'))
+}
+
+export const getUserIDByAddress = async (contract_address: string): Promise<string> => {
+  const registry = getRegistryContract()
+  let res = await registry.users(contract_address)
+  if (res.isZero()) return ""
+  res = res._hex.slice(2)
+  return stringify(Buffer.from(res, 'hex'))
+}
+
+const getRegistryContract = () =>
+  new ethers.Contract(registryAddress, registryAbi, new ethers.providers.JsonRpcProvider('http://104.197.245.214:8545'))
+
+
+
 function getMethodIdByAbi(abi: JsonFragment, params: string[]): string {
   let res = abi.name + '('
   res += (params.join(',') || '') + ')'
   return utils.id(res).slice(2, 10)
 }
 
-const encodeMemo = (extra: string, process?: string): string => {
+const encodeMemo = (extra: string, process: string): string => {
   const enc = new Encoder(Buffer.from([]))
   enc.writeInt(OperationPurposeGroupEvent)
-  enc.write(parse(process || RegistryProcess) as Buffer)
+  enc.write(parse(process) as Buffer)
   enc.writeBytes(Buffer.from([]))
   enc.writeBytes(Buffer.from([]))
   enc.writeBytes(Buffer.from(extra, 'hex'))

@@ -81,6 +81,9 @@ export {
   getMvmTransaction,
   abiParamsGenerator,
   extraGeneratByInfo,
+  getContractByUserIDOrAssetID,
+  getAssetIDByAddress,
+  getUserIDByAddress,
 } from './mvm'
 
 export class Client
