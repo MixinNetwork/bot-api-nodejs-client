@@ -4,7 +4,6 @@ import { AxiosInstance } from 'axios';
 import { mixinRequest, request } from '../services/request';
 import { UserClient } from './user';
 import { AddressClient } from './address';
-
 import {
   AddressClientRequest,
   AddressCreateParams,
@@ -78,22 +77,29 @@ import { PINClient } from './pin';
 import { SnapshotClient } from './snapshot';
 import { TransferClient } from './transfer';
 import { CollectiblesClient } from './collectibles';
+export {
+  getMvmTransaction,
+  abiParamsGenerator,
+  extraGeneratByInfo,
+  getContractByUserIDOrAssetID,
+  getAssetIDByAddress,
+  getUserIDByAddress,
+} from './mvm'
 
 export class Client
   implements
-    AddressClientRequest,
-    AppClientRequest,
-    AssetClientRequest,
-    AttachmentClientRequest,
-    CollectiblesClient,
-    ConversationClientRequest,
-    MessageClientRequest,
-    MultisigClientRequest,
-    PINClientRequest,
-    SnapshotClientRequest,
-    TransferClientRequest,
-    UserClientRequest
-{
+  AddressClientRequest,
+  AppClientRequest,
+  AssetClientRequest,
+  AttachmentClientRequest,
+  CollectiblesClient,
+  ConversationClientRequest,
+  MessageClientRequest,
+  MultisigClientRequest,
+  PINClientRequest,
+  SnapshotClientRequest,
+  TransferClientRequest,
+  UserClientRequest {
   request: AxiosInstance;
   keystore: Keystore;
 

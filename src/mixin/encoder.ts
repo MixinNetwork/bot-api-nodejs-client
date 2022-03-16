@@ -19,6 +19,17 @@ export class Encoder {
   write(buf: Buffer) {
     this.buf = Buffer.concat([this.buf, buf]);
   }
+
+  writeBytes(buf: Buffer) {
+    const len = buf.byteLength;
+    if (len > 65 * 21) {
+      throw new Error('bytes too long. max length is 21 * 65, current length is ' + len);
+    }
+
+    this.writeInt(len);
+    this.write(buf);
+  }
+
   writeInt(i: number) {
     if (i > maxEcodingInt) {
       throw new Error('int overflow');

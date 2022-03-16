@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios';
+import { base64url } from '../mixin/sign';
 import {
   AcknowledgementRequest,
   Keystore,
@@ -51,7 +52,7 @@ export class MessageClient implements MessageClientRequest {
         recipient_id
       ),
       message_id: this.newUUID(),
-      data: Buffer.from(data).toString('base64'),
+      data: base64url(Buffer.from(data)),
     });
   }
 

@@ -1,6 +1,7 @@
 import { parse as UUIDParse } from 'uuid';
-import { newHash, safeBase64 } from './tools';
+import { newHash } from './tools';
 import { Encoder } from './encoder';
+import { base64url } from './sign';
 const Prefix = 'NFO';
 const Version = 0x00;
 
@@ -24,5 +25,5 @@ export function buildMintCollectibleMemo(
   encoder.writeSlice(Buffer.from(UUIDParse(token_id) as Buffer));
 
   encoder.writeSlice(Buffer.from(newHash(content), 'hex'));
-  return safeBase64(encoder.buf.toString('base64'));
+  return base64url(encoder.buf);
 }

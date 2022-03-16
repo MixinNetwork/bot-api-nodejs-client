@@ -47,15 +47,7 @@ export function getEd25519Sign(payload: any, privateKey: any) {
   const header = toBuffer({ alg: 'EdDSA', typ: 'JWT' }).toString('base64');
   payload = base64url(toBuffer(payload));
   const result = [header, payload];
-  const sign = base64url(
-    Buffer.from(
-      pki.ed25519.sign({
-        message: result.join('.'),
-        encoding: 'utf8',
-        privateKey,
-      })
-    ).toString('base64')
-  );
+  const sign = base64url(Buffer.from(pki.ed25519.sign({ message: result.join('.'), encoding: 'utf8', privateKey, })));
   result.push(sign);
   return result.join('.');
 }
@@ -109,8 +101,8 @@ function scalarMult(curvePriv: any, publicKey: any) {
   return sharedKey;
 }
 
-function base64url(buffer: any) {
-  return buffer
+export function base64url(buffer: Buffer) {
+  return Buffer.from(buffer)
     .toString('base64')
     .replace(/\=/g, '')
     .replace(/\+/g, '-')
