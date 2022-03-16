@@ -76,6 +76,7 @@ import { MultisigsClient } from './multisigs';
 import { PINClient } from './pin';
 import { SnapshotClient } from './snapshot';
 import { TransferClient } from './transfer';
+export { verifyPayment } from './transfer'
 import { CollectiblesClient } from './collectibles';
 export {
   getMvmTransaction,

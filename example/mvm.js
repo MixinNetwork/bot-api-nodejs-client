@@ -1,16 +1,33 @@
-const { Client, extraGeneratorByInfo, getMvmTransaction, getAssetIDByAddress, getContractByUserIDOrAssetID } = require('mixin-node-sdk')
+const { Client,
+  extraGeneratorByInfo,
+  getMvmTransaction,
+  getAssetIDByAddress,
+  getContractByUserIDOrAssetID,
+  abiParamsGenerator,
+} = require('mixin-node-sdk')
 const fs = require('fs')
 const keystore = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'utf8'))
 const client = new Client(keystore)
 
 async function main() {
-  // 1. 使用参数进行生成 extra
+  // 1.1 使用参数进行生成 extra
   const extra = extraGeneratorByInfo(
     '0x7c15d0D2faA1b63862880Bed982bd3020e1f1A9A', // 要调用的合约地址
     'addLiquidity', // 上述合约里的方法名称
     ['address', 'uint256'], // 上述方法里的参数类型
     ['0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a', '20000'] // 上述方法里的参数的值
   )
+
+  // 1.2 使用 abi 进程生成 extra
+  // const paramsGenerator = abiParamsGenerator(
+  //   '0x7c15d0D2faA1b63862880Bed982bd3020e1f1A9A', // 要调用的合约地址
+  //   abi, // 合约的 abi
+  // )
+  // 直接用 paramsGenerator 调用合约方法然后传参就可以了
+  // const extra = paramsGenerator.addLiquidity('0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a', '20000')
+
+  // 1.1 和 1.2 生成 extra 是一样的
+
   // 注意, mvm 里的资产 decimal 是 8.
   // 所以, 如果要转账 0.0002 那么上述构建 extra 要转账的金额就是 0.0002 * 1e8 = 20000
   // 2. 使用生成的 extra 来构建交易
