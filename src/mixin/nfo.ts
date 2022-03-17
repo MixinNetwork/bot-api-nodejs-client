@@ -18,7 +18,7 @@ export function buildMintCollectibleMemo(
 
   encoder.write(Buffer.from([1]));
   encoder.wirteUint64(BigInt(1));
-  encoder.write(UUIDParse(DefaultChain) as Buffer);
+  encoder.writeUUID(DefaultChain);
 
   encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
   encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));

@@ -82,7 +82,8 @@ export {
   getMvmTransaction,
   abiParamsGenerator,
   extraGeneratByInfo,
-  getContractByUserIDOrAssetID,
+  getContractByAssetID,
+  getContractByUserIDs,
   getAssetIDByAddress,
   getUserIDByAddress,
 } from './mvm'

@@ -63,10 +63,18 @@ export const extraGeneratByInfo = (contractAddress: string, methodName: string, 
   return (contractAddress + methodId + abiCoder.encode(types, values).slice(2)).toLowerCase()
 }
 
-export const getContractByUserIDOrAssetID = (id: string): Promise<string> => {
-  const registry = getRegistryContract()
-  const _idx = '0x' + Buffer.from(parse(id) as Buffer).toString('hex')
-  return registry.contracts(_idx)
+export const getContractByAssetID = (id: string): Promise<string> =>
+  getRegistryContract().contracts('0x' + Buffer.from(parse(id) as Buffer).toString('hex'))
+
+
+export const getContractByUserIDs = (ids: string | string[], threshold?: number): Promise<string> => {
+  if (typeof ids === 'string') ids = [ids]
+  if (!threshold) threshold = ids.length
+  const encoder = new Encoder(Buffer.from([]))
+  encoder.writeInt(ids.length)
+  ids.forEach(id => encoder.writeUUID(id))
+  encoder.writeInt(threshold)
+  return getRegistryContract().contracts(utils.keccak256('0x' + encoder.buf.toString('hex')))
 }
 
 export const getAssetIDByAddress = async (contract_address: string): Promise<string> => {
@@ -99,7 +107,7 @@ function getMethodIdByAbi(abi: JsonFragment, params: string[]): string {
 const encodeMemo = (extra: string, process: string): string => {
   const enc = new Encoder(Buffer.from([]))
   enc.writeInt(OperationPurposeGroupEvent)
-  enc.write(parse(process) as Buffer)
+  enc.writeUUID(process)
   enc.writeBytes(Buffer.from([]))
   enc.writeBytes(Buffer.from([]))
   enc.writeBytes(Buffer.from(extra, 'hex'))

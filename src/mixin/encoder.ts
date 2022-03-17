@@ -1,5 +1,6 @@
 import { Aggregated, Input, Output } from '../types';
 import { BigNumber } from 'bignumber.js';
+import { parse } from 'uuid'
 const aggregatedSignaturePrefix = 0xff01;
 const empty = Buffer.from([0x00, 0x00]);
 
@@ -62,6 +63,10 @@ export class Encoder {
     if (l > 128) throw new Error('slice too long');
     this.write(Buffer.from([l]));
     this.write(str);
+  }
+
+  writeUUID(id: string) {
+    this.write(parse(id) as Buffer)
   }
 
   encodeInput(i: Input) {

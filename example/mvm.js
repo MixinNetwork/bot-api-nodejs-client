@@ -2,7 +2,8 @@ const { Client,
   extraGeneratorByInfo,
   getMvmTransaction,
   getAssetIDByAddress,
-  getContractByUserIDOrAssetID,
+  getContractByAssetID,
+  getContractByUserIDs,
   abiParamsGenerator,
 } = require('mixin-node-sdk')
 const fs = require('fs')
@@ -47,8 +48,11 @@ async function main() {
   const cnbAssetID = await getAssetIDByAddress('0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a') // cnb 的地址
   console.log(cnbAssetID) // 965e5c6e-434c-3fa9-b780-c50f43cd955c 
 
-  const btcAssetContract = await getContractByUserIDOrAssetID('c6d0c728-2624-429b-8e0d-d9d19b6592fa')
+  const btcAssetContract = await getContractByAssetID('c6d0c728-2624-429b-8e0d-d9d19b6592fa')
   console.log(btcAssetContract)
+
+  const userAddress = await getContractByUserIDs('e8e8cd79cd4047968c543a13cfe50115')
+  console.log(userAddress)
 }
 
 main()
