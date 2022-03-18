@@ -66,7 +66,9 @@ export class Encoder {
   }
 
   writeUUID(id: string) {
-    this.write(parse(id) as Buffer)
+    const uuid: any = parse(id)
+    for (let i = 0; i < uuid.length; i++)
+      this.write(Buffer.from([uuid[i]]));
   }
 
   encodeInput(i: Input) {
