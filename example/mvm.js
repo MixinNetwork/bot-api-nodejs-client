@@ -16,7 +16,7 @@ async function main() {
     '0x7c15d0D2faA1b63862880Bed982bd3020e1f1A9A', // 要调用的合约地址
     'addLiquidity', // 上述合约里的方法名称
     ['address', 'uint256'], // 上述方法里的参数类型
-    ['0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a', '20000'] // 上述方法里的参数的值
+    ['0xd630070b7a1fe4121a1b919947532493f6cc907f', '20000'] // 上述方法里的参数的值
   )
 
   // 1.2 使用 abi 进程生成 extra
@@ -25,7 +25,7 @@ async function main() {
   //   abi, // 合约的 abi
   // )
   // 直接用 paramsGenerator 调用合约方法然后传参就可以了
-  // const extra = paramsGenerator.addLiquidity('0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a', '20000')
+  // const extra = paramsGenerator.addLiquidity('0xd630070b7a1fe4121a1b919947532493f6cc907f', '20000')
 
   // 1.1 和 1.2 生成 extra 是一样的
 
@@ -45,13 +45,13 @@ async function main() {
   console.log(`mixin://codes/${res.code_id}`)
 
 
-  const cnbAssetID = await getAssetIDByAddress('0xA95664B451dE7E85e5E743AFD0F8f4d2A57eD11a') // cnb 的地址
+  const cnbAssetID = await getAssetIDByAddress('0xd630070b7a1fe4121a1b919947532493f6cc907f') // cnb 的地址
   console.log(cnbAssetID) // 965e5c6e-434c-3fa9-b780-c50f43cd955c 
 
   const btcAssetContract = await getContractByAssetID('c6d0c728-2624-429b-8e0d-d9d19b6592fa')
   console.log(btcAssetContract)
 
-  const userAddress = await getContractByUserIDs('e8e8cd79cd4047968c543a13cfe50115')
+  const userAddress = await getContractByUserIDs('e8e8cd79-cd40-4796-8c54-3a13cfe50115')
   console.log(userAddress)
 }
 
