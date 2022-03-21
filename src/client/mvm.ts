@@ -94,7 +94,7 @@ export const getUserIDByAddress = async (contract_address: string): Promise<stri
 }
 
 const getRegistryContract = () =>
-  new ethers.Contract(registryAddress, registryAbi, new ethers.providers.JsonRpcProvider('http://104.197.245.214:8545'))
+  new ethers.Contract(registryAddress, registryAbi, new ethers.providers.JsonRpcProvider('https://quorum-testnet.mixin.zone/'))
 
 
 

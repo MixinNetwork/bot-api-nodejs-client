@@ -1,6 +1,6 @@
 {
   "name": "mixin-node-sdk",
-  "version": "3.0.20",
+  "version": "3.0.21",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
