@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { base64url, getSignPIN } from '../mixin/sign';
-import { BigNumber } from 'bignumber.js';
+import { BN } from "bn.js";
 import {
   Keystore,
   MultisigClientRequest,
@@ -81,12 +81,9 @@ export class MultisigsClient implements MultisigClientRequest {
         index: input.output_index,
       });
     }
-    let change = inputs.reduce(
-      (sum, input) => sum.plus(input.amount),
-      new BigNumber(0)
-    );
-    for (const output of outputs) change = change.minus(output.amount);
-    if (change.isGreaterThan(0))
+    let change = inputs.reduce((sum, input) => sum.add(new BN(input.amount)), new BN(0))
+    for (const output of outputs) change = change.sub(new BN(output.amount));
+    if (change.gt(new BN(0)))
       outputs.push({
         receivers: inputs[0].members,
         threshold: inputs[0].threshold,
