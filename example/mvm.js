@@ -12,28 +12,22 @@ const client = new Client(keystore)
 
 async function main() {
   // 1.1 使用参数进行生成 extra
-  const extra = extraGeneratorByInfo(
-    '0x7c15d0D2faA1b63862880Bed982bd3020e1f1A9A', // 要调用的合约地址
-    'addLiquidity', // 上述合约里的方法名称
-    ['address', 'uint256'], // 上述方法里的参数类型
-    ['0xd630070b7a1fe4121a1b919947532493f6cc907f', '20000'] // 上述方法里的参数的值
-  )
+  const extra = extraGeneratorByInfo({
+    contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+    methodName: 'addAny', // 要调用的合约方法
+    types: ['uint256'], // 参数类型列表
+    values: [2] // 参数值列表
+  })
 
   // 1.2 使用 abi 进程生成 extra
   // const paramsGenerator = abiParamsGenerator(
-  //   '0x7c15d0D2faA1b63862880Bed982bd3020e1f1A9A', // 要调用的合约地址
+  //   '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
   //   abi, // 合约的 abi
   // )
   // 直接用 paramsGenerator 调用合约方法然后传参就可以了
-  // const extra = paramsGenerator.addLiquidity('0xd630070b7a1fe4121a1b919947532493f6cc907f', '20000')
-
-  // 1.1 和 1.2 生成 extra 是一样的
-
-  // 注意, mvm 里的资产 decimal 是 8.
-  // 所以, 如果要转账 0.0002 那么上述构建 extra 要转账的金额就是 0.0002 * 1e8 = 20000
-  // 2. 使用生成的 extra 来构建交易
+  // const extra = paramsGenerator.addAny(2)
   const transactionInput = getMvmTransaction({
-    amount: '0.0002',
+    amount: '0.00000001',
     asset: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     trace: 'uuid', // uuid 可以为空,
     extra,
@@ -45,14 +39,14 @@ async function main() {
   console.log(`mixin://codes/${res.code_id}`)
 
 
-  const cnbAssetID = await getAssetIDByAddress('0xd630070b7a1fe4121a1b919947532493f6cc907f') // cnb 的地址
+  const cnbAssetID = await getAssetIDByAddress('0xbE48C98736E54c99d92f1616e90FC944Deb64030') // cnb 的地址
   console.log(cnbAssetID) // 965e5c6e-434c-3fa9-b780-c50f43cd955c 
 
   const btcAssetContract = await getContractByAssetID('c6d0c728-2624-429b-8e0d-d9d19b6592fa')
-  console.log(btcAssetContract)
+  console.log(btcAssetContract) // 0xe2E4137FF1553F2845084E3965E27937674264FC
 
   const userAddress = await getContractByUserIDs('e8e8cd79-cd40-4796-8c54-3a13cfe50115')
-  console.log(userAddress)
+  console.log(userAddress) // 0xc49E0F42A844273E41F0d00e8C2406468b55AFEa
 }
 
 main()

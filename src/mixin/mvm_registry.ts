@@ -1,7 +1,7 @@
 
-export const registryAddress = '0x853053Ee2BDfCF4b31CBa171B40E126eC98ee65d'
+export const registryAddress = '0x5237E9eFa0A57D2c415B853ff3A9a4C38Df7b1c8'
 
-export const registryProcess = '2fa5c408-a752-3405-a73f-e894fadf940c'
+export const registryProcess = 'e556d3ac-43c7-3355-819e-eda90da40451'
 
 export const registryAbi = [
   {
@@ -328,6 +328,42 @@ export const registryAbi = [
     ],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "values",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_key",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "raw",
+        "type": "bytes"
+      }
+    ],
+    "name": "writeValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]
-
