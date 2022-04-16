@@ -1,7 +1,7 @@
 
-export const registryAddress = '0x5237E9eFa0A57D2c415B853ff3A9a4C38Df7b1c8'
+export const registryAddress = '0x65ccF8d1B92AfC6aF2915Cb61e72d93ACdD16556'
 
-export const registryProcess = 'e556d3ac-43c7-3355-819e-eda90da40451'
+export const registryProcess = '86c58765-ec81-3ca4-a35b-875f35a0ad7d'
 
 export const registryAbi = [
   {

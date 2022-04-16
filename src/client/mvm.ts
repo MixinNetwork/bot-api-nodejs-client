@@ -54,16 +54,18 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
 // 根据调用信息获取 extra
 export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<string> => {
   let { contractAddress, methodID, methodName, types = [], values = [], options = {} } = params
-  if (!contractAddress) throw new Error('contractAddress is required')
+  if (!contractAddress) return Promise.reject('contractAddress is required')
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2)
   if (!methodID && !methodName) return Promise.reject('methodID or methodName is required')
   if (!methodID) methodID = getMethodIdByAbi(methodName!, types)
-  if (types.length != values.length) return Promise.reject('params length error')
-  if (types.length === 0) return (contractAddress + methodID).toLowerCase()
-  const abiCoder = new utils.AbiCoder()
-  const { uploadkey, delegatecall, process = registryProcess, address = registryAddress } = options
+  if (types.length != values.length) return Promise.reject('error: types.length!=values.length')
+  let extra = contractAddress + methodID
   let opcode: number = 0
-  let extra = (contractAddress + methodID + abiCoder.encode(types, values).slice(2)).toLowerCase()
+  const { uploadkey, delegatecall, process = registryProcess, address = registryAddress } = options
+  if (types.length !== 0) {
+    const abiCoder = new utils.AbiCoder()
+    extra += abiCoder.encode(types, values).slice(2)
+  }
   const memo = encodeMemo(extra, process)
   if (memo.length > 200) {
     if (!uploadkey) return Promise.reject('please provide key to generate extra(length > 200)')
@@ -72,10 +74,10 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
     const res = await axios.post(`https://mvm-api.test.mixinbots.com/`, { uploadkey, key, raw, address })
     if (!res.data.hash) return Promise.reject(res)
     opcode += 1
-    extra = key.slice(2).toLowerCase()
+    extra = key.slice(2)
   }
   if (delegatecall) opcode += 2
-  return '0' + opcode + extra
+  return ('0' + opcode + extra).toLowerCase()
 }
 
 
