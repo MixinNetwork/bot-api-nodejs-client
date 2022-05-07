@@ -1,5 +1,6 @@
 import { TransactionInput } from "./transaction"
 import { JsonFragment } from "@ethersproject/abi"
+import { Payment } from "./transfer"
 
 
 export interface InvokeCodeParams {
@@ -43,6 +44,6 @@ export interface PaymentGenerateParams extends ExtraGenerateParams {
 export interface MvmClientRequest {
   getMvmTransaction(params: InvokeCodeParams): TransactionInput
   abiParamsGenerator(contractAddress: string, abi: JsonFragment[]): { [method: string]: Function }
-  extraGenerateByInfo(params: ExtraGenerateParams): string
-  paymentGenerateByInfo(params: PaymentGenerateParams): string
+  extraGenerateByInfo(params: ExtraGenerateParams): Promise<string>
+  paymentGenerateByInfo(params: PaymentGenerateParams): Promise<Payment | TransactionInput>
 }

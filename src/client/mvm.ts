@@ -84,7 +84,7 @@ export const extraGenerateByInfo = async (params: ExtraGenerateParams): Promise<
   return ('0' + opcode + extra).toLowerCase()
 }
 
-export const paymentGenerateByInfo = async (params: PaymentGenerateParams): Promise<Payment> => {
+export const paymentGenerateByInfo = async (params: PaymentGenerateParams): Promise<Payment | TransactionInput> => {
   if (!params.options) params.options = {}
   params.options.ignoreUpload = true
   const extra = await extraGenerateByInfo(params)
