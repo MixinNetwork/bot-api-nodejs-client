@@ -1,4 +1,4 @@
-import { TransactionInput, InvokeCodeParams, ExtraGeneratParams } from "../types"
+import { TransactionInput, InvokeCodeParams, ExtraGeneratParams, Payment, PaymentGeneratParams } from "../types"
 import { v4 as newUUID, parse, stringify } from 'uuid'
 import { Encoder } from "../mixin/encoder"
 import { base64url } from "../mixin/sign"
@@ -11,6 +11,10 @@ import axios from 'axios'
 const OperationPurposeGroupEvent = 1
 // const OperationPurposeAddProcess = 11
 // const OperationPurposeCreditProcess = 12
+
+const mvmClient = axios.create({
+  baseURL: 'https://mvm-api.test.mixinbots.com',
+})
 
 const receivers = [
   "a15e0b6d-76ed-4443-b83f-ade9eca2681a",
@@ -60,18 +64,18 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
   if (!methodID) methodID = getMethodIdByAbi(methodName!, types)
   if (types.length != values.length) return Promise.reject('error: types.length!=values.length')
   let extra = contractAddress + methodID
-  let opcode: number = 0
-  const { uploadkey, delegatecall, process = registryProcess, address = registryAddress } = options
+  const { uploadkey, delegatecall, ignoreUpload, process = registryProcess, address = registryAddress } = options
   if (types.length !== 0) {
     const abiCoder = new utils.AbiCoder()
     extra += abiCoder.encode(types, values).slice(2)
   }
-  const memo = encodeMemo(extra, process)
-  if (memo.length > 200) {
+  if (ignoreUpload) return extra
+  let opcode: number = 0
+  if (encodeMemo(extra, process).length > 200) {
     if (!uploadkey) return Promise.reject('please provide key to generate extra(length > 200)')
     const raw = '0x' + extra
     const key = utils.keccak256(raw)
-    const res = await axios.post(`https://mvm-api.test.mixinbots.com/`, { uploadkey, key, raw, address })
+    const res = await mvmClient.post(`/`, { uploadkey, key, raw, address })
     if (!res.data.hash) return Promise.reject(res)
     opcode += 1
     extra = key.slice(2)
@@ -80,10 +84,22 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
   return ('0' + opcode + extra).toLowerCase()
 }
 
+export const paymentGeneratByInfo = async (params: PaymentGeneratParams): Promise<Payment> => {
+  if (!params.options) params.options = {}
+  params.options.ignoreUpload = true
+  const extra = await extraGeneratByInfo(params)
+  const { type, trace, asset, amount } = params.payment || {}
+  const { process, delegatecall, uploadkey, address } = params.options
+  const res = await mvmClient.post('/payment', {
+    extra,
+    process, delegatecall, uploadkey, address,
+    type, trace, asset, amount
+  })
+  return res.data
+}
 
 export const getContractByAssetID = (id: string, processAddress = registryAddress): Promise<string> =>
   getRegistryContract(processAddress).contracts('0x' + Buffer.from(parse(id) as Buffer).toString('hex'))
-
 
 export const getContractByUserIDs = (ids: string | string[], threshold?: number, processAddress = registryAddress): Promise<string> => {
   if (typeof ids === 'string') ids = [ids]
