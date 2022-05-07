@@ -18,7 +18,7 @@ interface ContractParams {
   methodID?: string
 }
 
-export interface ExtraGeneratParams extends ContractParams {
+export interface ExtraGenerateParams extends ContractParams {
   options: {
     delegatecall?: boolean // use delegatecall
     process?: string // registry process
@@ -29,7 +29,7 @@ export interface ExtraGeneratParams extends ContractParams {
   }
 }
 
-export interface PaymentGeneratParams extends ExtraGeneratParams {
+export interface PaymentGenerateParams extends ExtraGenerateParams {
   extra?: string,
   payment: {
     asset?: string
@@ -43,6 +43,6 @@ export interface PaymentGeneratParams extends ExtraGeneratParams {
 export interface MvmClientRequest {
   getMvmTransaction(params: InvokeCodeParams): TransactionInput
   abiParamsGenerator(contractAddress: string, abi: JsonFragment[]): { [method: string]: Function }
-  extraGeneratByInfo(params: ExtraGeneratParams): string
-  paymentGeneratByInfo(params: PaymentGeneratParams): string
+  extraGenerateByInfo(params: ExtraGenerateParams): string
+  paymentGenerateByInfo(params: PaymentGenerateParams): string
 }

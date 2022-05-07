@@ -1,4 +1,4 @@
-import { TransactionInput, InvokeCodeParams, ExtraGeneratParams, Payment, PaymentGeneratParams } from "../types"
+import { TransactionInput, InvokeCodeParams, ExtraGenerateParams, Payment, PaymentGenerateParams } from "../types"
 import { v4 as newUUID, parse, stringify } from 'uuid'
 import { Encoder } from "../mixin/encoder"
 import { base64url } from "../mixin/sign"
@@ -48,7 +48,7 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
       res[item.name!] = function () {
         let values = Array.from(arguments)
         const options = (values.length === types.length + 1) ? values.pop() : {}
-        return extraGeneratByInfo({ contractAddress, methodID, types, values, options })
+        return extraGenerateByInfo({ contractAddress, methodID, types, values, options })
       }
     }
   })
@@ -56,7 +56,7 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
 }
 
 // 根据调用信息获取 extra
-export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<string> => {
+export const extraGenerateByInfo = async (params: ExtraGenerateParams): Promise<string> => {
   let { contractAddress, methodID, methodName, types = [], values = [], options = {} } = params
   if (!contractAddress) return Promise.reject('contractAddress is required')
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2)
@@ -84,10 +84,10 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
   return ('0' + opcode + extra).toLowerCase()
 }
 
-export const paymentGeneratByInfo = async (params: PaymentGeneratParams): Promise<Payment> => {
+export const paymentGenerateByInfo = async (params: PaymentGenerateParams): Promise<Payment> => {
   if (!params.options) params.options = {}
   params.options.ignoreUpload = true
-  const extra = await extraGeneratByInfo(params)
+  const extra = await extraGenerateByInfo(params)
   const { type, trace, asset, amount } = params.payment || {}
   const { process, delegatecall, uploadkey, address } = params.options
   const res = await mvmClient.post('/payment', {

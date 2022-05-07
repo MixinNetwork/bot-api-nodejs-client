@@ -81,8 +81,8 @@ import { CollectiblesClient } from './collectibles';
 export {
   getMvmTransaction,
   abiParamsGenerator,
-  extraGeneratByInfo,
-  paymentGeneratByInfo,
+  extraGenerateByInfo,
+  paymentGenerateByInfo,
   getContractByAssetID,
   getContractByUserIDs,
   getAssetIDByAddress,

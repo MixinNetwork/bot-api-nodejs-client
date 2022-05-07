@@ -1,6 +1,6 @@
 const { Client,
-  extraGeneratByInfo,
-  paymentGeneratByInfo,
+  extraGenerateByInfo,
+  paymentGenerateByInfo,
   getMvmTransaction,
   getAssetIDByAddress,
   getContractByAssetID,
@@ -13,7 +13,7 @@ const client = new Client(keystore)
 
 async function main() {
   // 1.1 使用参数进行生成 extra
-  const extra = extraGeneratByInfo({
+  const extra = extraGenerateByInfo({
     contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
     methodName: 'addAny', // 要调用的合约方法
     types: ['uint256'], // 参数类型列表
@@ -51,7 +51,7 @@ async function main() {
 }
 
 async function paymentTest() {
-  const t = await paymentGeneratByInfo({
+  const t = await paymentGenerateByInfo({
     contractAddress: '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c',
     methodName: 'addAny',
     types: ['uint256'],
