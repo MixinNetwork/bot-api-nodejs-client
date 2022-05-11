@@ -114,16 +114,17 @@ export const getContractByUserIDs = (ids: string | string[], threshold?: number,
 export const getAssetIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
   const registry = getRegistryContract(processAddress)
   let res = await registry.assets(contract_address)
-  if (res.isZero()) return ""
-  res = res._hex.slice(2)
+  if (res.length <= 2) return ""
+  res = res.slice(2)
   return stringify(Buffer.from(res, 'hex'))
 }
 
 export const getUserIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
   const registry = getRegistryContract(processAddress)
   let res = await registry.users(contract_address)
-  if (res.isZero()) return ""
-  res = res._hex.slice(2)
+  if (res.length <= 2) return ""
+  res = res.slice(6)
+  res = res.slice(0, 32)
   return stringify(Buffer.from(res, 'hex'))
 }
 
