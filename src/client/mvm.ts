@@ -2,7 +2,7 @@ import { TransactionInput, InvokeCodeParams, ExtraGenerateParams, Payment, Payme
 import { v4 as newUUID, parse, stringify } from 'uuid'
 import { Encoder } from "../mixin/encoder"
 import { base64url } from "../mixin/sign"
-import { ethers, utils } from "ethers"
+import { BigNumber, ethers, utils } from "ethers"
 import { JsonFragment } from "@ethersproject/abi"
 import { registryAbi, registryAddress, registryProcess } from "../mixin/mvm_registry"
 import axios from 'axios'
@@ -114,6 +114,7 @@ export const getContractByUserIDs = (ids: string | string[], threshold?: number,
 export const getAssetIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
   const registry = getRegistryContract(processAddress)
   let res = await registry.assets(contract_address)
+  res instanceof BigNumber && (res = res._hex)
   if (res.length <= 2) return ""
   res = res.slice(2)
   return stringify(Buffer.from(res, 'hex'))
@@ -122,6 +123,7 @@ export const getAssetIDByAddress = async (contract_address: string, processAddre
 export const getUserIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
   const registry = getRegistryContract(processAddress)
   let res = await registry.users(contract_address)
+  res instanceof BigNumber && (res = res._hex)
   if (res.length <= 2) return ""
   res = res.slice(6)
   res = res.slice(0, 32)
