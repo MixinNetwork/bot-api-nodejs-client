@@ -56,9 +56,7 @@ async function paymentTest() {
     methodName: 'addAny',
     types: ['uint256'],
     values: ['11'],
-    payment: {
-      type: 'tx'
-    }
+    payment: { type: 'tx' }
   })
 
   const tx = await client.transaction(t)

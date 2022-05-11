@@ -20,7 +20,7 @@ interface ContractParams {
 }
 
 export interface ExtraGenerateParams extends ContractParams {
-  options: {
+  options?: {
     delegatecall?: boolean // use delegatecall
     process?: string // registry process
     address?: string // registry address
@@ -32,7 +32,7 @@ export interface ExtraGenerateParams extends ContractParams {
 
 export interface PaymentGenerateParams extends ExtraGenerateParams {
   extra?: string,
-  payment: {
+  payment?: {
     asset?: string
     amount?: string
     trace?: string
