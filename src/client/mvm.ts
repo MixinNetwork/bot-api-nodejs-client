@@ -115,7 +115,7 @@ export const getAssetIDByAddress = async (contract_address: string, processAddre
   const registry = getRegistryContract(processAddress)
   let res = await registry.assets(contract_address)
   res instanceof BigNumber && (res = res._hex)
-  if (res.length <= 2) return ""
+  if (res.length != 34) return ""
   res = res.slice(2)
   return stringify(Buffer.from(res, 'hex'))
 }
@@ -124,10 +124,13 @@ export const getUserIDByAddress = async (contract_address: string, processAddres
   const registry = getRegistryContract(processAddress)
   let res = await registry.users(contract_address)
   res instanceof BigNumber && (res = res._hex)
-  if (res.length <= 2) return ""
-  res = res.slice(6)
-  res = res.slice(0, 32)
-  return stringify(Buffer.from(res, 'hex'))
+  if (res.length == 42) {
+    res = res.slice(6)
+    res = res.slice(0, 32)
+    return stringify(Buffer.from(res, 'hex'))
+  } else {
+    return res
+  }
 }
 
 const getRegistryContract = (address = registryAddress) =>
