@@ -4,7 +4,7 @@ import { Aggregated, Input, Output } from 'types';
 
 const MaximumEncodingInt = 0xffff;
 
-const AggregatedSignaturePrefix = 0xFF01;
+const AggregatedSignaturePrefix = 0xff01;
 
 const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
@@ -126,7 +126,7 @@ export default class Encoder {
     this.writeInteger(new BN(1e8).mul(new BN(o.amount!)).toNumber());
     this.writeInt(o.keys!.length);
 
-    o.keys!.forEach((k) => this.write(Buffer.from(k, 'hex')));
+    o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
 
     this.write(Buffer.from(o.mask!, 'hex'));
 
@@ -184,12 +184,12 @@ export default class Encoder {
       // TODO... not check...
       this.write(Buffer.from([0x01]));
       this.writeInt(js.signature.length);
-      js.signers.forEach((m) => this.writeInt(m));
+      js.signers.forEach(m => this.writeInt(m));
       return;
     }
 
     const masks = Buffer.alloc((((max / 8) | 0) + 1) | 0);
-    js.signers.forEach((m) => {
+    js.signers.forEach(m => {
       masks[(m / 8) | 0] ^= 1 << (m % 8 | 0);
     });
     this.write(Buffer.from([0x00]));
@@ -203,7 +203,7 @@ export default class Encoder {
       .sort((a, b) => Number(a.index) - Number(b.index));
 
     this.writeInt(ss.length);
-    ss.forEach((s) => {
+    ss.forEach(s => {
       this.wirteUint16(Number(s.index));
       this.write(Buffer.from(s.sig, 'hex'));
     });

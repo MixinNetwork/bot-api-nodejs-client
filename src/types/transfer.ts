@@ -2,6 +2,7 @@ import { User } from './user';
 import { Asset } from './asset';
 import { Snapshot } from './snapshot';
 import { TransactionInput } from '.';
+
 export interface Payment {
   recipient: User;
   asset: Asset;

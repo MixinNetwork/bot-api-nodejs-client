@@ -1,4 +1,5 @@
 import { App } from './app';
+
 export interface User {
   type: 'user';
   user_id: string;

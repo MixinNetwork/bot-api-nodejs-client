@@ -1,4 +1,5 @@
 import { Asset } from './asset';
+
 export interface Snapshot {
   type: string;
   snapshot_id: string;

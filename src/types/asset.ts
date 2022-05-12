@@ -36,10 +36,7 @@ export interface AssetClientRequest {
   readAsset(asset_id: string): Promise<Asset>;
   readAssets(): Promise<Asset[]>;
   readAssetFee(asset_id: string): Promise<number>;
-  readAssetNetworkTicker(
-    asset_id: string,
-    offset?: string
-  ): Promise<NetworkTicker>;
+  readAssetNetworkTicker(asset_id: string, offset?: string): Promise<NetworkTicker>;
   readExchangeRates(): Promise<ExchangeRate[]>;
 }
 

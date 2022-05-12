@@ -9,27 +9,24 @@ export const getSignPIN = (keystore: Keystore, pin?: any, iterator?: any) => {
   if (!pin) throw new Error('PIN is required');
   const blockSize = 16;
 
-  let _privateKey: any = toBuffer(private_key, 'base64');
-  let pinKey =
-    _privateKey.length === 64
-      ? signEncryptEd25519PIN(pin_token, _privateKey)
-      : signPin(pin_token, private_key, session_id);
+  const _privateKey: any = toBuffer(private_key, 'base64');
+  const pinKey = _privateKey.length === 64 ? signEncryptEd25519PIN(pin_token, _privateKey) : signPin(pin_token, private_key, session_id);
 
-  let time = new Uint64LE((Date.now() / 1000) | 0).toBuffer();
-  if (iterator == undefined || iterator === '') {
+  const time = new Uint64LE((Date.now() / 1000) | 0).toBuffer();
+  if (iterator === undefined || iterator === '') {
     iterator = Date.now() * 1000000;
   }
   iterator = new Uint64LE(iterator).toBuffer();
   pin = Buffer.from(pin, 'utf8');
   let buf: any = Buffer.concat([pin, Buffer.from(time), Buffer.from(iterator)]);
-  let padding = blockSize - (buf.length % blockSize);
-  let paddingArray = [];
+  const padding = blockSize - (buf.length % blockSize);
+  const paddingArray = [];
   for (let i = 0; i < padding; i++) {
     paddingArray.push(padding);
   }
   buf = Buffer.concat([buf, Buffer.from(paddingArray)]);
-  let iv16 = randomBytes(16);
-  let cipher = createCipheriv('aes-256-cbc', pinKey, iv16);
+  const iv16 = randomBytes(16);
+  const cipher = createCipheriv('aes-256-cbc', pinKey, iv16);
   cipher.setAutoPadding(false);
   let encrypted_pin_buff = cipher.update(buf, 'utf-8');
   encrypted_pin_buff = Buffer.concat([iv16, encrypted_pin_buff]);
@@ -47,20 +44,14 @@ export function getEd25519Sign(payload: any, privateKey: any) {
   const header = toBuffer({ alg: 'EdDSA', typ: 'JWT' }).toString('base64');
   payload = base64url(toBuffer(payload));
   const result = [header, payload];
-  const sign = base64url(Buffer.from(pki.ed25519.sign({ message: result.join('.'), encoding: 'utf8', privateKey, })));
+  const sign = base64url(Buffer.from(pki.ed25519.sign({ message: result.join('.'), encoding: 'utf8', privateKey })));
   result.push(sign);
   return result.join('.');
 }
 
-export const signRequest = (
-  method: string,
-  url: string,
-  body: object | string = ''
-): string => {
-  if (url.startsWith('https://api.mixin.one'))
-    url = url.replace('https://api.mixin.one', '');
-  if (url.startsWith('https://mixin-api.zeromesh.net'))
-    url = url.replace('https://mixin-api.zeromesh.net', '');
+export const signRequest = (method: string, url: string, body: object | string = ''): string => {
+  if (url.startsWith('https://api.mixin.one')) url = url.replace('https://api.mixin.one', '');
+  if (url.startsWith('https://mixin-api.zeromesh.net')) url = url.replace('https://mixin-api.zeromesh.net', '');
   if (typeof body === 'object') body = JSON.stringify(body);
   method = method.toUpperCase();
   return md.sha256
@@ -77,7 +68,7 @@ function signEncryptEd25519PIN(pinToken: any, privateKey: string) {
 function signPin(pin_token: any, private_key: any, session_id: any) {
   pin_token = Buffer.from(pin_token, 'base64');
   private_key = pki.privateKeyFromPem(private_key);
-  let pinKey = private_key.decrypt(pin_token, 'RSA-OAEP', {
+  const pinKey = private_key.decrypt(pin_token, 'RSA-OAEP', {
     md: md.sha256.create(),
     label: session_id,
   });
@@ -96,24 +87,20 @@ function scalarMult(curvePriv: any, publicKey: any) {
   curvePriv[0] &= 248;
   curvePriv[31] &= 127;
   curvePriv[31] |= 64;
-  let sharedKey = new Uint8Array(32);
+  const sharedKey = new Uint8Array(32);
   crypto_scalarmult(sharedKey, curvePriv, publicKey);
   return sharedKey;
 }
 
 export function base64url(buffer: Buffer) {
-  return Buffer.from(buffer)
-    .toString('base64')
-    .replace(/\=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
+  return Buffer.from(buffer).toString('base64').replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 
 function privateKeyToCurve25519(privateKey: any) {
   const seed = privateKey.slice(0, 32);
   const sha512 = createHash('sha512');
   sha512.write(seed, 'binary');
-  let digest = sha512.digest();
+  const digest = sha512.digest();
   digest[0] &= 248;
   digest[31] &= 127;
   digest[31] |= 64;
@@ -121,16 +108,16 @@ function privateKeyToCurve25519(privateKey: any) {
 }
 
 function crypto_scalarmult(q: any, n: any, p: any) {
-  let z = new Uint8Array(32);
-  let x = new Float64Array(80),
-    r,
-    i;
-  let a = gf(),
-    b = gf(),
-    c = gf(),
-    d = gf(),
-    e = gf(),
-    f = gf();
+  const z = new Uint8Array(32);
+  const x = new Float64Array(80);
+  let r;
+  let i;
+  const a = gf();
+  const b = gf();
+  const c = gf();
+  const d = gf();
+  const e = gf();
+  const f = gf();
   for (i = 0; i < 31; i++) {
     z[i] = n[i];
   }
@@ -173,8 +160,8 @@ function crypto_scalarmult(q: any, n: any, p: any) {
     x[i + 48] = b[i];
     x[i + 64] = d[i];
   }
-  let x32 = x.subarray(32);
-  let x16 = x.subarray(16);
+  const x32 = x.subarray(32);
+  const x16 = x.subarray(16);
   inv25519(x32, x32);
   M(x16, x16, x32);
   pack25519(q, x16);
@@ -182,8 +169,8 @@ function crypto_scalarmult(q: any, n: any, p: any) {
 }
 
 function gf(init: any = undefined) {
-  let i,
-    r = new Float64Array(16);
+  let i;
+  const r = new Float64Array(16);
   if (init) {
     for (i = 0; i < init.length; i++) {
       r[i] = init[i];
@@ -201,8 +188,8 @@ function unpack25519(o: any, n: any) {
 }
 
 function sel25519(p: any, q: any, b: any) {
-  let t,
-    c = ~(b - 1);
+  let t;
+  const c = ~(b - 1);
   for (let i = 0; i < 16; i++) {
     t = c & (p[i] ^ q[i]);
     p[i] ^= t;
@@ -223,55 +210,55 @@ function Z(o: any, a: any, b: any) {
 }
 
 function M(o: any, a: any, b: any) {
-  let v,
-    c,
-    t0 = 0,
-    t1 = 0,
-    t2 = 0,
-    t3 = 0,
-    t4 = 0,
-    t5 = 0,
-    t6 = 0,
-    t7 = 0,
-    t8 = 0,
-    t9 = 0,
-    t10 = 0,
-    t11 = 0,
-    t12 = 0,
-    t13 = 0,
-    t14 = 0,
-    t15 = 0,
-    t16 = 0,
-    t17 = 0,
-    t18 = 0,
-    t19 = 0,
-    t20 = 0,
-    t21 = 0,
-    t22 = 0,
-    t23 = 0,
-    t24 = 0,
-    t25 = 0,
-    t26 = 0,
-    t27 = 0,
-    t28 = 0,
-    t29 = 0,
-    t30 = 0,
-    b0 = b[0],
-    b1 = b[1],
-    b2 = b[2],
-    b3 = b[3],
-    b4 = b[4],
-    b5 = b[5],
-    b6 = b[6],
-    b7 = b[7],
-    b8 = b[8],
-    b9 = b[9],
-    b10 = b[10],
-    b11 = b[11],
-    b12 = b[12],
-    b13 = b[13],
-    b14 = b[14],
-    b15 = b[15];
+  let v;
+  let c;
+  let t0 = 0;
+  let t1 = 0;
+  let t2 = 0;
+  let t3 = 0;
+  let t4 = 0;
+  let t5 = 0;
+  let t6 = 0;
+  let t7 = 0;
+  let t8 = 0;
+  let t9 = 0;
+  let t10 = 0;
+  let t11 = 0;
+  let t12 = 0;
+  let t13 = 0;
+  let t14 = 0;
+  let t15 = 0;
+  let t16 = 0;
+  let t17 = 0;
+  let t18 = 0;
+  let t19 = 0;
+  let t20 = 0;
+  let t21 = 0;
+  let t22 = 0;
+  let t23 = 0;
+  let t24 = 0;
+  let t25 = 0;
+  let t26 = 0;
+  let t27 = 0;
+  let t28 = 0;
+  let t29 = 0;
+  let t30 = 0;
+  const b0 = b[0];
+  const b1 = b[1];
+  const b2 = b[2];
+  const b3 = b[3];
+  const b4 = b[4];
+  const b5 = b[5];
+  const b6 = b[6];
+  const b7 = b[7];
+  const b8 = b[8];
+  const b9 = b[9];
+  const b10 = b[10];
+  const b11 = b[11];
+  const b12 = b[12];
+  const b13 = b[13];
+  const b14 = b[14];
+  const b15 = b[15];
   v = a[0];
   t0 += v * b0;
   t1 += v * b1;
@@ -685,7 +672,7 @@ function S(o: any, a: any) {
 }
 
 function inv25519(o: any, i: any) {
-  let c = gf();
+  const c = gf();
   let a;
   for (a = 0; a < 16; a++) {
     c[a] = i[a];
@@ -702,9 +689,11 @@ function inv25519(o: any, i: any) {
 }
 
 function pack25519(o: any, n: any) {
-  let i, j, b;
-  let m = gf(),
-    t = gf();
+  let i;
+  let j;
+  let b;
+  const m = gf();
+  const t = gf();
   for (i = 0; i < 16; i++) {
     t[i] = n[i];
   }
@@ -729,9 +718,9 @@ function pack25519(o: any, n: any) {
 }
 
 function car25519(o: any) {
-  let i,
-    v,
-    c = 1;
+  let i;
+  let v;
+  let c = 1;
   for (i = 0; i < 16; i++) {
     v = o[i] + c + 65535;
     c = Math.floor(v / 65536);

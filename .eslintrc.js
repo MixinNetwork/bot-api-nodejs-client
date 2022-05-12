@@ -4,20 +4,26 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ['airbnb-base', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint',
-  ],
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     'no-bitwise': 'off',
     'import/extensions': 'off',
+    'import/prefer-default-export': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
+    camelcase: 'off',
+    'no-underscore-dangle': 'off',
+    'no-plusplus': 'off',
+
+    // todo remove
+    'no-use-before-define': 'off',
+    'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {

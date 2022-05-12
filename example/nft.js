@@ -17,13 +17,10 @@ async function main() {
     console.log('mint collectibles', id, 'mixin://codes/' + payment.code_id);
     return;
   }
-  const outputs = await client.readCollectibleOutputs(
-    [client.keystore.client_id],
-    1
-  );
+  const outputs = await client.readCollectibleOutputs([client.keystore.client_id], 1);
   console.log(outputs);
 
-  outputs.forEach(async (output) => {
+  outputs.forEach(async output => {
     switch (output.state) {
       case 'unspent':
         const token = await client.readCollectibleToken(ctx, output.token_id);

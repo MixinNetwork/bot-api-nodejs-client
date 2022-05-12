@@ -131,13 +131,7 @@ export interface MessageClientRequest {
   sendAudioMsg(userID: string, audio: AudioMessage): Promise<MessageView>;
   sendLiveMsg(userID: string, live: LiveMessage): Promise<MessageView>;
   sendVideoMsg(userID: string, video: VideoMessage): Promise<MessageView>;
-  sendLocationMsg(
-    userID: string,
-    location: LocationMessage
-  ): Promise<MessageView>;
-  sendAppButtonMsg(
-    userID: string,
-    appButton: AppButtonMessage[]
-  ): Promise<MessageView>;
+  sendLocationMsg(userID: string, location: LocationMessage): Promise<MessageView>;
+  sendAppButtonMsg(userID: string, appButton: AppButtonMessage[]): Promise<MessageView>;
   sendRecallMsg(userID: string, message: RecallMessage): Promise<MessageView>;
 }
