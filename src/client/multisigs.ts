@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { AxiosInstance } from 'axios';
 import { BN } from 'bn.js';
 import { base64url, getSignPIN } from '../mixin/sign';
@@ -60,6 +61,7 @@ export class MultisigsClient implements MultisigClientRequest {
       inputs: [],
       outputs: [],
     };
+
     // add input
     for (const input of inputs) {
       tx.inputs!.push({

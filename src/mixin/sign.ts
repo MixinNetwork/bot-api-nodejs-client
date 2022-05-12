@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import { randomBytes, createCipheriv, createHash } from 'crypto';
 import { pki, util, md } from 'node-forge';
 import { Uint64LE } from 'int64-buffer';
@@ -126,9 +127,12 @@ function crypto_scalarmult(q: any, n: any, p: any) {
   unpack25519(x, p);
   for (i = 0; i < 16; i++) {
     b[i] = x[i];
-    d[i] = a[i] = c[i] = 0;
+    d[i] = 0;
+    a[i] = 0;
+    c[i] = 0;
   }
-  a[0] = d[0] = 1;
+  a[0] = 1;
+  d[0] = 1;
   for (i = 254; i >= 0; --i) {
     r = (z[i >>> 3] >>> (i & 7)) & 1;
     sel25519(a, b, r);

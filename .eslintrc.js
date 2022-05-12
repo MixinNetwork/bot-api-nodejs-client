@@ -20,6 +20,7 @@ module.exports = {
     camelcase: 'off',
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
+    'no-shadow': 'off',
 
     // todo remove
     'no-use-before-define': 'off',

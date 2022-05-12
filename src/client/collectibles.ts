@@ -38,7 +38,8 @@ export class CollectiblesClient implements CollectiblesClientRequest {
 
   batchReadGhostKeys!: (inputs: GhostInput[]) => Promise<GhostKeys[]>;
 
-  static newMintCollectibleTransferInput(p: CollectiblesParams): TransactionInput {
+  // eslint-disable-next-line class-methods-use-this
+  newMintCollectibleTransferInput(p: CollectiblesParams): TransactionInput {
     const { trace_id, collection_id, token_id, content } = p;
     if (!trace_id || !collection_id || !token_id || !content) throw new Error('Missing parameters');
     const input: TransactionInput = {

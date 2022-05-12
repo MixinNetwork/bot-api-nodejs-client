@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import * as crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
 import { AxiosInstance } from 'axios';

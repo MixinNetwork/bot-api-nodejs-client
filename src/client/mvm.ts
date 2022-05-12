@@ -45,12 +45,13 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
 
 // 根据调用信息获取 extra
 export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<string> => {
-  let { contractAddress, methodID, methodName, types = [], values = [], options = {} } = params;
-  if (!contractAddress) return Promise.reject('contractAddress is required');
+  let { contractAddress, methodID } = params;
+  const { methodName, types = [], values = [], options = {} } = params;
+  if (!contractAddress) throw new Error('contractAddress is required');
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2);
-  if (!methodID && !methodName) return Promise.reject('methodID or methodName is required');
+  if (!methodID && !methodName) throw new Error('methodID or methodName is required');
   if (!methodID) methodID = getMethodIdByAbi(methodName!, types);
-  if (types.length !== values.length) return Promise.reject('error: types.length!=values.length');
+  if (types.length !== values.length) throw new Error('error: types.length!=values.length');
   let extra = contractAddress + methodID;
   let opcode: number = 0;
   const { uploadkey, delegatecall, process = registryProcess, address = registryAddress } = options;
@@ -60,7 +61,7 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
   }
   const memo = encodeMemo(extra, process);
   if (memo.length > 200) {
-    if (!uploadkey) return Promise.reject('please provide key to generate extra(length > 200)');
+    if (!uploadkey) throw new Error('please provide key to generate extra(length > 200)');
     const raw = `0x${extra}`;
     const key = utils.keccak256(raw);
     const res = await axios.post(`https://mvm-api.test.mixinbots.com/`, {
@@ -69,7 +70,7 @@ export const extraGeneratByInfo = async (params: ExtraGeneratParams): Promise<st
       raw,
       address,
     });
-    if (!res.data.hash) return Promise.reject(res);
+    if (!res.data.hash) throw res;
     opcode += 1;
     extra = key.slice(2);
   }

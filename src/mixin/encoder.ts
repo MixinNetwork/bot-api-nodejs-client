@@ -182,6 +182,7 @@ export class Encoder {
     }
 
     const masks = Buffer.alloc((((max / 8) | 0) + 1) | 0);
+    // eslint-disable-next-line no-return-assign
     js.signers.forEach(m => (masks[(m / 8) | 0] ^= 1 << (m % 8 | 0)));
     this.write(Buffer.from([0x00]));
     this.writeInt(masks.length);

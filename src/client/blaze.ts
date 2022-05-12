@@ -67,7 +67,7 @@ export class BlazeClient extends Client {
       else await this.h.onMessage(msg);
       if (this.options.syncAck) {
         await this.send_raw({
-          id: this.newUUID(),
+          id: BlazeClient.newUUID(),
           action: 'ACKNOWLEDGE_MESSAGE_RECEIPT',
           params: { message_id: msg.message_id, status: 'READ' },
         });
@@ -83,7 +83,7 @@ export class BlazeClient extends Client {
     };
     this.ws.onopen = () => {
       this.isAlive = true;
-      this.send_raw({ id: this.newUUID(), action: 'LIST_PENDING_MESSAGES' });
+      this.send_raw({ id: BlazeClient.newUUID(), action: 'LIST_PENDING_MESSAGES' });
     };
   }
 
