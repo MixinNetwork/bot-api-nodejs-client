@@ -6,6 +6,7 @@ import { TransactionInput, InvokeCodeParams, ExtraGeneratParams } from '../types
 import { Encoder } from '../mixin/encoder';
 import { base64url } from '../mixin/sign';
 import { registryAbi, registryAddress, registryProcess } from '../mixin/mvm_registry';
+import { Blank } from 'mvm/registry';
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
@@ -105,6 +106,20 @@ export const getUserIDByAddress = async (contract_address: string, processAddres
   if (res.isZero()) return '';
   res = res._hex.slice(2);
   return stringify(Buffer.from(res, 'hex'));
+};
+
+export const getUserAddressByID = async (userId: string, processAddress = registryAddress) => {
+  const identity = `0x0001${userId}0001`;
+  const hash = ethers.utils.keccak256(identity.replaceAll('-', ''));
+  const address = await getRegistryContract(processAddress).contracts(hash);
+  if (address === Blank) return '';
+  return address;
+};
+
+export const getAssetAddressByID = async (assetId: string, processAddress = registryAddress) => {
+  const address = await getRegistryContract(processAddress).contracts(assetId);
+  if (!address) return '';
+  return address;
 };
 
 const getRegistryContract = (address = registryAddress) => new ethers.Contract(address, registryAbi, new ethers.providers.JsonRpcProvider('https://quorum-testnet.mixin.zone/'));

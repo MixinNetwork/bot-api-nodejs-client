@@ -81,7 +81,17 @@ import { TransferClient } from './transfer';
 import { CollectiblesClient } from './collectibles';
 
 export { verifyPayment } from './transfer';
-export { getMvmTransaction, abiParamsGenerator, extraGeneratByInfo, getContractByAssetID, getContractByUserIDs, getAssetIDByAddress, getUserIDByAddress } from './mvm';
+export {
+  getMvmTransaction,
+  abiParamsGenerator,
+  extraGeneratByInfo,
+  getContractByAssetID,
+  getContractByUserIDs,
+  getAssetIDByAddress,
+  getUserIDByAddress,
+  getAssetAddressByID,
+  getUserAddressByID,
+} from './mvm';
 
 export class Client
   implements
