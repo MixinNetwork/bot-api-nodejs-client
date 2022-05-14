@@ -91,6 +91,7 @@ export {
   getUserIDByAddress,
   getAssetAddressByID,
   getUserAddressByID,
+  writeValue,
 } from './mvm';
 
 export class Client

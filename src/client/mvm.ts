@@ -16,6 +16,12 @@ const OperationPurposeGroupEvent = 1;
 const receivers = ['a15e0b6d-76ed-4443-b83f-ade9eca2681a', 'b9126674-b07d-49b6-bf4f-48d965b2242b', '15141fe4-1cfd-40f8-9819-71e453054639', '3e72ca0c-1bab-49ad-aa0a-4d8471d375e7'];
 
 const threshold = 3;
+const MVMApiURI = 'https://mvm-api.test.mixinbots.com';
+
+// todo error handle
+export const MVMApiClient = axios.create({
+  baseURL: MVMApiURI,
+});
 
 // 获取 mvm 的交易输入
 export const getMvmTransaction = (params: InvokeCodeParams): TransactionInput => ({
@@ -120,6 +126,17 @@ export const getAssetAddressByID = async (assetId: string, processAddress = regi
   const address = await getRegistryContract(processAddress).contracts(assetId);
   if (!address) return '';
   return address;
+};
+
+export const writeValue = async (value: string, processAddress = registryAddress) => {
+  const key: string = ethers.utils.keccak256(value);
+  await MVMApiClient.post('/', {
+    key,
+    raw: value,
+    address: processAddress,
+  });
+
+  return key.slice(2);
 };
 
 const getRegistryContract = (address = registryAddress) => new ethers.Contract(address, registryAbi, new ethers.providers.JsonRpcProvider('https://quorum-testnet.mixin.zone/'));

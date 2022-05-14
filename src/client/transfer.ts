@@ -31,6 +31,10 @@ export class TransferClient implements TransferClientRequest {
     params.pin = getSignPIN(this.keystore, pin);
     return this.request.post('/withdrawals', params);
   }
+
+  readPayment(code: string): Promise<Payment> {
+    return this.request.get(`/codes/${code}`);
+  }
 }
 
 export const verifyPayment = (params: TransactionInput | TransferInput): Promise<Snapshot[]> => mixinRequest.post('/payments', params);
