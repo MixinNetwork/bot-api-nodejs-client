@@ -278,6 +278,8 @@ export class Client
 
   withdraw!: (params: WithdrawInput, pin?: string) => Promise<Snapshot>;
 
+  readPayment!: (code: string) => Promise<Payment>;
+
   // User...
   userMe!: () => Promise<User>;
 
