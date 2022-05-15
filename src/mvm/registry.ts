@@ -1,8 +1,9 @@
-import ethers from 'ethers';
+import { ethers, Contract } from 'ethers';
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
-import { RegistryABI, } from 'mvm/abis';
+import { RegistryABI } from './abis';
 
 export const Blank = '0x0000000000000000000000000000000000000000';
+export const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
 
 export const MVMMainnet = {};
 
@@ -18,15 +19,19 @@ export const MVMTestnet = {
     Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
   },
   MVMMembers: ['a15e0b6d-76ed-4443-b83f-ade9eca2681a', 'b9126674-b07d-49b6-bf4f-48d965b2242b', '15141fe4-1cfd-40f8-9819-71e453054639', '3e72ca0c-1bab-49ad-aa0a-4d8471d375e7'],
-  PrivateKey: 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb',
 };
 
-const providerTestnet = new StaticJsonRpcProvider(MVMTestnet.RPCUri);
+const provider = (uri: string) => new StaticJsonRpcProvider(uri);
 
-const signerTestnet = new ethers.Wallet(MVMTestnet.PrivateKey, providerTestnet);
+const signer = (uri: string) => new ethers.Wallet(PrivateKey, provider(uri));
 
-export const RegistryTestnetContract = new ethers.Contract(
-  MVMTestnet.Registry.Address,
+export const RegistryContract = (address: string, uri: string) => new ethers.Contract(
+  address,
   RegistryABI.abi,
-  signerTestnet
+  signer(uri)
 );
+
+export const fetchAssetAddress = (assetId: string, contract: Contract) => {
+  const id = assetId.replaceAll('-', '');
+  return contract.contracts(`0x${id}`);
+}
