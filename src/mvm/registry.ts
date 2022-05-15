@@ -35,3 +35,14 @@ export const fetchAssetAddress = (assetId: string, contract: Contract) => {
   const id = assetId.replaceAll('-', '');
   return contract.contracts(`0x${id}`);
 }
+
+export const fetchUsersAddress = (userIds: string[], threshold: number, contract: Contract) => {
+  const bufLen = Buffer.alloc(2);
+  bufLen.writeUInt16BE(userIds.length);
+  const bufThres = Buffer.alloc(2);
+  bufThres.writeUInt16BE(threshold);
+  const ids = userIds.join('').replaceAll('-', '');
+  const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
+  const key: string = ethers.utils.keccak256(identity);
+  return contract.contracts(key);
+}
