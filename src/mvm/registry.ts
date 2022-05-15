@@ -26,6 +26,8 @@ const provider = (uri: string) => new StaticJsonRpcProvider(uri);
 
 const signer = (uri: string) => new ethers.Wallet(PrivateKey, provider(uri));
 
+// Explanation of registry contract
+// https://mvm.dev/reference/registry.html
 export const RegistryContract = (address: string, uri: string) => new ethers.Contract(
   address,
   RegistryABI.abi,
