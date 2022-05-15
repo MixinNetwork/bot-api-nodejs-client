@@ -9,7 +9,7 @@ const AggregatedSignaturePrefix = 0xff01;
 const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
-function integerToBytes(x: number) {
+export const integerToBytes =  (x: number) => {
   const bytes = [];
   let i = x;
   do {
@@ -22,8 +22,15 @@ function integerToBytes(x: number) {
 export default class Encoder {
   buf: Buffer;
 
-  constructor(buf: Buffer) {
-    this.buf = buf;
+  constructor(buf: Buffer | undefined) {
+    this.buf = Buffer.from('');
+    if (buf) {
+      this.buf = buf;
+    }
+  }
+
+  hex() {
+    return this.buf.toString('hex');
   }
 
   write(buf: Buffer) {
