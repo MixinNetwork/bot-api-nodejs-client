@@ -3,6 +3,7 @@ import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { RegistryABI } from './abis';
 
 export const Blank = '0x0000000000000000000000000000000000000000';
+// private key uses for fetch some public informations from mvm
 export const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
 
 export const MVMMainnet = {};
@@ -10,7 +11,7 @@ export const MVMMainnet = {};
 export const MVMTestnet = {
   ChainId: '83927',
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
-  RPCUri1: 'https://mvm-api.test.mixinbots.com',
+  RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
   Registry: {
     Address: '0x535E4e8b6013f344ece46e7b0932AB617B327C39',
     PID: 'f6281e1c-53f7-3125-9cdd-30d5389189f8',
@@ -31,11 +32,15 @@ export const RegistryContract = (address: string, uri: string) => new ethers.Con
   signer(uri)
 );
 
+// fetch a mvm address of a mixin address
 export const fetchAssetAddress = (assetId: string, contract: Contract) => {
   const id = assetId.replaceAll('-', '');
   return contract.contracts(`0x${id}`);
 }
 
+// fetch mixin users's mvm address 
+// the address might be from a mixin multisig accounts
+// for the common mixin user, threshold is 1
 export const fetchUsersAddress = (userIds: string[], threshold: number, contract: Contract) => {
   const bufLen = Buffer.alloc(2);
   bufLen.writeUInt16BE(userIds.length);
@@ -43,6 +48,5 @@ export const fetchUsersAddress = (userIds: string[], threshold: number, contract
   bufThres.writeUInt16BE(threshold);
   const ids = userIds.join('').replaceAll('-', '');
   const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
-  const key: string = ethers.utils.keccak256(identity);
-  return contract.contracts(key);
+  return contract.contracts(ethers.utils.keccak256(identity));
 }
