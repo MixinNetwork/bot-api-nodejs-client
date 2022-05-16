@@ -38,7 +38,7 @@ export class UserClient implements UserClientRequest {
       session_secret: Buffer.from(publicKey).toString('base64'),
     };
     const u: User = await this.request.post(`/users`, params);
-    u.publick_key = publicKey.toString('base64');
+    u.public_key = publicKey.toString('base64');
     u.private_key = privateKey.toString('base64');
     return u;
   }
@@ -52,8 +52,8 @@ export class UserClient implements UserClientRequest {
   }
 }
 
-export const userMe = (token: string): Promise<User> => request(undefined, token).get('/me');
+export const userMe = (token: string): Promise<User> => request(token).get('/me');
 
-export const readFriends = (token: string): Promise<User[]> => request(undefined, token).get(`/friends`);
+export const readFriends = (token: string): Promise<User[]> => request(token).get(`/friends`);
 
-export const readBlockUsers = (token: string): Promise<User[]> => request(undefined, token).get(`/blocking_users`);
+export const readBlockUsers = (token: string): Promise<User[]> => request(token).get(`/blocking_users`);

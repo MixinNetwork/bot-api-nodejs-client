@@ -23,7 +23,7 @@ export interface Participant {
   created_at?: string;
 }
 
-export interface ConversationCreateParmas {
+export interface ConversationCreateParams {
   category: ConversationCategory;
   conversation_id: string;
   participants: Participant[];
@@ -36,7 +36,7 @@ export interface ConversationUpdateParams {
 }
 
 export interface ConversationClientRequest {
-  createConversation(params: ConversationCreateParmas): Promise<Conversation>;
+  createConversation(params: ConversationCreateParams): Promise<Conversation>;
   updateConversation(conversationID: string, params: ConversationUpdateParams): Promise<Conversation>;
   createContactConversation(userID: string): Promise<Conversation>;
   createGroupConversation(conversationID: string, name: string, participant: Participant[]): Promise<Conversation>;

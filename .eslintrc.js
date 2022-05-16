@@ -24,8 +24,8 @@ module.exports = {
     'no-shadow': 'off',
 
     // todo remove
-    'no-use-before-define': 'off',
-    'no-param-reassign': 'off',
+    // 'no-use-before-define': 'off',
+    // 'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {

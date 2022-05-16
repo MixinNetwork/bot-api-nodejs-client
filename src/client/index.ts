@@ -27,7 +27,7 @@ import {
   CollectibleOutput,
   RawCollectibleInput,
   ConversationClientRequest,
-  ConversationCreateParmas,
+  ConversationCreateParams,
   Conversation,
   ConversationUpdateParams,
   Participant,
@@ -114,9 +114,13 @@ export class Client
   keystore: Keystore;
 
   constructor(keystore?: Keystore, token?: string) {
-    if (!keystore && !token) throw new Error('keystore or token required');
+    // todo remove
     this.keystore = keystore!;
-    this.request = request(keystore, token);
+    if (keystore) {
+      this.keystore = keystore;
+      this.request = request(keystore);
+    } else if (token) this.request = request(token);
+    else throw new Error('keystore or token required');
   }
 
   // Address...
@@ -173,7 +177,7 @@ export class Client
   unlockCollectibleRequest!: (requestId: string, pin?: string) => Promise<void>;
 
   // Conversation...
-  createConversation!: (params: ConversationCreateParmas) => Promise<Conversation>;
+  createConversation!: (params: ConversationCreateParams) => Promise<Conversation>;
 
   updateConversation!: (conversationID: string, params: ConversationUpdateParams) => Promise<Conversation>;
 

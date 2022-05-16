@@ -26,6 +26,6 @@ export class AssetClient implements AssetClientRequest {
   }
 }
 
-export const readAssets = (token: string): Promise<Asset[]> => request(undefined, token).get('/assets');
+export const readAssets = (token: string): Promise<Asset[]> => request(token).get('/assets');
 
-export const readAsset = (token: string, assetID: string): Promise<Asset> => request(undefined, token).get(`/assets/${assetID}`);
+export const readAsset = (token: string, assetID: string): Promise<Asset> => request(token).get(`/assets/${assetID}`);
