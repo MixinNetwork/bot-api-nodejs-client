@@ -67,10 +67,14 @@ class Registry {
     return this.contract.contracts(ethers.utils.keccak256(identity));
   }
 
+  // Alias method for fetchUsersAddress
+  // for a single mixin user fetch mvm address
   fetchUserAddress(userId: string) {
     return this.fetchUsersAddress([userId])
   }
 
+  // Since extra for mtg memo is limited, it needs to 
+  // write a value to registry contract
   writeValue(value: string, key?: string) {
     const identity = ethers.utils.keccak256(value)
     if (key && key !== identity) {
