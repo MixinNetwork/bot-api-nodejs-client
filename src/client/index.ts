@@ -90,9 +90,8 @@ export {
   getContractByUserIDs,
   getAssetIDByAddress,
   getUserIDByAddress,
-  getAssetAddressByID,
   getUserAddressByID,
-  writeValue,
+  getAssetAddressByID,
 } from './mvm';
 
 export class Client
@@ -256,7 +255,7 @@ export class Client
   verifyPin!: (pin: string) => Promise<void>;
 
   modifyPin!: (pin: string, oldPin?: string) => Promise<void>;
-  
+
   readTurnServers!: () => Promise<Turn[]>;
 
   // Snapshot...

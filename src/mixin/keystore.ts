@@ -10,7 +10,7 @@ export class KeystoreAuth {
     this.keystore = keystore;
   }
 
-  signToken(signatrue: string, requestID: string): string {
+  signToken(signature: string, requestID: string): string {
     const { client_id, session_id, private_key, scope } = this.keystore!;
     const issuedAt = Math.floor(Date.now() / 1000);
     if (!requestID) requestID = v4();
@@ -20,7 +20,7 @@ export class KeystoreAuth {
       iat: issuedAt,
       exp: issuedAt + 3600,
       jti: requestID,
-      sig: signatrue,
+      sig: signature,
       scp: scope || 'FULL',
     };
     const _privateKey = toBuffer(private_key, 'base64');

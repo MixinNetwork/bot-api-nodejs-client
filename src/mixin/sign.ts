@@ -63,7 +63,7 @@ export const signRequest = (method: string, url: string, body: object | string =
 };
 function signEncryptEd25519PIN(pinToken: any, privateKey: string) {
   pinToken = Buffer.from(pinToken, 'base64');
-  return scalarMult(privateKeyToCurve25519(privateKey), pinToken.slice(0, 32));
+  return scalarMulti(privateKeyToCurve25519(privateKey), pinToken.slice(0, 32));
 }
 
 function signPin(pin_token: any, private_key: any, session_id: any) {
@@ -84,7 +84,7 @@ function hexToBytes(hex: any) {
   return bytes;
 }
 
-function scalarMult(curvePriv: any, publicKey: any) {
+function scalarMulti(curvePriv: any, publicKey: any) {
   curvePriv[0] &= 248;
   curvePriv[31] &= 127;
   curvePriv[31] |= 64;

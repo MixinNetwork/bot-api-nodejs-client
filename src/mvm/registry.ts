@@ -1,5 +1,5 @@
-import { ethers, Contract } from 'ethers';
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
+import { ethers, Contract } from 'ethers';
 import { RegistryABI } from './abis';
 
 export const Blank = '0x0000000000000000000000000000000000000000';
@@ -28,24 +28,12 @@ const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f
 class Registry {
   contract: Contract;
 
-  constructor({
-    address = MVMTestnet.Registry.Address,
-    uri = MVMTestnet.RPCUri,
-    secret = PrivateKey,
-  }: {
-    address?: string,
-    uri?: string,
-    secret?: string,
-  }) {
+  constructor({ address = MVMTestnet.Registry.Address, uri = MVMTestnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {
     // private key uses for fetch some public informations from mvm
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
     const signer = (uri: string) => new ethers.Wallet(secret, provider(uri));
 
-    this.contract = new ethers.Contract(
-      address,
-      RegistryABI.abi,
-      signer(uri)
-    );
+    this.contract = new ethers.Contract(address, RegistryABI.abi, signer(uri));
   }
 
   // fetch a mvm address of a mixin address
@@ -54,10 +42,10 @@ class Registry {
     return this.contract.contracts(`0x${id}`);
   }
 
-  // fetch mixin users's mvm address 
+  // fetch mixin users's mvm address
   // the address might be from a mixin multisig accounts
   // for the common mixin user, threshold is 1
-  fetchUsersAddress(userIds: string[], threshold: number=1) {
+  fetchUsersAddress(userIds: string[], threshold: number = 1) {
     const bufLen = Buffer.alloc(2);
     bufLen.writeUInt16BE(userIds.length);
     const bufThres = Buffer.alloc(2);
@@ -70,13 +58,13 @@ class Registry {
   // Alias method for fetchUsersAddress
   // for a single mixin user fetch mvm address
   fetchUserAddress(userId: string) {
-    return this.fetchUsersAddress([userId])
+    return this.fetchUsersAddress([userId]);
   }
 
-  // Since extra for mtg memo is limited, it needs to 
+  // Since extra for mtg memo is limited, it needs to
   // write a value to registry contract
   writeValue(value: string, key?: string) {
-    const identity = ethers.utils.keccak256(value)
+    const identity = ethers.utils.keccak256(value);
     if (key && key !== identity) {
       throw new Error('invalid key and value');
     }
