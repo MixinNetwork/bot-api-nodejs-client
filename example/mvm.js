@@ -5,7 +5,7 @@ const client = new Client(keystore);
 
 async function main() {
   // 1.1 使用参数进行生成 extra
-  const extra = extraGeneratorByInfo({
+  const extra = extraGenerateByInfo({
     contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
     methodName: 'addAny', // 要调用的合约方法
     types: ['uint256'], // 参数类型列表
@@ -41,4 +41,18 @@ async function main() {
   console.log(userAddress); // 0xc49E0F42A844273E41F0d00e8C2406468b55AFEa
 }
 
-main();
+async function paymentTest() {
+  const t = await paymentGenerateByInfo({
+    contractAddress: '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c',
+    methodName: 'addAny',
+    types: ['uint256'],
+    values: ['11'],
+    payment: { type: 'tx' }
+  })
+
+  const tx = await client.transaction(t)
+  console.log(t)
+  console.log(tx)
+}
+
+main()

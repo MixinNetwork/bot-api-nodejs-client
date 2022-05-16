@@ -84,7 +84,8 @@ export { verifyPayment } from './transfer';
 export {
   getMvmTransaction,
   abiParamsGenerator,
-  extraGeneratByInfo,
+  extraGenerateByInfo,
+  paymentGenerateByInfo,
   getContractByAssetID,
   getContractByUserIDs,
   getAssetIDByAddress,
@@ -254,8 +255,8 @@ export class Client
   // Pin...
   verifyPin!: (pin: string) => Promise<void>;
 
-  modifyPin!: (pin: string, newPin: string) => Promise<void>;
-
+  modifyPin!: (pin: string, oldPin?: string) => Promise<void>;
+  
   readTurnServers!: () => Promise<Turn[]>;
 
   // Snapshot...
