@@ -81,23 +81,10 @@ export interface CollectiblesClientRequest {
   newMintCollectibleTransferInput: (p: CollectiblesParams) => TransactionInput;
 
   readCollectibleToken: (id: string) => Promise<CollectibleToken>;
-  readCollectibleOutputs: (
-    members: string[],
-    threshold: number,
-    offset: string,
-    limit: number
-  ) => Promise<CollectibleOutput[]>;
-  makeCollectibleTransactionRaw: (
-    txInput: RawCollectibleInput
-  ) => Promise<string>;
-  createCollectibleRequest: (
-    action: CollectibleAction,
-    raw: string
-  ) => Promise<CollectibleRequest>;
-  signCollectibleRequest: (
-    requestId: string,
-    pin?: string
-  ) => Promise<CollectibleRequest>;
+  readCollectibleOutputs: (members: string[], threshold: number, offset: string, limit: number) => Promise<CollectibleOutput[]>;
+  makeCollectibleTransactionRaw: (txInput: RawCollectibleInput) => Promise<string>;
+  createCollectibleRequest: (action: CollectibleAction, raw: string) => Promise<CollectibleRequest>;
+  signCollectibleRequest: (requestId: string, pin?: string) => Promise<CollectibleRequest>;
   cancelCollectibleRequest: (requestId: string) => Promise<void>;
   unlockCollectibleRequest: (requestId: string, pin?: string) => Promise<void>;
 }

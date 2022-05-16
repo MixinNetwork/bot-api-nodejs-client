@@ -1,4 +1,5 @@
 import { GhostKeys, GhostInput, RawTransactionInput } from '.';
+
 export type UTXOState = 'unspent' | 'signed' | 'spent';
 
 export type MultisigAction = 'sign' | 'unlock';
@@ -45,12 +46,7 @@ export interface MultisigRequest {
 
 export interface MultisigClientRequest {
   readMultisigs(offset: string, limit: number): Promise<MultisigUTXO[]>;
-  readMultisigOutputs(
-    members: string[],
-    threshold: number,
-    offset: string,
-    limit: number
-  ): Promise<MultisigUTXO[]>;
+  readMultisigOutputs(members: string[], threshold: number, offset: string, limit: number): Promise<MultisigUTXO[]>;
   createMultisig(action: string, raw: string): Promise<MultisigRequest>;
   signMultisig(request_id: string, pin: string): Promise<MultisigRequest>;
   cancelMultisig(request_id: string): Promise<void>;

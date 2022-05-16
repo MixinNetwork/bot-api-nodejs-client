@@ -1,7 +1,7 @@
 import { SHA3 } from 'sha3';
 
 export const delay = (n = 500) =>
-  new Promise<void>((resolve) => {
+  new Promise<void>(resolve => {
     setTimeout(() => {
       resolve();
     }, n);
@@ -14,7 +14,6 @@ export function toBuffer(content: any, encoding: any = 'utf8') {
   return Buffer.from(content, encoding);
 }
 
-export const hashMember = (ids: string[]) =>
-  newHash(ids.sort((a, b) => (a > b ? 1 : -1)).join(''));
+export const hashMember = (ids: string[]) => newHash(ids.sort((a, b) => (a > b ? 1 : -1)).join(''));
 
 export const newHash = (str: string) => new SHA3(256).update(str).digest('hex');

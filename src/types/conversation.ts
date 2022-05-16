@@ -13,13 +13,7 @@ export interface Conversation {
 }
 
 export type ConversationCategory = 'CONTACT' | 'GROUP';
-export type ConversationAction =
-  | 'CREATE'
-  | 'ADD'
-  | 'REMOVE'
-  | 'JOIN'
-  | 'EXIT'
-  | 'ROLE';
+export type ConversationAction = 'CREATE' | 'ADD' | 'REMOVE' | 'JOIN' | 'EXIT' | 'ROLE';
 export type ConversationRole = 'OWNER' | 'ADMIN' | '';
 
 export interface Participant {
@@ -29,7 +23,7 @@ export interface Participant {
   created_at?: string;
 }
 
-export interface ConversationCreateParmas {
+export interface ConversationCreateParams {
   category: ConversationCategory;
   conversation_id: string;
   participants: Participant[];
@@ -42,34 +36,14 @@ export interface ConversationUpdateParams {
 }
 
 export interface ConversationClientRequest {
-  createConversation(params: ConversationCreateParmas): Promise<Conversation>;
-  updateConversation(
-    conversationID: string,
-    params: ConversationUpdateParams
-  ): Promise<Conversation>;
+  createConversation(params: ConversationCreateParams): Promise<Conversation>;
+  updateConversation(conversationID: string, params: ConversationUpdateParams): Promise<Conversation>;
   createContactConversation(userID: string): Promise<Conversation>;
-  createGroupConversation(
-    conversationID: string,
-    name: string,
-    participant: Participant[]
-  ): Promise<Conversation>;
+  createGroupConversation(conversationID: string, name: string, participant: Participant[]): Promise<Conversation>;
   readConversation(conversationID: string): Promise<Conversation>;
-  managerConversation(
-    conversationID: string,
-    action: ConversationAction,
-    participant: Participant[]
-  ): Promise<Conversation>;
-  addParticipants(
-    conversationID: string,
-    userIDs: string[]
-  ): Promise<Conversation>;
-  removeParticipants(
-    conversationID: string,
-    userIDs: string[]
-  ): Promise<Conversation>;
-  adminParticipants(
-    conversationID: string,
-    userIDs: string[]
-  ): Promise<Conversation>;
+  managerConversation(conversationID: string, action: ConversationAction, participant: Participant[]): Promise<Conversation>;
+  addParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>;
+  removeParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>;
+  adminParticipants(conversationID: string, userIDs: string[]): Promise<Conversation>;
   rotateConversation(conversationID: string): Promise<Conversation>;
 }

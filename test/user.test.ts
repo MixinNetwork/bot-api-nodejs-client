@@ -17,9 +17,7 @@ describe('user', () => {
   });
 
   it('readUsers', async () => {
-    const users = await client.readUsers([
-      'e8e8cd79-cd40-4796-8c54-3a13cfe50115',
-    ]);
+    const users = await client.readUsers(['e8e8cd79-cd40-4796-8c54-3a13cfe50115']);
     expect(users[0].identity_number).toEqual('30265');
   });
 

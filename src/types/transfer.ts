@@ -2,6 +2,7 @@ import { User } from './user';
 import { Asset } from './asset';
 import { Snapshot } from './snapshot';
 import { TransactionInput } from '.';
+
 export interface Payment {
   recipient: User;
   asset: Asset;
@@ -71,4 +72,5 @@ export interface TransferClientRequest {
   readTransfer(trace_id: string): Promise<Snapshot>;
   transaction(params: TransactionInput, pin?: string): Promise<RawTransaction>;
   withdraw(params: WithdrawInput, pin?: string): Promise<Snapshot>;
+  readPayment(code: string): Promise<Payment>;
 }

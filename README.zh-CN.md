@@ -57,7 +57,7 @@ const client = new BlazeClient(
     pin: '',
     client_secret: '',
   },
-  { parse: true, syncAck: true }
+  { parse: true, syncAck: true },
 );
 
 client.loopBlaze({

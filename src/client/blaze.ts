@@ -1,10 +1,10 @@
-import { Client } from '../client';
+import WebSocket from 'ws';
+import { gzip, ungzip } from 'pako';
+import { Client } from '.';
 import { KeystoreAuth } from '../mixin/keystore';
 import { signRequest } from '../mixin/sign';
 import { Keystore } from '../types';
-import WebSocket from 'ws';
 import { BlazeMessage, MessageView } from '../types/blaze';
-import { gzip, ungzip } from 'pako';
 
 const zeromeshUrl = 'wss://mixin-blaze.zeromesh.net';
 const oneUrl = 'wss://blaze.mixin.one/';
@@ -23,10 +23,15 @@ interface BlazeHandler {
 
 export class BlazeClient extends Client {
   ws: WebSocket | null;
+
   h!: BlazeHandler;
+
   url = oneUrl;
+
   isAlive = false;
+
   pingInterval: any;
+
   options: BlazeOptions = {
     parse: false,
     syncAck: false,
@@ -47,25 +52,22 @@ export class BlazeClient extends Client {
   _loopBlaze() {
     const k = new KeystoreAuth(this.keystore);
     const headers = {
-      Authorization: 'Bearer ' + k.signToken(signRequest('GET', '/'), ''),
+      Authorization: `Bearer ${k.signToken(signRequest('GET', '/'), '')}`,
     };
     this.ws = new WebSocket(this.url, 'Mixin-Blaze-1', {
       headers,
       handshakeTimeout: 3000,
     });
-    this.ws.onmessage = async (event) => {
-      let msg = await this.decode(event.data as Uint8Array);
+    this.ws.onmessage = async event => {
+      const msg = await this.decode(event.data as Uint8Array);
       if (!msg) return;
-      if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && this.h.onAckReceipt)
-        await this.h.onAckReceipt(msg);
-      else if (msg.category === 'SYSTEM_CONVERSATION' && this.h.onConversation)
-        await this.h.onConversation(msg);
-      else if (msg.category === 'SYSTEM_ACCOUNT_SNAPSHOT' && this.h.onTransfer)
-        await this.h.onTransfer(msg);
+      if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && this.h.onAckReceipt) await this.h.onAckReceipt(msg);
+      else if (msg.category === 'SYSTEM_CONVERSATION' && this.h.onConversation) await this.h.onConversation(msg);
+      else if (msg.category === 'SYSTEM_ACCOUNT_SNAPSHOT' && this.h.onTransfer) await this.h.onTransfer(msg);
       else await this.h.onMessage(msg);
       if (this.options.syncAck) {
         await this.send_raw({
-          id: this.newUUID(),
+          id: BlazeClient.newUUID(),
           action: 'ACKNOWLEDGE_MESSAGE_RECEIPT',
           params: { message_id: msg.message_id, status: 'READ' },
         });
@@ -75,13 +77,13 @@ export class BlazeClient extends Client {
       clearInterval(this.pingInterval);
       this._loopBlaze();
     };
-    this.ws.onerror = (e) => {
-      e.message === 'Opening handshake has timed out' &&
-        (this.url = this.url === oneUrl ? zeromeshUrl : oneUrl);
+    this.ws.onerror = e => {
+      if (e.message !== 'Opening handshake has timed out') return;
+      this.url = this.url === oneUrl ? zeromeshUrl : oneUrl;
     };
     this.ws.onopen = () => {
       this.isAlive = true;
-      this.send_raw({ id: this.newUUID(), action: 'LIST_PENDING_MESSAGES' });
+      this.send_raw({ id: BlazeClient.newUUID(), action: 'LIST_PENDING_MESSAGES' });
     };
   }
 
@@ -91,28 +93,33 @@ export class BlazeClient extends Client {
     });
     this.pingInterval = setInterval(() => {
       if (this.ws!.readyState === WebSocket.CONNECTING) return;
-      if (!this.isAlive) return this.ws!.terminate();
+      if (!this.isAlive) {
+        this.ws!.terminate();
+        return;
+      }
       this.isAlive = false;
       this.ws!.ping();
     }, 1000 * 30);
   }
 
   decode(data: Uint8Array): Promise<MessageView> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const t = ungzip(data, { to: 'string' });
       const msgObj = JSON.parse(t);
       if (this.options?.parse && msgObj.data && msgObj.data.data) {
         msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString();
         try {
           msgObj.data.data = JSON.parse(msgObj.data.data);
-        } catch (e) {}
+        } catch (e) {
+          // ignore error
+        }
       }
       resolve(msgObj.data);
     });
   }
 
   send_raw(message: BlazeMessage) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
       const zipped = gzip(buffer);
       if (this.ws!.readyState === WebSocket.OPEN) {

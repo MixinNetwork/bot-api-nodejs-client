@@ -1,4 +1,5 @@
 import { App } from './app';
+
 export interface User {
   type: 'user';
   user_id: string;
@@ -25,7 +26,7 @@ export interface User {
   fiat_currency?: string;
   device_status?: string;
 
-  publick_key?: string;
+  public_key?: string;
   private_key?: string;
 }
 

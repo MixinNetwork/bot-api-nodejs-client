@@ -7,10 +7,7 @@ export interface BlazeMessage {
   data?: MessageType;
 }
 
-export type MessageType =
-  | MessageView
-  | TransferView
-  | SystemConversationPayload;
+export type MessageType = MessageView | TransferView | SystemConversationPayload;
 
 export interface MessageView {
   type: 'message';

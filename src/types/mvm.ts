@@ -1,14 +1,14 @@
-import { TransactionInput } from "./transaction"
-import { JsonFragment } from "@ethersproject/abi"
+import { JsonFragment } from '@ethersproject/abi';
+import { TransactionInput } from './transaction';
 import { Payment } from "./transfer"
 
 
 export interface InvokeCodeParams {
-  asset: string
-  amount: string
-  extra: string
-  trace: string
-  process?: string
+  asset: string;
+  amount: string;
+  extra: string;
+  trace: string;
+  process?: string;
 }
 
 interface ContractParams {
