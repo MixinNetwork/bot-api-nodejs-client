@@ -70,6 +70,14 @@ class Registry {
   fetchUserAddress(userId: string) {
     return this.fetchUsersAddress([userId])
   }
+
+  writeValue(value: string, key?: string) {
+    const identity = ethers.utils.keccak256(value)
+    if (key && key !== identity) {
+      throw new Error('invalid key and value');
+    }
+    return this.contract.writeValue(identity, value);
+  }
 }
 
 export default Registry;
