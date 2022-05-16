@@ -3,8 +3,6 @@ import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { RegistryABI } from './abis';
 
 export const Blank = '0x0000000000000000000000000000000000000000';
-// private key uses for fetch some public informations from mvm
-export const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
 
 export const MVMMainnet = {};
 
@@ -23,33 +21,42 @@ export const MVMTestnet = {
   MVMThreshold: 3,
 };
 
-const provider = (uri: string) => new StaticJsonRpcProvider(uri);
-
-const signer = (uri: string) => new ethers.Wallet(PrivateKey, provider(uri));
-
 // Explanation of registry contract
 // https://mvm.dev/reference/registry.html
-export const RegistryContract = (address: string, uri: string) => new ethers.Contract(
-  address,
-  RegistryABI.abi,
-  signer(uri)
-);
+class Registry {
+  contract: Contract;
 
-// fetch a mvm address of a mixin address
-export const fetchAssetAddress = (assetId: string, contract: Contract) => {
-  const id = assetId.replaceAll('-', '');
-  return contract.contracts(`0x${id}`);
+  constructor(address: string, uri: string) {
+    // private key uses for fetch some public informations from mvm
+    const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
+    const provider = (uri: string) => new StaticJsonRpcProvider(uri);
+    const signer = (uri: string) => new ethers.Wallet(PrivateKey, provider(uri));
+
+    this.contract = new ethers.Contract(
+      address,
+      RegistryABI.abi,
+      signer(uri)
+    );
+  }
+
+  // fetch a mvm address of a mixin address
+  fetchAssetAddress(assetId: string) {
+    const id = assetId.replaceAll('-', '');
+    return this.contract.contracts(`0x${id}`);
+  }
+
+  // fetch mixin users's mvm address 
+  // the address might be from a mixin multisig accounts
+  // for the common mixin user, threshold is 1
+  fetchUsersAddress(userIds: string[], threshold: number) {
+    const bufLen = Buffer.alloc(2);
+    bufLen.writeUInt16BE(userIds.length);
+    const bufThres = Buffer.alloc(2);
+    bufThres.writeUInt16BE(threshold);
+    const ids = userIds.join('').replaceAll('-', '');
+    const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
+    return this.contract.contracts(ethers.utils.keccak256(identity));
+  }
 }
 
-// fetch mixin users's mvm address 
-// the address might be from a mixin multisig accounts
-// for the common mixin user, threshold is 1
-export const fetchUsersAddress = (userIds: string[], threshold: number, contract: Contract) => {
-  const bufLen = Buffer.alloc(2);
-  bufLen.writeUInt16BE(userIds.length);
-  const bufThres = Buffer.alloc(2);
-  bufThres.writeUInt16BE(threshold);
-  const ids = userIds.join('').replaceAll('-', '');
-  const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
-  return contract.contracts(ethers.utils.keccak256(identity));
-}
+export default Registry;
