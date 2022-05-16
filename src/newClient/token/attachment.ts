@@ -1,6 +1,3 @@
-// import axios, { AxiosInstance, AxiosResponse } from 'axios';
-// import { Attachment, AttachmentClientRequest } from '../types/attachment';
-
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Attachment } from 'types';
 
