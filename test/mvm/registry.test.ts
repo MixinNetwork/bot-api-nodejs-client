@@ -23,4 +23,10 @@ describe('Tests for registry', () => {
     const address = await registry.fetchUsersAddress(['965e5c6e-434c-3fa9-b780-c50f43cd955c'], 1);
     expect(address).toMatch(Blank);
   });
+
+  test('Test for default registry', async () => {
+    const defaultRegistry = new Registry();
+    const address = await defaultRegistry.fetchAssetAddress('965e5c6e-434c-3fa9-b780-c50f43cd955c');
+    expect(address).toMatch('0x155bDfAb24f07630C27a3F31634B33F94eC4A634');
+  });
 });

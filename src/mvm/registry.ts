@@ -26,7 +26,7 @@ export const MVMTestnet = {
 class Registry {
   contract: Contract;
 
-  constructor(address: string, uri: string) {
+  constructor(address: string=MVMTestnet.Registry.Address, uri: string=MVMTestnet.RPCUri) {
     // private key uses for fetch some public informations from mvm
     const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
