@@ -21,16 +21,25 @@ export const MVMTestnet = {
   MVMThreshold: 3,
 };
 
+const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
+
 // Explanation of registry contract
 // https://mvm.dev/reference/registry.html
 class Registry {
   contract: Contract;
 
-  constructor(address: string=MVMTestnet.Registry.Address, uri: string=MVMTestnet.RPCUri) {
+  constructor({
+    address = MVMTestnet.Registry.Address,
+    uri = MVMTestnet.RPCUri,
+    secret = PrivateKey,
+  }: {
+    address?: string,
+    uri?: string,
+    secret?: string,
+  }) {
     // private key uses for fetch some public informations from mvm
-    const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
-    const signer = (uri: string) => new ethers.Wallet(PrivateKey, provider(uri));
+    const signer = (uri: string) => new ethers.Wallet(secret, provider(uri));
 
     this.contract = new ethers.Contract(
       address,

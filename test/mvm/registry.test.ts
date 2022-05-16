@@ -1,7 +1,7 @@
 import Registry, { Blank, MVMTestnet } from '../../src/mvm/registry';
 
 describe('Tests for registry', () => {
-  const registry = new Registry(MVMTestnet.Registry.Address, MVMTestnet.RPCUri);
+  const registry = new Registry({ address: MVMTestnet.Registry.Address, uri: MVMTestnet.RPCUri});
 
   test('Test for fetch mvm address of mixin asset', async () => {
     const address = await registry.fetchAssetAddress('965e5c6e-434c-3fa9-b780-c50f43cd955c');
@@ -29,7 +29,7 @@ describe('Tests for registry', () => {
   });
 
   test('Test for default registry', async () => {
-    const defaultRegistry = new Registry();
+    const defaultRegistry = new Registry({});
     const address = await defaultRegistry.fetchAssetAddress('965e5c6e-434c-3fa9-b780-c50f43cd955c');
     expect(address).toMatch('0x155bDfAb24f07630C27a3F31634B33F94eC4A634');
   });
