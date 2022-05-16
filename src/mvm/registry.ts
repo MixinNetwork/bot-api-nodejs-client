@@ -48,7 +48,7 @@ class Registry {
   // fetch mixin users's mvm address 
   // the address might be from a mixin multisig accounts
   // for the common mixin user, threshold is 1
-  fetchUsersAddress(userIds: string[], threshold: number) {
+  fetchUsersAddress(userIds: string[], threshold: number=1) {
     const bufLen = Buffer.alloc(2);
     bufLen.writeUInt16BE(userIds.length);
     const bufThres = Buffer.alloc(2);
@@ -56,6 +56,10 @@ class Registry {
     const ids = userIds.join('').replaceAll('-', '');
     const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
     return this.contract.contracts(ethers.utils.keccak256(identity));
+  }
+
+  fetchUserAddress(userId: string) {
+    return this.fetchUsersAddress([userId])
   }
 }
 
