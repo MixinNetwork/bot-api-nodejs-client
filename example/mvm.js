@@ -55,4 +55,18 @@ async function paymentTest() {
   console.log(tx)
 }
 
+async function paymentTest() {
+  const t = await paymentGenerateByInfo({
+    contractAddress: '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c',
+    methodName: 'addAny',
+    types: ['uint256'],
+    values: ['11'],
+    payment: { type: 'tx' }
+  })
+
+  const tx = await client.transaction(t)
+  console.log(t)
+  console.log(tx)
+}
+
 main()
