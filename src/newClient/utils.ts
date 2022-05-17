@@ -1,6 +1,7 @@
 import forge from 'node-forge';
 import { v4 as uuidv4 } from 'uuid';
 import serialize from 'serialize-javascript';
+import JsSHA from 'jssha';
 import { Keystore } from './types/keystore';
 
 // Utils is some helper methods for mixin api
@@ -63,6 +64,13 @@ class Utils {
     const sign = this.base64RawURLEncode(Buffer.from(signData));
     result.push(sign);
     return result.join('.');
+  }
+
+  static hashMembers(ids: string[]): string{
+    const key = ids.sort().join('');
+    const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
+    sha.update(key);
+    return sha.getHash('HEX');
   }
 }
 
