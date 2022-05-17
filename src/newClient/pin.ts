@@ -1,20 +1,27 @@
-import { AxiosInstance } from 'axios';
-import { getSignPIN } from 'mixin/sign';
-import { request } from 'services/request';
-import { Keystore } from './types/keystore';
-import {  PickFirstArg } from './types/client';
+import Keystore from './types/keystore';
+import { PickFirstArg } from './types/client';
+import HTTP from './http';
+import Utils from './utils/utils';
 
 // Verify or update pin, needs keystore
-export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
-  const _axiosInstance = axiosInstance || request(keystore);
+export const PinKeystoreClient = (keystore: Keystore) => {
+  const http = new HTTP(keystore);
+
   return {
     // Verify a user's PIN
-    verify(pin?: string) {
-      return _axiosInstance.post<unknown, void>('/pin/verify', { pin: getSignPIN(keystore, pin) });
+    verify(pin: string) {
+      const encrypted = Utils.signEd25519PIN(pin, keystore);
+      return http.request('POST', '/pin/verify', { pin: encrypted });
     },
+
     // Change the PIN of the user, or setup a new PIN if it is not set yet
-    update(pin: string, oldPin?: string) {
-      return _axiosInstance.post<unknown, void>('/pin/update', { old_pin: oldPin ? getSignPIN(keystore, oldPin) : undefined, pin: getSignPIN(keystore, pin) });
+    update(oldPin: string, pin: string) {
+      let encryptedOldPin = '';
+      if (oldPin !== '') {
+        encryptedOldPin = Utils.signEd25519PIN(oldPin, keystore); 
+      }
+      const encrypted = Utils.signEd25519PIN(pin, keystore);
+      return http.request('POST', '/pin/update', { old_pin: encryptedOldPin, pin: encrypted });
     },
   };
 };

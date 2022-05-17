@@ -1,28 +1,23 @@
-import { AxiosInstance } from 'axios';
 import merge from 'lodash.merge';
-import { request } from 'services/request';
 import { PinKeystoreClient } from './pin';
 import { UserTokenClient } from './user';
-import { Keystore } from './types/keystore';
+import Keystore from './types/keystore';
 
-const TokenClient = (axiosInstance: AxiosInstance) => ({
-  user: UserTokenClient(axiosInstance),
+const TokenClient = (keystore: Keystore) => ({
+  user: UserTokenClient(keystore),
 });
 
-const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
-  pin: PinKeystoreClient(keystore, axiosInstance),
+const KeystoreClient = (keystore: Keystore) => ({
+  pin: PinKeystoreClient(keystore),
 });
 
 type TokenClientReturnType = ReturnType<typeof TokenClient>;
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function Client(token: string): TokenClientReturnType;
 export function Client(keystore: Keystore): TokenClientReturnType & KeystoreClientReturnType;
-export function Client(arg: string | Keystore) {
-  const axiosInstance = request(arg);
-  const tokenClient = TokenClient(axiosInstance);
-  if (typeof arg === 'string') return tokenClient;
+export function Client(keystore: Keystore) {
+  const tokenClient = TokenClient(keystore);
 
-  const keystoreClient = KeystoreClient(arg, axiosInstance);
+  const keystoreClient = KeystoreClient(keystore);
   return merge(tokenClient, keystoreClient);
 }

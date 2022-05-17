@@ -1,11 +1,14 @@
 export interface Keystore {
-  client_id: string;
-  client_secret: string;
+  user_id: string;
   session_id: string;
   private_key: string;
-  pin_token: string;
-  scope?: string;
   pin: string;
+  pin_token: string;
+  client_secret: string;
+  scope?: string;
+
+  authorization_token: string;
+  host: string;
 }
 
 export default Keystore;
