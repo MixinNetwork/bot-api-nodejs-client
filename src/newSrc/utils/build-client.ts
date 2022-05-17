@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
-import { BaseClient } from 'newSrc/types';
 import { request } from 'services/request';
-import { Keystore } from 'types';
+import { Keystore } from '../types/keystore';
+import { BaseClient } from '../types/client';
 
 export const buildClient =
   <TokenReturnType, KeystoreReturnType>(

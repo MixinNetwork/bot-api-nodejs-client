@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { pki } from 'node-forge';
 import { request } from 'services/request';
 import { User, UserRelationship } from 'types';
-import { BaseClient } from '../types';
+import { BaseClient } from './types/client';
 
 // Methods to manage user's information
 export const UserTokenClient = (axiosInstance: AxiosInstance) => {

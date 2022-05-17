@@ -1,7 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { getSignPIN } from 'mixin/sign';
 import { request } from 'services/request';
-import { Keystore, PickFirstArg } from '../types';
+import { Keystore } from './types/keystore';
+import {  PickFirstArg } from './types/client';
 
 // Verify or update pin, needs keystore
 export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
