@@ -1,7 +1,9 @@
 import { AxiosInstance } from 'axios';
-import { Asset, ExchangeRate, NetworkTicker } from 'types';
+import { request } from '../../services/request';
+import { Asset, ExchangeRate, NetworkTicker } from '../../types';
+import { BaseClient } from '../types';
 
-export function AssetClient(axiosInstance: AxiosInstance) {
+export function AssetTokenClient(axiosInstance: AxiosInstance) {
   return {
     readAsset: (assetID: string) => axiosInstance.get<unknown, Asset>(`/assets/${assetID}`),
     readAssets: () => axiosInstance.get<unknown, Asset[]>('/assets'),
@@ -11,3 +13,5 @@ export function AssetClient(axiosInstance: AxiosInstance) {
     readAssetNetworkTicker: (asset: string, offset?: string) => axiosInstance.get<unknown, NetworkTicker>(`/network/ticker`, { params: { offset, asset } }),
   };
 }
+
+export const AssetClient: BaseClient<ReturnType<typeof AssetTokenClient>, ReturnType<typeof AssetTokenClient>> = (arg: any): any => AssetTokenClient(request(arg));

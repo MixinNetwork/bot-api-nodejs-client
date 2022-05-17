@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { Attachment } from 'types';
+import { request } from '../../services/request';
+import { Attachment } from '../../types';
+import { BaseClient } from '../types';
 
 // todo move to other dir?
 export async function uploadAttachmentTo(uploadURL: string, file: File): Promise<AxiosResponse> {
@@ -21,10 +23,10 @@ export function uploadAttachment(attachment: Attachment, file: File): Promise<Ax
   return uploadAttachmentTo(attachment.upload_url!, file);
 }
 
-export function AttachmentClient(axiosInstance: AxiosInstance) {
+export function AttachmentTokenClient(axiosInstance: AxiosInstance) {
   const createAttachment = () => axiosInstance.post<unknown, Attachment>(`/attachments`);
   return {
-    createAttachment: createAttachment,
+    createAttachment,
     showAttachment: (attachmentId: string) => axiosInstance.get<unknown, Attachment>(`/attachments/${attachmentId}`),
     uploadFile: async (file: File) => {
       const { view_url, upload_url, attachment_id } = await createAttachment();
@@ -34,3 +36,6 @@ export function AttachmentClient(axiosInstance: AxiosInstance) {
     },
   };
 }
+
+export const AttachmentClient: BaseClient<ReturnType<typeof AttachmentTokenClient>, ReturnType<typeof AttachmentTokenClient>> = (arg: any): any =>
+  AttachmentTokenClient(request(arg));

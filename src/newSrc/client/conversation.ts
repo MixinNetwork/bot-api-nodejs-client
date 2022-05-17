@@ -1,10 +1,11 @@
 import { AxiosInstance } from 'axios';
-import { Conversation, ConversationAction, ConversationCreateParams, ConversationUpdateParams, Participant } from 'types';
-import { uniqueConversationID } from 'utils';
-import { UserClient } from './user';
+import { Conversation, ConversationAction, ConversationCreateParams, ConversationUpdateParams, Keystore, Participant } from 'types';
+import { uniqueConversationID } from '../../utils';
+import { UserTokenClient } from './user';
+import { buildClient } from '../utils/build-client';
 
-export function ConversationClient(axiosInstance: AxiosInstance) {
-  const userClient = UserClient(axiosInstance);
+export const ConversationTokenClient = (axiosInstance: AxiosInstance) => {
+  const userClient = UserTokenClient(axiosInstance);
 
   const createConversation = (params: ConversationCreateParams) => axiosInstance.post<unknown, Conversation>('/conversations', params);
 
@@ -16,13 +17,13 @@ export function ConversationClient(axiosInstance: AxiosInstance) {
   async function createContactConversation(userID: string, selfUserID?: string): Promise<any> {
     return createConversation({
       category: 'CONTACT',
-      conversation_id: uniqueConversationID(selfUserID || (await userClient.userMe()).user_id, userID),
+      conversation_id: uniqueConversationID(selfUserID || (await userClient.profile()).user_id, userID),
       participants: [{ user_id: userID }],
     });
   }
 
   return {
-    createConversation: createConversation,
+    createConversation,
 
     updateConversation: (conversationID: string, params: ConversationUpdateParams) => axiosInstance.put<unknown, Conversation>(`/conversations/${conversationID}`, params),
 
@@ -38,7 +39,7 @@ export function ConversationClient(axiosInstance: AxiosInstance) {
 
     readConversation: (conversationID: string) => axiosInstance.get<unknown, Conversation>(`/conversations/${conversationID}`),
 
-    managerConversation: managerConversation,
+    managerConversation,
 
     addParticipants: (conversationID: string, userIDs: string[]) =>
       managerConversation(
@@ -63,4 +64,24 @@ export function ConversationClient(axiosInstance: AxiosInstance) {
 
     rotateConversation: (conversationID: string) => axiosInstance.post<unknown, Conversation>(`/conversations/${conversationID}/rotate`),
   };
-}
+};
+
+export const ConversationKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
+  const c = ConversationTokenClient(axiosInstance);
+
+  async function createContactConversation(userID: string): Promise<Conversation>;
+  async function createContactConversation(userID: string, selfUserID: string): Promise<Conversation>;
+  async function createContactConversation(userID: string, selfUserID?: string): Promise<any> {
+    return c.createConversation({
+      category: 'CONTACT',
+      conversation_id: uniqueConversationID(selfUserID || keystore.client_id, userID),
+      participants: [{ user_id: userID }],
+    });
+  }
+
+  return {
+    createContactConversation,
+  };
+};
+
+export const ConversationClient = buildClient(ConversationTokenClient, ConversationKeystoreClient);

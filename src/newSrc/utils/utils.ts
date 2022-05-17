@@ -1,15 +1,15 @@
 import forge from 'node-forge';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import serialize from 'serialize-javascript';
 import JsSHA from 'jssha';
-import { Keystore } from './types/keystore';
+import { Keystore } from 'types';
 
 // Utils is some helper methods for mixin api
 class Utils {
   // base64RawURLEncode is the standard raw, unpadded base64 encoding
   // base64RawURLDecode is same as encode
   // like Golang version https://pkg.go.dev/encoding/base64#Encoding
-  static base64RawURLEncode(raw: Buffer | string): string{
+  static base64RawURLEncode(raw: Buffer | string): string {
     let buf = raw;
     if (typeof raw === 'string') {
       buf = Buffer.from(raw);
@@ -41,11 +41,11 @@ class Utils {
     md.update(method + uri + data, 'utf8');
 
     const payload = {
-      uid: keystore.user_id,
+      uid: keystore.client_id,
       sid: keystore.session_id,
       iat,
       exp,
-      jti: uuidv4(),
+      jti: uuid(),
       sig: md.digest().toHex(),
       scp: keystore.scope || 'FULL',
     };
@@ -66,7 +66,7 @@ class Utils {
     return result.join('.');
   }
 
-  static hashMembers(ids: string[]): string{
+  static hashMembers(ids: string[]): string {
     const key = ids.sort().join('');
     const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
     sha.update(key);

@@ -1,9 +1,11 @@
 import { AxiosInstance } from 'axios';
 import { pki } from 'node-forge';
+import { request } from 'services/request';
 import { User, UserRelationship } from 'types';
+import { BaseClient } from '../types';
 
 // Methods to manage user's information
-export function User(axiosInstance: AxiosInstance) {
+export const UserTokenClient = (axiosInstance: AxiosInstance) => {
   async function create(fullName: string): Promise<User>;
   async function create(fullName: string, sessionSecret: string): Promise<User>;
   async function create(fullName: string, sessionSecret?: string) {
@@ -26,7 +28,7 @@ export function User(axiosInstance: AxiosInstance) {
     profile: () => axiosInstance.get<unknown, User>(`/me`),
 
     // Getting user information by userID or identity_number
-    show: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, User>(`/users/${userIdOrIdentityNumber}`),
+    show: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, User | undefined>(`/users/${userIdOrIdentityNumber}`),
 
     // Getting users' block list
     blockingUsers: () => axiosInstance.get<unknown, User[]>(`/blocking_users`),
@@ -38,7 +40,7 @@ export function User(axiosInstance: AxiosInstance) {
     friends: () => axiosInstance.get<unknown, User[]>(`/friends`),
 
     // Search users by keyword
-    search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, User>(`/search/${identityNumberOrPhone}`),
+    search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, User | undefined>(`/search/${identityNumberOrPhone}`),
 
     // Create a network user
     create,
@@ -49,4 +51,6 @@ export function User(axiosInstance: AxiosInstance) {
     // Manage the relationship between two users
     updateRelationships: (relationship: UserRelationship) => axiosInstance.post<unknown, User>(`/relationships`, relationship),
   };
-}
+};
+
+export const UserClient: BaseClient<ReturnType<typeof UserTokenClient>, ReturnType<typeof UserTokenClient>> = (arg: any): any => UserTokenClient(request(arg));
