@@ -1,4 +1,4 @@
-import { UserRelationship } from 'types';
+import { UserRelationship } from './types/user';
 import Keystore from './types/keystore';
 import HTTP from './http';
 
