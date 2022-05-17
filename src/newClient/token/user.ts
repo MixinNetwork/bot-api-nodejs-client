@@ -2,10 +2,11 @@ import { AxiosInstance } from 'axios';
 import { pki } from 'node-forge';
 import { User, UserRelationship } from 'types';
 
-export function UserClient(axiosInstance: AxiosInstance) {
-  async function createUser(fullName: string): Promise<User>;
-  async function createUser(fullName: string, sessionSecret: string): Promise<User>;
-  async function createUser(fullName: string, sessionSecret?: string) {
+// Methods to manage user's information
+export function User(axiosInstance: AxiosInstance) {
+  async function create(fullName: string): Promise<User>;
+  async function create(fullName: string, sessionSecret: string): Promise<User>;
+  async function create(fullName: string, sessionSecret?: string) {
     if (sessionSecret) {
       return axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret });
     }
@@ -21,22 +22,31 @@ export function UserClient(axiosInstance: AxiosInstance) {
     return user;
   }
   return {
-    userMe: () => axiosInstance.get<unknown, User>(`/me`),
+    // Get the current user's personal information
+    profile: () => axiosInstance.get<unknown, User>(`/me`),
 
-    readUser: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, User>(`/users/${userIdOrIdentityNumber}`),
+    // Getting user information by userID or identity_number
+    show: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, User>(`/users/${userIdOrIdentityNumber}`),
 
-    readBlockUsers: () => axiosInstance.get<unknown, User[]>(`/blocking_users`),
+    // Getting users' block list
+    blockingUsers: () => axiosInstance.get<unknown, User[]>(`/blocking_users`),
 
-    readUsers: (userIDs: string[]) => axiosInstance.post<unknown, User[]>(`/users/fetch`, userIDs),
+    // Getting users' information by user IDs in bulk
+    showUsers: (userIDs: string[]) => axiosInstance.post<unknown, User[]>(`/users/fetch`, userIDs),
 
-    readFriends: () => axiosInstance.get<unknown, User[]>(`/friends`),
+    // Obtaining the contact list of the users, containing users and bots
+    friends: () => axiosInstance.get<unknown, User[]>(`/friends`),
 
-    searchUser: (identityNumberOrPhone: string) => axiosInstance.get<unknown, User>(`/search/${identityNumberOrPhone}`),
+    // Search users by keyword
+    search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, User>(`/search/${identityNumberOrPhone}`),
 
-    createUser,
+    // Create a network user
+    create,
 
-    modifyProfile: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, User>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
+    // Modify current user's personal name and avatar
+    update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, User>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
-    modifyRelationships: (relationship: UserRelationship) => axiosInstance.post<unknown, User>(`/relationships`, relationship),
+    // Manage the relationship between two users
+    updateRelationships: (relationship: UserRelationship) => axiosInstance.post<unknown, User>(`/relationships`, relationship),
   };
 }

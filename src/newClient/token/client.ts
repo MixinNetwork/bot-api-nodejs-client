@@ -4,7 +4,7 @@ import { AppClient } from './app';
 import { AssetClient } from './asset';
 import { AttachmentClient } from './attachment';
 import { ConversationClient } from './conversation';
-import { UserClient } from './user';
+import { User } from './user';
 
 export const TokenClient = (axiosInstance: AxiosInstance) => {
   return {
@@ -13,6 +13,6 @@ export const TokenClient = (axiosInstance: AxiosInstance) => {
     ...AssetClient(axiosInstance),
     ...AttachmentClient(axiosInstance),
     ...ConversationClient(axiosInstance),
-    ...UserClient(axiosInstance),
+    user: User(axiosInstance),
   };
 };
