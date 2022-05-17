@@ -10,5 +10,9 @@ export function AddressClient(keystore: Keystore, axiosInstance?: AxiosInstance)
       params.pin = getSignPIN(keystore, pin);
       return _axiosInstance.post<unknown, Address>('/addresses', params);
     },
+    deleteAddress: (addressID: string, pin?: string) => {
+      pin = getSignPIN(keystore, pin);
+      return _axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, {pin})
+    },
   };
 }
