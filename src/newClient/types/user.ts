@@ -1,8 +1,8 @@
 export type Operation = 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK';
 
-export interface UserRelationship {
+export interface RelationshipRequest {
   user_id: string;
   action: Operation;
-  phone?: string;
-  full_name?: string;
+  phone?: string; // for ADD only
+  full_name?: string; // for ADD only
 }

@@ -1,4 +1,4 @@
-import { UserRelationship } from './types/user';
+import { RelationshipRequest } from './types/user';
 import Keystore from './types/keystore';
 import HTTP from './http';
 
@@ -32,6 +32,6 @@ export const UserTokenClient = (keystore: Keystore) => {
     update: (fullName: string, avatarBase64: string) => http.request('POST', `/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
     // Manage the relationship between two users
-    updateRelationships: (relationship: UserRelationship) => http.request('POST', `/relationships`, relationship),
+    updateRelationships: (relationship: RelationshipRequest) => http.request('POST', `/relationships`, relationship),
   };
 };
