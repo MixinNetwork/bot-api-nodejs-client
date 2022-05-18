@@ -1,4 +1,4 @@
-import Utils from '../../src/newClient/utils';
+import Utils from '../../src/newClient/utils/utils';
 
 describe('Tests for utils', () => {
   test('base64 encode & decode should be url safe', () => {
