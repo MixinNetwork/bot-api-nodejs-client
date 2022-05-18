@@ -8,7 +8,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
   // Getting user information by userID or identity_number
-  user: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse | undefined>(`/users/${userIdOrIdentityNumber}`),
+  user: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse>(`/users/${userIdOrIdentityNumber}`),
 
   // Getting users' information by user IDs in bulk
   users: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
@@ -38,3 +38,5 @@ export const UserClient = buildClient({
   TokenClient: UserTokenClient,
   KeystoreClient: UserKeystoreClient,
 });
+
+export default UserClient;

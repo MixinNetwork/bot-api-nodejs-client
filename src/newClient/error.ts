@@ -3,3 +3,5 @@ export class ResponseError extends Error {
     super(`code: ${code}, description: ${description}, status: ${status}, extra: ${extra}, requestId: ${requestId} originalError: ${originalError}`);
   }
 }
+
+export default ResponseError;

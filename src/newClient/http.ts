@@ -1,7 +1,7 @@
 // @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ResponseError } from './error';
 import { v4 as uuid } from 'uuid';
+import { ResponseError } from './error';
 import { KeystoreAuth } from '../mixin/keystore';
 import { signRequest } from '../mixin/sign';
 import { delay } from '../mixin/tools';
