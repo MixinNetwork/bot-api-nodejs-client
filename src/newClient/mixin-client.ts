@@ -1,7 +1,7 @@
 import merge from 'lodash.merge';
 import { AxiosInstance } from 'axios';
 import { PinKeystoreClient } from './pin';
-import { UserTokenClient } from './user';
+import { UserKeystoreClient, UserTokenClient } from './user';
 import Keystore from './types/keystore';
 import { TokenClientConfig, KeystoreClientConfig } from './types/client';
 import { createAxiosClient } from './utils/client';
@@ -11,6 +11,7 @@ const TokenClient = (axiosInstance: AxiosInstance) => ({
 });
 
 const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
+  user: UserKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
 });
 
