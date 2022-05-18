@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { request } from 'services/request';
+import { http } from '../http';
 import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
@@ -7,9 +7,9 @@ export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreCl
 
   let axiosInstance: AxiosInstance;
   if (token) {
-    axiosInstance = request(token, axiosConfig);
+    axiosInstance = http(token, axiosConfig);
   } else if (keystore) {
-    axiosInstance = request(keystore, axiosConfig);
+    axiosInstance = http(keystore, axiosConfig);
   } else {
     throw new Error('Either token or keystore is required');
   }

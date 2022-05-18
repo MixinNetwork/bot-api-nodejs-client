@@ -1,12 +1,12 @@
-import { request } from 'services/request';
 import { AxiosInstance } from 'axios';
+import { http } from './http';
 import Keystore from './types/keystore';
 import Utils from './utils/utils';
 import { buildClient } from './utils/client';
 
 // Verify or update pin, needs keystore
 export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
-  const _axiosInstance = axiosInstance || request(keystore);
+  const _axiosInstance = axiosInstance || http(keystore);
 
   return {
     // Verify a user's PIN
