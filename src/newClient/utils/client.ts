@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { request } from 'services/request';
 import { Keystore } from '../types/keystore';
-import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient } from '../types/client';
+import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient } from '../types/client';
 
 export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
@@ -18,6 +18,10 @@ export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreCl
   return axiosInstance;
 };
 
+export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient => ({
+  request: config => axiosInstance.request(config),
+});
+
 export const buildClient: BuildClient =
   <TokenReturnType, KeystoreReturnType>({
     TokenClient,
@@ -28,12 +32,16 @@ export const buildClient: BuildClient =
   }): BaseClient<TokenReturnType, KeystoreReturnType> =>
   (config: Partial<TokenClientConfig & KeystoreClientConfig>): any => {
     const axiosInstance = createAxiosClient(config);
+    const requestClient = createRequestClient(axiosInstance);
+
     const { keystore } = config;
 
-    let tokenClient: TokenReturnType | undefined;
-    if (TokenClient) tokenClient = TokenClient(axiosInstance);
+    const tokenClient = TokenClient?.(axiosInstance);
+    if (!keystore || !KeystoreClient) {
+      if (!tokenClient) throw new Error('Either token or keystore is required');
 
-    if (tokenClient || !keystore || !KeystoreClient) return tokenClient;
+      return Object.assign(tokenClient, requestClient);
+    }
 
     let keystoreClient: KeystoreReturnType | undefined;
     switch (KeystoreClient.length) {
@@ -47,5 +55,5 @@ export const buildClient: BuildClient =
         throw new Error('KeystoreClient must have 1 or 2 arguments');
     }
 
-    return Object.assign(tokenClient || {}, keystoreClient);
+    return Object.assign(tokenClient || {}, keystoreClient, requestClient);
   };
