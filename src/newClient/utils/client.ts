@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { request } from 'services/request';
-import { Keystore } from '../types/keystore';
-import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient } from '../types/client';
+import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
@@ -27,8 +26,8 @@ export const buildClient: BuildClient =
     TokenClient,
     KeystoreClient,
   }: {
-    TokenClient?: (axiosInstance: AxiosInstance) => TokenReturnType;
-    KeystoreClient?: ((keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType) | ((axiosInstance: AxiosInstance) => KeystoreReturnType);
+    TokenClient?: BaseInnerClient<TokenReturnType>;
+    KeystoreClient?: UnionKeystoreClient<KeystoreReturnType>;
   }): BaseClient<TokenReturnType, KeystoreReturnType> =>
   (config: Partial<TokenClientConfig & KeystoreClientConfig>): any => {
     const axiosInstance = createAxiosClient(config);
