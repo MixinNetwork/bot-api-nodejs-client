@@ -23,7 +23,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => {
     // Search users by keyword
     search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse | undefined>(`/search/${identityNumberOrPhone}`),
 
-    // Create a network user
+    // Create a network user, can be created by bot only
     createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret }),
 
     // Modify current user's personal name and avatar
