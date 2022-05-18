@@ -8,10 +8,10 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
   // Getting user information by userID or identity_number
-  user: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse>(`/users/${userIdOrIdentityNumber}`),
+  fetch: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse>(`/users/${userIdOrIdentityNumber}`),
 
   // Getting users' information by user IDs in bulk
-  users: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
+  fetchUsers: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
 
   // Getting users' block list
   blockingUsers: () => axiosInstance.get<unknown, UserResponse[]>(`/blocking_users`),

@@ -10,7 +10,7 @@ describe('Tests for users', () => {
   });
 
   test('fetch user by id', async () =>  {
-    const resp = await user.user(keystore.user_id);
+    const resp = await user.fetch(keystore.user_id);
     expect(resp.user_id).toMatch(keystore.user_id);
   });
 });
