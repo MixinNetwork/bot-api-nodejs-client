@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from './types/user';
 import { buildClient } from './utils/client';
-import Keystore from './types/keystore';
 
 // Methods to manage user's information
 export const UserTokenClient = (axiosInstance: AxiosInstance) => {
@@ -28,7 +27,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => {
   return methods;
 };
 
-export const UserKeystoreClient = (_keystore: Keystore, axiosInstance: AxiosInstance) => ({
+export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Create a network user, can be created by bot only
   createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret }),
 

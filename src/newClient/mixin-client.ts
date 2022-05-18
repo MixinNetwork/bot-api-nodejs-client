@@ -11,8 +11,8 @@ const TokenClient = (axiosInstance: AxiosInstance) => ({
 });
 
 const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
-  user: UserKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
+  user: UserKeystoreClient(axiosInstance),
 });
 
 type TokenClientReturnType = ReturnType<typeof TokenClient>;

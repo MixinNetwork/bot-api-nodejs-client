@@ -1,16 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { request } from 'services/request';
 import { Keystore } from '../types/keystore';
-import { BaseClient, KeystoreClientConfig, TokenClientConfig } from '../types/client';
-
-interface BuildClient {
-  <TokenReturnType, KeystoreReturnType>(config: {
-    TokenClient: (axiosInstance: AxiosInstance) => TokenReturnType;
-    KeystoreClient: (keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType;
-  }): BaseClient<TokenReturnType, KeystoreReturnType>;
-  <TokenReturnType>(config: { TokenClient: (axiosInstance: AxiosInstance) => TokenReturnType }): BaseClient<TokenReturnType, TokenReturnType>;
-  <KeystoreReturnType>(config: { KeystoreClient: (keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType }): BaseClient<KeystoreReturnType, KeystoreReturnType>;
-}
+import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
   const { token, keystore, axiosConfig } = config;
@@ -33,7 +24,7 @@ export const buildClient: BuildClient =
     KeystoreClient,
   }: {
     TokenClient?: (axiosInstance: AxiosInstance) => TokenReturnType;
-    KeystoreClient?: (keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType;
+    KeystoreClient?: ((keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType) | ((axiosInstance: AxiosInstance) => KeystoreReturnType);
   }): BaseClient<TokenReturnType, KeystoreReturnType> =>
   (config: Partial<TokenClientConfig & KeystoreClientConfig>): any => {
     const axiosInstance = createAxiosClient(config);
@@ -45,7 +36,16 @@ export const buildClient: BuildClient =
     if (tokenClient || !keystore || !KeystoreClient) return tokenClient;
 
     let keystoreClient: KeystoreReturnType | undefined;
-    if (keystore) keystoreClient = KeystoreClient(keystore, axiosInstance);
+    switch (KeystoreClient.length) {
+      case 1:
+        keystoreClient = (KeystoreClient as BaseInnerClient<KeystoreReturnType>)(axiosInstance);
+        break;
+      case 2:
+        keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
+        break;
+      default:
+        throw new Error('KeystoreClient must have 1 or 2 arguments');
+    }
 
     return Object.assign(tokenClient || {}, keystoreClient);
   };
