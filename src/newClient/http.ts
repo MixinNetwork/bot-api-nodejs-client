@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, Method, AxiosResponse } from 'axios';
+import axios, { Method, AxiosResponse } from 'axios';
+import { ApiError } from './error';
 import Keystore from './types/keystore';
 import Utils from './utils/utils';
 
@@ -27,16 +28,11 @@ class HTTP {
     this.token = token;
   }
 
-  request(method: Method, path: string, data: object | string = '') {
+  request<T>(method: Method, path: string, data: object | string = ''): Promise<T> {
     if (this.token) {
       return this.requestByToken(method, path, data, this.token);
     }
-    const token = Utils.signAuthenticationToken(
-      String(method),
-      path,
-      data,
-      this.keystore,
-    );
+    const token = Utils.signAuthenticationToken(String(method), path, data, this.keystore);
     return this.requestByToken(method, path, data, token);
   }
 
@@ -58,8 +54,7 @@ class HTTP {
       (res: AxiosResponse) => {
         const { data, error } = res.data;
         if (error) {
-          error.request_id = res.headers['X-Request-Id'];
-          return error;
+          throw new ApiError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
         }
         return data;
       },

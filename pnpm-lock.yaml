@@ -21,6 +21,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.23.0
   axios: ^0.21.1
   bn.js: ^5.2.0
+  curve25519-js: ^0.0.4
   eslint: ^8.15.0
   eslint-config-airbnb-base: ^15.0.0
   eslint-config-prettier: ^8.5.0
@@ -57,6 +58,7 @@ dependencies:
   '@types/uuid': 8.3.4
   axios: 0.21.4
   bn.js: 5.2.0
+  curve25519-js: 0.0.4
   ethers: 5.6.6
   int64-buffer: 1.0.1
   jsonwebtoken: 8.5.1
@@ -3868,6 +3870,10 @@ packages:
     dependencies:
       cssom: 0.3.8
     dev: true
+
+  /curve25519-js/0.0.4:
+    resolution: {integrity: sha512-axn2UMEnkhyDUPWOwVKBMVIzSQy2ejH2xRGy1wq81dqRwApXfIzfbE3hIX0ZRFBIihf/KDqK158DLwESu4AK1w==}
+    dev: false
 
   /cyclist/1.0.1:
     resolution: {integrity: sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=}
