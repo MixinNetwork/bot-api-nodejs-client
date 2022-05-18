@@ -4,7 +4,7 @@ import { Keystore } from '../types/keystore';
 import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
-  const { token, keystore, axiosConfig } = config;
+  const { token, keystore, requestConfig: axiosConfig } = config;
 
   let axiosInstance: AxiosInstance;
   if (token) {

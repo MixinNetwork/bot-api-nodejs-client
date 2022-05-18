@@ -2,7 +2,7 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Keystore from './keystore';
 
 export interface ClientConfig {
-  axiosConfig?: AxiosRequestConfig;
+  requestConfig?: Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>;
 }
 
 export interface TokenClientConfig extends ClientConfig {

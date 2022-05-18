@@ -10,7 +10,7 @@ import { Keystore } from '../types';
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
 export function request(arg?: string | Keystore, config?: AxiosRequestConfig): AxiosInstance {
-  const isCustomUrl = !!config?.url;
+  const isCustomUrl = !!config?.baseURL;
 
   const ins = axios.create({
     baseURL: hostURL[0],
