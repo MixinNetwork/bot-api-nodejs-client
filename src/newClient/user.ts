@@ -25,7 +25,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
 
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Create a network user, can be created by bot only
-  createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret }),
+  createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post<UserResponse>('/users', { full_name: fullName, session_secret: sessionSecret }),
 
   // Modify current user's personal name and avatar
   update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
