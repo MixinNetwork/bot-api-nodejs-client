@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios';
-import { request } from '../services/request';
-import { BaseClient } from './types/client';
 import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from './types/user';
+import { buildClient } from './utils/build-client';
 
 // Methods to manage user's information
 export const UserTokenClient = (axiosInstance: AxiosInstance) => {
@@ -36,4 +35,4 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => {
   return methods;
 };
 
-export const UserClient: BaseClient<ReturnType<typeof UserTokenClient>, ReturnType<typeof UserTokenClient>> = (arg: any): any => UserTokenClient(request(arg));
+export const UserClient = buildClient(UserTokenClient);

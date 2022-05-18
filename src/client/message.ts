@@ -50,7 +50,7 @@ export class MessageClient implements MessageClientRequest {
     return this.sendMessage({
       category,
       recipient_id,
-      conversation_id: this.uniqueConversationID(this.keystore.client_id, recipient_id),
+      conversation_id: this.uniqueConversationID(this.keystore.user_id, recipient_id),
       message_id: this.newUUID(),
       data: base64url(Buffer.from(data)),
     });

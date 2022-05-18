@@ -28,7 +28,7 @@ export class ConversationClient implements ConversationClientRequest {
   createContactConversation(userID: string): Promise<Conversation> {
     return this.createConversation({
       category: 'CONTACT',
-      conversation_id: this.uniqueConversationID(this.keystore.client_id, userID),
+      conversation_id: this.uniqueConversationID(this.keystore.user_id, userID),
       participants: [{ user_id: userID }],
     });
   }

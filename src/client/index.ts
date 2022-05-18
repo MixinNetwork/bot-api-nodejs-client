@@ -311,7 +311,7 @@ export class Client
       client_secret,
       code,
       code_verifier,
-      client_id: this.keystore.client_id,
+      client_id: this.keystore.user_id,
     });
   }
 

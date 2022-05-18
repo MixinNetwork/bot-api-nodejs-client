@@ -1,5 +1,5 @@
 export interface Keystore {
-  client_id: string;
+  user_id: string;
   client_secret: string;
   session_id: string;
   private_key: string;

@@ -75,7 +75,6 @@ class Utils {
     return sha.getHash('HEX');
   }
 
-  /*eslint no-bitwise: "allow"*/
   static privateKeyToCurve25519(privateKey: Buffer) {
     const seed = privateKey.subarray(0, 32);
     const md = forge.md.sha512.create();
@@ -107,12 +106,12 @@ class Utils {
 
   static signEd25519PIN(pin: string, keystore: Keystore) {
     const blockSize = 16;
-    let Uint64 = LittleEndian.Int64LE;
+    const Uint64 = LittleEndian.Int64LE;
 
     const sharedkey = this.sharedEd25519Key(keystore.pin_token, keystore.private_key);
 
-    const iterator = Buffer.from(new Uint64(Math.floor((new Date()).getTime() / 1000)).toBuffer());
-    const time = Buffer.from(new Uint64(Math.floor((new Date()).getTime() / 1000)).toBuffer());
+    const iterator = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
+    const time = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
 
     const pinByte = forge.util.createBuffer(pin, 'utf8');
 

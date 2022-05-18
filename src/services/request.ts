@@ -1,5 +1,6 @@
 // @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ApiError } from 'newClient/error';
 import { v4 as uuid } from 'uuid';
 import { KeystoreAuth } from '../mixin/keystore';
 import { signRequest } from '../mixin/sign';
@@ -8,10 +9,6 @@ import { Keystore } from '../types';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function request(): AxiosInstance;
-export function request(keystore: Keystore): AxiosInstance;
-export function request(token: string): AxiosInstance;
-export function request(arg: string | Keystore): AxiosInstance;
 export function request(arg?: string | Keystore): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
@@ -41,10 +38,8 @@ export function request(arg?: string | Keystore): AxiosInstance {
   ins.interceptors.response.use(
     (res: AxiosResponse) => {
       const { data, error } = res.data;
-      if (error) {
-        error.request_id = res.headers['x-request-id'];
-        return error;
-      }
+      if (error) throw new ApiError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+
       return data;
     },
     async (e: any) => {
