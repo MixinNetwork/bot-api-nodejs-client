@@ -1,6 +1,6 @@
 // @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ApiError } from 'newClient/error';
+import { ResponseError } from 'newClient/error';
 import { v4 as uuid } from 'uuid';
 import { KeystoreAuth } from '../mixin/keystore';
 import { signRequest } from '../mixin/sign';
@@ -41,7 +41,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
   ins.interceptors.response.use(
     (res: AxiosResponse) => {
       const { data, error } = res.data;
-      if (error) throw new ApiError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
 
       return data;
     },
