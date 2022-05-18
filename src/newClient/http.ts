@@ -14,7 +14,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
 
   const ins = axios.create({
     baseURL: hostURL[0],
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    headers: { 'Content-Type': 'application/json' },
     timeout: 3000,
     ...config,
   });
