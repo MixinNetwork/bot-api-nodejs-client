@@ -3,29 +3,25 @@ import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from '.
 import { buildClient } from './utils/client';
 
 // Methods to manage user's information
-export const UserTokenClient = (axiosInstance: AxiosInstance) => {
-  const methods = {
-    // Get the current user's personal information
-    profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
+export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
+  // Get the current user's personal information
+  profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
-    // Getting user information by userID or identity_number
-    user: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse | undefined>(`/users/${userIdOrIdentityNumber}`),
+  // Getting user information by userID or identity_number
+  user: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse | undefined>(`/users/${userIdOrIdentityNumber}`),
 
-    // Getting users' information by user IDs in bulk
-    users: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
+  // Getting users' information by user IDs in bulk
+  users: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
 
-    // Getting users' block list
-    blockingUsers: () => axiosInstance.get<unknown, UserResponse[]>(`/blocking_users`),
+  // Getting users' block list
+  blockingUsers: () => axiosInstance.get<unknown, UserResponse[]>(`/blocking_users`),
 
-    // Obtaining the contact list of the users, containing users and bots
-    friends: () => axiosInstance.get<unknown, UserResponse[]>(`/friends`),
+  // Obtaining the contact list of the users, containing users and bots
+  friends: () => axiosInstance.get<unknown, UserResponse[]>(`/friends`),
 
-    // Search users by keyword
-    search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse | undefined>(`/search/${identityNumberOrPhone}`),
-  };
-
-  return methods;
-};
+  // Search users by keyword
+  search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse | undefined>(`/search/${identityNumberOrPhone}`),
+});
 
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Create a network user, can be created by bot only
