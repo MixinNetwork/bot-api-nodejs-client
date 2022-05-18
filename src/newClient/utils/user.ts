@@ -8,8 +8,7 @@ class User {
     const seed = privateKey.subarray(0, 32);
     const md = forge.md.sha512.create();
     md.update(seed.toString('binary'));
-    const digestx = md.digest();
-    const digest = Buffer.from(digestx.getBytes(), 'binary');
+    const digest = Buffer.from(md.digest().getBytes(), 'binary');
 
     digest[0] &= 248;
     digest[31] &= 127;
@@ -29,7 +28,7 @@ class User {
     const blockSize = 16;
     const Uint64 = LittleEndian.Int64LE;
 
-    const sharedkey = this.sharedEd25519Key(keystore.pin_token, keystore.private_key);
+    const sharedKey = this.sharedEd25519Key(keystore.pin_token, keystore.private_key);
 
     const iterator = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
     const time = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
@@ -45,7 +44,7 @@ class User {
       buffer.putBytes(paddingLen.toString(16));
     }
     const iv = forge.random.getBytesSync(16);
-    const cipher = forge.cipher.createCipher('AES-CBC', forge.util.binary.hex.encode(sharedkey));
+    const cipher = forge.cipher.createCipher('AES-CBC', forge.util.binary.hex.encode(sharedKey));
 
     cipher.start({
       iv,
