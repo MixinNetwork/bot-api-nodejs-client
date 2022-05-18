@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, Method } from 'axios';
+import axios, { AxiosInstance, Method, AxiosResponse } from 'axios';
 import Keystore from './types/keystore';
 import Utils from './utils/utils';
 
@@ -40,19 +40,38 @@ class HTTP {
     return this.requestByToken(method, path, data, token);
   }
 
-  requestByToken(method: Method, path: string, data: object | string = '', token: string = ''): AxiosInstance {
+  requestByToken<T = any>(method: Method, path: string, data: object | string = '', token: string = ''): Promise<T> {
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       timeout: 3000, // TODO developer can setup timeout
     };
 
-    return axios.create({
+    const instance = axios.create({
       method,
       url: this.host + path,
       data,
       headers,
     });
+
+    instance.interceptors.response.use(
+      (res: AxiosResponse) => {
+        const { data, error } = res.data;
+        if (error) {
+          error.request_id = res.headers['X-Request-Id'];
+          return error;
+        }
+        return data;
+      },
+      (e: any) => {
+        if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
+          instance.defaults.baseURL = e.config.baseURL === HTTP.GlobalHost ? HTTP.AbroadHost : HTTP.GlobalHost;
+          e.config.baseURL = instance.defaults.baseURL;
+        }
+        return instance(e.config);
+      },
+    );
+    return instance.request({});
   }
 }
 

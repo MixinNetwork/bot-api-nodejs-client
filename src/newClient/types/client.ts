@@ -1,7 +1,7 @@
 import Keystore from './keystore';
 
 export interface BaseClient<TokenReturnType, KeystoreReturnType> {
-  (keystore: Keystore): TokenReturnType;
+  (keystore: string): TokenReturnType;
   (keystore: Keystore): TokenReturnType & KeystoreReturnType;
 }
 
