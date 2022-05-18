@@ -20,7 +20,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
   friends: () => axiosInstance.get<unknown, UserResponse[]>(`/friends`),
 
   // Search users by keyword
-  search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse | undefined>(`/search/${identityNumberOrPhone}`),
+  search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse>(`/search/${identityNumberOrPhone}`),
 });
 
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
