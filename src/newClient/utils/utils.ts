@@ -105,12 +105,12 @@ class Utils {
 
   static signEd25519PIN(pin: string, keystore: Keystore) {
     const blockSize = 16;
-    const Uint64 = LittleEndian.Int64LE;
+    const Uint64 = LittleEndian.Uint64LE;
 
     const sharedKey = this.sharedEd25519Key(keystore.pin_token, keystore.private_key);
 
-    const iterator = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
-    const time = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
+    const iterator = Buffer.from(new Uint64(new Date().getTime() * 1000000).toBuffer());
+    const time = Buffer.from(new Uint64(new Date().getTime() / 1000).toBuffer());
 
     const pinByte = forge.util.createBuffer(pin, 'utf8');
 
@@ -120,10 +120,11 @@ class Utils {
     buffer.putBytes(iterator.toString('binary'));
     const paddingLen = blockSize - (buffer.length() % blockSize);
     for (let i = 0; i < paddingLen; i += 1) {
-      buffer.putBytes(paddingLen.toString(16));
+      buffer.putBytes(paddingLen.toString());
     }
+
     const iv = forge.random.getBytesSync(16);
-    const cipher = forge.cipher.createCipher('AES-CBC', forge.util.binary.hex.encode(sharedKey));
+    const cipher = forge.cipher.createCipher('AES-CBC', forge.util.createBuffer(sharedKey));
 
     cipher.start({
       iv,
