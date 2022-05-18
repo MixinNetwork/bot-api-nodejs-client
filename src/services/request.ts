@@ -9,11 +9,14 @@ import { Keystore } from '../types';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function request(arg?: string | Keystore): AxiosInstance {
+export function request(arg?: string | Keystore, config?: AxiosRequestConfig): AxiosInstance {
+  const isCustomUrl = !!config?.url;
+
   const ins = axios.create({
     baseURL: hostURL[0],
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     timeout: 3000,
+    ...config,
   });
 
   let token: string | undefined;
@@ -44,6 +47,8 @@ export function request(arg?: string | Keystore): AxiosInstance {
     },
     async (e: any) => {
       if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
+        if (isCustomUrl) return e.config;
+
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;
       }

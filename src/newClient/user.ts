@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from './types/user';
-import { buildClient } from './utils/build-client';
-import Keystore from "./types/keystore";
+import { buildClient } from './utils/client';
+import Keystore from './types/keystore';
 
 // Methods to manage user's information
 export const UserTokenClient = (axiosInstance: AxiosInstance) => {
@@ -23,22 +23,23 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => {
 
     // Search users by keyword
     search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse | undefined>(`/search/${identityNumberOrPhone}`),
-
-    // Create a network user, can be created by bot only
-    createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret }),
   };
 
   return methods;
 };
 
-export const UserKeystoreClient = (_keystore: Keystore, axiosInstance: AxiosInstance) => {
-  return {
-    // Modify current user's personal name and avatar
-    update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
+export const UserKeystoreClient = (_keystore: Keystore, axiosInstance: AxiosInstance) => ({
+  // Create a network user, can be created by bot only
+  createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post('/users', { full_name: fullName, session_secret: sessionSecret }),
 
-    // Manage the relationship between two users
-    updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
-  }
-}
+  // Modify current user's personal name and avatar
+  update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
-export const UserClient = buildClient(UserTokenClient, UserKeystoreClient);
+  // Manage the relationship between two users
+  updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
+});
+
+export const UserClient = buildClient({
+  TokenClient: UserTokenClient,
+  KeystoreClient: UserKeystoreClient,
+});

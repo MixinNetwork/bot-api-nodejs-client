@@ -1,14 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { request } from '../services/request';
-import {
-  ConversationClientRequest,
-  ConversationCreateParams as ConversationCreateParams,
-  Conversation,
-  ConversationUpdateParams,
-  Participant,
-  ConversationAction,
-  Keystore,
-} from '../types';
+import { ConversationClientRequest, ConversationCreateParams, Conversation, ConversationUpdateParams, Participant, ConversationAction, Keystore } from '../types';
 
 export class ConversationClient implements ConversationClientRequest {
   keystore!: Keystore;

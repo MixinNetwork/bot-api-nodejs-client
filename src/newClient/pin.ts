@@ -1,8 +1,8 @@
 import { request } from 'services/request';
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { PickFirstArg } from './types/client';
 import Utils from './utils/utils';
+import { buildClient } from './utils/client';
 
 // Verify or update pin, needs keystore
 export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
@@ -27,4 +27,6 @@ export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInsta
   };
 };
 
-export const PinClient: PickFirstArg<typeof PinKeystoreClient> = PinKeystoreClient;
+export const PinClient = buildClient({
+  KeystoreClient: PinKeystoreClient,
+});
