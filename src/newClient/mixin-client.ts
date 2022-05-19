@@ -5,12 +5,17 @@ import { UserKeystoreClient, UserTokenClient } from './user';
 import Keystore from './types/keystore';
 import { TokenClientConfig, KeystoreClientConfig, RequestClient } from './types/client';
 import { createAxiosClient, createRequestClient } from './utils/client';
+import { AddressKeystoreClient, AddressTokenClient } from "./address";
+import { ConversationKeystoreClient } from "./conversation";
 
 const TokenClient = (axiosInstance: AxiosInstance) => ({
+  address: AddressTokenClient(axiosInstance),
   user: UserTokenClient(axiosInstance),
 });
 
 const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
+  address: AddressKeystoreClient(keystore, axiosInstance),
+  conversation: ConversationKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
   user: UserKeystoreClient(axiosInstance),
 });

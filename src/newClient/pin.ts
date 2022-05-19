@@ -27,3 +27,5 @@ export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInsta
 export const PinClient = buildClient({
   KeystoreClient: PinKeystoreClient,
 });
+
+export default PinClient
