@@ -22,10 +22,14 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
     'no-shadow': 'off',
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
+
 
     // todo remove
-    // 'no-use-before-define': 'off',
-    // 'no-param-reassign': 'off',
+    // 'no-redeclare': 'off',
+    'no-use-before-define': 'off',
+    'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {

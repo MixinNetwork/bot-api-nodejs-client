@@ -51,13 +51,15 @@ export function getEd25519Sign(payload: any, privateKey: any) {
 }
 
 export const signRequest = (method: string, url: string, body: object | string = ''): string => {
-  if (url.startsWith('https://api.mixin.one')) url = url.replace('https://api.mixin.one', '');
-  if (url.startsWith('https://mixin-api.zeromesh.net')) url = url.replace('https://mixin-api.zeromesh.net', '');
-  if (typeof body === 'object') body = JSON.stringify(body);
-  method = method.toUpperCase();
+  const _method = method.toUpperCase();
+
+  const _url = new URL(url);
+
+  let _body = body;
+  if (typeof body === 'object') _body = JSON.stringify(body);
   return md.sha256
     .create()
-    .update(method + url + body, 'utf8')
+    .update(_method + _url.pathname + _url.search + _body, 'utf8')
     .digest()
     .toHex();
 };
@@ -89,7 +91,7 @@ function scalarMulti(curvePriv: any, publicKey: any) {
   curvePriv[31] &= 127;
   curvePriv[31] |= 64;
   const sharedKey = new Uint8Array(32);
-  crypto_scalarmult(sharedKey, curvePriv, publicKey);
+  cryptoScalarMulti(sharedKey, curvePriv, publicKey);
   return sharedKey;
 }
 
@@ -108,7 +110,7 @@ function privateKeyToCurve25519(privateKey: any) {
   return digest.slice(0, 32);
 }
 
-function crypto_scalarmult(q: any, n: any, p: any) {
+function cryptoScalarMulti(q: any, n: any, p: any) {
   const z = new Uint8Array(32);
   const x = new Float64Array(80);
   let r;

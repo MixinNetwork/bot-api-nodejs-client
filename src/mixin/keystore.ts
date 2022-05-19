@@ -11,7 +11,7 @@ export class KeystoreAuth {
   }
 
   signToken(signature: string, requestID: string): string {
-    const { client_id, session_id, private_key, scope } = this.keystore!;
+    const { user_id: client_id, session_id, private_key, scope } = this.keystore!;
     const issuedAt = Math.floor(Date.now() / 1000);
     if (!requestID) requestID = v4();
     const payload = {
