@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import Utils from './utils/utils'
+import Utils from './utils/utils';
 import { mixinRequest } from "./http";
 import { buildClient } from "./utils/client";
 import Keystore from './types/keystore';
@@ -8,9 +8,9 @@ import { ConversationResponse, ConversationAction, ConversationCreateRequest, Co
 // todo: move to network
 // Get conversation information by conversationID
 export const showConversation = async (conversationID: string, axiosInstance?: AxiosInstance) => {
-  const _axiosInstance = axiosInstance || mixinRequest
-  return _axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`)
-}
+  const _axiosInstance = axiosInstance || mixinRequest;
+  return _axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`);
+};
 
 // Manage conversation, need keystore
 export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: AxiosInstance) {
@@ -30,7 +30,7 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
     });
   }
 
-  const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration })
+  const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });
 
   return {
     // Ensure the conversation is created
@@ -107,6 +107,6 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
 
 export const ConversationClient = buildClient({
   KeystoreClient: ConversationKeystoreClient,
-})
+});
 
-export default ConversationClient
+export default ConversationClient;
