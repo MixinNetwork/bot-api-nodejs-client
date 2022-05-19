@@ -43,7 +43,7 @@ describe('Tests for utils', () => {
     // forge sha256 is not equal to jssha
     const key = ids.sort().join('');
     const md = forge.md.sha256.create();
-    md.update(key);
+    md.update(key, 'utf8');
     expect(md.digest().toHex()).toBe('cc24bdf9c9c6a9d96031568e66a6c56f800ac4fefc88061e4aea6ed0df5ac41a');
     const md1 = forge.md.sha512.create();
     md1.update(key);

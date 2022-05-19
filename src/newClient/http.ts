@@ -2,10 +2,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
-import { KeystoreAuth } from '../mixin/keystore';
-import { signRequest } from '../mixin/sign';
 import { delay } from '../mixin/tools';
 import { Keystore } from '../types';
+import utils from './utils';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -20,12 +19,12 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
   });
 
   let token: string | undefined;
-  let k: KeystoreAuth | undefined;
+  let keystore: Keystore | undefined; 
 
   if (typeof arg === 'string') {
     token = arg;
   } else {
-    k = new KeystoreAuth(arg);
+    keystore = arg;
   }
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
@@ -33,7 +32,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
     const uri = ins.getUri(config);
     const requestID = uuid();
     config.headers['x-request-id'] = requestID;
-    const jwtToken = token || k?.signToken(signRequest(method!, uri, data), requestID) || '';
+    const jwtToken = utils.auth.signAuthenticationToken(method, uri, data, keystore) || token || '';
     config.headers.Authorization = `Bearer ${jwtToken}`;
     return config;
   });

@@ -12,5 +12,6 @@ describe('Tests for users', () => {
   test('fetch user by id', async () =>  {
     const resp = await user.fetch(keystore.user_id);
     expect(resp.user_id).toMatch(keystore.user_id);
+    expect(resp.is_verified).toBe(false);
   });
 });
