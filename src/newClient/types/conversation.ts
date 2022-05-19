@@ -1,15 +1,29 @@
+import { CircleConversationResponse } from './circle';
+
+export interface ParticipantResponse {
+  type: 'participant';
+  user_id: string;
+  session_id: string;
+  public_key: string;
+}
+
 export interface ConversationResponse {
+  type: 'conversation';
   conversation_id: string;
   creator_id: string;
   category: ConversationCategory;
   name: string;
   icon_url: string;
   announcement: string;
-  created_at: string;
+  created_at: Date;
+
   code_id: string;
   code_url: string;
+  mute_until: string;
+  expire_in: number;
 
-  participants: Participant[];
+  participant_sessions: ParticipantResponse[];
+  circles: CircleConversationResponse[];
 }
 
 export type ConversationCategory = 'CONTACT' | 'GROUP';
