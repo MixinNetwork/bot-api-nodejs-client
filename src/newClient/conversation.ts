@@ -95,7 +95,7 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
     joinGroup: (codeId: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
 
     // Exit a group
-    exitGroup: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/join`),
+    exitGroup: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
 
     // Mute contact for <duration> seconds
     mute: (conversationID: string, duration: number) => muteConversation(conversationID, duration),
