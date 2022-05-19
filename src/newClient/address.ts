@@ -17,14 +17,14 @@ export const  AddressTokenClient = (axiosInstance: AxiosInstance) => ({
 export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   // Create a new withdrawal address
   create: (params: AddressCreateRequest, pin: string) => {
-    params.pin = Utils.signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, AddressResponse>('/addresses', params);
+    const encrypted = Utils.signEd25519PIN(pin, keystore);
+    return axiosInstance.post<unknown, AddressResponse>('/addresses', { ...params, pin: encrypted });
   },
 
   // Delete a specified address by addressID
   delete: (addressID: string, pin: string) => {
-    const _pin = Utils.signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { _pin })
+    const encrypted = Utils.signEd25519PIN(pin, keystore);
+    return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { pin: encrypted })
   },
 });
 
