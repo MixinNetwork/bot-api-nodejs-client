@@ -34,20 +34,3 @@ export interface ConversationUpdateRequest {
   name?: string;
   announcement?: string;
 }
-
-export interface ConversationMuteRequest {
-  duration: number;
-}
-
-export interface ConversationClientRequest {
-  createConversation(params: ConversationCreateRequest): Promise<ConversationResponse>;
-  updateConversation(conversationID: string, params: ConversationUpdateRequest): Promise<ConversationResponse>;
-  createContactConversation(userID: string): Promise<ConversationResponse>;
-  createGroupConversation(conversationID: string, name: string, participant: Participant[]): Promise<ConversationResponse>;
-  readConversation(conversationID: string): Promise<ConversationResponse>;
-  managerConversation(conversationID: string, action: ConversationAction, participant: Participant[]): Promise<ConversationResponse>;
-  addParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  removeParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  adminParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  rotateConversation(conversationID: string): Promise<ConversationResponse>;
-}
