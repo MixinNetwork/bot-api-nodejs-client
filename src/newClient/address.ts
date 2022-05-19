@@ -16,15 +16,14 @@ export const  AddressTokenClient = (axiosInstance: AxiosInstance) => ({
 // Create or delete a withdrawal address, needs keystore
 export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   // Create a new withdrawal address
-  create: (params: AddressCreateRequest, pin?: string) => {
-    const _pin = pin || keystore.pin
-    params.pin = Utils.signEd25519PIN(_pin, keystore);
+  create: (params: AddressCreateRequest, pin: string) => {
+    params.pin = Utils.signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, AddressResponse>('/addresses', params);
   },
 
   // Delete a specified address by addressID
-  delete: (addressID: string, pin?: string) => {
-    const _pin = Utils.signEd25519PIN(pin || keystore.pin, keystore);
+  delete: (addressID: string, pin: string) => {
+    const _pin = Utils.signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { _pin })
   },
 });
