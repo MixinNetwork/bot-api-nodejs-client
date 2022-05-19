@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { delay } from '../mixin/tools';
 import { Keystore } from '../types';
-import utils from './utils';
+import { signAuthenticationToken } from './utils/auth';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -32,7 +32,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
     const uri = ins.getUri(config);
     const requestID = uuid();
     config.headers['x-request-id'] = requestID;
-    const jwtToken = utils.auth.signAuthenticationToken(method, uri, data, keystore) || token || '';
+    const jwtToken = signAuthenticationToken(method, uri, data, keystore) || token || '';
     config.headers.Authorization = `Bearer ${jwtToken}`;
     return config;
   });

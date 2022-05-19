@@ -25,6 +25,8 @@ module.exports = {
     "no-redeclare": "off",
     "@typescript-eslint/no-redeclare": ["error"],
 
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"],
 
     // todo remove
     // 'no-redeclare': 'off',
