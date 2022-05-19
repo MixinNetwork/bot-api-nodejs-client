@@ -3,7 +3,7 @@ import forge from 'node-forge';
 import LittleEndian from 'int64-buffer';
 import Keystore from '../types/keystore';
 
-class User {
+class Auth {
   static privateKeyToCurve25519(privateKey: Buffer) {
     const seed = privateKey.subarray(0, 32);
     const md = forge.md.sha512.create();
@@ -61,4 +61,4 @@ class User {
   }
 }
 
-export default User;
+export default Auth;
