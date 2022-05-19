@@ -7,9 +7,11 @@ import { TokenClientConfig, KeystoreClientConfig, RequestClient } from './types/
 import { createAxiosClient, createRequestClient } from './utils/client';
 import { AddressKeystoreClient, AddressTokenClient } from "./address";
 import { ConversationKeystoreClient } from "./conversation";
+import { AssetTokenClient } from "./asset";
 
 const TokenClient = (axiosInstance: AxiosInstance) => ({
   address: AddressTokenClient(axiosInstance),
+  asset: AssetTokenClient(axiosInstance),
   user: UserTokenClient(axiosInstance),
 });
 
