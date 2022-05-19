@@ -8,6 +8,14 @@ import { buildClient } from './utils/client';
 export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
   const _axiosInstance = axiosInstance || http(keystore);
 
+  function updatePin(pin: string): Promise<void>;
+  function updatePin(oldPin: string, pin: string): Promise<void>;
+  function updatePin(firstPin: string, secondPin?: string): Promise<any> {
+    const oldEncrypted = secondPin ? Utils.signEd25519PIN(firstPin, keystore) : '';
+    const newEncrypted = secondPin ? Utils.signEd25519PIN(secondPin, keystore) : Utils.signEd25519PIN(firstPin, keystore);
+    return _axiosInstance.post<void>('/pin/update', { old_pin: oldEncrypted, pin: newEncrypted });
+  }
+
   return {
     // Verify a user's PIN
     verify: (pin: string) => {
@@ -16,11 +24,7 @@ export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInsta
     },
 
     // Change the PIN of the user, or setup a new PIN if it is not set yet
-    update: (pin: string, oldPin: string) => {
-      const encryptedOldPin = oldPin ? Utils.signEd25519PIN(oldPin, keystore) : '';
-      const encrypted = Utils.signEd25519PIN(pin, keystore);
-      return _axiosInstance.post<void>('/pin/update', { old_pin: encryptedOldPin, pin: encrypted });
-    },
+    update: updatePin
   };
 };
 
