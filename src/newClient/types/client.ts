@@ -13,7 +13,7 @@ export interface BaseClient<TokenReturnType, KeystoreReturnType> {
 }
 
 export type BaseInnerClient<KeystoreReturnType> = (axiosInstance: AxiosInstance) => KeystoreReturnType;
-export type KeystoreClient<KeystoreReturnType> = (keystore: Keystore, axiosInstance: AxiosInstance) => KeystoreReturnType;
+export type KeystoreClient<KeystoreReturnType> = (axiosInstance: AxiosInstance, keystore?: Keystore) => KeystoreReturnType;
 export type UnionKeystoreClient<KeystoreReturnType> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {

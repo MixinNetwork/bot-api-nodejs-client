@@ -13,7 +13,7 @@ export const showConversation = async (conversationID: string, axiosInstance?: A
 };
 
 // Manage conversation, need keystore
-export const ConversationKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => {
+export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const createConversation = (params: ConversationCreateRequest) => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 

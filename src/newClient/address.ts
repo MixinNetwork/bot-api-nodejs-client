@@ -5,7 +5,7 @@ import { buildClient } from './utils/client';
 import { signEd25519PIN } from "./utils/auth";
 
 // Create or delete a withdrawal address
-export const AddressKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => ({
+export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get an address by addressID
   show: (addressID: string) => axiosInstance.get<unknown, AddressResponse>(`/addresses/${addressID}`),
 

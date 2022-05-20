@@ -6,7 +6,7 @@ import { TransferRequest, Payment, WithdrawRequest } from './types/transfer';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
-export const TransferKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => ({
+export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get transfer information by traceID
   show: (trace_id: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${trace_id}`),
 

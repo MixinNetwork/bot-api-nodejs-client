@@ -5,7 +5,7 @@ import { signEd25519PIN } from "./utils/auth";
 import { buildClient } from "./utils/client";
 import { MultisigRequest, MultisigIndexRequest, MultisigResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
 
-export const MutilsigsKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => {
+export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequest> => {
     const encrypted = signEd25519PIN(pin, keystore);

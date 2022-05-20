@@ -13,16 +13,16 @@ import { AttachmentKeystoreClient } from "./attachment";
 import { MutilsigsKeystoreClient } from "./multisigs";
 import { TransferKeystoreClient } from './transfer';
 
-const KeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => ({
-  address: AddressKeystoreClient(keystore, axiosInstance),
+const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+  address: AddressKeystoreClient(axiosInstance, keystore),
   asset: AssetKestoreClient(axiosInstance),
   app: AppKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
-  conversation: ConversationKeystoreClient(keystore, axiosInstance),
-  multisigs: MutilsigsKeystoreClient(keystore, axiosInstance),
-  pin: PinKeystoreClient(keystore, axiosInstance),
+  conversation: ConversationKeystoreClient(axiosInstance, keystore),
+  multisigs: MutilsigsKeystoreClient(axiosInstance, keystore),
+  pin: PinKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
-  transfer: TransferKeystoreClient(keystore, axiosInstance),
+  transfer: TransferKeystoreClient(axiosInstance, keystore),
 });
 
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
@@ -34,6 +34,6 @@ export function Client(config: HTTPConfig) {
   const requestClient = createRequestClient(axiosInstance);
   const { keystore } = config;
 
-  const keystoreClient = KeystoreClient(keystore, axiosInstance);
+  const keystoreClient = KeystoreClient(axiosInstance, keystore);
   return merge(keystoreClient, requestClient);
 }

@@ -32,27 +32,15 @@ export const buildClient: BuildClient =
   (config: HTTPConfig): any => {
     const axiosInstance = createAxiosClient(config);
     const requestClient = createRequestClient(axiosInstance);
+    console.log(TokenClient);
 
     const { keystore } = config;
 
-    const tokenClient = TokenClient?.(axiosInstance);
-    if (!keystore || !KeystoreClient) {
-      if (!tokenClient) throw new Error('Either token or keystore is required');
-
-      return Object.assign(tokenClient, requestClient);
+    if (!KeystoreClient) {
+      throw new Error('Either token or keystore is required');
     }
 
-    let keystoreClient: KeystoreReturnType | undefined;
-    switch (KeystoreClient.length) {
-      case 1:
-        keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
-        break;
-      case 2:
-        keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
-        break;
-      default:
-        throw new Error('KeystoreClient must have 1 or 2 arguments');
-    }
+    const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
 
-    return Object.assign(tokenClient || {}, keystoreClient, requestClient);
+    return Object.assign(keystoreClient, requestClient);
   };
