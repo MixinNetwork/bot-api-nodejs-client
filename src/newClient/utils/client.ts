@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { http } from '../http';
-import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
+import { BaseClient, BuildClient, BaseInnerClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
-export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
+export const createAxiosClient = (config: HTTPConfig) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
 
   let axiosInstance: AxiosInstance;
@@ -11,7 +11,7 @@ export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreCl
   } else if (keystore) {
     axiosInstance = http(keystore, axiosConfig);
   } else {
-    throw new Error('Either token or keystore is required');
+    axiosInstance = http('', axiosConfig);
   }
 
   return axiosInstance;
@@ -29,7 +29,7 @@ export const buildClient: BuildClient =
     TokenClient?: BaseInnerClient<TokenReturnType>;
     KeystoreClient?: UnionKeystoreClient<KeystoreReturnType>;
   }): BaseClient<TokenReturnType, KeystoreReturnType> =>
-  (config: Partial<TokenClientConfig & KeystoreClientConfig>): any => {
+  (config: HTTPConfig): any => {
     const axiosInstance = createAxiosClient(config);
     const requestClient = createRequestClient(axiosInstance);
 

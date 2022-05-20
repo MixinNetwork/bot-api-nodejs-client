@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios';
 import { PinKeystoreClient } from './pin';
 import { UserKeystoreClient, UserTokenClient } from './user';
 import Keystore from './types/keystore';
-import { TokenClientConfig, KeystoreClientConfig, RequestClient } from './types/client';
+import { HTTPConfig, RequestClient } from './types/client';
 import { createAxiosClient, createRequestClient } from './utils/client';
 import { AddressKeystoreClient, AddressTokenClient } from "./address";
 import { ConversationKeystoreClient } from "./conversation";
@@ -31,9 +31,9 @@ const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
 type TokenClientReturnType = ReturnType<typeof TokenClient>;
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function Client(config: TokenClientConfig): TokenClientReturnType & RequestClient;
-export function Client(config: KeystoreClientConfig): TokenClientReturnType & KeystoreClientReturnType & RequestClient;
-export function Client(config: Partial<TokenClientConfig & KeystoreClientConfig>) {
+export function Client(config: HTTPConfig): TokenClientReturnType & RequestClient;
+export function Client(config: HTTPConfig): TokenClientReturnType & KeystoreClientReturnType & RequestClient;
+export function Client(config: HTTPConfig) {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
   const { keystore } = config;
