@@ -3,15 +3,12 @@ import { AppResponse, UpdateAppRequest } from './types/app';
 import { buildClient } from "./utils/client";
 
 // Methods to manage your app share list
-export function AppTokenClient(axiosInstance: AxiosInstance) {
-  return {
+export const AppTokenClient = (axiosInstance: AxiosInstance) => ({
     // Get user's app share list
     index: (userID: string) => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
-  };
-};
+  });
 
-export function AppKeystoreClient(axiosInstance: AxiosInstance) {
-  return {
+export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
     // Update app setting
     update: (appID: string, params: UpdateAppRequest) => axiosInstance.post<unknown, AppResponse>(`/apps/${appID}`, params),
 
@@ -20,8 +17,7 @@ export function AppKeystoreClient(axiosInstance: AxiosInstance) {
 
     // Removing from your share list
     unfavorite: (appID: string) => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
-  };
-};
+  });
 
 export const AppClient = buildClient({
   TokenClient: AppTokenClient,

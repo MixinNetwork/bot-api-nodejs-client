@@ -3,7 +3,7 @@ import { AttachmentResponse } from "./types/attachment";
 import { buildClient } from "./utils/client";
 
 // Get attachment
-export function AttachmentTokenClient(axiosInstance: AxiosInstance) {
+export const AttachmentTokenClient = (axiosInstance: AxiosInstance) => {
   return {
     // Get a specific attachment by attachmentID
     show: (attachmentId: string) => axiosInstance.get<unknown, AttachmentResponse>(`/attachments/${attachmentId}`),
@@ -11,7 +11,7 @@ export function AttachmentTokenClient(axiosInstance: AxiosInstance) {
 };
 
 // Upload attachment
-export function AttachmentKeystoreClient(axiosInstance: AxiosInstance) {
+export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {
 
   const createAttachment = () => axiosInstance.post<unknown, AttachmentResponse>(`/attachments`);
 
