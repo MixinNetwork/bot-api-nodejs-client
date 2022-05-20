@@ -10,12 +10,14 @@ import { ConversationKeystoreClient } from "./conversation";
 import { AssetTokenClient } from "./asset";
 import { AppKeystoreClient, AppTokenClient } from "./app";
 import { AttachmentKeystoreClient } from "./attachment";
+import { MutilsigsTokenClient, MutilsigsKeystoreClient } from "./multisigs";
 
 const TokenClient = (axiosInstance: AxiosInstance) => ({
   address: AddressTokenClient(axiosInstance),
   app: AppTokenClient(axiosInstance),
   asset: AssetTokenClient(axiosInstance),
   attachment: AddressTokenClient(axiosInstance),
+  multisigs: MutilsigsTokenClient(axiosInstance),
   user: UserTokenClient(axiosInstance),
 });
 
@@ -24,6 +26,7 @@ const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   app: AppKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   conversation: ConversationKeystoreClient(keystore, axiosInstance),
+  multisigs: MutilsigsKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
   user: UserKeystoreClient(axiosInstance),
 });
