@@ -7,8 +7,8 @@ export function AttachmentTokenClient(axiosInstance: AxiosInstance) {
   return {
     // Get a specific attachment by attachmentID
     show: (attachmentId: string) => axiosInstance.get<unknown, AttachmentResponse>(`/attachments/${attachmentId}`),
-  }
-}
+  };
+};
 
 // Upload attachment
 export function AttachmentKeystoreClient(axiosInstance: AxiosInstance) {
@@ -25,7 +25,7 @@ export function AttachmentKeystoreClient(axiosInstance: AxiosInstance) {
         'Content-Type': 'application/octet-stream',
       },
       maxContentLength: 2147483648,
-    })
+    });
 
   return {
     // Create a new attachment before upload it
@@ -40,7 +40,7 @@ export function AttachmentKeystoreClient(axiosInstance: AxiosInstance) {
       return { view_url, attachment_id };
     },
   };
-}
+};
 
 export const AttachmentClient = buildClient({
   TokenClient: AttachmentTokenClient,

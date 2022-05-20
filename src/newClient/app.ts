@@ -8,7 +8,7 @@ export function AppTokenClient(axiosInstance: AxiosInstance) {
     // Get user's app share list
     index: (userID: string) => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
   };
-}
+};
 
 export function AppKeystoreClient(axiosInstance: AxiosInstance) {
   return {
@@ -20,8 +20,8 @@ export function AppKeystoreClient(axiosInstance: AxiosInstance) {
 
     // Removing from your share list
     unfavorite: (appID: string) => axiosInstance.post<unknown, void>(`/apps/${appID}/unfavorite`),
-  }
-}
+  };
+};
 
 export const AppClient = buildClient({
   TokenClient: AppTokenClient,

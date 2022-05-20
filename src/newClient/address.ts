@@ -11,7 +11,7 @@ export const  AddressTokenClient = (axiosInstance: AxiosInstance) => ({
 
   // Get a list of withdrawal addresses for the given asset
   index: (assetID: string) => axiosInstance.get<unknown, AddressResponse[]>(`/assets/${assetID}/addresses`),
-})
+});
 
 // Create or delete a withdrawal address, needs keystore
 export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
@@ -24,7 +24,7 @@ export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosIn
   // Delete a specified address by addressID
   delete: (addressID: string, pin: string) => {
     const encrypted = Utils.signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { pin: encrypted })
+    return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { pin: encrypted });
   },
 });
 
@@ -33,4 +33,4 @@ export const AddressClient = buildClient({
   KeystoreClient: AddressKeystoreClient,
 });
 
-export default AddressClient
+export default AddressClient;

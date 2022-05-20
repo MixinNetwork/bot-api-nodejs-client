@@ -32,4 +32,4 @@ export const PinClient = buildClient({
   KeystoreClient: PinKeystoreClient,
 });
 
-export default PinClient
+export default PinClient;

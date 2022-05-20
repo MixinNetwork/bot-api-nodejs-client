@@ -26,6 +26,6 @@ export function AssetTokenClient(axiosInstance: AxiosInstance) {
 
 export const AssetClient = buildClient({
   TokenClient: AddressTokenClient,
-})
+});
 
-export default AssetClient
+export default AssetClient;

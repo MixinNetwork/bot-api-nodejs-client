@@ -103,7 +103,7 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
     // Unmute contact
     unmute: (conversationID: string) => muteConversation(conversationID, 0),
   };
-}
+};
 
 export const ConversationClient = buildClient({
   KeystoreClient: ConversationKeystoreClient,
