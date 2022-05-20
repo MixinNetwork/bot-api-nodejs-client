@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { AssetResponse, ExchangeRate, NetworkTicker } from './types/asset';
+import { AssetResponse, ExchangeRate } from './types/asset';
 import { buildClient } from "./utils/client";
 import { AddressTokenClient } from "./address";
 
@@ -12,15 +12,8 @@ export function AssetTokenClient(axiosInstance: AxiosInstance) {
     // Get the asset list of current user
     index: () => axiosInstance.get<unknown, AssetResponse[]>('/assets'),
 
-    // Get the specified asset's fee
-    fee: (assetID: string) => axiosInstance.get<unknown, number>(`/assets/${assetID}/fee`),
-
     // Get a list of all fiat exchange rates based on US Dollar.
     rates: () => axiosInstance.get<unknown, ExchangeRate[]>('/fiats'),
-
-    // todo move to network?
-    // Get the historical price of a specified asset
-    historicalPrice: (asset: string, offset?: string) => axiosInstance.get<unknown, NetworkTicker>(`/network/ticker`, { params: { offset, asset } }),
   };
 }
 
