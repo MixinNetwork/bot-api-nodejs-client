@@ -34,9 +34,9 @@ export interface MultisigRequest {
   amount: string;
   threshold: string;
   senders: string;
-  receivers: string;
-  signers: string;
-  memo: string;
+  receivers: string[];
+  signers: string[];
+  memo: string[];
   action: MultisigInitAction;
   state: MultisigState;
   transaction_hash: string;

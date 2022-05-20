@@ -24,23 +24,23 @@ export const MutilsigsTokenClient = (axiosInstance: AxiosInstance) => ({
 
 export const MutilsigsKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
 
-  const initMutilsig = (pin: string, request_id: string, action: MultisigAction) => {
+  const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequest> => {
     const encrypted = signEd25519PIN(pin, keystore);
-    return axiosInstance.post(`/multisigs/requests/${request_id}/${action}`, { pin: encrypted });
+    return axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests/${request_id}/${action}`, { pin: encrypted });
   };
 
   return {
     // Generate a multi-signature request to obtain request_id
-    create: (action: MultisigInitAction, raw: string): Promise<MultisigRequest> => axiosInstance.post(`/multisigs/requests`, { action, raw }),
+    create: (action: MultisigInitAction, raw: string): Promise<MultisigRequest> => axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests`, { action, raw }),
 
     // Initiate or participate in signing
-    sign: (pin: string, request_id: string) => initMutilsig(pin, request_id, "sign"),
+    sign: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "sign"),
 
     // Cancel multisigs
-    unlock: (pin: string, request_id: string) => initMutilsig(pin, request_id, "unlock"),
+    unlock: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "unlock"),
 
     // Cancel my signature
-    cancel: (pin: string, request_id: string) => initMutilsig(pin, request_id, "cancel"),
+    cancel: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "cancel"),
   };
 };
 
