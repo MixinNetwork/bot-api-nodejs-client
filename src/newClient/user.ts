@@ -7,8 +7,8 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
   // Get the current user's personal information
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
-  // Get user information by userID or identity_number
-  fetch: (userIdOrIdentityNumber: string) => axiosInstance.get<unknown, AuthenticationUserResponse>(`/users/${userIdOrIdentityNumber}`),
+  // Get user information by user id
+  fetch: (id: string) => axiosInstance.get<unknown, UserResponse>(`/users/${id}`),
 
   // Get users' information by user IDs in bulk
   fetchList: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
