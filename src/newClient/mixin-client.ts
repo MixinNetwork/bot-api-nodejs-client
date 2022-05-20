@@ -1,7 +1,7 @@
 import merge from 'lodash.merge';
 import { AxiosInstance } from 'axios';
 import { PinKeystoreClient } from './pin';
-import { UserKeystoreClient, UserTokenClient } from './user';
+import { UserTokenClient } from './user';
 import Keystore from './types/keystore';
 import { HTTPConfig, RequestClient } from './types/client';
 import { createAxiosClient, createRequestClient } from './utils/client';
@@ -28,7 +28,6 @@ const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   conversation: ConversationKeystoreClient(keystore, axiosInstance),
   multisigs: MutilsigsKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
-  user: UserKeystoreClient(axiosInstance),
 });
 
 type TokenClientReturnType = ReturnType<typeof TokenClient>;

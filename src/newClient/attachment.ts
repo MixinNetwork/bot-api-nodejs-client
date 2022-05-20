@@ -3,29 +3,26 @@ import { AttachmentResponse } from "./types/attachment";
 import { buildClient } from "./utils/client";
 
 // Get attachment
-export const AttachmentTokenClient = (axiosInstance: AxiosInstance) => {
-  return {
-    // Get a specific attachment by attachmentID
-    show: (attachmentId: string) => axiosInstance.get<unknown, AttachmentResponse>(`/attachments/${attachmentId}`),
-  };
-};
+export const AttachmentTokenClient = (axiosInstance: AxiosInstance) => ({
+  // Get a specific attachment by attachmentID
+  show: (attachmentId: string) => axiosInstance.get<unknown, AttachmentResponse>(`/attachments/${attachmentId}`),
+});
 
 // Upload attachment
 export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {
-
   const createAttachment = () => axiosInstance.post<unknown, AttachmentResponse>(`/attachments`);
 
   // todo move to other dir?
   const uploadAttachmentTo = (uploadURL: string, file: File): Promise<AxiosResponse> => axios.create()({
-      url: uploadURL,
-      method: 'PUT',
-      data: file,
-      headers: {
-        'x-amz-acl': 'public-read',
-        'Content-Type': 'application/octet-stream',
-      },
-      maxContentLength: 2147483648,
-    });
+    url: uploadURL,
+    method: 'PUT',
+    data: file,
+    headers: {
+      'x-amz-acl': 'public-read',
+      'Content-Type': 'application/octet-stream',
+    },
+    maxContentLength: 2147483648,
+  });
 
   return {
     // Create a new attachment before upload it
