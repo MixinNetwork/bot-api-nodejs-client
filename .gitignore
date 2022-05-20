@@ -6,3 +6,5 @@ dist
 
 config.json
 test/index.js
+
+keystore.ts

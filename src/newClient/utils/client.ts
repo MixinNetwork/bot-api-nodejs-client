@@ -47,6 +47,9 @@ export const buildClient: BuildClient =
       case 1:
         keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
         break;
+      case 2:
+        keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
+        break;
       default:
         throw new Error('KeystoreClient must have 1 or 2 arguments');
     }

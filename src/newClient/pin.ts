@@ -21,7 +21,7 @@ export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInsta
     // Verify a user's PIN
     verify: (pin: string) => {
       const encrypted = signEd25519PIN(pin, keystore);
-      return _axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', { pin: encrypted });
+      return _axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', { pin: encrypted});
     },
 
     // Change the PIN of the user, or setup a new PIN if it is not set yet

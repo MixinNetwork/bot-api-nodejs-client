@@ -87,9 +87,11 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
   buffer.putBytes(time.toString('binary'));
   buffer.putBytes(iterator.toString('binary'));
   const paddingLen = blockSize - (buffer.length() % blockSize);
+  const paddings = [];
   for (let i = 0; i < paddingLen; i += 1) {
-    buffer.putBytes(paddingLen.toString(16));
+    paddings.push(paddingLen);
   }
+  buffer.putBytes(Buffer.from(paddings).toString('binary'));
   const iv = forge.random.getBytesSync(16);
   const cipher = forge.cipher.createCipher('AES-CBC', forge.util.hexToBytes(forge.util.binary.hex.encode(sharedKey)));
 
