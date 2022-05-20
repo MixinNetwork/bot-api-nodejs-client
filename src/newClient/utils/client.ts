@@ -45,9 +45,6 @@ export const buildClient: BuildClient =
     let keystoreClient: KeystoreReturnType | undefined;
     switch (KeystoreClient.length) {
       case 1:
-        keystoreClient = (KeystoreClient as BaseInnerClient<KeystoreReturnType>)(axiosInstance);
-        break;
-      case 2:
         keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
         break;
       default:

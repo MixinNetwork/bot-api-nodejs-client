@@ -21,9 +21,10 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
 
   // Search users by keyword
   search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse>(`/search/${identityNumberOrPhone}`),
-});
 
-export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
+  // Rotate user's code
+  rotateCode: () => axiosInstance.get<unknown, AuthenticationUserResponse>('/me/code'),
+
   // Create a network user, can be created by bot only
   createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post<UserResponse>('/users', { full_name: fullName, session_secret: sessionSecret }),
 
@@ -36,7 +37,6 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
 export const UserClient = buildClient({
   TokenClient: UserTokenClient,
-  KeystoreClient: UserKeystoreClient,
 });
 
 export default UserClient;

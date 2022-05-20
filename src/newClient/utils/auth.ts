@@ -91,7 +91,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
     buffer.putBytes(paddingLen.toString(16));
   }
   const iv = forge.random.getBytesSync(16);
-  const cipher = forge.cipher.createCipher('AES-CBC', forge.util.binary.hex.encode(sharedKey));
+  const cipher = forge.cipher.createCipher('AES-CBC', forge.util.hexToBytes(forge.util.binary.hex.encode(sharedKey)));
 
   cipher.start({
     iv,
@@ -104,5 +104,5 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
   pinBuff.putBytes(cipher.output.getBytes());
 
   const encryptedBytes = Buffer.from(pinBuff.getBytes(), 'binary');
-  return forge.util.binary.base64.encode(encryptedBytes);
+  return base64RawURLEncode(encryptedBytes);
 };
