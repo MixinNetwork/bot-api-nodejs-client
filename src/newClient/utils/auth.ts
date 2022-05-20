@@ -49,7 +49,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   const sign = base64RawURLEncode(signData);
   result.push(sign);
   return result.join('.');
-}
+};
 
 const privateKeyToCurve25519 = (privateKey: Buffer) => {
   const seed = privateKey.subarray(0, 32);
@@ -61,7 +61,7 @@ const privateKeyToCurve25519 = (privateKey: Buffer) => {
   digest[31] &= 127;
   digest[31] |= 64;
   return digest.subarray(0, 32);
-}
+};
 
 export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => {
   const pinToken = Buffer.from(pinTokenRaw, 'base64');
@@ -69,7 +69,7 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
   privateKey = privateKeyToCurve25519(privateKey);
 
   return sharedKey(privateKey, pinToken);
-}
+};
 
 export const signEd25519PIN = (pin: string, keystore: Keystore) => {
   const blockSize = 16;
@@ -105,4 +105,4 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
 
   const encryptedBytes = Buffer.from(pinBuff.getBytes(), 'binary');
   return forge.util.binary.base64.encode(encryptedBytes);
-}
+};
