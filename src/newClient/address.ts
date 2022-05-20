@@ -24,7 +24,7 @@ export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosIn
   // Delete a specified address by addressID
   delete: (addressID: string, pin: string) => {
     const encrypted = Utils.signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, void>(`/addresses/${addressID}/delete`, { pin: encrypted });
+    return axiosInstance.post<unknown, any>(`/addresses/${addressID}/delete`, { pin: encrypted });
   },
 });
 

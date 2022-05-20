@@ -19,7 +19,7 @@ export function AppKeystoreClient(axiosInstance: AxiosInstance) {
     favorite: (appID: string) => axiosInstance.post<unknown, AppResponse[]>(`/apps/${appID}/favorite`),
 
     // Removing from your share list
-    unfavorite: (appID: string) => axiosInstance.post<unknown, void>(`/apps/${appID}/unfavorite`),
+    unfavorite: (appID: string) => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
   };
 };
 
