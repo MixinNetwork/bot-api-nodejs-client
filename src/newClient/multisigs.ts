@@ -6,21 +6,21 @@ import { buildClient } from "./utils/client";
 import { MultisigRequest, MultisigIndexRequest, MultisigResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
 
 export const MutilsigsTokenClient = (axiosInstance: AxiosInstance) => ({
-    // Get signature outputs, if an account participates in it
-    index: (params: MultisigIndexRequest): Promise<MultisigResponse[]> => {
-      const { members, threshold, order } = params;
-      if ((members.length > 0 && threshold < 1) || threshold > members.length)
-        return Promise.reject(new Error('Invalid threshold or members'));
+  // Get signature outputs, if an account participates in it
+  index: (params: MultisigIndexRequest): Promise<MultisigResponse[]> => {
+    const { members, threshold, order } = params;
+    if ((members.length > 0 && threshold < 1) || threshold > members.length)
+      return Promise.reject(new Error('Invalid threshold or members'));
 
-      const hashedParams = {
-        ...params,
-        threshold: Number(threshold),
-        members: hashMember(members),
-        order: order || "updated",
-      };
-      return axiosInstance.get<unknown, MultisigResponse[]>(`/multisigs/outputs`, { params: hashedParams });
-    }
-  });
+    const hashedParams = {
+      ...params,
+      threshold: Number(threshold),
+      members: hashMember(members),
+      order: order || "updated",
+    };
+    return axiosInstance.get<unknown, MultisigResponse[]>(`/multisigs/outputs`, { params: hashedParams });
+  }
+});
 
 export const MutilsigsKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
 

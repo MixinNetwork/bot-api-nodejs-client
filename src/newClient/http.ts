@@ -19,7 +19,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
   });
 
   let token: string | undefined;
-  let keystore: Keystore | undefined; 
+  let keystore: Keystore | undefined;
 
   if (typeof arg === 'string') {
     token = arg;
