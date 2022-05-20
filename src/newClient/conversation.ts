@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { uniqueConversationID } from './utils/uniq';
-import { mixinRequest } from "./http";
-import { buildClient } from "./utils/client";
+import { mixinRequest } from './http';
+import { buildClient } from './utils/client';
 import Keystore from './types/keystore';
 import { ConversationResponse, ConversationAction, ConversationCreateRequest, ConversationUpdateRequest, Participant } from './types/conversation';
 
