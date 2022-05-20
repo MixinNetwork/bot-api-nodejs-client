@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { http } from '../http';
-import { BaseClient, BuildClient, BaseInnerClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
+import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: HTTPConfig) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
@@ -22,17 +22,14 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
 });
 
 export const buildClient: BuildClient =
-  <TokenReturnType, KeystoreReturnType>({
-    TokenClient,
+  <KeystoreReturnType>({
     KeystoreClient,
   }: {
-    TokenClient?: BaseInnerClient<TokenReturnType>;
-    KeystoreClient?: UnionKeystoreClient<KeystoreReturnType>;
-  }): BaseClient<TokenReturnType, KeystoreReturnType> =>
+    KeystoreClient: UnionKeystoreClient<KeystoreReturnType>;
+  }): BaseClient<KeystoreReturnType> =>
   (config: HTTPConfig): any => {
     const axiosInstance = createAxiosClient(config);
     const requestClient = createRequestClient(axiosInstance);
-    console.log(TokenClient);
 
     const { keystore } = config;
 

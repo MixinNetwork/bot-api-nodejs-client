@@ -7,9 +7,8 @@ export interface HTTPConfig {
   keystore?: Keystore;
 }
 
-export interface BaseClient<TokenReturnType, KeystoreReturnType> {
-  (config: HTTPConfig): TokenReturnType & RequestClient;
-  (config: HTTPConfig): TokenReturnType & KeystoreReturnType & RequestClient;
+export interface BaseClient<KeystoreReturnType> {
+  (config: HTTPConfig): KeystoreReturnType & RequestClient;
 }
 
 export type BaseInnerClient<KeystoreReturnType> = (axiosInstance: AxiosInstance) => KeystoreReturnType;
@@ -17,12 +16,9 @@ export type KeystoreClient<KeystoreReturnType> = (axiosInstance: AxiosInstance, 
 export type UnionKeystoreClient<KeystoreReturnType> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {
-  <TokenReturnType, KeystoreReturnType>(config: { TokenClient: BaseInnerClient<TokenReturnType>; KeystoreClient: UnionKeystoreClient<KeystoreReturnType> }): BaseClient<
-    TokenReturnType,
+  <KeystoreReturnType>(config: { KeystoreClient: UnionKeystoreClient<KeystoreReturnType> }): BaseClient<
     KeystoreReturnType
-  >;
-  <TokenReturnType>(config: { TokenClient: BaseInnerClient<TokenReturnType> }): BaseClient<TokenReturnType, TokenReturnType>;
-  <KeystoreReturnType>(config: { KeystoreClient: UnionKeystoreClient<KeystoreReturnType> }): BaseClient<KeystoreReturnType, KeystoreReturnType>;
+>;
 }
 
 export interface RequestClient {
