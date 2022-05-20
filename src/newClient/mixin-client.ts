@@ -11,6 +11,7 @@ import { AssetTokenClient } from "./asset";
 import { AppKeystoreClient, AppTokenClient } from "./app";
 import { AttachmentKeystoreClient } from "./attachment";
 import { MutilsigsTokenClient, MutilsigsKeystoreClient } from "./multisigs";
+import { MessagesKeystoreClient } from "./messages";
 
 const TokenClient = (axiosInstance: AxiosInstance) => ({
   address: AddressTokenClient(axiosInstance),
@@ -26,6 +27,7 @@ const KeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   app: AppKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   conversation: ConversationKeystoreClient(keystore, axiosInstance),
+  messages: MessagesKeystoreClient(keystore, axiosInstance),
   multisigs: MutilsigsKeystoreClient(keystore, axiosInstance),
   pin: PinKeystoreClient(keystore, axiosInstance),
   user: UserKeystoreClient(axiosInstance),
