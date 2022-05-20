@@ -31,7 +31,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
     const { method, data } = config;
     const uri = ins.getUri(config);
     const requestID = uuid();
-    config.headers['x-request-id'] = requestID;
+    config.headers['X-Request-Id'] = requestID;
     const jwtToken = signAuthenticationToken(method, uri, data, keystore) || token || '';
     config.headers.Authorization = `Bearer ${jwtToken}`;
     return config;
