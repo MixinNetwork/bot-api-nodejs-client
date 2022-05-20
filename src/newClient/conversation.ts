@@ -70,7 +70,7 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
       ),
 
     // Set admin privileges for a user, group owners Only
-    addAdmin: (conversationID: string, userIDs: string[]) =>
+    setAdmin: (conversationID: string, userIDs: string[]) =>
       managerConversation(
         conversationID,
         'ROLE',
@@ -78,7 +78,7 @@ export function ConversationKeystoreClient(keystore: Keystore, axiosInstance: Ax
       ),
 
     // Remove admin privileges for a user, group owners Only
-    removeAdmin: (conversationID: string, userIDs: string[]) =>
+    revokeAdmin: (conversationID: string, userIDs: string[]) =>
       managerConversation(
         conversationID,
         'ROLE',
