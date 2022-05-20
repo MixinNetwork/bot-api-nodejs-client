@@ -3,7 +3,7 @@ import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from '.
 import { buildClient } from './utils/client';
 
 // Get users' information
-export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
+export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the current user's personal information
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
@@ -36,7 +36,7 @@ export const UserTokenClient = (axiosInstance: AxiosInstance) => ({
 });
 
 export const UserClient = buildClient({
-  TokenClient: UserTokenClient,
+  KeystoreClient: UserKeystoreClient,
 });
 
 export default UserClient;

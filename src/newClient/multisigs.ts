@@ -5,7 +5,14 @@ import { signEd25519PIN } from "./utils/auth";
 import { buildClient } from "./utils/client";
 import { MultisigRequest, MultisigIndexRequest, MultisigResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
 
-export const MutilsigsTokenClient = (axiosInstance: AxiosInstance) => ({
+export const MutilsigsKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => {
+
+  const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequest> => {
+    const encrypted = signEd25519PIN(pin, keystore);
+    return axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests/${request_id}/${action}`, { pin: encrypted });
+  };
+
+  return {
     // Get signature outputs, if an account participates in it
     index: (params: MultisigIndexRequest): Promise<MultisigResponse[]> => {
       const { members, threshold, order } = params;
@@ -19,17 +26,8 @@ export const MutilsigsTokenClient = (axiosInstance: AxiosInstance) => ({
         order: order || "updated",
       };
       return axiosInstance.get<unknown, MultisigResponse[]>(`/multisigs/outputs`, { params: hashedParams });
-    }
-  });
+    },
 
-export const MutilsigsKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
-
-  const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequest> => {
-    const encrypted = signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests/${request_id}/${action}`, { pin: encrypted });
-  };
-
-  return {
     // Generate a multi-signature request to obtain request_id
     create: (action: MultisigInitAction, raw: string): Promise<MultisigRequest> => axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests`, { action, raw }),
 
@@ -45,7 +43,6 @@ export const MutilsigsKeystoreClient = (keystore: Keystore, axiosInstance: Axios
 };
 
 export const MultisigsClient = buildClient({
-  TokenClient: MutilsigsTokenClient,
   KeystoreClient: MutilsigsKeystoreClient
 });
 

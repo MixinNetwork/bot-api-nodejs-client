@@ -71,7 +71,10 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
   return sharedKey(privateKey, pinToken);
 };
 
-export const signEd25519PIN = (pin: string, keystore: Keystore) => {
+export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
+  if (!keystore) {
+    return '';
+  }
   const blockSize = 16;
   const Uint64 = LittleEndian.Int64LE;
 

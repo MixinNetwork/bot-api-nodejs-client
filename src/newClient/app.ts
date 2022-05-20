@@ -2,13 +2,10 @@ import { AxiosInstance } from 'axios';
 import { AppResponse, UpdateAppRequest } from './types/app';
 import { buildClient } from "./utils/client";
 
-// Methods to manage your app share list
-export const AppTokenClient = (axiosInstance: AxiosInstance) => ({
+export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get user's app share list
   favorites: (userID: string) => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
-});
 
-export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Update app setting
   update: (appID: string, params: UpdateAppRequest) => axiosInstance.post<unknown, AppResponse>(`/apps/${appID}`, params),
 
@@ -20,7 +17,6 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
 });
 
 export const AppClient = buildClient({
-  TokenClient: AppTokenClient,
   KeystoreClient: AppKeystoreClient,
 });
 

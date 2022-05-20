@@ -4,17 +4,14 @@ import { AddressResponse, AddressCreateRequest } from "./types/address";
 import { buildClient } from './utils/client';
 import { signEd25519PIN } from "./utils/auth";
 
-// Get withdrawal address, needs token
-export const  AddressTokenClient = (axiosInstance: AxiosInstance) => ({
+// Create or delete a withdrawal address
+export const AddressKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => ({
   // Get an address by addressID
   show: (addressID: string) => axiosInstance.get<unknown, AddressResponse>(`/addresses/${addressID}`),
 
   // Get a list of withdrawal addresses for the given asset
   index: (assetID: string) => axiosInstance.get<unknown, AddressResponse[]>(`/assets/${assetID}/addresses`),
-});
 
-// Create or delete a withdrawal address, needs keystore
-export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => ({
   // Create a new withdrawal address
   create: (params: AddressCreateRequest, pin: string) => {
     const encrypted = signEd25519PIN(pin, keystore);
@@ -29,7 +26,6 @@ export const AddressKeystoreClient = (keystore: Keystore, axiosInstance: AxiosIn
 });
 
 export const AddressClient = buildClient({
-  TokenClient: AddressTokenClient,
   KeystoreClient: AddressKeystoreClient,
 });
 

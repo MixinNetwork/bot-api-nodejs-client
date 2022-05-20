@@ -13,7 +13,7 @@ export const showConversation = async (conversationID: string, axiosInstance?: A
 };
 
 // Manage conversation, need keystore
-export const ConversationKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
+export const ConversationKeystoreClient = (keystore: Keystore | undefined, axiosInstance: AxiosInstance) => {
 
   const createConversation = (params: ConversationCreateRequest) => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
@@ -22,7 +22,7 @@ export const ConversationKeystoreClient = (keystore: Keystore, axiosInstance: Ax
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
       category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore.user_id, userID),
+      conversation_id: uniqueConversationID(keystore!.user_id, userID),
       participants: [{ user_id: userID }],
     });
 

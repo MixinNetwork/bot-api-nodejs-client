@@ -6,7 +6,7 @@ import { buildClient } from './utils/client';
 import { signEd25519PIN } from './utils/auth';
 
 // Verify or update pin, needs keystore
-export const PinKeystoreClient = (keystore: Keystore, axiosInstance?: AxiosInstance) => {
+export const PinKeystoreClient = (keystore: Keystore | undefined, axiosInstance?: AxiosInstance) => {
   const _axiosInstance = axiosInstance || http(keystore);
 
   function updatePin(pin: string): Promise<AuthenticationUserResponse>;
