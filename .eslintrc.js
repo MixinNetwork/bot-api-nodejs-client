@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
-    "jest/globals": true,
+    'jest/globals': true,
   },
   extends: ['airbnb-base', 'prettier'],
   parser: '@typescript-eslint/parser',
@@ -22,11 +22,13 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
     'no-shadow': 'off',
-    "no-redeclare": "off",
-    "@typescript-eslint/no-redeclare": ["error"],
+    'no-redeclare': 'off',
+    '@typescript-eslint/no-redeclare': ['error'],
 
-    "semi": "off",
-    "@typescript-eslint/semi": ["error"],
+    'semi': 'off',
+    '@typescript-eslint/semi': ['error'],
+
+    quotes: ['error', 'single', { 'allowTemplateLiterals': true }],
 
     // todo remove
     // 'no-redeclare': 'off',

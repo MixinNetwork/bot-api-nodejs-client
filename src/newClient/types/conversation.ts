@@ -1,15 +1,29 @@
+import { CircleConversationResponse } from './circle';
+
+export interface ParticipantResponse {
+  type: 'participant';
+  user_id: string;
+  session_id: string;
+  public_key: string;
+}
+
 export interface ConversationResponse {
+  type: 'conversation';
   conversation_id: string;
   creator_id: string;
   category: ConversationCategory;
   name: string;
   icon_url: string;
   announcement: string;
-  created_at: string;
+  created_at: Date;
+
   code_id: string;
   code_url: string;
+  mute_until: string;
+  expire_in: number;
 
-  participants: Participant[];
+  participant_sessions: ParticipantResponse[];
+  circles: CircleConversationResponse[];
 }
 
 export type ConversationCategory = 'CONTACT' | 'GROUP';
@@ -33,21 +47,4 @@ export interface ConversationCreateRequest {
 export interface ConversationUpdateRequest {
   name?: string;
   announcement?: string;
-}
-
-export interface ConversationMuteRequest {
-  duration: number;
-}
-
-export interface ConversationClientRequest {
-  createConversation(params: ConversationCreateRequest): Promise<ConversationResponse>;
-  updateConversation(conversationID: string, params: ConversationUpdateRequest): Promise<ConversationResponse>;
-  createContactConversation(userID: string): Promise<ConversationResponse>;
-  createGroupConversation(conversationID: string, name: string, participant: Participant[]): Promise<ConversationResponse>;
-  readConversation(conversationID: string): Promise<ConversationResponse>;
-  managerConversation(conversationID: string, action: ConversationAction, participant: Participant[]): Promise<ConversationResponse>;
-  addParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  removeParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  adminParticipants(conversationID: string, userIDs: string[]): Promise<ConversationResponse>;
-  rotateConversation(conversationID: string): Promise<ConversationResponse>;
 }

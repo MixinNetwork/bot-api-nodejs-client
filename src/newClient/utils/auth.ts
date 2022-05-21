@@ -49,7 +49,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   const sign = base64RawURLEncode(signData);
   result.push(sign);
   return result.join('.');
-}
+};
 
 const privateKeyToCurve25519 = (privateKey: Buffer) => {
   const seed = privateKey.subarray(0, 32);
@@ -61,7 +61,7 @@ const privateKeyToCurve25519 = (privateKey: Buffer) => {
   digest[31] &= 127;
   digest[31] |= 64;
   return digest.subarray(0, 32);
-}
+};
 
 export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => {
   const pinToken = Buffer.from(pinTokenRaw, 'base64');
@@ -69,9 +69,12 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
   privateKey = privateKeyToCurve25519(privateKey);
 
   return sharedKey(privateKey, pinToken);
-}
+};
 
-export const signEd25519PIN = (pin: string, keystore: Keystore) => {
+export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
+  if (!keystore) {
+    return '';
+  }
   const blockSize = 16;
   const Uint64 = LittleEndian.Int64LE;
 
@@ -87,11 +90,13 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
   buffer.putBytes(time.toString('binary'));
   buffer.putBytes(iterator.toString('binary'));
   const paddingLen = blockSize - (buffer.length() % blockSize);
+  const paddings = [];
   for (let i = 0; i < paddingLen; i += 1) {
-    buffer.putBytes(paddingLen.toString(16));
+    paddings.push(paddingLen);
   }
+  buffer.putBytes(Buffer.from(paddings).toString('binary'));
   const iv = forge.random.getBytesSync(16);
-  const cipher = forge.cipher.createCipher('AES-CBC', forge.util.binary.hex.encode(sharedKey));
+  const cipher = forge.cipher.createCipher('AES-CBC', forge.util.hexToBytes(forge.util.binary.hex.encode(sharedKey)));
 
   cipher.start({
     iv,
@@ -104,5 +109,5 @@ export const signEd25519PIN = (pin: string, keystore: Keystore) => {
   pinBuff.putBytes(cipher.output.getBytes());
 
   const encryptedBytes = Buffer.from(pinBuff.getBytes(), 'binary');
-  return forge.util.binary.base64.encode(encryptedBytes);
-}
+  return base64RawURLEncode(encryptedBytes);
+};

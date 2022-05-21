@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { http } from '../http';
-import { BaseClient, BuildClient, KeystoreClientConfig, BaseInnerClient, TokenClientConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
+import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
-export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreClientConfig>) => {
+export const createAxiosClient = (config: HTTPConfig) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
 
   let axiosInstance: AxiosInstance;
@@ -11,7 +11,7 @@ export const createAxiosClient = (config: Partial<TokenClientConfig & KeystoreCl
   } else if (keystore) {
     axiosInstance = http(keystore, axiosConfig);
   } else {
-    throw new Error('Either token or keystore is required');
+    axiosInstance = http('', axiosConfig);
   }
 
   return axiosInstance;
@@ -22,37 +22,22 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
 });
 
 export const buildClient: BuildClient =
-  <TokenReturnType, KeystoreReturnType>({
-    TokenClient,
+  <KeystoreReturnType>({
     KeystoreClient,
   }: {
-    TokenClient?: BaseInnerClient<TokenReturnType>;
-    KeystoreClient?: UnionKeystoreClient<KeystoreReturnType>;
-  }): BaseClient<TokenReturnType, KeystoreReturnType> =>
-  (config: Partial<TokenClientConfig & KeystoreClientConfig>): any => {
+    KeystoreClient: UnionKeystoreClient<KeystoreReturnType>;
+  }): BaseClient<KeystoreReturnType> =>
+  (config: HTTPConfig): any => {
     const axiosInstance = createAxiosClient(config);
     const requestClient = createRequestClient(axiosInstance);
 
     const { keystore } = config;
 
-    const tokenClient = TokenClient?.(axiosInstance);
-    if (!keystore || !KeystoreClient) {
-      if (!tokenClient) throw new Error('Either token or keystore is required');
-
-      return Object.assign(tokenClient, requestClient);
+    if (!KeystoreClient) {
+      throw new Error('Either token or keystore is required');
     }
 
-    let keystoreClient: KeystoreReturnType | undefined;
-    switch (KeystoreClient.length) {
-      case 1:
-        keystoreClient = (KeystoreClient as BaseInnerClient<KeystoreReturnType>)(axiosInstance);
-        break;
-      case 2:
-        keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(keystore, axiosInstance);
-        break;
-      default:
-        throw new Error('KeystoreClient must have 1 or 2 arguments');
-    }
+    const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
 
-    return Object.assign(tokenClient || {}, keystoreClient, requestClient);
+    return Object.assign(keystoreClient, requestClient);
   };
