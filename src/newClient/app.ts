@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { AppResponse, UpdateAppRequest } from './types/app';
-import { buildClient } from "./utils/client";
+import { buildClient } from './utils/client';
 
 export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get user's app share list

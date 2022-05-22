@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { hashMember } from '../mixin/tools';
-import { signEd25519PIN } from "./utils/auth";
-import { buildClient } from "./utils/client";
+import { signEd25519PIN } from './utils/auth';
+import { buildClient } from './utils/client';
 import { MultisigRequest, MultisigIndexRequest, MultisigResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
 
 export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
@@ -23,7 +23,7 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
         ...params,
         threshold: Number(threshold),
         members: hashMember(members),
-        order: order || "updated",
+        order: order || 'updated',
       };
       return axiosInstance.get<unknown, MultisigResponse[]>(`/multisigs/outputs`, { params: hashedParams });
     },
@@ -32,13 +32,13 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
     create: (action: MultisigInitAction, raw: string): Promise<MultisigRequest> => axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests`, { action, raw }),
 
     // Initiate or participate in signing
-    sign: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "sign"),
+    sign: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'sign'),
 
     // Cancel multisigs
-    unlock: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "unlock"),
+    unlock: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'unlock'),
 
     // Cancel my signature
-    cancel: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, "cancel"),
+    cancel: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'cancel'),
   };
 };
 

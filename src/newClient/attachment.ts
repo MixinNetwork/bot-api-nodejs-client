@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { AttachmentResponse } from "./types/attachment";
-import { buildClient } from "./utils/client";
+import { AttachmentResponse } from './types/attachment';
+import { buildClient } from './utils/client';
 
 // Upload attachment
 export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {

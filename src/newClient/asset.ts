@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse, ExchangeRate } from './types/asset';
-import { buildClient } from "./utils/client";
+import { buildClient } from './utils/client';
 
 // Get information about asset
 export const AssetKestoreClient = (axiosInstance: AxiosInstance) => ({

@@ -1,17 +1,17 @@
 import merge from 'lodash.merge';
 import { AxiosInstance } from 'axios';
-import { PinKeystoreClient } from './pin';
-import { UserKeystoreClient } from './user';
 import Keystore from './types/keystore';
 import { HTTPConfig, RequestClient } from './types/client';
 import { createAxiosClient, createRequestClient } from './utils/client';
-import { AddressKeystoreClient } from "./address";
-import { ConversationKeystoreClient } from "./conversation";
-import { AssetKestoreClient } from "./asset";
-import { AppKeystoreClient } from "./app";
-import { AttachmentKeystoreClient } from "./attachment";
-import { MutilsigsKeystoreClient } from "./multisigs";
+import { AddressKeystoreClient } from './address';
+import { AssetKestoreClient } from './asset';
+import { AppKeystoreClient } from './app';
+import { AttachmentKeystoreClient } from './attachment';
+import { ConversationKeystoreClient } from './conversation';
+import { MutilsigsKeystoreClient } from './multisigs';
+import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
+import { UserKeystoreClient } from './user';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),

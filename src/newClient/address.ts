@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { AddressResponse, AddressCreateRequest } from "./types/address";
+import { AddressResponse, AddressCreateRequest } from './types/address';
 import { buildClient } from './utils/client';
-import { signEd25519PIN } from "./utils/auth";
+import { signEd25519PIN } from './utils/auth';
 
 // Create or delete a withdrawal address
 export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
