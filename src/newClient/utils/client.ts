@@ -5,13 +5,11 @@ import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, Uni
 export const createAxiosClient = (config: HTTPConfig) => {
   const { token, keystore, requestConfig: axiosConfig } = config;
 
-  let axiosInstance: AxiosInstance;
+  let axiosInstance: AxiosInstance = http('', axiosConfig);
   if (token) {
     axiosInstance = http(token, axiosConfig);
   } else if (keystore) {
     axiosInstance = http(keystore, axiosConfig);
-  } else {
-    axiosInstance = http('', axiosConfig);
   }
 
   return axiosInstance;
@@ -30,11 +28,10 @@ export const buildClient: BuildClient =
   (config: HTTPConfig): any => {
     const axiosInstance = createAxiosClient(config);
     const requestClient = createRequestClient(axiosInstance);
-
     const { keystore } = config;
 
     if (!KeystoreClient) {
-      throw new Error('Either token or keystore is required');
+      throw new Error('keystore client is required');
     }
 
     const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
