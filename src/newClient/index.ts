@@ -9,6 +9,7 @@ export { TransferClient } from './transfer';
 export { MultisigsClient } from './multisigs';
 export { CircleClient } from './circle';
 export { CollectiblesClient } from './collectibles';
+export { OAuthClient } from './oauth';
 export * from './mixin-client';
 
 // todo export utils
