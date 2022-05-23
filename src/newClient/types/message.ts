@@ -1,3 +1,9 @@
+export interface SessionResponse {
+  type: 'session';
+  session_id: string;
+  public_key: string;
+}
+
 export type MessageStatus = 'SENT' | 'DELIVERED' | 'READ';
 
 export type MessageResponse = {
@@ -142,4 +148,13 @@ export interface TransferMessage {
 export interface AcknowledgementRequest {
   message_id: string;
   status: string;
+}
+
+export type EnctypedMessageStatus = 'SUCCESS' | 'FAILED';
+
+export interface EnctypedMessageRespose {
+  type: 'message';
+  message_id: string;
+  recipient_id: string;
+  state: EnctypedMessageStatus;
 }

@@ -1,17 +1,28 @@
 import { UserResponse } from './user';
 import { AssetResponse } from './asset';
+import { AddressResponse } from './address';
 
-export interface Payment {
-  recipient: UserResponse;
-  asset: AssetResponse;
+// For multisig transfer
+export interface PaymentRequestResponse {
+  type: 'payment';
   asset_id: string;
   amount: string;
-  trace_id: string;
-  status: string;
+  receivers: string[];
+  threshold: number;
   memo: string;
-  receivers: string;
-  threshold: string;
+  trace_id: string;
+  created_at: Date;
+  status: string;
   code_id: string;
+}
+
+// For 1to1 transfer
+export interface PaymentResponse {
+  recipient: UserResponse;
+  asset: AssetResponse;
+  address: AddressResponse;
+  amount: string;
+  status: string;
 }
 
 export interface TransferRequest {

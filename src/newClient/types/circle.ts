@@ -7,12 +7,9 @@ export interface CircleConversationResponse {
 }
 
 export interface CircleResponse {
+  type: 'circle';
   circle_id: string;
-  conversation_id: string;
-  created_at: Date;
-}
-
-export interface CircleFilterResponse {
-  limit: number;
-  offset: string;
+  user_id: string;
+  name: string;
+  created_at: string;
 }
