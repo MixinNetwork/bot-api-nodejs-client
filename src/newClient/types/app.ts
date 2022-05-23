@@ -1,5 +1,5 @@
 export interface AppResponse {
-  updated_at: string;
+  type: string;
   app_id: string;
   app_number: string;
   redirect_url: string;
@@ -12,6 +12,8 @@ export interface AppResponse {
   category: string;
   creator_id: string;
   app_secret: string;
+  session_secret: string;
+  updated_at: string;
 }
 
 export interface UpdateAppRequest {
