@@ -1,9 +1,9 @@
 import { AxiosInstance } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { base64url } from '../mixin/sign';
-import { buildClient } from "./utils/client";
+import { buildClient } from './utils/client';
 import { uniqueConversationID } from './utils/uniq';
-import Keystore from "./types/keystore";
+import Keystore from './types/keystore';
 import {
   MessageResponse,
   AcknowledgementRequest,
@@ -24,7 +24,7 @@ import {
   FileMessage,
 } from './types/message';
 
-export const MessagesKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
+export const MessagesKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
@@ -34,7 +34,7 @@ export const MessagesKeystoreClient = (keystore: Keystore, axiosInstance: AxiosI
     return send({
       category,
       recipient_id,
-      conversation_id: uniqueConversationID(keystore.user_id, recipient_id),
+      conversation_id: uniqueConversationID(keystore!.user_id, recipient_id),
       message_id: uuid(),
       data: base64url(Buffer.from(data)),
     });

@@ -1,3 +1,4 @@
+export { NetworkClient } from './network';
 export { UserClient } from './user';
 export { PinClient } from './pin';
 export { AppClient } from './app';

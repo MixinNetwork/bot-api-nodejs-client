@@ -14,14 +14,6 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
     return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/update', { old_pin: oldEncrypted, pin: newEncrypted });
   }
 
-  function updatePin(pin: string): Promise<AuthenticationUserResponse>;
-  function updatePin(oldPin: string, pin: string): Promise<AuthenticationUserResponse>;
-  function updatePin(firstPin: string, secondPin?: string): Promise<AuthenticationUserResponse> {
-    const oldEncrypted = secondPin ? signEd25519PIN(firstPin, keystore) : '';
-    const newEncrypted = secondPin ? signEd25519PIN(secondPin, keystore) : signEd25519PIN(firstPin, keystore);
-    return _axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/update', { old_pin: oldEncrypted, pin: newEncrypted });
-  }
-
   return {
     // Verify a user's PIN
     verify: (pin: string) => {

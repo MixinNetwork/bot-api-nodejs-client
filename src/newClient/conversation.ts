@@ -1,16 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { uniqueConversationID } from './utils/uniq';
-import { mixinRequest } from './http';
 import { buildClient } from './utils/client';
 import Keystore from './types/keystore';
 import { ConversationResponse, ConversationAction, ConversationCreateRequest, ConversationUpdateRequest, Participant } from './types/conversation';
-
-// todo: move to network
-// Get conversation information by conversationID
-export const showConversation = async (conversationID: string, axiosInstance?: AxiosInstance) => {
-  const _axiosInstance = axiosInstance || mixinRequest;
-  return _axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`);
-};
 
 // Manage conversation, need keystore
 export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {

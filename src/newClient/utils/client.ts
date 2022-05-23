@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { http } from '../http';
+import { NetworkClient } from '../network';
 import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: HTTPConfig) => {
@@ -17,6 +18,10 @@ export const createAxiosClient = (config: HTTPConfig) => {
 
 export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient => ({
   request: config => axiosInstance.request(config),
+});
+
+export const createNetworkClient = (axiosInstance: AxiosInstance) => ({
+  network: NetworkClient(axiosInstance),
 });
 
 export const buildClient: BuildClient =

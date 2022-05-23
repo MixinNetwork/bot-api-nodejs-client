@@ -25,9 +25,3 @@ export interface ExchangeRate {
   code: string;
   rate: string;
 }
-
-export interface NetworkTicker {
-  type: 'ticker';
-  price_usd: string;
-  price_btc: string;
-}
