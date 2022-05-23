@@ -1,10 +1,9 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse, ExchangeRate } from './types/asset';
-import { buildClient } from "./utils/client";
-import { AddressTokenClient } from "./address";
+import { buildClient } from './utils/client';
 
 // Get information about asset
-export const AssetTokenClient = (axiosInstance: AxiosInstance) => ({
+export const AssetKestoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the specified asset of current user, the ASSETS:READ permission is required.
   show: (assetID: string) => axiosInstance.get<unknown, AssetResponse>(`/assets/${assetID}`),
 
@@ -16,7 +15,7 @@ export const AssetTokenClient = (axiosInstance: AxiosInstance) => ({
 });
 
 export const AssetClient = buildClient({
-  TokenClient: AddressTokenClient,
+  KeystoreClient: AssetKestoreClient,
 });
 
 export default AssetClient;

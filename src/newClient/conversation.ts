@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { uniqueConversationID } from './utils/uniq';
-import { mixinRequest } from "./http";
-import { buildClient } from "./utils/client";
+import { mixinRequest } from './http';
+import { buildClient } from './utils/client';
 import Keystore from './types/keystore';
 import { ConversationResponse, ConversationAction, ConversationCreateRequest, ConversationUpdateRequest, Participant } from './types/conversation';
 
@@ -13,7 +13,7 @@ export const showConversation = async (conversationID: string, axiosInstance?: A
 };
 
 // Manage conversation, need keystore
-export const ConversationKeystoreClient = (keystore: Keystore, axiosInstance: AxiosInstance) => {
+export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const createConversation = (params: ConversationCreateRequest) => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
@@ -22,7 +22,7 @@ export const ConversationKeystoreClient = (keystore: Keystore, axiosInstance: Ax
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
       category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore.user_id, userID),
+      conversation_id: uniqueConversationID(keystore!.user_id, userID),
       participants: [{ user_id: userID }],
     });
 

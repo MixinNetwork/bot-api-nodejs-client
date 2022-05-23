@@ -9,7 +9,7 @@ import { signAuthenticationToken } from './utils/auth';
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
 export function http(arg?: string | Keystore, config?: AxiosRequestConfig): AxiosInstance {
-  const isCustomUrl = !!config?.baseURL;
+  const domain = !!config?.baseURL;
 
   const ins = axios.create({
     baseURL: hostURL[0],
@@ -46,7 +46,7 @@ export function http(arg?: string | Keystore, config?: AxiosRequestConfig): Axio
     },
     async (e: any) => {
       if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
-        if (isCustomUrl) return e.config;
+        if (domain) return e.config;
 
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;

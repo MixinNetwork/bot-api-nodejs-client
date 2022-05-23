@@ -6,7 +6,7 @@ export const base64RawURLEncode = (raw: Buffer | Uint8Array | string): string =>
   let buf = raw;
   if (typeof raw === 'string') {
     buf = Buffer.from(raw);
-  } else if (raw instanceof Uint8Array ) {
+  } else if (raw instanceof Uint8Array) {
     buf = Buffer.from(raw);
   }
   if (buf.length === 0) {

@@ -8,7 +8,7 @@ export const hashMembers = (ids: string[]): string => {
   const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
   sha.update(key);
   return sha.getHash('HEX');
-}
+};
 
 export const uniqueConversationID = (userID: string, recipientID: string): string => {
   const [minId, maxId] = [userID, recipientID].sort();
