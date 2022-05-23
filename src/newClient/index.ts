@@ -7,6 +7,7 @@ export { AttachmentClient } from './attachment';
 export { ConversationClient } from './conversation';
 export { TransferClient } from './transfer';
 export { MultisigsClient } from './multisigs';
+export { CircleClient } from './circle';
 export * from './mixin-client';
 
 // todo export utils

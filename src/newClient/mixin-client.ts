@@ -13,12 +13,14 @@ import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { MessagesKeystoreClient } from './messages';
+import { CircleKeystoreClient } from './circle';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
   app: AppKeystoreClient(axiosInstance),
   asset: AssetKestoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
+  circle: CircleKeystoreClient(axiosInstance),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   messages: MessagesKeystoreClient(axiosInstance, keystore),
   multisigs: MutilsigsKeystoreClient(axiosInstance, keystore),
