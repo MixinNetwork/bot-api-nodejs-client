@@ -14,6 +14,7 @@ import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { MessagesKeystoreClient } from './messages';
 import { CircleKeystoreClient } from './circle';
+import { CollectiblesKeystoreClient } from './collectibles';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -21,6 +22,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   asset: AssetKestoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
+  collectibles: CollectiblesKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   messages: MessagesKeystoreClient(axiosInstance, keystore),
   multisigs: MutilsigsKeystoreClient(axiosInstance, keystore),
