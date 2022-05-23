@@ -3,9 +3,10 @@ import {
   CollectibleRequestAction,
   CollectibleGenerateRequest,
   CollectibleOutputsRequest,
-  CollectibleOutputResponse,
-
-  CollectibleResponse, CollectibleTokenResponse, CollectibleCollectionResponse
+  NFTOutputResponse,
+  NFTRequestResponse, 
+  NFTResponse, 
+  NFTCollectionResponse,
 } from './types/collectibles';
 import { signEd25519PIN } from './utils/auth';
 import Keystore from './types/keystore';
@@ -15,12 +16,12 @@ export const CollectiblesKeystoreClient = (axiosInstance: AxiosInstance, keystor
 
   const manageRequest = (pin: string, request_id: string, action: CollectibleRequestAction) => {
     const encrypted = signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, CollectibleResponse>(`/collectibles/requests/${request_id}/${action}`, { pin: encrypted });
+    return axiosInstance.post<unknown, NFTRequestResponse>(`/collectibles/requests/${request_id}/${action}`, { pin: encrypted });
   };
 
   return {
     // Generate a collectibles transfer request
-    transfer: (data: CollectibleGenerateRequest): Promise<CollectibleResponse> => axiosInstance.post<unknown, CollectibleResponse>('/collectibles/requests', data),
+    transfer: (data: CollectibleGenerateRequest): Promise<NFTRequestResponse> => axiosInstance.post<unknown, NFTRequestResponse>('/collectibles/requests', data),
 
     // Initiate or participate in signing
     sign: (pin: string, request_id: string) => manageRequest(pin, request_id, 'sign'),
@@ -32,13 +33,13 @@ export const CollectiblesKeystoreClient = (axiosInstance: AxiosInstance, keystor
     unlock: (pin: string, request_id: string) => manageRequest(pin, request_id, 'unlock'),
 
     // Get collectibles outputs
-    outputs: (params: CollectibleOutputsRequest): Promise<CollectibleOutputResponse> => axiosInstance.get<unknown, CollectibleOutputResponse>('/collectibles/outputs', { params }),
+    outputs: (params: CollectibleOutputsRequest): Promise<NFTOutputResponse> => axiosInstance.get<unknown, NFTOutputResponse>('/collectibles/outputs', { params }),
 
     // Get the information of the collectible
-    show: (token_id: string): Promise<CollectibleTokenResponse> => axiosInstance.get<unknown, CollectibleTokenResponse>(`/collectibles/tokens/${token_id}`),
+    show: (token_id: string): Promise<NFTResponse> => axiosInstance.get<unknown, NFTResponse>(`/collectibles/tokens/${token_id}`),
 
     // Get the information of the collectible collection
-    collection: (collection_id: string): Promise<CollectibleCollectionResponse> => axiosInstance.get<unknown, CollectibleCollectionResponse>(`/collectibles/collections/${collection_id}`)
+    collection: (collection_id: string): Promise<NFTCollectionResponse> => axiosInstance.get<unknown, NFTCollectionResponse>(`/collectibles/collections/${collection_id}`)
   };
 };
 
