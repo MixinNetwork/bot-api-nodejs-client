@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { mixinRequest } from './http';
 import { AssetResponse } from './types/asset';
 import { ConversationResponse } from './types/conversation';
-import { SnapshotQuery, GhostInput, GhostKeys, NetworkChain, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
+import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkChain, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
 
 // Methods need no permission
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
@@ -55,7 +55,7 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   showConversation: (conversationID: string): Promise<ConversationResponse> => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
 
   // Check if the address is the inner one
-  externalAddressesCheck: (params: SnapshotQuery): Promise<boolean> => mixinRequest.get(`/external/addresses/check`, { params }),
+  externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => mixinRequest.get(`/external/addresses/check`, { params }),
 });
 
 export const NetworkClient = NetworkBaseClient(mixinRequest);
