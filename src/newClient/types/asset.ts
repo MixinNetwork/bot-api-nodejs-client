@@ -20,7 +20,10 @@ export interface AssetResponse {
   capitalization: number;
   liquidity: string;
 
-  // for GET /assets/:id only
+  // fields for
+  // GET /assets/:id
+  // GET /network/assets/top
+  // GET /network/search/:q
   balance: string;
   deposit_entries: DepositEntry[];
   destination: string;
