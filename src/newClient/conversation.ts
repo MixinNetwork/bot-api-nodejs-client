@@ -93,8 +93,6 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
   };
 };
 
-export const ConversationClient = buildClient({
-  KeystoreClient: ConversationKeystoreClient,
-});
+export const ConversationClient = buildClient(ConversationKeystoreClient);
 
 export default ConversationClient;

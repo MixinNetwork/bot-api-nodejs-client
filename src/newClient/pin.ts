@@ -26,8 +26,6 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
   };
 };
 
-export const PinClient = buildClient({
-  KeystoreClient: PinKeystoreClient,
-});
+export const PinClient = buildClient(PinKeystoreClient);
 
 export default PinClient;

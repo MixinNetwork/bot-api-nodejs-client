@@ -14,8 +14,6 @@ export const AssetKestoreClient = (axiosInstance: AxiosInstance) => ({
   rates: () => axiosInstance.get<unknown, ExchangeRate[]>('/fiats'),
 });
 
-export const AssetClient = buildClient({
-  KeystoreClient: AssetKestoreClient,
-});
+export const AssetClient = buildClient(AssetKestoreClient);
 
 export default AssetClient;

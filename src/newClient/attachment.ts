@@ -36,8 +36,6 @@ export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {
   };
 };
 
-export const AttachmentClient = buildClient({
-  KeystoreClient: AttachmentKeystoreClient,
-});
+export const AttachmentClient = buildClient(AttachmentKeystoreClient);
 
 export default AttachmentClient;

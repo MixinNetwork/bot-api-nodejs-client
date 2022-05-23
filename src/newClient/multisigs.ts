@@ -42,8 +42,6 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
   };
 };
 
-export const MultisigsClient = buildClient({
-  KeystoreClient: MutilsigsKeystoreClient
-});
+export const MultisigsClient = buildClient(MutilsigsKeystoreClient);
 
 export default MultisigsClient;

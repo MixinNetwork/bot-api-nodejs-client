@@ -3,7 +3,6 @@ import Keystore from './keystore';
 
 export interface HTTPConfig {
   requestConfig?: Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>;
-  token?: string;
   keystore?: Keystore;
 }
 
@@ -16,7 +15,7 @@ export type KeystoreClient<KeystoreReturnType> = (axiosInstance: AxiosInstance, 
 export type UnionKeystoreClient<KeystoreReturnType> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {
-  <KeystoreReturnType>(config: { KeystoreClient: UnionKeystoreClient<KeystoreReturnType> }): BaseClient<
+  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<
     KeystoreReturnType
 >;
 }

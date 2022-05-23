@@ -38,8 +38,6 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   }
 });
 
-export const TransferClient = buildClient({
-  KeystoreClient: TransferKeystoreClient,
-});
+export const TransferClient = buildClient(TransferKeystoreClient);
 
 export default TransferClient;

@@ -86,8 +86,6 @@ export const MessagesKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   };
 };
 
-export const MessagesClient = buildClient({
-  KeystoreClient: MessagesKeystoreClient,
-});
+export const MessagesClient = buildClient(MessagesKeystoreClient);
 
 export default MessagesClient;

@@ -23,8 +23,8 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   messages: MessagesKeystoreClient(axiosInstance, keystore),
   multisigs: MutilsigsKeystoreClient(axiosInstance, keystore),
   pin: PinKeystoreClient(axiosInstance, keystore),
-  user: UserKeystoreClient(axiosInstance),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
+  user: UserKeystoreClient(axiosInstance),
 });
 
 type NetworkClientReturnType = ReturnType<typeof createNetworkClient>;
@@ -36,11 +36,10 @@ export function Client(config: HTTPConfig) {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
   const networkClient = createNetworkClient(axiosInstance);
-  merge(networkClient, requestClient);
 
   const { keystore } = config;
-  if (!keystore) return networkClient;
+  if (!keystore) return merge(networkClient, requestClient);
 
   const keystoreClient = KeystoreClient(axiosInstance, keystore);
-  return merge(keystoreClient, requestClient);
+  return merge(keystoreClient, networkClient, requestClient);
 }

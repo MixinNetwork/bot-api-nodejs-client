@@ -35,8 +35,6 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
 });
 
-export const UserClient = buildClient({
-  KeystoreClient: UserKeystoreClient,
-});
+export const UserClient = buildClient(UserKeystoreClient);
 
 export default UserClient;

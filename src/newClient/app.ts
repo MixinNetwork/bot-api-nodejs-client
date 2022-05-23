@@ -16,8 +16,6 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   unfavorite: (appID: string) => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
 });
 
-export const AppClient = buildClient({
-  KeystoreClient: AppKeystoreClient,
-});
+export const AppClient = buildClient(AppKeystoreClient);
 
 export default AppClient;
