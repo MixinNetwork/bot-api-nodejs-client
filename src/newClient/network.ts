@@ -2,10 +2,10 @@ import { AxiosInstance } from 'axios';
 import { mixinRequest } from './http';
 import { AssetResponse } from './types/asset';
 import { ConversationResponse } from './types/conversation';
-import { GhostInput, GhostKeys, NetworkChain, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
+import { SnapshotQuery, GhostInput, GhostKeys, NetworkChain, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
 
 // Methods need no permission
-export const NetworkClient = (axiosInstance: AxiosInstance) => ({
+export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get the list of all public chains supported by Mixin
   chains: (): Promise<NetworkChain[]> => axiosInstance.get<unknown, NetworkChain[]>('/network/chains'),
 
@@ -14,17 +14,13 @@ export const NetworkClient = (axiosInstance: AxiosInstance) => ({
 
   // Query the list of the top 100 assets on the entire network
   topAssets: (kind = 'ALL'): Promise<AssetResponse[]> => {
-    const params = {
-      kind
-    };
+    const params = { kind };
     return axiosInstance.get<unknown, AssetResponse[]>('/network/assets/top', { params });
   },
 
-  // Search for popular assets by symbol or nama
+  // Search for popular assets by symbol or name
   searchAssets: (keyword: string, kind = 'ALL'): Promise<AssetResponse[]> => {
-    const params = {
-      kind
-    };
+    const params = { kind };
     return axiosInstance.get<unknown, AssetResponse[]>(`/network/assets/search/${keyword}`, { params });
   },
 
@@ -57,6 +53,11 @@ export const NetworkClient = (axiosInstance: AxiosInstance) => ({
 
   // Get conversation information by conversationID
   showConversation: (conversationID: string): Promise<ConversationResponse> => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
+
+  // Check if the address is the inner one
+  externalAddressesCheck: (params: SnapshotQuery): Promise<boolean> => mixinRequest.get(`/external/addresses/check`, { params }),
 });
 
-export default NetworkClient(mixinRequest);
+export const NetworkClient = NetworkBaseClient(mixinRequest);
+
+export default NetworkClient;

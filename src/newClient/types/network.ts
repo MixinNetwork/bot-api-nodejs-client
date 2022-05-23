@@ -66,6 +66,15 @@ export interface GhostKeys {
   mask: string;
 }
 
+export interface SnapshotQuery {
+  limit?: number | string;
+  offset?: string;
+  asset?: string;
+  opponent?: string;
+  tag?: string;
+  destination?: string; // query external transactions
+}
+
 export interface NetworkInfo {
   assets: NetworkAsset[];
   chains: NetworkChain[];

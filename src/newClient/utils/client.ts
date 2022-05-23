@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { http } from '../http';
-import { NetworkClient } from '../network';
+import { NetworkBaseClient } from '../network';
 import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: HTTPConfig) => {
@@ -13,20 +13,21 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
 });
 
 export const createNetworkClient = (axiosInstance: AxiosInstance) => ({
-  network: NetworkClient(axiosInstance),
+  network: NetworkBaseClient(axiosInstance),
 });
 
-export const buildClient: BuildClient =
-  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType> =>
-  (config: HTTPConfig): any => {
-    if (!KeystoreClient) throw new Error('keystore client is required');
+export const buildClient: BuildClient = <KeystoreReturnType>(
+  KeystoreClient: UnionKeystoreClient<KeystoreReturnType>
+): BaseClient<KeystoreReturnType> =>
+    (config: HTTPConfig): any => {
+      if (!KeystoreClient) throw new Error('keystore client is required');
 
-    const axiosInstance = createAxiosClient(config);
-    const networkClient = createNetworkClient(axiosInstance);
-    const requestClient = createRequestClient(axiosInstance);
+      const axiosInstance = createAxiosClient(config);
+      const networkClient = createNetworkClient(axiosInstance);
+      const requestClient = createRequestClient(axiosInstance);
 
-    const { keystore } = config;
-    const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
+      const { keystore } = config;
+      const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
 
-    return Object.assign(keystoreClient, networkClient, requestClient);
-  };
+      return Object.assign(keystoreClient, networkClient, requestClient);
+    };
