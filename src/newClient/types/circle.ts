@@ -13,3 +13,8 @@ export interface CircleResponse {
   name: string;
   created_at: string;
 }
+
+export interface CircleRequest {
+  offset: Date;
+  limit: number;
+}
