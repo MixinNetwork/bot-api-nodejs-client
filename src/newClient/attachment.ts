@@ -1,14 +1,13 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { AttachmentResponse } from './types/attachment';
 import { buildClient } from './utils/client';
 
 // Upload attachment
 export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {
-
   const createAttachment = (): Promise<AttachmentResponse> => axiosInstance.post<unknown, AttachmentResponse>(`/attachments`);
 
   // todo move to other dir?
-  const uploadAttachmentTo = (uploadURL: string, file: File): Promise<AxiosResponse> => axios.create()({
+  const uploadAttachmentTo = (uploadURL: string, file: File): Promise<any> => axios.create()({
     url: uploadURL,
     method: 'PUT',
     data: file,
