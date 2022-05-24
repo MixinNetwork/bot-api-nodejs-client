@@ -2,7 +2,7 @@ export type UTXOState = 'unspent' | 'signed' | 'spent';
 
 export type MultisigInitAction = 'sign' | 'unlock';
 
-export type MultisigAction = 'sign' | 'unlock' | 'cancel';
+export type MultisigAction = MultisigInitAction | 'cancel';
 
 export type MultisigState = 'initial' | 'signed';
 

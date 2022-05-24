@@ -11,10 +11,9 @@ export interface AddressResponse {
   updated_at: string;
 }
 
-export interface AddressCreateRequest {
-  label: string;
+export interface AddressRequest {
   asset_id: string;
-  destination: string;
-  tag?: string;
-  pin?: string;
+  label: string;
+  destination: string; // alias public_key
+  tag?: string; // alias memo
 }
