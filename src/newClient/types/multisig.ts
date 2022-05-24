@@ -60,4 +60,4 @@ export interface MultisigIndexRequest {
   offset?: string;
   limit?: number;
   order: MultisigOrder;
-};
+}

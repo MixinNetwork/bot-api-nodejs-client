@@ -8,7 +8,7 @@ import { AssetKeystoreClient } from './asset';
 import { AppKeystoreClient } from './app';
 import { AttachmentKeystoreClient } from './attachment';
 import { ConversationKeystoreClient } from './conversation';
-import { MutilsigsKeystoreClient } from './multisigs';
+import { MutilsigKeystoreClient } from './multisig';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
@@ -26,7 +26,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   collectibles: CollectiblesKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   messages: MessagesKeystoreClient(axiosInstance, keystore),
-  multisigs: MutilsigsKeystoreClient(axiosInstance, keystore),
+  multisig: MutilsigKeystoreClient(axiosInstance, keystore),
   oauth: OAuthKeystoreClient(axiosInstance, keystore),
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),

@@ -1,11 +1,11 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { MultisigIndexRequest, MultisigRequestResponse, MultisigUTXOResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
+import { MultisigIndexRequest, MultisigRequestResponse, MultisigUTXOResponse, MultisigAction, MultisigInitAction } from './types/multisig';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 import { hashMembers } from './utils/uniq';
 
-export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const MutilsigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const initMutilsig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests/${requestID}/${action}`, { pin: encrypted });
@@ -41,6 +41,6 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
   };
 };
 
-export const MultisigsClient = buildClient(MutilsigsKeystoreClient);
+export const MultisigClient = buildClient(MutilsigKeystoreClient);
 
-export default MultisigsClient;
+export default MultisigClient;

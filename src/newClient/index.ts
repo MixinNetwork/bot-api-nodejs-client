@@ -6,7 +6,7 @@ export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
 export { ConversationClient } from './conversation';
 export { TransferClient } from './transfer';
-export { MultisigsClient } from './multisigs';
+export { MultisigClient } from './multisig';
 export { CircleClient } from './circle';
 export { CollectiblesClient } from './collectibles';
 export { OAuthClient } from './oauth';

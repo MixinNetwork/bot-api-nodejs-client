@@ -29,6 +29,6 @@ export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
   },
 });
 
-export const AddressClient = buildClient( AddressKeystoreClient);
+export const AddressClient = buildClient(AddressKeystoreClient);
 
 export default AddressClient;
