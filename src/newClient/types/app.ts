@@ -1,5 +1,5 @@
 export interface AppResponse {
-  type: string;
+  type: 'app';
   app_id: string;
   app_number: string;
   redirect_url: string;
@@ -16,7 +16,16 @@ export interface AppResponse {
   updated_at: string;
 }
 
-export interface UpdateAppRequest {
+export interface AppSecretResponse {
+  app_secret: string;
+}
+
+export interface AppSessionResponse {
+  session_id: string;
+  pin_token_base64: string;
+}
+
+export interface AppRequest {
   redirect_uri: string;
   home_uri: string;
   name: string;
