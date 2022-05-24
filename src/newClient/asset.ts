@@ -1,8 +1,12 @@
 import { AxiosInstance } from 'axios';
-import { AssetFeeResponse, AssetResponse, ExchangeRateResponse } from './types/asset';
+import { AssetResponse } from './types/asset';
 import { buildClient } from './utils/client';
 
-// Get information about asset
+// Get personal information about asset.
+// Notes:
+// Get /assets may not have a deposit address, if you want a deposit address,
+// should request /assets/:asset_id first.
+// https://developers.mixin.one/docs/api/assets/assets
 export const AssetKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the specified asset of current user, the ASSETS:READ permission is required.
   fetch: (assetID: string): Promise<AssetResponse> => axiosInstance.get<unknown, AssetResponse>(`/assets/${assetID}`),
@@ -10,11 +14,8 @@ export const AssetKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the asset list of current user
   fetchList: (): Promise<AssetResponse[]> => axiosInstance.get<unknown, AssetResponse[]>('/assets'),
 
-  // Get the specified asset's withdrawal fee
-  withdrawalFee: (assetID: string): Promise<AssetFeeResponse> => axiosInstance.get<unknown, AssetFeeResponse>(`assets/${assetID}/fee`),
-
-  // Get a list of all fiat exchange rates based on US Dollar.
-  rates: (): Promise<ExchangeRateResponse[]> => axiosInstance.get<unknown, ExchangeRateResponse[]>('/fiats'),
+  // TODO
+  // GET /assets/:id/snapshots
 });
 
 export const AssetClient = buildClient(AssetKeystoreClient);
