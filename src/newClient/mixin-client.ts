@@ -4,7 +4,7 @@ import Keystore from './types/keystore';
 import { HTTPConfig, RequestClient } from './types/client';
 import { createAxiosClient, createNetworkClient, createRequestClient } from './utils/client';
 import { AddressKeystoreClient } from './address';
-import { AssetKestoreClient } from './asset';
+import { AssetKeystoreClient } from './asset';
 import { AppKeystoreClient } from './app';
 import { AttachmentKeystoreClient } from './attachment';
 import { ConversationKeystoreClient } from './conversation';
@@ -20,7 +20,7 @@ import { OAuthKeystoreClient } from './oauth';
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
   app: AppKeystoreClient(axiosInstance),
-  asset: AssetKestoreClient(axiosInstance),
+  asset: AssetKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
   collectibles: CollectiblesKeystoreClient(axiosInstance, keystore),

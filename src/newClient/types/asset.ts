@@ -36,7 +36,10 @@ export interface AssetResponse {
   snapshots_count: number;
 }
 
-export interface AssetNetworkResponse {
+export interface AssetFeeResponse {
+  type: string;
+  asset_id: string;
+  amount: string;
 }
 
 export interface ExchangeRate {
