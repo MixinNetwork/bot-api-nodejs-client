@@ -2,7 +2,7 @@ export interface UserResponse {
   type: 'user';
   user_id: string;
   identity_number: string;
-  phone: string;
+  phone: string; // need `PHONE:READ` permission granted
   full_name: string;
   biography: string;
   avatar_url: string;
