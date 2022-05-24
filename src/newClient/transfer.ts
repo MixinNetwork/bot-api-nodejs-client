@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
 import { RawTransactionRequest, RawTransactionResponse } from './types/transaction';
-import { TransferRequest, PaymentRequestResponse, PaymentResponse, WithdrawRequest } from './types/transfer';
+import { TransferRequest, PaymentRequestResponse, WithdrawRequest } from './types/transfer';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
@@ -31,7 +31,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   // Generate code id for transaction/transfer or verify payments by trace id
-  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse | PaymentResponse>('/payments', params),
+  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
 
   // Submit a withdrawal request
   withdraw: (pin: string, params: WithdrawRequest): Promise<SnapshotResponse> => {

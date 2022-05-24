@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { AssetFeeResponse, AssetResponse, ExchangeRate } from './types/asset';
+import { AssetFeeResponse, AssetResponse, ExchangeRateResponse } from './types/asset';
 import { buildClient } from './utils/client';
 
 // Get information about asset
@@ -14,7 +14,7 @@ export const AssetKeystoreClient = (axiosInstance: AxiosInstance) => ({
   withdrawalFee: (assetID: string): Promise<AssetFeeResponse> => axiosInstance.get<unknown, AssetFeeResponse>(`assets/${assetID}/fee`),
 
   // Get a list of all fiat exchange rates based on US Dollar.
-  rates: (): Promise<ExchangeRate[]> => axiosInstance.get<unknown, ExchangeRate[]>('/fiats'),
+  rates: (): Promise<ExchangeRateResponse[]> => axiosInstance.get<unknown, ExchangeRateResponse[]>('/fiats'),
 });
 
 export const AssetClient = buildClient(AssetKeystoreClient);
