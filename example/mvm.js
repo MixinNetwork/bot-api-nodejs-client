@@ -1,11 +1,11 @@
-const { Client, extraGeneratorByInfo, getMvmTransaction, getAssetIDByAddress, getContractByAssetID, getContractByUserIDs, abiParamsGenerator } = require('mixin-node-sdk');
+const { Client, extraGenerateByInfo, getMvmTransaction, getAssetIDByAddress, getContractByAssetID, getContractByUserIDs, abiParamsGenerator } = require('mixin-node-sdk');
 const fs = require('fs');
 const keystore = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'utf8'));
 const client = new Client(keystore);
 
 async function main() {
   // 1.1 使用参数进行生成 extra
-  const extra = extraGenerateByInfo({
+  const extra = await extraGenerateByInfo({
     contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
     methodName: 'addAny', // 要调用的合约方法
     types: ['uint256'], // 参数类型列表
