@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
-import { mixinRequest } from './http';
 import { AssetResponse } from './types/asset';
 import { ConversationResponse } from './types/conversation';
 import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkAssetResponse, NetworkChainResponse, NetworkPriceResponse, NetworkSnapshotResponse, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
+import { buildClient } from './utils/client';
 
 // Public methods that need no permission
 // Detail: https://developers.mixin.one/docs/api/transfer/snapshots
@@ -63,9 +63,9 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   fetchConversation: (conversationID: string): Promise<ConversationResponse> => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
 
   // Check if an address belongs to Mixin
-  externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => mixinRequest.get(`/external/addresses/check`, { params }),
+  externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
 });
 
-export const NetworkClient = NetworkBaseClient(mixinRequest);
+export const NetworkClient = buildClient(NetworkBaseClient);
 
 export default NetworkClient;
