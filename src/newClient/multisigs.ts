@@ -1,9 +1,9 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { hashMember } from '../mixin/tools';
+import { MultisigIndexRequest, MultisigRequestResponse, MultisigUTXOResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
-import { MultisigIndexRequest, MultisigRequestResponse, MultisigUTXOResponse, MultisigAction, MultisigInitAction } from './types/multisigs';
+import { hashMembers } from './utils/uniq';
 
 export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
@@ -21,7 +21,7 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
       const hashedParams = {
         ...params,
         threshold: Number(threshold),
-        members: hashMember(members),
+        members: hashMembers(members),
         order: order || 'updated',
       };
       return axiosInstance.get<unknown, MultisigUTXOResponse[]>(`/multisigs/outputs`, { params: hashedParams });

@@ -2,15 +2,15 @@ import { AxiosInstance } from 'axios';
 import { mixinRequest } from './http';
 import { AssetResponse } from './types/asset';
 import { ConversationResponse } from './types/conversation';
-import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkChain, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
+import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkAssetResponse, NetworkChainResponse, NetworkPrice, NetworkSnapshot, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
 
 // Methods need no permission
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get the list of all public chains supported by Mixin
-  chains: (): Promise<NetworkChain[]> => axiosInstance.get<unknown, NetworkChain[]>('/network/chains'),
+  chains: (): Promise<NetworkChainResponse[]> => axiosInstance.get<unknown, NetworkChainResponse[]>('/network/chains'),
 
   // Query public information of an asset
-  asset: (asset_id: string): Promise<AssetResponse> => axiosInstance.get<unknown, AssetResponse>(`network/assets/${asset_id}`),
+  asset: (asset_id: string): Promise<NetworkAssetResponse> => axiosInstance.get<unknown, NetworkAssetResponse>(`network/assets/${asset_id}`),
 
   // Query the list of the top 100 assets on the entire network
   topAssets: (kind = 'ALL'): Promise<AssetResponse[]> => {

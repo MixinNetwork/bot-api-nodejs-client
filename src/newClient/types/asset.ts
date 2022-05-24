@@ -1,9 +1,9 @@
-export interface DepositEntry {
+export interface DepositEntryResponse {
   destination: string;
   tag: string;
 }
 
-export interface AssetResponse {
+export interface AssetCommonResponse {
   type: 'asset';
   asset_id: string;
   chain_id: string;
@@ -19,21 +19,18 @@ export interface AssetResponse {
   confirmations: number;
   capitalization: number;
   liquidity: string;
+  reserve: string;
+}
 
-  // fields for
-  // GET /assets/:id
-  // GET /network/assets/top
-  // GET /network/search/:q
+// fields for
+// GET /assets/:id
+// GET /network/assets/top
+// GET /network/search/:q
+export interface AssetResponse extends AssetCommonResponse {
   balance: string;
-  deposit_entries: DepositEntry[];
+  deposit_entries: DepositEntryResponse[];
   destination: string;
   tag: string;
-  reserve: string;
-
-  // for GET /network/assets/:id only
-  amount: string;
-  fee: string;
-  snapshots_count: number;
 }
 
 export interface AssetNetworkResponse {
