@@ -64,6 +64,10 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
 
   // Check if an address belongs to Mixin
   externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
+
+  // TODO
+  // GET /network
+  // GET /external/fiats
 });
 
 export const NetworkClient = buildClient(NetworkBaseClient);

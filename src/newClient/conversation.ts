@@ -90,6 +90,10 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
 
     // Unmute contact
     unmute: (conversationID: string) => muteConversation(conversationID, 0),
+
+    // TODO
+    // POST /conversations/:id/disappear, params duration: int64
+    // GET /conversations/:id
   };
 };
 

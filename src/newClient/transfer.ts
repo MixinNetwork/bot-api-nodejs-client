@@ -39,6 +39,9 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     const request: WithdrawRequest = { ...params, pin: encrypted };
     return axiosInstance.post<unknown, SnapshotResponse>('/withdrawals', request);
   }
+
+  // TODO
+  // POST /outputs
 });
 
 export const TransferClient = buildClient(TransferKeystoreClient);

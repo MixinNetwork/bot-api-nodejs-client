@@ -34,6 +34,9 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   // Manage the relationship between two users, one can 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK' a user
   updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
+
+  // TODO
+  // POST /me/preferences
 });
 
 export const UserClient = buildClient(UserKeystoreClient);
