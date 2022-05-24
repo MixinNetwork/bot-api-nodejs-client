@@ -32,7 +32,7 @@ export interface NetworkSnapshotAsset {
   type: string;
 }
 
-export interface NetworkSnapshot {
+export interface NetworkSnapshotResponse {
   amount: number;
   asset: NetworkSnapshotAsset;
   created_at: string;
@@ -47,7 +47,7 @@ export interface NetworkSnapshot {
   data?: string;
 }
 
-export interface NetworkPrice {
+export interface NetworkPriceResponse {
   type: string;
   price_btc: number;
   price_usd: number;
