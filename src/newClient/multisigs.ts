@@ -7,14 +7,14 @@ import { MultisigRequest, MultisigIndexRequest, MultisigResponse, MultisigAction
 
 export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
-  const initMutilsig = (pin: string, request_id: string, action: MultisigAction): Promise<MultisigRequest> => {
+  const initMutilsig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequest> => {
     const encrypted = signEd25519PIN(pin, keystore);
-    return axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests/${request_id}/${action}`, { pin: encrypted });
+    return axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests/${requestID}/${action}`, { pin: encrypted });
   };
 
   return {
     // Get signature outputs, if an account participates in it
-    index: (params: MultisigIndexRequest): Promise<MultisigResponse[]> => {
+    outputs: (params: MultisigIndexRequest): Promise<MultisigResponse[]> => {
       const { members, threshold, order } = params;
       if ((members.length > 0 && threshold < 1) || threshold > members.length)
         return Promise.reject(new Error('Invalid threshold or members'));
@@ -32,13 +32,13 @@ export const MutilsigsKeystoreClient = (axiosInstance: AxiosInstance, keystore: 
     create: (action: MultisigInitAction, raw: string): Promise<MultisigRequest> => axiosInstance.post<unknown, MultisigRequest>(`/multisigs/requests`, { action, raw }),
 
     // Initiate or participate in signing
-    sign: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'sign'),
+    sign: (pin: string, requestID: string): Promise<MultisigRequest> => initMutilsig(pin, requestID, 'sign'),
 
     // Cancel multisigs
-    unlock: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'unlock'),
+    unlock: (pin: string, requestID: string): Promise<MultisigRequest> => initMutilsig(pin, requestID, 'unlock'),
 
     // Cancel my signature
-    cancel: (pin: string, request_id: string): Promise<MultisigRequest> => initMutilsig(pin, request_id, 'cancel'),
+    cancel: (pin: string, requestID: string): Promise<MultisigRequest> => initMutilsig(pin, requestID, 'cancel'),
   };
 };
 

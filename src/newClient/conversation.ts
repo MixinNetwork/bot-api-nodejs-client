@@ -7,9 +7,9 @@ import { ConversationResponse, ConversationAction, ConversationCreateRequest, Co
 // Manage conversation, need keystore
 export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
-  const createConversation = (params: ConversationCreateRequest) => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
+  const createConversation = (params: ConversationCreateRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
-  const managerConversation = (conversationID: string, action: ConversationAction, participant: Participant[]) =>
+  const managerConversation = (conversationID: string, action: ConversationAction, participant: Participant[]): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
@@ -74,16 +74,16 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       ),
 
     // Update a group's title and announcement by conversationID
-    updateGroupInfo: (conversationID: string, params: ConversationUpdateRequest) => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
+    updateGroupInfo: (conversationID: string, params: ConversationUpdateRequest): Promise<ConversationResponse> => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
 
     // Reset invitation link and codeId
-    resetGroupCode: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
+    resetGroupCode: (conversationID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
 
     // Join a group by codeID
-    joinGroup: (codeId: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
+    joinGroup: (codeId: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
 
     // Exit a group
-    exitGroup: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
+    exitGroup: (conversationID: string): Promise<ConversationResponse>=> axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
 
     // Mute contact for <duration> seconds
     mute: (conversationID: string, duration: number) => muteConversation(conversationID, duration),

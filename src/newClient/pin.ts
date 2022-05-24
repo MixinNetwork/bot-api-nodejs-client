@@ -6,6 +6,7 @@ import { signEd25519PIN } from './utils/auth';
 
 // Verify or update pin, needs keystore
 export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+
   function updatePin(pin: string): Promise<AuthenticationUserResponse>;
   function updatePin(oldPin: string, pin: string): Promise<AuthenticationUserResponse>;
   function updatePin(firstPin: string, secondPin?: string): Promise<AuthenticationUserResponse> {

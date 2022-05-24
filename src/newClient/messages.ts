@@ -28,13 +28,13 @@ export const MessagesKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
 
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
-  const sendMsg = (recipient_id: string, category: MessageCategory, data: any): Promise<MessageView> => {
+  const sendMsg = (recipientID: string, category: MessageCategory, data: any): Promise<MessageView> => {
     if (typeof data === 'object') data = JSON.stringify(data);
 
     return send({
       category,
-      recipient_id,
-      conversation_id: uniqueConversationID(keystore!.user_id, recipient_id),
+      recipient_id: recipientID,
+      conversation_id: uniqueConversationID(keystore!.user_id, recipientID),
       message_id: uuid(),
       data: base64url(Buffer.from(data)),
     });
