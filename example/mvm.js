@@ -5,7 +5,7 @@ const client = new Client(keystore);
 
 async function main() {
   // 1.1 使用参数进行生成 extra
-  const extra = extraGenerateByInfo({
+  const extra = await extraGenerateByInfo({
     contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
     methodName: 'addAny', // 要调用的合约方法
     types: ['uint256'], // 参数类型列表
@@ -23,7 +23,7 @@ async function main() {
     amount: '0.00000001',
     asset: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     trace: 'uuid', // uuid 可以为空,
-    extra: extra.toString(),
+    extra: extra,
   });
   // 3. 可以直接调用 /transaction 付款,
   //  也可以生成一个 code_id 来调起客户端的付款
