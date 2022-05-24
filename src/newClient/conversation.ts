@@ -1,30 +1,22 @@
 import { AxiosInstance } from 'axios';
 import { uniqueConversationID } from './utils/uniq';
-import { mixinRequest } from './http';
 import { buildClient } from './utils/client';
 import Keystore from './types/keystore';
 import { ConversationResponse, ConversationAction, ConversationCreateRequest, ConversationUpdateRequest, Participant } from './types/conversation';
 
-// todo: move to network
-// Get conversation information by conversationID
-export const showConversation = async (conversationID: string, axiosInstance?: AxiosInstance) => {
-  const _axiosInstance = axiosInstance || mixinRequest;
-  return _axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`);
-};
-
 // Manage conversation, need keystore
 export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
-  const createConversation = (params: ConversationCreateRequest) => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
+  const createConversation = (params: ConversationCreateRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
-  const managerConversation = (conversationID: string, action: ConversationAction, participant: Participant[]) =>
+  const managerConversation = (conversationID: string, action: ConversationAction, participant: Participant[]): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
-      category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore!.user_id, userID),
-      participants: [{ user_id: userID }],
-    });
+    category: 'CONTACT',
+    conversation_id: uniqueConversationID(keystore!.user_id, userID),
+    participants: [{ user_id: userID }],
+  });
 
   const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });
 
@@ -82,16 +74,16 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       ),
 
     // Update a group's title and announcement by conversationID
-    updateGroupInfo: (conversationID: string, params: ConversationUpdateRequest) => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
+    updateGroupInfo: (conversationID: string, params: ConversationUpdateRequest): Promise<ConversationResponse> => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
 
     // Reset invitation link and codeId
-    resetGroupCode: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
+    resetGroupCode: (conversationID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
 
     // Join a group by codeID
-    joinGroup: (codeId: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
+    joinGroup: (codeId: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
 
     // Exit a group
-    exitGroup: (conversationID: string) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
+    exitGroup: (conversationID: string): Promise<ConversationResponse>=> axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
 
     // Mute contact for <duration> seconds
     mute: (conversationID: string, duration: number) => muteConversation(conversationID, duration),
@@ -101,8 +93,6 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
   };
 };
 
-export const ConversationClient = buildClient({
-  KeystoreClient: ConversationKeystoreClient,
-});
+export const ConversationClient = buildClient(ConversationKeystoreClient);
 
 export default ConversationClient;

@@ -1,17 +1,20 @@
 import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
-import { SnapshotFilterRequest, SnapshotResponse } from './types/snapshot';
+import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
 import { RawTransactionRequest, RawTransactionResponse } from './types/transaction';
-import { TransferRequest, Payment, WithdrawRequest } from './types/transfer';
+import { TransferRequest, PaymentRequestResponse, WithdrawRequest } from './types/transfer';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
 export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get transfer information by traceID
-  show: (trace_id: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${trace_id}`),
+  fetch: (traceID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${traceID}`),
 
   // Get the snapshots of the current user
-  index: (snapshot_id: string, params?: SnapshotFilterRequest) => axiosInstance.get<SnapshotResponse>(`/snapshots/${snapshot_id}`, { params }),
+  snapshot: (snapshotID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/snapshots/${snapshotID}`),
+
+  // Get the snapshot of a user
+  snapshots: (params: SnapshotRequest): Promise<SnapshotResponse[]> => axiosInstance.get<unknown, SnapshotResponse[]>(`/snapshots`, { params }),
 
   // Transfer to specific user
   toUser: (pin: string, params: TransferRequest): Promise<SnapshotResponse> => {
@@ -28,7 +31,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   // Generate code id for transaction/transfer or verify payments by trace id
-  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, Payment>('/payments', params),
+  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
 
   // Submit a withdrawal request
   withdraw: (pin: string, params: WithdrawRequest): Promise<SnapshotResponse> => {
@@ -38,8 +41,6 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   }
 });
 
-export const TransferClient = buildClient({
-  KeystoreClient: TransferKeystoreClient,
-});
+export const TransferClient = buildClient(TransferKeystoreClient);
 
 export default TransferClient;

@@ -2,14 +2,14 @@ export type UTXOState = 'unspent' | 'signed' | 'spent';
 
 export type MultisigInitAction = 'sign' | 'unlock';
 
-export type MultisigAction = 'sign' | 'unlock' | 'cancel';
+export type MultisigAction = MultisigInitAction | 'cancel';
 
 export type MultisigState = 'initial' | 'signed';
 
 export type MultisigOrder = 'created' | 'updated';
 
-export interface MultisigResponse {
-  type: string;
+export interface MultisigUTXOResponse {
+  type: 'multisig_utxo';
   user_id: string;
   utxo_id: string;
   asset_id: string;
@@ -20,13 +20,20 @@ export interface MultisigResponse {
   members: string[];
   memo: string;
   state: UTXOState;
+  sender: string;
   created_at: string;
   updated_at: string;
   signed_by: string;
   signed_tx: string;
 }
 
-export interface MultisigRequest {
+export interface GhostResponse {
+  type: '';
+  mask: string;
+  keys: string[];
+}
+
+export interface MultisigRequestResponse {
   type: string;
   request_id: string;
   user_id: string;
@@ -53,4 +60,4 @@ export interface MultisigIndexRequest {
   offset?: string;
   limit?: number;
   order: MultisigOrder;
-};
+}

@@ -28,6 +28,8 @@ module.exports = {
     'semi': 'off',
     '@typescript-eslint/semi': ['error'],
 
+    'indent': ['error', 2],
+
     quotes: ['error', 'single', { 'allowTemplateLiterals': true }],
 
     // todo remove

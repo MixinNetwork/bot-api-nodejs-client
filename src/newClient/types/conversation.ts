@@ -28,11 +28,10 @@ export interface ConversationResponse {
 
 export type ConversationCategory = 'CONTACT' | 'GROUP';
 export type ConversationAction = 'ADD' | 'REMOVE' | 'ROLE';
-export type ConversationRole = 'OWNER' | 'ADMIN' | '';
+export type ConversationRole = 'ADMIN' | '';
 
 export interface Participant {
   user_id: string;
-  type?: 'participant';
   role?: ConversationRole;
   created_at?: string;
 }

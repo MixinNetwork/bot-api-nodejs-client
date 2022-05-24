@@ -1,8 +1,12 @@
-export interface AssetResponse {
+export interface DepositEntryResponse {
+  destination: string;
+  tag: string;
+}
+
+export interface AssetCommonResponse {
+  type: 'asset';
   asset_id: string;
   chain_id: string;
-  asset_key?: string;
-  mixin_id?: string;
   symbol: string;
   name: string;
   icon_url: string;
@@ -10,24 +14,32 @@ export interface AssetResponse {
   change_btc: string;
   price_usd: string;
   change_usd: string;
+  asset_key: string;
+  mixin_id: string;
+  confirmations: number;
+  capitalization: number;
+  liquidity: string;
+  reserve: string;
+}
+
+// fields for
+// GET /assets/:id
+// GET /network/assets/top
+// GET /network/search/:q
+export interface AssetResponse extends AssetCommonResponse {
   balance: string;
+  deposit_entries: DepositEntryResponse[];
   destination: string;
   tag: string;
-  confirmations: number;
-  capitalization?: number;
-  amount?: string;
-  fee?: string;
-  liquidity?: string;
-  snapshots_count: number;
 }
 
-export interface ExchangeRate {
+export interface AssetFeeResponse {
+  type: string;
+  asset_id: string;
+  amount: string;
+}
+
+export interface ExchangeRateResponse {
   code: string;
   rate: string;
-}
-
-export interface NetworkTicker {
-  type: 'ticker';
-  price_usd: string;
-  price_btc: string;
 }

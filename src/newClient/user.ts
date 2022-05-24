@@ -2,15 +2,16 @@ import { AxiosInstance } from 'axios';
 import { AuthenticationUserResponse, UserResponse, RelationshipRequest } from './types/user';
 import { buildClient } from './utils/client';
 
-// Get users' information
+// Methods to obtain or edit users' profile and relationships
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the current user's personal information
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
-  // Get user information by user id
+  // Get user information by userID
+  // This API will only return the list of existing users
   fetch: (id: string) => axiosInstance.get<unknown, UserResponse>(`/users/${id}`),
 
-  // Get users' information by user IDs in bulk
+  // Get users' information by userIDs in bulk
   fetchList: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
 
   // Get users' block list
@@ -25,18 +26,16 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Rotate user's code
   rotateCode: () => axiosInstance.get<unknown, AuthenticationUserResponse>('/me/code'),
 
-  // Create a network user, can be created by bot only
+  // Create a network user, can be created by bot only with no permission
   createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post<UserResponse>('/users', { full_name: fullName, session_secret: sessionSecret }),
 
   // Modify current user's personal name and avatar
   update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
-  // Manage the relationship between two users
+  // Manage the relationship between two users, one can 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK' a user
   updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
 });
 
-export const UserClient = buildClient({
-  KeystoreClient: UserKeystoreClient,
-});
+export const UserClient = buildClient(UserKeystoreClient);
 
 export default UserClient;

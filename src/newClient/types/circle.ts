@@ -5,3 +5,16 @@ export interface CircleConversationResponse {
   user_id: string;
   created_at: Date;
 }
+
+export interface CircleResponse {
+  type: 'circle';
+  circle_id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
+}
+
+export interface CircleRequest {
+  offset: Date;
+  limit: number;
+}

@@ -28,8 +28,12 @@ export interface RawTransactionResponse {
   type: string;
   snapshot: string;
   opponent_key: string;
+  opponent_receivers: string[];
+  opponent_threshold: number;
   asset_id: string;
   amount: string;
+  opening_balance: string;
+  closing_balance: string;
   trace_id: string;
   memo: string;
   state: string;
