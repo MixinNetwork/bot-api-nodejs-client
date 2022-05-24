@@ -1,4 +1,4 @@
-const { Client, extraGenerateByInfo, getMvmTransaction, getAssetIDByAddress, getContractByAssetID, getContractByUserIDs, abiParamsGenerator } = require('mixin-node-sdk');
+const { Client, extraGenerateByInfo, paymentGenerateByInfo, getMvmTransaction, getAssetIDByAddress, getContractByAssetID, getContractByUserIDs, abiParamsGenerator } = require('mixin-node-sdk');
 const fs = require('fs');
 const keystore = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'utf8'));
 const client = new Client(keystore);
