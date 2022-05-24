@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AccessTokenResponse } from './types/oauth';
-import { buildClient } from "./utils/client";
+import { buildClient } from './utils/client';
 
 export const OAuthKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   getToken: (code: string): Promise<AccessTokenResponse> => {

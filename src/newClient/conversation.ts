@@ -13,10 +13,10 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
-      category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore!.user_id, userID),
-      participants: [{ user_id: userID }],
-    });
+    category: 'CONTACT',
+    conversation_id: uniqueConversationID(keystore!.user_id, userID),
+    participants: [{ user_id: userID }],
+  });
 
   const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });
 
