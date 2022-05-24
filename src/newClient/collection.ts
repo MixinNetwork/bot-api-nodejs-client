@@ -7,12 +7,12 @@ import {
   NFTRequestResponse,
   NFTResponse,
   NFTCollectionResponse,
-} from './types/collectibles';
+} from './types/collection';
 import { signEd25519PIN } from './utils/auth';
 import Keystore from './types/keystore';
 import { buildClient } from './utils/client';
 
-export const CollectiblesKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const CollectionKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const manageRequest = (pin: string, requestID: string, action: CollectibleRequestAction): Promise<NFTRequestResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
@@ -43,6 +43,6 @@ export const CollectiblesKeystoreClient = (axiosInstance: AxiosInstance, keystor
   };
 };
 
-export const CollectiblesClient = buildClient(CollectiblesKeystoreClient);
+export const CollectionClient = buildClient(CollectionKeystoreClient);
 
-export default CollectiblesClient;
+export default CollectionClient;

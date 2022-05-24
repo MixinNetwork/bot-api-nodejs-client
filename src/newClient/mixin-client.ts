@@ -12,9 +12,9 @@ import { MutilsigKeystoreClient } from './multisig';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
-import { MessagesKeystoreClient } from './messages';
+import { MessageKeystoreClient } from './message';
 import { CircleKeystoreClient } from './circle';
-import { CollectiblesKeystoreClient } from './collectibles';
+import { CollectionKeystoreClient } from './collection';
 import { OAuthKeystoreClient } from './oauth';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
@@ -23,9 +23,9 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   asset: AssetKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
-  collectibles: CollectiblesKeystoreClient(axiosInstance, keystore),
+  collection: CollectionKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
-  messages: MessagesKeystoreClient(axiosInstance, keystore),
+  message: MessageKeystoreClient(axiosInstance, keystore),
   multisig: MutilsigKeystoreClient(axiosInstance, keystore),
   oauth: OAuthKeystoreClient(axiosInstance, keystore),
   pin: PinKeystoreClient(axiosInstance, keystore),

@@ -24,7 +24,7 @@ import {
   FileMessage,
 } from './types/message';
 
-export const MessagesKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
@@ -86,6 +86,6 @@ export const MessagesKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   };
 };
 
-export const MessagesClient = buildClient(MessagesKeystoreClient);
+export const MessageClient = buildClient(MessageKeystoreClient);
 
-export default MessagesClient;
+export default MessageClient;

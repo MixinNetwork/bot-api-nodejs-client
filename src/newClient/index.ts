@@ -1,15 +1,17 @@
-export { NetworkClient } from './network';
-export { UserClient } from './user';
-export { PinClient } from './pin';
+export { AddressClient } from './address';
 export { AppClient } from './app';
 export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
-export { ConversationClient } from './conversation';
-export { TransferClient } from './transfer';
-export { MultisigClient } from './multisig';
 export { CircleClient } from './circle';
-export { CollectiblesClient } from './collectibles';
+export { CollectionClient } from './collection';
+export { ConversationClient } from './conversation';
+export { MessageClient } from './message';
+export { MultisigClient } from './multisig';
+export { NetworkClient } from './network';
 export { OAuthClient } from './oauth';
+export { PinClient } from './pin';
+export { TransferClient } from './transfer';
+export { UserClient } from './user';
 export * from './mixin-client';
 
 // todo export utils
