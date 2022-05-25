@@ -59,7 +59,7 @@ export interface WithdrawalWithFeeResponse extends WithdrawalResponse {
   fee: FeeResponse;
 }
 
-export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
+export type SnapshotResponse = TransferResponse | DepositResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
 
 export interface SnapshotRequest {
   limit: number | string;
