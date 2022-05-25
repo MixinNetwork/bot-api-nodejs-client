@@ -1,14 +1,3 @@
-export interface GhostInput {
-  receivers: string[];
-  index: number;
-  hint: string;
-}
-
-export interface GhostKeys {
-  keys: string[];
-  mask: string;
-}
-
 export interface RawTransactionRequest {
   asset_id: string;
   amount?: string;
@@ -41,4 +30,15 @@ export interface RawTransactionResponse {
   transaction_hash: string;
   snapshot_hash: string;
   snapshot_at: string;
+}
+
+export interface GhostInput {
+  receivers: string[];
+  index: number;
+  hint: string;
+}
+
+export interface GhostKeys {
+  keys: string[];
+  mask: string;
 }

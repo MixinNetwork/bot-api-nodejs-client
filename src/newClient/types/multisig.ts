@@ -8,6 +8,15 @@ export type MultisigState = 'initial' | 'signed';
 
 export type MultisigOrder = 'created' | 'updated';
 
+export interface MultisigRequest {
+  members: string[];
+  threshold: number;
+  state?: UTXOState;
+  offset?: string;
+  limit?: number;
+  order: MultisigOrder;
+}
+
 export interface MultisigUTXOResponse {
   type: 'multisig_utxo';
   user_id: string;
@@ -45,13 +54,4 @@ export interface MultisigRequestResponse {
   created_at: string;
   updated_at: string;
   code_id: string;
-}
-
-export interface MultisigRequest {
-  members: string[];
-  threshold: number;
-  state?: UTXOState;
-  offset?: string;
-  limit?: number;
-  order: MultisigOrder;
 }

@@ -1,3 +1,5 @@
+export type Operation = 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK';
+
 export interface UserResponse {
   type: 'user';
   user_id: string;
@@ -34,15 +36,6 @@ export interface AuthenticationUserResponse extends UserResponse {
   private_key?: string;
 }
 
-export type Operation = 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK';
-
-export interface RelationshipRequest {
-  user_id: string;
-  action: Operation;
-  phone?: string; // for ADD only
-  full_name?: string; // for ADD only
-}
-
 export interface PreferenceRequest {
   receive_message_source: string;
   accept_conversation_source: string;
@@ -50,4 +43,11 @@ export interface PreferenceRequest {
   fiat_currency: string;
   transfer_notification_threshold?: number;
   transfer_confirmation_threshold?: number;
+}
+
+export interface RelationshipRequest {
+  user_id: string;
+  action: Operation;
+  phone?: string; // for ADD only
+  full_name?: string; // for ADD only
 }

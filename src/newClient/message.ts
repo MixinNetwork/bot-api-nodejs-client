@@ -1,28 +1,28 @@
 import { AxiosInstance } from 'axios';
 import { v4 as uuid } from 'uuid';
+import Keystore from './types/keystore';
+import {
+  MessageResponse,
+  AcknowledgementRequest,
+  MessageCategory,
+  MessageRequest,
+  MessageView,
+  StickerMessageRequest,
+  ImageMessageRequest,
+  AudioMessageRequest,
+  VideoMessageRequest,
+  ContactMessageRequest,
+  AppCardMessageRequest,
+  FileMessageRequest,
+  LiveMessageRequest,
+  LocationMessageRequest,
+  AppButtonMessageRequest,
+  TransferMessageRequest,
+  RecallMessageRequest,
+} from './types/message';
 import { base64url } from '../mixin/sign';
 import { buildClient } from './utils/client';
 import { uniqueConversationID } from './utils/uniq';
-import Keystore from './types/keystore';
-import {
-  AcknowledgementRequest,
-  MessageRequest,
-  MessageResponse,
-  MessageCategory,
-  MessageView,
-  ImageMessage,
-  StickerMessage,
-  ContactMesage,
-  AppCardMessage,
-  AudioMessage,
-  LiveMessage,
-  LocationMessage,
-  VideoMessage,
-  AppButtonMessage,
-  RecallMessage,
-  TransferMessage,
-  FileMessage,
-} from './types/message';
 
 export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
@@ -58,31 +58,31 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
 
     sendText: (userID: string, text: string): Promise<MessageView> => sendMsg(userID, 'PLAIN_TEXT', text),
 
-    sendSticker: (userID: string, sticker: StickerMessage) => sendMsg(userID, 'PLAIN_STICKER', sticker),
+    sendSticker: (userID: string, sticker: StickerMessageRequest) => sendMsg(userID, 'PLAIN_STICKER', sticker),
 
-    sendImage: (userID: string, image: ImageMessage): Promise<MessageView> => sendMsg(userID, 'PLAIN_IMAGE', image),
+    sendImage: (userID: string, image: ImageMessageRequest): Promise<MessageView> => sendMsg(userID, 'PLAIN_IMAGE', image),
 
-    sendAudio: (userID: string, audio: AudioMessage) => sendMsg(userID, 'PLAIN_AUDIO', audio),
+    sendAudio: (userID: string, audio: AudioMessageRequest) => sendMsg(userID, 'PLAIN_AUDIO', audio),
 
-    sendVideo: (userID: string, video: VideoMessage) => sendMsg(userID, 'PLAIN_VIDEO', video),
+    sendVideo: (userID: string, video: VideoMessageRequest) => sendMsg(userID, 'PLAIN_VIDEO', video),
 
-    sendContact: (userID: string, contact: ContactMesage) => sendMsg(userID, 'PLAIN_CONTACT', contact),
+    sendContact: (userID: string, contact: ContactMessageRequest) => sendMsg(userID, 'PLAIN_CONTACT', contact),
 
-    sendAppCard: (userID: string, appCard: AppCardMessage): Promise<MessageView> => sendMsg(userID, 'APP_CARD', appCard),
+    sendAppCard: (userID: string, appCard: AppCardMessageRequest): Promise<MessageView> => sendMsg(userID, 'APP_CARD', appCard),
 
-    sendFile: (userID: string, file: FileMessage): Promise<MessageView> => sendMsg(userID, 'PLAIN_DATA', file),
+    sendFile: (userID: string, file: FileMessageRequest): Promise<MessageView> => sendMsg(userID, 'PLAIN_DATA', file),
 
-    sendLive: (userID: string, live: LiveMessage) => sendMsg(userID, 'PLAIN_LIVE', live),
+    sendLive: (userID: string, live: LiveMessageRequest) => sendMsg(userID, 'PLAIN_LIVE', live),
 
-    sendLocation: (userID: string, location: LocationMessage) => sendMsg(userID, 'PLAIN_LOCATION', location),
+    sendLocation: (userID: string, location: LocationMessageRequest) => sendMsg(userID, 'PLAIN_LOCATION', location),
 
     sendPost: (userID: string, text: string): Promise<MessageView> => sendMsg(userID, 'PLAIN_POST', text),
 
-    sendAppButton: (userID: string, appButton: AppButtonMessage[]) => sendMsg(userID, 'APP_BUTTON_GROUP', appButton),
+    sendAppButton: (userID: string, appButton: AppButtonMessageRequest[]) => sendMsg(userID, 'APP_BUTTON_GROUP', appButton),
 
-    sendTransfer: (userID: string, transfer: TransferMessage) => sendMsg(userID, 'SYSTEM_ACCOUNT_SNAPSHOT', transfer),
+    sendTransfer: (userID: string, transfer: TransferMessageRequest) => sendMsg(userID, 'SYSTEM_ACCOUNT_SNAPSHOT', transfer),
 
-    sendRecall: (userID: string, message: RecallMessage) => sendMsg(userID, 'MESSAGE_RECALL', message),
+    sendRecall: (userID: string, message: RecallMessageRequest) => sendMsg(userID, 'MESSAGE_RECALL', message),
   };
 };
 

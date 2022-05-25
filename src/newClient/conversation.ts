@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { ConversationRequest, ParticipantRequest, ConversationResponse, ConversationAction } from './types/conversation';
+import { ConversationRequest, ConversationResponse, ConversationAction, ParticipantRequest } from './types/conversation';
 import { uniqueConversationID } from './utils/uniq';
 import { buildClient } from './utils/client';
 
@@ -41,6 +41,12 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
         participants: participant,
       }),
 
+    // Join a group by codeID
+    joinGroup: (codeId: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
+
+    // Exit a group
+    exitGroup: (conversationID: string): Promise<ConversationResponse>=> axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
+
     // Add/remove other participants or add/remove admin in a group
     updateParticipants: managerConversation,
 
@@ -76,17 +82,11 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
         userIDs.map(userID => ({ user_id: userID, role: '' })),
       ),
 
-    // Update a group's title and announcement by conversationID
-    updateGroupInfo: (conversationID: string, params: Pick<ConversationRequest, 'name' | 'announcement'>): Promise<ConversationResponse> => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
-
     // Reset invitation link and codeId
     resetGroupCode: (conversationID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
 
-    // Join a group by codeID
-    joinGroup: (codeId: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
-
-    // Exit a group
-    exitGroup: (conversationID: string): Promise<ConversationResponse>=> axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
+    // Update a group's title and announcement by conversationID
+    updateGroupInfo: (conversationID: string, params: Pick<ConversationRequest, 'name' | 'announcement'>): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
 
     // Mute contact for <duration> seconds
     mute: (conversationID: string, duration: number) => muteConversation(conversationID, duration),

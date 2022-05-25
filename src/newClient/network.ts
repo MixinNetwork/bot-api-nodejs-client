@@ -1,24 +1,23 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
 import {
-  CheckAddressRequest,
-  DepositFilterRequest,
-  SnapshotFilterRequest,
-  CheckAddressResponse,
-  NetworkAssetResponse,
-  NetworkChainResponse,
-  NetworkPriceResponse,
-  NetworkSnapshotResponse,
-  ExternalTransactionResponse,
   NetworkInfoResponse,
+  NetworkChainResponse,
+  NetworkAssetResponse,
+  NetworkPriceResponse,
+  SnapshotFilterRequest,
+  NetworkSnapshotResponse,
+  DepositFilterRequest,
+  ExternalTransactionResponse,
   ExchangeRateResponse,
+  CheckAddressRequest,
+  CheckAddressResponse,
 } from './types/network';
 import { buildClient } from './utils/client';
 
 // Public methods that need no permission
 // Detail: https://developers.mixin.one/docs/api/transfer/snapshots
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
-
   // Get network info
   info: (): Promise<NetworkInfoResponse> => axiosInstance.get<unknown, NetworkInfoResponse>('/network'),
 
@@ -52,6 +51,11 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
     return axiosInstance.get<unknown, NetworkPriceResponse>(`/network/ticker`, { params });
   },
 
+  // Get snapshot details by snapshot_id
+  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
+  // to obtain the private fields like user_id, opponent_id, trace_id and data
+  snapshot: (snapshotID: string): Promise<NetworkSnapshotResponse> => axiosInstance.get<unknown, NetworkSnapshotResponse>(`/network/snapshots/${snapshotID}`),
+
   // Get snapshot records public information, which including transfers, deposits, withdrawals, etc
   // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
   // to obtain the private fields like user_id, opponent_id, trace_id and data
@@ -63,19 +67,14 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
     return axiosInstance.get<unknown, NetworkSnapshotResponse[]>(`/network/snapshots`, { params });
   },
 
-  // Get snapshot details by snapshot_id
-  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
-  // to obtain the private fields like user_id, opponent_id, trace_id and data
-  snapshot: (snapshotID: string): Promise<NetworkSnapshotResponse> => axiosInstance.get<unknown, NetworkSnapshotResponse>(`/network/snapshots/${snapshotID}`),
-
   // Get public network-wide deposit records
   deposit: (params: DepositFilterRequest): Promise<ExternalTransactionResponse[]> => axiosInstance.get<unknown, ExternalTransactionResponse[]>('/external/transactions', { params }),
 
+  // GET the list of all fiat exchange rates based on US Dollar
+  exchangeRates: (): Promise<ExchangeRateResponse> => axiosInstance.get<unknown, ExchangeRateResponse>('/external/fiats'),
+
   // Check if an address belongs to Mixin
   externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
-
-  // GET the list of all fiat exchange rates based on US Dollar
-  exchangeRates: (): Promise<ExchangeRateResponse> => axiosInstance.get<unknown, ExchangeRateResponse>('/external/fiats')
 });
 
 export const NetworkClient = buildClient(NetworkBaseClient);
