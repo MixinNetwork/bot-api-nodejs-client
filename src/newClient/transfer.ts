@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
 import { TransferRequest, PaymentRequestResponse, WithdrawRequest } from './types/transfer';
-import { RawTransactionRequest, RawTransactionResponse, GhostInput, GhostKeys } from './types/transaction';
+import { RawTransactionRequest, GhostInput, GhostKeys } from './types/transaction';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
@@ -27,10 +27,10 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   // Send raw transactions to the mainnet or multisig address
-  toAddress: (pin: string, params: RawTransactionRequest): Promise<RawTransactionResponse> => {
+  toAddress: (pin: string, params: RawTransactionRequest): Promise<SnapshotResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     const request: RawTransactionRequest = { ...params, pin: encrypted };
-    return axiosInstance.post<unknown, RawTransactionResponse>('/transactions', request);
+    return axiosInstance.post<unknown, SnapshotResponse>('/transactions', request);
   },
 
   // Submit a withdrawal request
