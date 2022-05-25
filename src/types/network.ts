@@ -38,7 +38,7 @@ export interface NetworkInfo {
 
 export interface ExternalTransaction {
   transaction_id: string;
-  created_at: string;
+  created_at: Date;
   transaction_hash: string;
   sender: string;
   chain_id: string;

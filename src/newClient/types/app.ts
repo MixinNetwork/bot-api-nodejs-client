@@ -13,7 +13,7 @@ export interface AppResponse {
   creator_id: string;
   app_secret: string;
   session_secret: string;
-  updated_at: string;
+  updated_at: Date;
 }
 
 export interface AppSecretResponse {

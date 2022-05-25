@@ -1,5 +1,5 @@
 export interface App {
-  updated_at: string;
+  updated_at: Date;
   app_id: string;
   app_number: string;
   redirect_url: string;
@@ -17,7 +17,7 @@ export interface App {
 export interface FavoriteApp {
   user_id: string;
   app_id: string;
-  created_at: string;
+  created_at: Date;
 }
 
 export interface UpdateAppRequest {

@@ -26,10 +26,10 @@ export interface RawTransactionResponse {
   trace_id: string;
   memo: string;
   state: string;
-  created_at: string;
+  created_at: Date;
   transaction_hash: string;
   snapshot_hash: string;
-  snapshot_at: string;
+  snapshot_at: Date;
 }
 
 export interface GhostInput {

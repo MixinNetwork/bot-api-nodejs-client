@@ -42,7 +42,7 @@ export interface SnapshotFilterRequest {
   limit: number | string;
   offset: string;
   asset?: string;
-  order?:string
+  order?: string;
 }
 
 export interface NetworkSnapshotAsset {
@@ -57,7 +57,7 @@ export interface NetworkSnapshotAsset {
 export interface NetworkSnapshotResponse {
   amount: number;
   asset: NetworkSnapshotAsset;
-  created_at: string;
+  created_at: Date;
   snapshot_id: string;
   source: string;
   type: string; // Options only for user (or App) who has access.
@@ -79,7 +79,7 @@ export interface DepositFilterRequest {
 
 export interface ExternalTransactionResponse {
   transaction_id: string;
-  created_at: string;
+  created_at: Date;
   transaction_hash: string;
   sender: string;
   chain_id: string;
