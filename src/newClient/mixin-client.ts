@@ -16,6 +16,7 @@ import { MessageKeystoreClient } from './message';
 import { CircleKeystoreClient } from './circle';
 import { CollectionKeystoreClient } from './collection';
 import { OAuthKeystoreClient } from './oauth';
+import { ExternalKeystoreClient } from './external';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -25,6 +26,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   circle: CircleKeystoreClient(axiosInstance),
   collection: CollectionKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
+  external: ExternalKeystoreClient(axiosInstance),
   message: MessageKeystoreClient(axiosInstance, keystore),
   multisig: MultisigKeystoreClient(axiosInstance, keystore),
   oauth: OAuthKeystoreClient(axiosInstance, keystore),

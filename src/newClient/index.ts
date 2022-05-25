@@ -5,6 +5,7 @@ export { AttachmentClient } from './attachment';
 export { CircleClient } from './circle';
 export { CollectionClient } from './collection';
 export { ConversationClient } from './conversation';
+export { ExternalClient } from './external';
 export { MessageClient } from './message';
 export { MultisigClient } from './multisig';
 export { NetworkClient } from './network';
