@@ -4,8 +4,6 @@ import { ConversationResponse } from './types/conversation';
 import {
   CheckAddressRequest,
   CheckAddressResponse,
-  GhostInput,
-  GhostKeys,
   NetworkAssetResponse,
   NetworkChainResponse,
   NetworkPriceResponse,
@@ -65,9 +63,6 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
   // to obtain the private fields like user_id, opponent_id, trace_id and data
   snapshot: (snapshotID: string): Promise<NetworkSnapshotResponse> => axiosInstance.get<unknown, NetworkSnapshotResponse>(`/network/snapshots/${snapshotID}`),
-
-  // Get one-time user keys
-  outputs: (input: GhostInput): Promise<GhostKeys[]> => axiosInstance.post<unknown, GhostKeys[]>(`/network/outputs`, input),
 
   // Get public network-wide deposit records
   deposit: (params: DepositFilterRequest): Promise<ExternalTransactionResponse[]> => axiosInstance.get<unknown, ExternalTransactionResponse[]>('/external/transactions', { params }),

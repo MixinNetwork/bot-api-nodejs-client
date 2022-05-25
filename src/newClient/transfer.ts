@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
-import { RawTransactionRequest, RawTransactionResponse } from './types/transaction';
 import { TransferRequest, PaymentRequestResponse, WithdrawRequest } from './types/transfer';
+import { GhostInput, GhostKeys, RawTransactionRequest, RawTransactionResponse } from './types/transaction';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
@@ -38,10 +38,10 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     const encrypted = signEd25519PIN(pin, keystore);
     const request: WithdrawRequest = { ...params, pin: encrypted };
     return axiosInstance.post<unknown, SnapshotResponse>('/withdrawals', request);
-  }
+  },
 
-  // TODO
-  // POST /outputs
+  // Get one-time user keys
+  outputs: (input: GhostInput): Promise<GhostKeys[]> => axiosInstance.post<unknown, GhostKeys[]>(`/outputs`, input),
 });
 
 export const TransferClient = buildClient(TransferKeystoreClient);

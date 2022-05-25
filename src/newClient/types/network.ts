@@ -53,17 +53,6 @@ export interface NetworkPriceResponse {
   price_usd: number;
 }
 
-export interface GhostInput {
-  receivers: string[];
-  index: number;
-  hint: string;
-}
-
-export interface GhostKeys {
-  keys: string[];
-  mask: string;
-}
-
 export interface NetworkInfo {
   assets: NetworkAssetResponse[];
   chains: NetworkChainResponse[];
