@@ -1,5 +1,9 @@
 import { CircleConversationResponse } from './circle';
 
+type ConversationCategory = 'CONTACT' | 'GROUP';
+type ConversationRole = 'ADMIN' | '';
+export type ConversationAction = 'ADD' | 'REMOVE' | 'ROLE';
+
 export interface ParticipantResponse {
   type: 'participant';
   user_id: string;
@@ -25,10 +29,6 @@ export interface ConversationResponse {
   participant_sessions: ParticipantResponse[];
   circles: CircleConversationResponse[];
 }
-
-export type ConversationCategory = 'CONTACT' | 'GROUP';
-export type ConversationAction = 'ADD' | 'REMOVE' | 'ROLE';
-export type ConversationRole = 'ADMIN' | '';
 
 export interface ParticipantRequest {
   user_id: string;
