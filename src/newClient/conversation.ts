@@ -91,9 +91,11 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
     // Unmute contact
     unmute: (conversationID: string) => muteConversation(conversationID, 0),
 
-    // TODO
-    // POST /conversations/:id/disappear, params duration: int64
-    // GET /conversations/:id
+    // Get specific conversation information by conversationID
+    fetch: (conversationID: string) => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
+
+    // Set the disappearing message expiration duration for group
+    disappearDuration: (conversationID: string, duration: number) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/disappear`, { duration })
   };
 };
 
