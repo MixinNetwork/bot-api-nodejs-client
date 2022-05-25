@@ -5,10 +5,10 @@ import { buildClient } from './utils/client';
 import { uniqueConversationID } from './utils/uniq';
 import Keystore from './types/keystore';
 import {
-  MessageResponse,
   AcknowledgementRequest,
-  MessageCategory,
   MessageRequest,
+  MessageResponse,
+  MessageCategory,
   MessageView,
   ImageMessage,
   StickerMessage,
