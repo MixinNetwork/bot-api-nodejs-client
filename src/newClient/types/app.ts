@@ -16,15 +16,6 @@ export interface AppResponse {
   updated_at: Date;
 }
 
-export interface AppSecretResponse {
-  app_secret: string;
-}
-
-export interface AppSessionResponse {
-  session_id: string;
-  pin_token_base64: string;
-}
-
 export interface AppPropertyResponse {
   count: number;
   price: string;
@@ -40,4 +31,13 @@ export interface AppRequest {
   category: string;
   capabilities: string[];
   resource_patterns: string[];
+}
+
+export interface AppSecretResponse {
+  app_secret: string;
+}
+
+export interface AppSessionResponse {
+  session_id: string;
+  pin_token_base64: string;
 }
