@@ -8,7 +8,7 @@ import { AssetKeystoreClient } from './asset';
 import { AppKeystoreClient } from './app';
 import { AttachmentKeystoreClient } from './attachment';
 import { ConversationKeystoreClient } from './conversation';
-import { MutilsigKeystoreClient } from './multisig';
+import { MultisigKeystoreClient } from './multisig';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
@@ -26,7 +26,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   collection: CollectionKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   message: MessageKeystoreClient(axiosInstance, keystore),
-  multisig: MutilsigKeystoreClient(axiosInstance, keystore),
+  multisig: MultisigKeystoreClient(axiosInstance, keystore),
   oauth: OAuthKeystoreClient(axiosInstance, keystore),
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
@@ -36,8 +36,8 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
 type NetworkClientReturnType = ReturnType<typeof createNetworkClient>;
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function Client(config: HTTPConfig):  RequestClient & NetworkClientReturnType;
-export function Client(config: HTTPConfig):  KeystoreClientReturnType & RequestClient & NetworkClientReturnType;
+export function Client(config: HTTPConfig): RequestClient & NetworkClientReturnType;
+export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient & NetworkClientReturnType;
 export function Client(config: HTTPConfig) {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
