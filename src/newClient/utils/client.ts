@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
+import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 import { http } from '../http';
 import { NetworkBaseClient } from '../network';
-import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, UnionKeystoreClient } from '../types/client';
 
 export const createAxiosClient = (config: HTTPConfig) => {
   const { keystore, requestConfig: axiosConfig } = config;

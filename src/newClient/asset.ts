@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
+import { SnapshotResponse } from './types/snapshot';
 import { buildClient } from './utils/client';
 
 // Get personal information about asset.
@@ -14,8 +15,8 @@ export const AssetKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the asset list of current user
   fetchList: (): Promise<AssetResponse[]> => axiosInstance.get<unknown, AssetResponse[]>('/assets'),
 
-  // TODO
-  // GET /assets/:id/snapshots
+  // Get specific asset's snapshots of current user
+  snapshots: (assetID: string): Promise<SnapshotResponse[]> => axiosInstance.get<unknown, SnapshotResponse[]>(`/assets/${assetID}/snapshots`),
 });
 
 export const AssetClient = buildClient(AssetKeystoreClient);

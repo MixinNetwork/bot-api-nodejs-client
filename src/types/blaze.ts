@@ -22,8 +22,8 @@ export interface MessageView {
   data_base64: string;
   status: MessageStatus;
   source: string;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface TransferView {
@@ -34,7 +34,7 @@ export interface TransferView {
   amount: string;
   trace_id: string;
   memo: string;
-  created_at: string;
+  created_at: Date;
 }
 
 export interface SystemConversationPayload {

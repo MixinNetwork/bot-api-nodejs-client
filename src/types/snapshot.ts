@@ -6,7 +6,7 @@ export interface Snapshot {
   trace_id: string;
   user_id?: string;
   asset_id: string;
-  created_at: string;
+  created_at: Date;
   opponent_id?: string;
   source: string;
   amount: string;

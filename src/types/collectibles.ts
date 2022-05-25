@@ -8,8 +8,8 @@ export type CollectibleRequestState = 'initial' | 'signed';
 
 export interface CollectibleOutput {
   type?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
   user_id?: string;
   output_id?: string;
   token_id?: string;
@@ -27,8 +27,8 @@ export interface CollectibleOutput {
 
 export interface CollectibleRequest {
   type?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
   request_id?: string;
   user_id?: string;
   token_id?: string;
@@ -55,7 +55,7 @@ export interface CollectibleTokenMeta {
 }
 export interface CollectibleToken {
   type?: string;
-  created_at?: string;
+  created_at?: Date;
   token_id?: string;
   group?: string;
   token?: string;

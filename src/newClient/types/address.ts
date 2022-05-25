@@ -8,7 +8,7 @@ export interface AddressResponse {
   fee: string;
   reserve: string;
   dust: string;
-  updated_at: string;
+  updated_at: Date;
 }
 
 export interface AddressRequest {

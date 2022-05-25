@@ -5,7 +5,7 @@ export interface Conversation {
   name: string;
   icon_url: string;
   announcement: string;
-  created_at: string;
+  created_at: Date;
   code_id: string;
   code_url: string;
 
@@ -20,7 +20,7 @@ export interface Participant {
   user_id: string;
   type?: 'participant';
   role?: ConversationRole;
-  created_at?: string;
+  created_at?: Date;
 }
 
 export interface ConversationCreateParams {

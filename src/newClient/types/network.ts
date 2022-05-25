@@ -1,5 +1,14 @@
 import { AssetCommonResponse } from './asset';
 
+export interface NetworkInfoResponse {
+  assets: NetworkAssetResponse[];
+  chains: NetworkChainResponse[];
+  assets_count: string;
+  peak_throughput: string;
+  snapshots_count: string;
+  type: string;
+}
+
 export interface NetworkChainResponse {
   type: 'chain';
   chain_id: string;
@@ -23,6 +32,19 @@ export interface NetworkAssetResponse extends AssetCommonResponse {
   snapshots_count: number;
 }
 
+export interface NetworkPriceResponse {
+  type: string;
+  price_btc: number;
+  price_usd: number;
+}
+
+export interface SnapshotFilterRequest {
+  limit: number | string;
+  offset: string;
+  asset?: string;
+  order?: string;
+}
+
 export interface NetworkSnapshotAsset {
   asset_id: string;
   chain_id: string;
@@ -35,7 +57,7 @@ export interface NetworkSnapshotAsset {
 export interface NetworkSnapshotResponse {
   amount: number;
   asset: NetworkSnapshotAsset;
-  created_at: string;
+  created_at: Date;
   snapshot_id: string;
   source: string;
   type: string; // Options only for user (or App) who has access.
@@ -47,35 +69,17 @@ export interface NetworkSnapshotResponse {
   data?: string;
 }
 
-export interface NetworkPriceResponse {
-  type: string;
-  price_btc: number;
-  price_usd: number;
-}
-
-export interface GhostInput {
-  receivers: string[];
-  index: number;
-  hint: string;
-}
-
-export interface GhostKeys {
-  keys: string[];
-  mask: string;
-}
-
-export interface NetworkInfo {
-  assets: NetworkAssetResponse[];
-  chains: NetworkChainResponse[];
-  assets_count: string;
-  peak_throughput: string;
-  snapshots_count: string;
-  type: string;
+export interface DepositFilterRequest {
+  limit: number | string;
+  offset: string;
+  asset?: string;
+  opponent?: string;
+  tag?: string;
 }
 
 export interface ExternalTransactionResponse {
   transaction_id: string;
-  created_at: string;
+  created_at: Date;
   transaction_hash: string;
   sender: string;
   chain_id: string;
@@ -87,19 +91,9 @@ export interface ExternalTransactionResponse {
   threshold: string;
 }
 
-export interface SnapshotFilterRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  order?:string
-}
-
-export interface DepositFilterRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  opponent?: string;
-  tag?: string;
+export interface ExchangeRateResponse {
+  code: string;
+  rate: string;
 }
 
 export interface CheckAddressRequest {

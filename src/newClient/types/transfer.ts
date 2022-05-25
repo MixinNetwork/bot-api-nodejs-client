@@ -2,6 +2,16 @@ import { UserResponse } from './user';
 import { AssetResponse } from './asset';
 import { AddressResponse } from './address';
 
+export interface TransferRequest {
+  asset_id: string;
+  opponent_id: string;
+  amount?: string;
+  trace_id?: string;
+  memo?: string;
+
+  pin?: string;
+}
+
 // For multisig transfer
 export interface PaymentRequestResponse {
   type: 'payment';
@@ -23,16 +33,6 @@ export interface PaymentResponse {
   address: AddressResponse;
   amount: string;
   status: string;
-}
-
-export interface TransferRequest {
-  asset_id: string;
-  opponent_id: string;
-  amount?: string;
-  trace_id?: string;
-  memo?: string;
-
-  pin?: string;
 }
 
 export interface WithdrawRequest {

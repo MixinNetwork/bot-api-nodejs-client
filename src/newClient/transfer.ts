@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
-import { RawTransactionRequest, RawTransactionResponse } from './types/transaction';
 import { TransferRequest, PaymentRequestResponse, WithdrawRequest } from './types/transfer';
+import { RawTransactionRequest, GhostInput, GhostKeys } from './types/transaction';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
@@ -16,6 +16,9 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   // Get the snapshot of a user
   snapshots: (params: SnapshotRequest): Promise<SnapshotResponse[]> => axiosInstance.get<unknown, SnapshotResponse[]>(`/snapshots`, { params }),
 
+  // Generate code id for transaction/transfer or verify payments by trace id
+  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
+
   // Transfer to specific user
   toUser: (pin: string, params: TransferRequest): Promise<SnapshotResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
@@ -24,21 +27,21 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   // Send raw transactions to the mainnet or multisig address
-  toAddress: (pin: string, params: RawTransactionRequest): Promise<RawTransactionResponse> => {
+  toAddress: (pin: string, params: RawTransactionRequest): Promise<SnapshotResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     const request: RawTransactionRequest = { ...params, pin: encrypted };
-    return axiosInstance.post<unknown, RawTransactionResponse>('/transactions', request);
+    return axiosInstance.post<unknown, SnapshotResponse>('/transactions', request);
   },
-
-  // Generate code id for transaction/transfer or verify payments by trace id
-  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
 
   // Submit a withdrawal request
   withdraw: (pin: string, params: WithdrawRequest): Promise<SnapshotResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     const request: WithdrawRequest = { ...params, pin: encrypted };
     return axiosInstance.post<unknown, SnapshotResponse>('/withdrawals', request);
-  }
+  },
+
+  // Get one-time user keys
+  outputs: (input: GhostInput): Promise<GhostKeys[]> => axiosInstance.post<unknown, GhostKeys[]>(`/outputs`, input),
 });
 
 export const TransferClient = buildClient(TransferKeystoreClient);
