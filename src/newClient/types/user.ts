@@ -42,3 +42,12 @@ export interface RelationshipRequest {
   phone?: string; // for ADD only
   full_name?: string; // for ADD only
 }
+
+export interface PreferenceRequest {
+  receive_message_source: string;
+  accept_conversation_source: string;
+  accept_search_source: string;
+  fiat_currency: string;
+  transfer_notification_threshold?: number;
+  transfer_confirmation_threshold?: number;
+}
