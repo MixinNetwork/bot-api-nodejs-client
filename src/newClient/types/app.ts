@@ -25,6 +25,11 @@ export interface AppSessionResponse {
   pin_token_base64: string;
 }
 
+export interface AppPropertyResponse {
+  count: number;
+  price: string;
+}
+
 export interface AppRequest {
   redirect_uri: string;
   home_uri: string;
