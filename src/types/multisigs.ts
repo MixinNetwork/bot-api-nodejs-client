@@ -18,8 +18,8 @@ export interface MultisigUTXO {
   members: string[];
   memo: string;
   state: UTXOState;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
   signed_by: string;
   signed_tx: string;
 }
@@ -39,8 +39,8 @@ export interface MultisigRequest {
   state: MultisigState;
   transaction_hash: string;
   raw_transaction: string;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
   code_id: string;
 }
 

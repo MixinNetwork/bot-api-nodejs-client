@@ -1,24 +1,24 @@
 import { AxiosInstance } from 'axios';
-import { AppResponse, AppRequest, AppSecretResponse, AppSessionResponse, AppPropertyResponse } from './types/app';
+import { AppResponse, AppPropertyResponse, AppRequest, AppSecretResponse, AppSessionResponse } from './types/app';
 import { buildClient } from './utils/client';
 
 // TODO add app api for developer document
 // https://developers.mixin.one/
 export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
+  // Get app list of current user
+  fetchList: (): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/apps`),
+
+  // Get app number of current user and the price to buy new credit
+  properties: (): Promise<AppPropertyResponse> => axiosInstance.get<unknown, AppPropertyResponse>(`/apps/property`),
+
   // Get user's app share list
   favorites: (userID: string): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
 
-  // Update app setting
-  update: (appID: string, params: AppRequest): Promise<AppResponse> => axiosInstance.post<unknown, AppResponse>(`/apps/${appID}`, params),
-
-  // Add to your share list
-  favorite: (appID: string): Promise<AppResponse[]> => axiosInstance.post<unknown, AppResponse[]>(`/apps/${appID}/favorite`),
-
-  // Removing from your share list
-  unfavorite: (appID: string): Promise<any> => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
-
   // Create a new app, 2 free credit for each user
   create: (params: AppRequest): Promise<AppResponse> => axiosInstance.post<unknown, AppResponse>(`/apps`, params),
+
+  // Update app setting
+  update: (appID: string, params: AppRequest): Promise<AppResponse> => axiosInstance.post<unknown, AppResponse>(`/apps/${appID}`, params),
 
   // Get a new app secret
   updateSecret: (appID: string): Promise<AppSecretResponse> => axiosInstance.post<unknown, AppSecretResponse>(`/apps/${appID}/secret`),
@@ -34,11 +34,11 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
     return axiosInstance.post<unknown, AppSessionResponse>(`/apps/${appID}/session`, data);
   },
 
-  // Get app list of current user
-  fetchList: (): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/apps`),
+  // Add to your share list
+  favorite: (appID: string): Promise<AppResponse[]> => axiosInstance.post<unknown, AppResponse[]>(`/apps/${appID}/favorite`),
 
-  // Get app number of current user and the price to buy new credit
-  properties: (): Promise<AppPropertyResponse> => axiosInstance.get<unknown, AppPropertyResponse>(`/apps/property`),
+  // Removing from your share list
+  unfavorite: (appID: string): Promise<any> => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
 });
 
 export const AppClient = buildClient(AppKeystoreClient);

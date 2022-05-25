@@ -1,51 +1,35 @@
-import { RawTransactionResponse } from './transaction';
-
-export interface DepositResponse {
-  type: 'deposit';
+interface BaseSnapshotResponse {
   snapshot_id: string;
   asset_id: string;
-  transaction_hash: string;
-  output_index: number;
-  sender: string;
   amount: string;
-  opening_balance: string;
   closing_balance: string;
-  snapshot_hash?: string;
-  snapshot_at?: Date;
   created_at: Date;
+  opening_balance: string;
+  snapshot_at?: Date;
+  snapshot_hash?: string;
+  transaction_hash: string;
+  type: string;
 }
 
-export interface TransferResponse {
+export interface TransferResponse extends BaseSnapshotResponse {
   type: 'transfer';
-  snapshot_id: string;
   opponent_id: string;
-  asset_id: string;
-  amount: string;
-  opening_balance: string;
-  closing_balance: string;
   trace_id: string;
   memo: string;
-  created_at: Date;
-  transaction_hash?: string;
-  snapshot_hash?: string;
-  snapshot_at?: string;
 }
 
-export interface WithdrawalResponse {
+export interface DepositResponse extends BaseSnapshotResponse {
+  type: 'deposit';
+  output_index: number;
+  sender: string;
+}
+
+export interface WithdrawalResponse extends BaseSnapshotResponse {
   type: 'withdrawal' | 'rebate' | 'fee';
-  snapshot_id: string;
   receiver: string;
-  transaction_hash: string;
-  asset_id: string;
-  amount: string;
-  opening_balance: string;
-  closing_balance: string;
   confirmations: number;
   trace_id: string;
   memo: string;
-  snapshot_hash?: string;
-  snapshot_at?: Date;
-  created_at: string;
 }
 
 interface FeeResponse {
@@ -58,6 +42,17 @@ export interface WithdrawalWithFeeResponse extends WithdrawalResponse {
   state: string;
   fee: FeeResponse;
 }
+
+export interface RawTransactionResponse extends BaseSnapshotResponse {
+  type: string;
+  opponent_key: string;
+  opponent_receivers: string[];
+  opponent_threshold: number;
+  trace_id: string;
+  memo: string;
+  state: string;
+}
+
 
 export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
 
@@ -73,5 +68,5 @@ export interface SnapshotFilterRequest {
   opponent?: string;
   tag?: string;
   destination?: string; // query external transactions
-  order: 'ASC' | 'DESC'
+  order: 'ASC' | 'DESC';
 }

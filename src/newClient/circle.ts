@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { CircleRequest, CircleConversationResponse, CircleResponse } from './types/circle';
+import { CircleResponse, CircleRequest, CircleConversationResponse } from './types/circle';
 import { buildClient } from './utils/client';
 
 export const CircleKeystoreClient = (axiosInstance: AxiosInstance) => ({

@@ -1,6 +1,13 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
-import { NetworkSnapshotRequest, NetworkAssetResponse, NetworkChainResponse, NetworkPriceResponse, NetworkSnapshotResponse, NetworkInfoResponse } from './types/network';
+import {
+  NetworkSnapshotRequest,
+  NetworkInfoResponse,
+  NetworkChainResponse,
+  NetworkAssetResponse,
+  NetworkPriceResponse,
+  NetworkSnapshotResponse,
+} from './types/network';
 import { buildClient } from './utils/client';
 
 // Public methods that need no permission

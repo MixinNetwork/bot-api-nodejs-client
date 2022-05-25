@@ -4,19 +4,19 @@ import Keystore from './types/keystore';
 import { HTTPConfig, RequestClient } from './types/client';
 import { createAxiosClient, createNetworkClient, createRequestClient } from './utils/client';
 import { AddressKeystoreClient } from './address';
-import { AssetKeystoreClient } from './asset';
 import { AppKeystoreClient } from './app';
+import { AssetKeystoreClient } from './asset';
 import { AttachmentKeystoreClient } from './attachment';
+import { CircleKeystoreClient } from './circle';
+import { CollectionKeystoreClient } from './collection';
 import { ConversationKeystoreClient } from './conversation';
+import { ExternalKeystoreClient } from './external';
+import { MessageKeystoreClient } from './message';
 import { MultisigKeystoreClient } from './multisig';
+import { OAuthKeystoreClient } from './oauth';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
-import { MessageKeystoreClient } from './message';
-import { CircleKeystoreClient } from './circle';
-import { CollectionKeystoreClient } from './collection';
-import { OAuthKeystoreClient } from './oauth';
-import { ExternalKeystoreClient } from './external';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),

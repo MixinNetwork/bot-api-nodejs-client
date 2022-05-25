@@ -26,7 +26,7 @@ export interface Payment {
 //   amount: string
 //   destination: string
 //   tag: string
-//   created_at: string
+//   created_at: Date
 //   output_index: number,
 //   confirmations: number,
 //   threshold: number,
@@ -41,10 +41,10 @@ export interface RawTransaction {
   trace_id: string;
   memo: string;
   state: string;
-  created_at: string;
+  created_at: Date;
   transaction_hash: string;
   snapshot_hash: string;
-  snapshot_at: string;
+  snapshot_at: Date;
 }
 
 export interface TransferInput {

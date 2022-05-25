@@ -10,7 +10,7 @@ export interface User {
   avatar_url: string;
   relationship: string;
   mute_until: string;
-  created_at: string;
+  created_at: Date;
   is_verified: boolean;
   app?: App;
   session_id?: string;

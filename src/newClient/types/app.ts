@@ -13,16 +13,7 @@ export interface AppResponse {
   creator_id: string;
   app_secret: string;
   session_secret: string;
-  updated_at: string;
-}
-
-export interface AppSecretResponse {
-  app_secret: string;
-}
-
-export interface AppSessionResponse {
-  session_id: string;
-  pin_token_base64: string;
+  updated_at: Date;
 }
 
 export interface AppPropertyResponse {
@@ -40,4 +31,13 @@ export interface AppRequest {
   category: string;
   capabilities: string[];
   resource_patterns: string[];
+}
+
+export interface AppSecretResponse {
+  app_secret: string;
+}
+
+export interface AppSessionResponse {
+  session_id: string;
+  pin_token_base64: string;
 }

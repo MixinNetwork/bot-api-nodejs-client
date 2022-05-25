@@ -1,9 +1,9 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { MultisigRequest, MultisigRequestResponse, MultisigUTXOResponse, MultisigAction, MultisigInitAction } from './types/multisig';
+import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUTXOResponse, MultisigRequestResponse } from './types/multisig';
 import { signEd25519PIN } from './utils/auth';
-import { buildClient } from './utils/client';
 import { hashMembers } from './utils/uniq';
+import { buildClient } from './utils/client';
 
 export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const initMultisig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
