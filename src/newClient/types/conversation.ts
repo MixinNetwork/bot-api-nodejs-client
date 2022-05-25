@@ -33,7 +33,6 @@ export interface ConversationResponse {
 export interface ParticipantRequest {
   user_id: string;
   role?: ConversationRole;
-  created_at?: string;
 }
 
 export interface ConversationRequest {
