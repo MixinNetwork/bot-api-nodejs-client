@@ -2,14 +2,14 @@ import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
 import {
   CheckAddressRequest,
+  DepositFilterRequest,
+  SnapshotFilterRequest,
   CheckAddressResponse,
   NetworkAssetResponse,
   NetworkChainResponse,
   NetworkPriceResponse,
   NetworkSnapshotResponse,
   ExternalTransactionResponse,
-  DepositFilterRequest,
-  SnapshotFilterRequest,
   NetworkInfo, ExchangeRateResponse
 } from './types/network';
 import { buildClient } from './utils/client';
