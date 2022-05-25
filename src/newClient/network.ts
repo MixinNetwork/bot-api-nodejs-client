@@ -10,7 +10,8 @@ import {
   NetworkPriceResponse,
   NetworkSnapshotResponse,
   ExternalTransactionResponse,
-  NetworkInfo, ExchangeRateResponse
+  NetworkInfoResponse,
+  ExchangeRateResponse,
 } from './types/network';
 import { buildClient } from './utils/client';
 
@@ -19,7 +20,7 @@ import { buildClient } from './utils/client';
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
 
   // Get network info
-  info: (): Promise<NetworkInfo> => axiosInstance.get<unknown, NetworkInfo>('/network'),
+  info: (): Promise<NetworkInfoResponse> => axiosInstance.get<unknown, NetworkInfoResponse>('/network'),
 
   // Get the list of all public chains supported by Mixin
   chains: (): Promise<NetworkChainResponse[]> => axiosInstance.get<unknown, NetworkChainResponse[]>('/network/chains'),

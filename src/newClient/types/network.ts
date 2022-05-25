@@ -53,7 +53,7 @@ export interface NetworkPriceResponse {
   price_usd: number;
 }
 
-export interface NetworkInfo {
+export interface NetworkInfoResponse {
   assets: NetworkAssetResponse[];
   chains: NetworkChainResponse[];
   assets_count: string;
