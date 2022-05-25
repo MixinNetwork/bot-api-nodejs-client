@@ -27,12 +27,6 @@ export interface MultisigUTXOResponse {
   signed_tx: string;
 }
 
-export interface GhostResponse {
-  type: '';
-  mask: string;
-  keys: string[];
-}
-
 export interface MultisigRequestResponse {
   type: string;
   request_id: string;
@@ -53,7 +47,7 @@ export interface MultisigRequestResponse {
   code_id: string;
 }
 
-export interface MultisigIndexRequest {
+export interface MultisigRequest {
   members: string[];
   threshold: number;
   state?: UTXOState;

@@ -1,15 +1,15 @@
 import { AxiosInstance } from 'axios';
+import Keystore from './types/keystore';
+import { ConversationRequest, ParticipantRequest, ConversationResponse, ConversationAction } from './types/conversation';
 import { uniqueConversationID } from './utils/uniq';
 import { buildClient } from './utils/client';
-import Keystore from './types/keystore';
-import { ConversationResponse, ConversationAction, ConversationCreateRequest, ConversationUpdateRequest, Participant } from './types/conversation';
 
 // Manage conversation, need keystore
 export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
-  const createConversation = (params: ConversationCreateRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
+  const createConversation = (params: ConversationRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
-  const managerConversation = (conversationID: string, action: ConversationAction, participant: Participant[]): Promise<ConversationResponse> =>
+  const managerConversation = (conversationID: string, action: ConversationAction, participant: ParticipantRequest[]): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => createConversation({
@@ -21,6 +21,9 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
   const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });
 
   return {
+    // Get specific conversation information by conversationID
+    fetch: (conversationID: string): Promise<ConversationResponse> => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
+
     // Ensure the conversation is created
     // when creating a new group or having a conversation with a user
     // for the first time.
@@ -30,7 +33,7 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
     createContact: createContactConversation,
 
     // Create a new group for the first time
-    createGroup: (conversationID: string, name: string, participant: Participant[]) =>
+    createGroup: (conversationID: string, name: string, participant: ParticipantRequest[]) =>
       createConversation({
         category: 'GROUP',
         conversation_id: conversationID,
@@ -74,7 +77,7 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       ),
 
     // Update a group's title and announcement by conversationID
-    updateGroupInfo: (conversationID: string, params: ConversationUpdateRequest): Promise<ConversationResponse> => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
+    updateGroupInfo: (conversationID: string, params: Pick<ConversationRequest, 'name' | 'announcement'>): Promise<ConversationResponse> => axiosInstance.put<unknown, ConversationResponse>(`/conversations/${conversationID}`, params),
 
     // Reset invitation link and codeId
     resetGroupCode: (conversationID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/rotate`),
@@ -90,9 +93,6 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
 
     // Unmute contact
     unmute: (conversationID: string) => muteConversation(conversationID, 0),
-
-    // Get specific conversation information by conversationID
-    fetch: (conversationID: string) => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
 
     // Set the disappearing message expiration duration for group
     disappearDuration: (conversationID: string, duration: number) => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/disappear`, { duration })

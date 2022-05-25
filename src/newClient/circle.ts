@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { CircleRequest, CircleResponse } from './types/circle';
+import { CircleRequest, CircleConversationResponse, CircleResponse } from './types/circle';
 import { buildClient } from './utils/client';
 
 export const CircleKeystoreClient = (axiosInstance: AxiosInstance) => ({
@@ -8,6 +8,9 @@ export const CircleKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   // Get all circles of a user
   fetchList: (): Promise<CircleResponse[]> => axiosInstance.get<unknown, CircleResponse[]>('/circles'),
+
+  // Get all the conversations in a circle of a user
+  conversations: (circleID: string, params: CircleRequest): Promise<CircleConversationResponse[]> => axiosInstance.get<unknown, CircleConversationResponse[]>(`/circles/${circleID}/conversations`, { params }),
 
   // Create a circle
   create: (name: string): Promise<CircleResponse> => axiosInstance.post<unknown, CircleResponse>('/circles', { name }),
@@ -29,9 +32,6 @@ export const CircleKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   // Remove the group from a certain circle
   removeGroup: (conversation_id: string, circleID: string): Promise<CircleResponse[]> => axiosInstance.post<unknown, CircleResponse[]>(`/conversations/${conversation_id}/circles`, { circleID, action: 'REMOVE' }),
-
-  // Get all the conversations in a circle of a user
-  conversations: (circleID: string, params: CircleRequest): Promise<CircleResponse[]> => axiosInstance.get<unknown, CircleResponse[]>(`/circles/${circleID}/circles`, { params })
 });
 
 export const CircleClient = buildClient(CircleKeystoreClient);

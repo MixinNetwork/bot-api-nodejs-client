@@ -32,9 +32,3 @@ export interface AssetResponse extends AssetCommonResponse {
   destination: string;
   tag: string;
 }
-
-export interface AssetFeeResponse {
-  type: string;
-  asset_id: string;
-  amount: string;
-}
