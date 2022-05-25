@@ -1,7 +1,20 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
 import { ConversationResponse } from './types/conversation';
-import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkAssetResponse, NetworkChainResponse, NetworkPriceResponse, NetworkSnapshotResponse, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
+import {
+  CheckAddressRequest,
+  CheckAddressResponse,
+  GhostInput,
+  GhostKeys,
+  NetworkAssetResponse,
+  NetworkChainResponse,
+  NetworkPriceResponse,
+  NetworkSnapshotResponse,
+  ExternalTransactionResponse,
+  DepositFilterRequest,
+  SnapshotFilterRequest,
+  NetworkInfo, ExchangeRateResponse
+} from './types/network';
 import { buildClient } from './utils/client';
 
 // Public methods that need no permission
@@ -65,9 +78,11 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   // Check if an address belongs to Mixin
   externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
 
-  // TODO
-  // GET /network
-  // GET /external/fiats
+  // Get network info
+  info: (): Promise<NetworkInfo> => axiosInstance.get<unknown, NetworkInfo>('/network'),
+
+  // GET the list of all fiat exchange rates based on US Dollar
+  exchangeRates: (): Promise<ExchangeRateResponse> => axiosInstance.get<unknown, ExchangeRateResponse>('/external/fiats')
 });
 
 export const NetworkClient = buildClient(NetworkBaseClient);

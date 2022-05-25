@@ -38,8 +38,3 @@ export interface AssetFeeResponse {
   asset_id: string;
   amount: string;
 }
-
-export interface ExchangeRateResponse {
-  code: string;
-  rate: string;
-}

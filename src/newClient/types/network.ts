@@ -112,3 +112,8 @@ export interface CheckAddressResponse {
   destination: string;
   tag: string;
 }
+
+export interface ExchangeRateResponse {
+  code: string;
+  rate: string;
+}
