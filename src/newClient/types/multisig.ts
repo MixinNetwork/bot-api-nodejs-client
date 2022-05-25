@@ -53,7 +53,7 @@ export interface MultisigRequestResponse {
   code_id: string;
 }
 
-export interface MultisigIndexRequest {
+export interface MultisigRequest {
   members: string[];
   threshold: number;
   state?: UTXOState;

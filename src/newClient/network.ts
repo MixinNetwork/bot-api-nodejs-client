@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
-import { ConversationResponse } from './types/conversation';
 import { CheckAddressRequest, CheckAddressResponse, GhostInput, GhostKeys, NetworkAssetResponse, NetworkChainResponse, NetworkPriceResponse, NetworkSnapshotResponse, ExternalTransactionResponse, DepositFilterRequest, SnapshotFilterRequest } from './types/network';
 import { buildClient } from './utils/client';
 
@@ -58,9 +57,6 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
 
   // Get public network-wide deposit records
   deposit: (params: DepositFilterRequest): Promise<ExternalTransactionResponse[]> => axiosInstance.get<unknown, ExternalTransactionResponse[]>('/external/transactions', { params }),
-
-  // Get conversation information by conversationID
-  fetchConversation: (conversationID: string): Promise<ConversationResponse> => axiosInstance.get<unknown, ConversationResponse>(`/conversations/${conversationID}`),
 
   // Check if an address belongs to Mixin
   externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),

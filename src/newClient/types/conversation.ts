@@ -30,20 +30,16 @@ export type ConversationCategory = 'CONTACT' | 'GROUP';
 export type ConversationAction = 'ADD' | 'REMOVE' | 'ROLE';
 export type ConversationRole = 'ADMIN' | '';
 
-export interface Participant {
+export interface ParticipantRequest {
   user_id: string;
   role?: ConversationRole;
   created_at?: string;
 }
 
-export interface ConversationCreateRequest {
+export interface ConversationRequest {
   category: ConversationCategory;
   conversation_id: string;
-  participants: Participant[];
-  name?: string;
-}
-
-export interface ConversationUpdateRequest {
+  participants: ParticipantRequest[];
   name?: string;
   announcement?: string;
 }
