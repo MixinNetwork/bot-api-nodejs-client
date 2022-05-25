@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
-import { buildClient } from './utils/client';
 import { SnapshotResponse } from './types/snapshot';
+import { buildClient } from './utils/client';
 
 // Get personal information about asset.
 // Notes:

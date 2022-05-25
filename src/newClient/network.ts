@@ -17,6 +17,10 @@ import { buildClient } from './utils/client';
 // Public methods that need no permission
 // Detail: https://developers.mixin.one/docs/api/transfer/snapshots
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
+
+  // Get network info
+  info: (): Promise<NetworkInfo> => axiosInstance.get<unknown, NetworkInfo>('/network'),
+
   // Get the list of all public chains supported by Mixin
   chains: (): Promise<NetworkChainResponse[]> => axiosInstance.get<unknown, NetworkChainResponse[]>('/network/chains'),
 
@@ -68,9 +72,6 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
 
   // Check if an address belongs to Mixin
   externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
-
-  // Get network info
-  info: (): Promise<NetworkInfo> => axiosInstance.get<unknown, NetworkInfo>('/network'),
 
   // GET the list of all fiat exchange rates based on US Dollar
   exchangeRates: (): Promise<ExchangeRateResponse> => axiosInstance.get<unknown, ExchangeRateResponse>('/external/fiats')
