@@ -5,8 +5,8 @@ import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 import { hashMembers } from './utils/uniq';
 
-export const MutilsigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
-  const initMutilsig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
+export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+  const initMultisig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests/${requestID}/${action}`, { pin: encrypted });
   };
@@ -15,8 +15,7 @@ export const MutilsigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     // Get signature outputs, if an account participates in it
     outputs: (params: MultisigIndexRequest): Promise<MultisigUTXOResponse[]> => {
       const { members, threshold, order } = params;
-      if ((members.length > 0 && threshold < 1) || threshold > members.length)
-        return Promise.reject(new Error('Invalid threshold or members'));
+      if ((members.length > 0 && threshold < 1) || threshold > members.length) return Promise.reject(new Error('Invalid threshold or members'));
 
       const hashedParams = {
         ...params,
@@ -28,19 +27,20 @@ export const MutilsigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     },
 
     // Generate a multi-signature request to obtain request_id
-    create: (action: MultisigInitAction, raw: string): Promise<MultisigRequestResponse> => axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests`, { action, raw }),
+    create: (action: MultisigInitAction, raw: string): Promise<MultisigRequestResponse> =>
+      axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests`, { action, raw }),
 
     // Initiate or participate in signing
-    sign: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMutilsig(pin, requestID, 'sign'),
+    sign: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'sign'),
 
     // Cancel multisigs
-    unlock: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMutilsig(pin, requestID, 'unlock'),
+    unlock: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'unlock'),
 
     // Cancel my signature
-    cancel: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMutilsig(pin, requestID, 'cancel'),
+    cancel: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'cancel'),
   };
 };
 
-export const MultisigClient = buildClient(MutilsigKeystoreClient);
+export const MultisigClient = buildClient(MultisigKeystoreClient);
 
 export default MultisigClient;
