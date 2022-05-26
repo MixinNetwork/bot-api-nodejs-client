@@ -3,7 +3,7 @@ export { AppClient } from './app';
 export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
 export { CircleClient } from './circle';
-export { CollectionClient } from './collection';
+export { CollectibleClient } from './collectible';
 export { ConversationClient } from './conversation';
 export { ExternalClient } from './external';
 export { MessageClient } from './message';
