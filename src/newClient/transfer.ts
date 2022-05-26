@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
 import { TransferRequest, PaymentRequestResponse } from './types/transfer';
-import { RawTransactionRequest, GhostInput, GhostKeys } from './types/transaction';
+import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
@@ -34,7 +34,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   // Get one-time user keys for mainnet
-  outputs: (input: GhostInput): Promise<GhostKeys[]> => axiosInstance.post<unknown, GhostKeys[]>(`/outputs`, input),
+  outputs: (input: GhostInputRequest): Promise<GhostKeysResponse[]> => axiosInstance.post<unknown, GhostKeysResponse[]>(`/outputs`, input),
 });
 
 export const TransferClient = buildClient(TransferKeystoreClient);

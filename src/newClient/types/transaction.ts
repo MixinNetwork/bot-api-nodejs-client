@@ -13,13 +13,14 @@ export interface RawTransactionRequest {
   pin?: string;
 }
 
-export interface GhostInput {
+export interface GhostInputRequest {
   receivers: string[];
   index: number;
   hint: string;
 }
 
-export interface GhostKeys {
+export interface GhostKeysResponse {
+  type: 'ghost_key';
   keys: string[];
   mask: string;
 }
