@@ -1,9 +1,11 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Keystore from './keystore';
+import { BlazeOptions } from './blaze';
 
 export interface HTTPConfig {
   requestConfig?: Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>;
   keystore?: Keystore;
+  blazeOptions?: BlazeOptions
 }
 
 export interface BaseClient<KeystoreReturnType> {

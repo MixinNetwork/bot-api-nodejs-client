@@ -19,6 +19,7 @@ import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
+import { BlazeClient } from './blaze';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -39,14 +40,19 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
 });
 
+type BlazeClientReturnType = ReturnType<typeof BlazeClient>;
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
+export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient;
+export function Client(config: HTTPConfig): BlazeClientReturnType & KeystoreClientReturnType & RequestClient;
 export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
 
   const { keystore } = config;
   const keystoreClient = KeystoreClient(axiosInstance, keystore);
+  if (!keystore) return merge(keystoreClient, requestClient);
 
-  return merge(keystoreClient, requestClient);
+  const blazeClient = BlazeClient(keystore, config.blazeOptions);
+  return merge(keystoreClient, blazeClient, requestClient);
 }

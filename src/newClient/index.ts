@@ -14,6 +14,7 @@ export { OAuthClient } from './oauth';
 export { PinClient } from './pin';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
+export { BlazeClient } from './blaze';
 export * from './mixin-client';
 
 export { mixinRequest } from './http';
