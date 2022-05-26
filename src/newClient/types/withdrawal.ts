@@ -1,4 +1,4 @@
-export interface WithdrawRequest {
+export interface WithdrawalRequest {
   address_id: string;
   amount: string;
   pin_base64: string;
