@@ -8,7 +8,7 @@ import { AppKeystoreClient } from './app';
 import { AssetKeystoreClient } from './asset';
 import { AttachmentKeystoreClient } from './attachment';
 import { CircleKeystoreClient } from './circle';
-import { CollectionKeystoreClient } from './collection';
+import { CollectibleKeystoreClient } from './collectible';
 import { ConversationKeystoreClient } from './conversation';
 import { ExternalKeystoreClient } from './external';
 import { MessageKeystoreClient } from './message';
@@ -17,6 +17,7 @@ import { OAuthKeystoreClient } from './oauth';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
+import { WithdrawalKeystoreClient } from './withdrawal';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -24,7 +25,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   asset: AssetKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
-  collection: CollectionKeystoreClient(axiosInstance, keystore),
+  collection: CollectibleKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   external: ExternalKeystoreClient(axiosInstance),
   message: MessageKeystoreClient(axiosInstance, keystore),
@@ -33,6 +34,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
+  withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
 });
 
 type NetworkClientReturnType = ReturnType<typeof createNetworkClient>;

@@ -13,6 +13,7 @@ export { OAuthClient } from './oauth';
 export { PinClient } from './pin';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
+export { WithdrawalClient } from './withdrawal';
 export * from './mixin-client';
 
 // todo export utils
