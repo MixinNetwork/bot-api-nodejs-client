@@ -21,6 +21,15 @@ export interface AppPropertyResponse {
   price: string;
 }
 
+export interface AppSecretResponse {
+  app_secret: string;
+}
+
+export interface AppSessionResponse {
+  session_id: string;
+  pin_token_base64: string;
+}
+
 export interface AppRequest {
   redirect_uri: string;
   home_uri: string;
@@ -31,13 +40,4 @@ export interface AppRequest {
   category: string;
   capabilities: string[];
   resource_patterns: string[];
-}
-
-export interface AppSecretResponse {
-  app_secret: string;
-}
-
-export interface AppSessionResponse {
-  session_id: string;
-  pin_token_base64: string;
 }
