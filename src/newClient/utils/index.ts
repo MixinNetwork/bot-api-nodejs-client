@@ -1,4 +1,13 @@
-export * from './auth';
-export * from './base64';
-export * from './client';
-export * from './uniq';
+import * as auth from './auth';
+import * as base64 from './base64';
+import * as client from './client';
+import * as uniq from './uniq';
+
+const utils  = {
+  auth,
+  base64,
+  client,
+  uniq
+};
+
+export default utils;
