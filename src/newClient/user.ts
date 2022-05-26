@@ -7,13 +7,6 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get the current user's personal information
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
-  // Get user information by userID
-  // This API will only return the list of existing users
-  fetch: (id: string) => axiosInstance.get<unknown, UserResponse>(`/users/${id}`),
-
-  // Search users by keyword
-  search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse>(`/search/${identityNumberOrPhone}`),
-
   // Get the contact list of the users, containing users and bots
   friends: () => axiosInstance.get<unknown, UserResponse[]>(`/friends`),
 
@@ -23,7 +16,14 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Rotate user's code
   rotateCode: () => axiosInstance.get<unknown, AuthenticationUserResponse>('/me/code'),
 
+  // Search users by keyword
+  search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse>(`/search/${identityNumberOrPhone}`),
+
+  // Get user information by userID
+  fetch: (id: string) => axiosInstance.get<unknown, UserResponse>(`/users/${id}`),
+
   // Get users' information by userIDs in bulk
+  // This API will only return the list of existing users
   fetchList: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
 
   // Create a network user, can be created by bot only with no permission

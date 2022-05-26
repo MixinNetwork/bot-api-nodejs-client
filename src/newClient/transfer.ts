@@ -10,10 +10,10 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   // Get transfer information by traceID
   fetch: (traceID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${traceID}`),
 
-  // Get the snapshots of the current user
+  // Get specific snapshot of current user
   snapshot: (snapshotID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/snapshots/${snapshotID}`),
 
-  // Get the snapshot of a user
+  // Get the snapshots of current user
   snapshots: (params: SnapshotRequest): Promise<SnapshotResponse[]> => axiosInstance.get<unknown, SnapshotResponse[]>(`/snapshots`, { params }),
 
   // Generate code id for transaction/transfer or verify payments by trace id
@@ -33,7 +33,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     return axiosInstance.post<unknown, SnapshotResponse>('/transactions', request);
   },
 
-  // Get one-time user keys
+  // Get one-time user keys for mainnet
   outputs: (input: GhostInput): Promise<GhostKeys[]> => axiosInstance.post<unknown, GhostKeys[]>(`/outputs`, input),
 });
 

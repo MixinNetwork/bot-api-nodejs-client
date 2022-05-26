@@ -46,14 +46,10 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
     return axiosInstance.get<unknown, NetworkPriceResponse>(`/network/ticker`, { params });
   },
 
-  // Get snapshot details by snapshot_id
-  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
-  // to obtain the private fields like user_id, opponent_id, trace_id and data
+  // Get public information of specific snapshot by snapshot_id
   snapshot: (snapshotID: string): Promise<NetworkSnapshotResponse> => axiosInstance.get<unknown, NetworkSnapshotResponse>(`/network/snapshots/${snapshotID}`),
 
-  // Get snapshot records public information, which including transfers, deposits, withdrawals, etc
-  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
-  // to obtain the private fields like user_id, opponent_id, trace_id and data
+  // Get public information of snapshot records, which including transfers, deposits, withdrawals, etc
   snapshots: (inputParams: NetworkSnapshotRequest): Promise<NetworkSnapshotResponse[]> => {
     const params = {
       ...inputParams,

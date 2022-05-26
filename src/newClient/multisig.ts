@@ -31,10 +31,10 @@ export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     // Initiate or participate in signing
     sign: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'sign'),
 
-    // Cancel multisigs
+    // Cancel my signature before the multisig finish
     unlock: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'unlock'),
 
-    // Cancel my signature
+    // Cancel my multisig request
     cancel: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'cancel'),
   };
 };

@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
-import { buildClient } from './utils/client';
 import { DepositRequest, ExternalTransactionResponse, CheckAddressRequest, CheckAddressResponse, ExchangeRateResponse } from './types/external';
+import { buildClient } from './utils/client';
 
 export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get public network-wide deposit records
