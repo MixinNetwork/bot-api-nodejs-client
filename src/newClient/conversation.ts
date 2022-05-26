@@ -42,7 +42,7 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       }),
 
     // Join a group by codeID
-    joinGroup: (codeId: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeId}/join`),
+    joinGroup: (codeID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeID}/join`),
 
     // Exit a group
     exitGroup: (conversationID: string): Promise<ConversationResponse>=> axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),
