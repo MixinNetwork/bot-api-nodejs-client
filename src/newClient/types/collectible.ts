@@ -6,7 +6,17 @@ export type CollectibleRequestAction = 'sign' | 'unlock' | 'cancel';
 
 export type CollectibleRequestState = 'initial' | 'signed';
 
-export interface NFTResponse {
+interface CollectibleMetaResponse {
+  group: string;
+  name: string;
+  description: string;
+  icon_url: string;
+  media_url: string;
+  mime: string;
+  hash: string;
+}
+
+export interface CollectibleResponse {
   type: 'non_fungible_token';
   token_id: string;
   group: string;
@@ -14,13 +24,13 @@ export interface NFTResponse {
   mixin_id: string;
   collection_id: string;
   nfo: string;
-  meta: NFTMetaResponse;
+  meta: CollectibleMetaResponse;
   receivers: string[];
   receivers_threshold: number;
   created_at: Date;
 }
 
-export interface NFTCollectionResponse {
+export interface CollectionResponse {
   type: 'collection';
   collection_id: string;
   name: string;
@@ -37,7 +47,7 @@ export interface CollectibleOutputsRequest {
   threshold: number;
 }
 
-export interface NFTOutputResponse {
+export interface CollectibleOutputsResponse {
   type: 'non_fungible_output';
   user_id: string;
   output_id: string;
@@ -62,17 +72,7 @@ export interface CollectibleGenerateRequest {
   raw: string;
 }
 
-interface NFTMetaResponse {
-  group: string;
-  name: string;
-  description: string;
-  icon_url: string;
-  media_url: string;
-  mime: string;
-  hash: string;
-}
-
-export interface NFTRequestResponse {
+export interface CollectibleGenerateResponse {
   type: '';
   request_id: string;
   user_id: string;
