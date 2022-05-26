@@ -38,13 +38,6 @@ export interface NetworkPriceResponse {
   price_usd: number;
 }
 
-export interface SnapshotFilterRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  order?: string;
-}
-
 export interface NetworkSnapshotAsset {
   asset_id: string;
   chain_id: string;
@@ -69,14 +62,6 @@ export interface NetworkSnapshotResponse {
   data?: string;
 }
 
-export interface DepositFilterRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  opponent?: string;
-  tag?: string;
-}
-
 export interface ExternalTransactionResponse {
   transaction_id: string;
   created_at: Date;
@@ -96,13 +81,35 @@ export interface ExchangeRateResponse {
   rate: string;
 }
 
+export interface CheckAddressResponse {
+  destination: string;
+  tag: string;
+}
+
 export interface CheckAddressRequest {
   asset: string;
   destination: string;
   tag?: string;
 }
 
-export interface CheckAddressResponse {
-  destination: string;
-  tag: string;
+export interface NetworkSnapshotRequest {
+  limit: number | string;
+  offset: string;
+  asset?: string;
+  order?:string
+}
+
+export interface DepositFilterRequest {
+  limit: number | string;
+  offset: string;
+  asset?: string;
+  opponent?: string;
+  tag?: string;
+}
+
+export interface SnapshotFilterRequest {
+  limit: number | string;
+  offset: string;
+  asset?: string;
+  order?: string;
 }

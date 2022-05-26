@@ -15,9 +15,7 @@ export type KeystoreClient<KeystoreReturnType> = (axiosInstance: AxiosInstance, 
 export type UnionKeystoreClient<KeystoreReturnType> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {
-  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<
-    KeystoreReturnType
->;
+  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType>;
 }
 
 export interface RequestClient {

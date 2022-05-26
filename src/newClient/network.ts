@@ -1,17 +1,12 @@
 import { AxiosInstance } from 'axios';
 import { AssetResponse } from './types/asset';
 import {
+  NetworkSnapshotRequest,
   NetworkInfoResponse,
   NetworkChainResponse,
   NetworkAssetResponse,
   NetworkPriceResponse,
-  SnapshotFilterRequest,
   NetworkSnapshotResponse,
-  DepositFilterRequest,
-  ExternalTransactionResponse,
-  ExchangeRateResponse,
-  CheckAddressRequest,
-  CheckAddressResponse,
 } from './types/network';
 import { buildClient } from './utils/client';
 
@@ -51,30 +46,17 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
     return axiosInstance.get<unknown, NetworkPriceResponse>(`/network/ticker`, { params });
   },
 
-  // Get snapshot details by snapshot_id
-  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
-  // to obtain the private fields like user_id, opponent_id, trace_id and data
+  // Get public information of specific snapshot by snapshot_id
   snapshot: (snapshotID: string): Promise<NetworkSnapshotResponse> => axiosInstance.get<unknown, NetworkSnapshotResponse>(`/network/snapshots/${snapshotID}`),
 
-  // Get snapshot records public information, which including transfers, deposits, withdrawals, etc
-  // Make sure the dApp has already granted the SNAPSHOT:READ permission and set correct JWT in the request headers,
-  // to obtain the private fields like user_id, opponent_id, trace_id and data
-  snapshots: (inputParams: SnapshotFilterRequest): Promise<NetworkSnapshotResponse[]> => {
+  // Get public information of snapshot records, which including transfers, deposits, withdrawals, etc
+  snapshots: (inputParams: NetworkSnapshotRequest): Promise<NetworkSnapshotResponse[]> => {
     const params = {
       ...inputParams,
       order: inputParams.order || 'DESC'
     };
     return axiosInstance.get<unknown, NetworkSnapshotResponse[]>(`/network/snapshots`, { params });
   },
-
-  // Get public network-wide deposit records
-  deposit: (params: DepositFilterRequest): Promise<ExternalTransactionResponse[]> => axiosInstance.get<unknown, ExternalTransactionResponse[]>('/external/transactions', { params }),
-
-  // GET the list of all fiat exchange rates based on US Dollar
-  exchangeRates: (): Promise<ExchangeRateResponse> => axiosInstance.get<unknown, ExchangeRateResponse>('/external/fiats'),
-
-  // Check if an address belongs to Mixin
-  externalAddressesCheck: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get(`/external/addresses/check`, { params }),
 });
 
 export const NetworkClient = buildClient(NetworkBaseClient);
