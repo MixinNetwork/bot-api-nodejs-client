@@ -3,7 +3,8 @@ import { DepositRequest, ExternalTransactionResponse, CheckAddressRequest, Check
 import { buildClient } from './utils/client';
 
 export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
-  // Get public network-wide deposit records
+  // Get the pending deposits
+  // Which confirmations is less then threshold
   deposits: (params: DepositRequest): Promise<ExternalTransactionResponse[]> => axiosInstance.get<unknown, ExternalTransactionResponse[]>('/external/transactions', { params }),
 
   // Check if an address belongs to Mixin

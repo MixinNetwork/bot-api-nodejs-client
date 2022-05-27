@@ -4,7 +4,10 @@ import { AuthenticationUserResponse } from './types/user';
 import { buildClient } from './utils/client';
 import { signEd25519PIN } from './utils/auth';
 
-// Verify or update pin, needs keystore
+// Methods to verify or update pin with keystore
+// Note:
+// * If you forget your PIN, there is no way to retrieve or restore it
+// Docs: https://developers.mixin.one/docs/api/pin/pin-update
 export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   function updatePin(pin: string): Promise<AuthenticationUserResponse>;
@@ -16,7 +19,7 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
   }
 
   return {
-    // Verify a user's PIN
+    // Verify a user's PIN, the iterator of the pin will increment also
     verify: (pin: string) => {
       const encrypted = signEd25519PIN(pin, keystore);
       return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', { pin: encrypted});

@@ -6,6 +6,10 @@ import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './t
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
+// Methods to transfer asset, withdraw and obtain transfer information
+// Note:
+// * Once /transfers API is successfully called, it means data has been confirmed by all nodes, and it is irreversible
+// Docs: https://developers.mixin.one/docs/api/transfer/transfer
 export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get transfer information by traceID
   fetch: (traceID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${traceID}`),
@@ -20,6 +24,8 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
 
   // Transfer to specific user
+  // If you encounter 500 error, do it over again
+  // If you see the error 20119 password is wrong, do not try again. It is recommended to call the PIN Verification API to confirm
   toUser: (pin: string, params: TransferRequest): Promise<SnapshotResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     const request: TransferRequest = { ...params, pin: encrypted };

@@ -2,19 +2,25 @@ import { AxiosInstance } from 'axios';
 import { AppResponse, AppPropertyResponse, AppRequest, AppSecretResponse, AppSessionResponse } from './types/app';
 import { buildClient } from './utils/client';
 
+// API for mixin users and official app
+// Notes:
+// * Some api only available for mixin official app
+// * Two free apps pre developer
 // TODO add app api for developer document
 // https://developers.mixin.one/
 export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   // Get app list of current user
+  // Available for mixin official developer app only
   fetchList: (): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/apps`),
 
   // Get app number of current user and the price to buy new credit
+  // Available for mixin official developer app only
   properties: (): Promise<AppPropertyResponse> => axiosInstance.get<unknown, AppPropertyResponse>(`/apps/property`),
 
   // Get user's app share list
   favorites: (userID: string): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
 
-  // Create a new app, 2 free credit for each user
+  // Developer can create up to 2 free apps, or pay for more unlimited apps;
   create: (params: AppRequest): Promise<AppResponse> => axiosInstance.post<unknown, AppResponse>(`/apps`, params),
 
   // Update app setting
@@ -35,6 +41,7 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   },
 
   // Add to your share list
+  // User can have up to 3 favorite apps
   favorite: (appID: string): Promise<AppResponse[]> => axiosInstance.post<unknown, AppResponse[]>(`/apps/${appID}/favorite`),
 
   // Removing from your share list
