@@ -15,9 +15,8 @@ const BlazeKeystoreClient = (keystore: Keystore, wsOptions?: BlazeOptions) => {
   let pingInterval: ReturnType<typeof setInterval> | null = null;
 
   const option: BlazeOptions = {
-    parse: false,
-    syncAck: false,
-    ...wsOptions
+    parse: wsOptions?.parse || false,
+    syncAck: wsOptions?.syncAck || false,
   };
 
   const decode = (data: Uint8Array): Promise<MessageView> => new Promise(resolve => {
@@ -48,8 +47,27 @@ const BlazeKeystoreClient = (keystore: Keystore, wsOptions?: BlazeOptions) => {
     }
   });
 
+  const heartbeat = () => {
+    ws!.on('pong', () => {
+      isAlive = true;
+    });
+
+    pingInterval = setInterval(() => {
+      if (ws!.readyState === WebSocket.CONNECTING) return;
+
+      if (!isAlive) {
+        ws!.terminate();
+        return;
+      }
+
+      isAlive = false;
+      ws!.ping();
+    }, 1000 * 30);
+  };
+
   const loopBlaze = (h: BlazeHandler) => {
     ws = websocket(keystore, url);
+    heartbeat();
 
     ws.onmessage = async event => {
       const msg = await decode(event.data as Uint8Array);
@@ -76,7 +94,7 @@ const BlazeKeystoreClient = (keystore: Keystore, wsOptions?: BlazeOptions) => {
 
     ws.onerror = e => {
       if (e.message !== 'Opening handshake has timed out') return;
-      url = url === hostURL[0] ?hostURL[1] : hostURL[0];
+      url = url === hostURL[0] ? hostURL[1] : hostURL[0];
     };
 
     ws.onopen = () => {
@@ -90,24 +108,6 @@ const BlazeKeystoreClient = (keystore: Keystore, wsOptions?: BlazeOptions) => {
       if (!h.onMessage) throw new Error('OnMessage not set');
       loopBlaze(h);
     },
-
-    heartbeat() {
-      if (!ws) throw new Error('Use oop first');
-
-      ws!.on('pong', () => {
-        isAlive = true;
-      });
-
-      pingInterval = setInterval(() => {
-        if (ws!.readyState === WebSocket.CONNECTING) return;
-        if (isAlive) {
-          ws!.terminate();
-          return;
-        }
-        isAlive = false;
-        ws!.ping();
-      }, 1000 * 30);
-    }
   };
 };
 
