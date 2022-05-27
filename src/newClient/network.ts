@@ -11,7 +11,7 @@ import {
 import { buildClient } from './utils/client';
 
 // Public methods that need no permission
-// Detail: https://developers.mixin.one/docs/api/transfer/snapshots
+// Docs: https://developers.mixin.one/docs/api/transfer/snapshots
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get network info
   info: (): Promise<NetworkInfoResponse> => axiosInstance.get<unknown, NetworkInfoResponse>('/network'),

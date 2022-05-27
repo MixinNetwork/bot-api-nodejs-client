@@ -9,6 +9,7 @@ import { buildClient } from './utils/client';
 // Methods to transfer asset, withdraw and obtain transfer information
 // Note:
 // * Once /transfers API is successfully called, it means data has been confirmed by all nodes, and it is irreversible
+// Docs: https://developers.mixin.one/docs/api/transfer/transfer
 export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get transfer information by traceID
   fetch: (traceID: string): Promise<SnapshotResponse> => axiosInstance.get<unknown, SnapshotResponse>(`/transfers/trace/${traceID}`),

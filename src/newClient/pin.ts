@@ -7,6 +7,7 @@ import { signEd25519PIN } from './utils/auth';
 // Methods to verify or update pin with keystore
 // Note:
 // * If you forget your PIN, there is no way to retrieve or restore it
+// Docs: https://developers.mixin.one/docs/api/pin/pin-update
 export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   function updatePin(pin: string): Promise<AuthenticationUserResponse>;

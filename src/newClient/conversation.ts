@@ -4,7 +4,13 @@ import { ConversationRequest, ConversationResponse, ConversationAction, Particip
 import { uniqueConversationID } from './utils/uniq';
 import { buildClient } from './utils/client';
 
-// Manage conversation, need keystore
+// Create and manage a conversation
+// Notes:
+// * only owner and admin can add or remove participants, and rotate conversation code
+// * only owner can change the role of participants
+// * only owner and admin can setup disappear
+// * for group conversation, creator will be the owner and can't be changed.
+// Docs: https://developers.mixin.one/docs/api/conversations/read
 export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
 
   const createConversation = (params: ConversationRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
