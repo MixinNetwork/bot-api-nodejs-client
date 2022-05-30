@@ -8,6 +8,7 @@ import { AppKeystoreClient } from './app';
 import { AssetKeystoreClient } from './asset';
 import { AttachmentKeystoreClient } from './attachment';
 import { CircleKeystoreClient } from './circle';
+import { CodeKeystoreClient } from './code';
 import { CollectibleKeystoreClient } from './collectible';
 import { ConversationKeystoreClient } from './conversation';
 import { ExternalKeystoreClient } from './external';
@@ -27,6 +28,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   asset: AssetKeystoreClient(axiosInstance),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
+  code: CodeKeystoreClient(axiosInstance),
   collection: CollectibleKeystoreClient(axiosInstance, keystore),
   conversation: ConversationKeystoreClient(axiosInstance, keystore),
   external: ExternalKeystoreClient(axiosInstance),

@@ -4,6 +4,7 @@ export { AddressClient } from './address';
 export { AppClient } from './app';
 export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
+export { CodeClient } from './code';
 export { CircleClient } from './circle';
 export { CollectibleClient } from './collectible';
 export { ConversationClient } from './conversation';
