@@ -11,6 +11,7 @@ export type OAuthScope = 'PROFILE:READ'
 export interface AccessTokenResponse{
   access_token: string;
   scope: OAuthScope[];
+  authorization_id: string;
   // public key from server
   ed25519: string;
 }
