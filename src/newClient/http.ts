@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { delay } from '../mixin/tools';
 import { Keystore } from '../types';
-import { signAuthenticationToken } from './utils/auth';
+import { signAuthenticationToken } from './utils/signToken';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 

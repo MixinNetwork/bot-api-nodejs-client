@@ -2,12 +2,11 @@ import axios from 'axios';
 import { ethers, utils, BigNumber } from 'ethers';
 import { JsonFragment } from '@ethersproject/abi';
 import { v4 as newUUID, parse, stringify } from 'uuid';
-import { RawTransactionRequest, PaymentRequestResponse } from '../newClient';
 import { InvokeCodeParams, ExtraGenerateParams, PaymentGenerateParams } from '../types';
 import { Blank } from './registry';
-import { Encoder } from '../mixin/encoder';
-import { base64url } from '../mixin/sign';
+import Encoder from './encoder';
 import { registryAbi, registryAddress, registryProcess } from '../mixin/mvm_registry';
+import { RawTransactionRequest, PaymentRequestResponse, base64RawURLEncode } from '../newClient';
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
@@ -172,5 +171,5 @@ const encodeMemo = (extra: string, process: string): string => {
   enc.writeBytes(Buffer.from([]));
   enc.writeBytes(Buffer.from([]));
   enc.writeBytes(Buffer.from(extra, 'hex'));
-  return base64url(enc.buf);
+  return base64RawURLEncode(enc.buf);
 };
