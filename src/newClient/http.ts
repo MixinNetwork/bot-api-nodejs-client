@@ -13,7 +13,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
 
   const ins = axios.create({
     baseURL: hostURL[0],
-    headers: { 'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     timeout: 3000,
     ...config,
   });
