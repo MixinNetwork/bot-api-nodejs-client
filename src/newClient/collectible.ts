@@ -9,7 +9,7 @@ import {
   CollectibleTransactionRequest,
   CollectibleTransactionResponse
 } from './types/collectible';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
 
 // Users can use those APIs to manage their NFTs
