@@ -5,7 +5,9 @@ import { WithdrawalRequest } from './types/withdrawal';
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
-// It costs fee to withdrawal. To get the fee, use GET /assets/{asset_id}/fee
+// User need to create an address before withdrawal
+// If the address belongs to a Mixin user, withdrawal will not charge any fee
+// Docs: https://developers.mixin.one/docs/api/withdrawal/withdrawal
 export const WithdrawalKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Submit a withdrawal request
   submit: (pin: string, params: WithdrawalRequest): Promise<SnapshotResponse> => {

@@ -12,8 +12,13 @@ import {
 import { signEd25519PIN } from './utils/auth';
 import { buildClient } from './utils/client';
 
+// Users can use those APIs to manage their NFTs
+// Note:
+// * Before transferring a collectible, user should create a request first.
+// * only unsigned request can be canceled.
+// * only uncompleted sign transaction can be unlocked.
+// Docs: https://developers.mixin.one/docs/api/collectibles/request
 export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
-
   const manageRequest = (pin: string, requestID: string, action: CollectibleRequestAction): Promise<CollectibleGenerateResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, CollectibleGenerateResponse>(`/collectibles/requests/${requestID}/${action}`, { pin: encrypted });
