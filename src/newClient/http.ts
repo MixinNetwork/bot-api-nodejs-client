@@ -13,13 +13,13 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
 
   const ins = axios.create({
     baseURL: hostURL[0],
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json'},
     timeout: 3000,
     ...config,
   });
 
   let keystore: Keystore | undefined;
-  if (!arg) {
+  if (arg) {
     keystore = arg;
   }
 
@@ -31,8 +31,9 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
 
     let jwtToken = '';
     if (keystore && keystore.sign === 'owner') jwtToken = signAuthenticationToken(method, uri, data, keystore);
-    if (keystore && keystore.sign === 'oauth') jwtToken = signOauthAccessToken(method, uri, data, keystore);
+    if (keystore && keystore.sign === 'oauth') jwtToken = signOauthAccessToken(method, uri, data, requestID, keystore);
     config.headers.Authorization = `Bearer ${jwtToken}`;
+
     return config;
   });
 

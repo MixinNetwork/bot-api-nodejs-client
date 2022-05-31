@@ -7,8 +7,8 @@ import { base64RawURLDecode, base64RawURLEncode } from './base64';
 export const getED25519KeyPair = () => {
   const keypair = forge.pki.ed25519.generateKeyPair();
   return {
-    privateKey: forge.pki.privateKeyToPem(keypair.privateKey),
-    publicKey: forge.pki.publicKeyToPem(keypair.publicKey),
+    privateKey: base64RawURLEncode(keypair.privateKey),
+    publicKey: base64RawURLEncode(keypair.publicKey),
   };
 };
 
@@ -57,7 +57,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   return result.join('.');
 };
 
-export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore) => {
+export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
   if (!keystore) {
     return '';
   }
@@ -76,11 +76,11 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
   md.update(method + uri + data, 'utf8');
 
   const payload = {
-    uid: keystore.user_id,
+    iss: keystore.user_id,
     aid: keystore.authorization_id,
     iat,
     exp,
-    jti: uuid(),
+    jti: requestID,
     sig: md.digest().toHex(),
     scp: keystore.scope,
   };
