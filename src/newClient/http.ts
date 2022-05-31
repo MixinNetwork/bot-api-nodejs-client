@@ -1,10 +1,10 @@
 // @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
+import { Keystore } from './types/keystore';
 import { ResponseError } from './error';
 import { delay } from '../mixin/tools';
-import { Keystore } from '../types';
-import { signAuthenticationToken } from './utils/signToken';
+import { signAuthenticationToken, signOauthAccessToken } from './utils/signToken';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -28,7 +28,10 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
     const uri = ins.getUri(config);
     const requestID = uuid();
     config.headers['X-Request-Id'] = requestID;
-    const jwtToken = signAuthenticationToken(method, uri, data, keystore) || '';
+
+    let jwtToken = '';
+    if (keystore && keystore.sign === 'owner') jwtToken = signAuthenticationToken(method, uri, data, keystore);
+    if (keystore && keystore.sign === 'oauth') jwtToken = signOauthAccessToken(method, uri, data, keystore);
     config.headers.Authorization = `Bearer ${jwtToken}`;
     return config;
   });

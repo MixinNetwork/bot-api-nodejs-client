@@ -20,12 +20,13 @@ import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
-import { BlazeClient } from './blaze';
+import { BlazeKeystoreClient } from './blaze';
 
-const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
   app: AppKeystoreClient(axiosInstance),
   asset: AssetKeystoreClient(axiosInstance),
+  blaze: BlazeKeystoreClient(keystore, config.blazeOptions),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
   code: CodeKeystoreClient(axiosInstance),
@@ -42,19 +43,14 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
 });
 
-type BlazeClientReturnType = ReturnType<typeof BlazeClient>;
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient;
-export function Client(config: HTTPConfig): BlazeClientReturnType & KeystoreClientReturnType & RequestClient;
 export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
 
   const { keystore } = config;
-  const keystoreClient = KeystoreClient(axiosInstance, keystore);
-  if (!keystore) return merge(keystoreClient, requestClient);
+  const keystoreClient = KeystoreClient(axiosInstance, keystore, config);
 
-  const blazeClient = BlazeClient(keystore, config.blazeOptions);
-  return merge(keystoreClient, blazeClient, requestClient);
+  return merge(keystoreClient, requestClient);
 }

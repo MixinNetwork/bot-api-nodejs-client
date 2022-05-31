@@ -1,11 +1,16 @@
 import serialize from 'serialize-javascript';
 import forge from 'node-forge';
 import { v4 as uuid } from 'uuid';
-import { generateKeyPair } from 'curve25519-js';
 import Keystore from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
 
-export const getKeyPair = () => generateKeyPair(Date.now());
+export const getED25519KeyPair = () => {
+  const keypair = forge.pki.ed25519.generateKeyPair();
+  return {
+    privateKey: forge.pki.privateKeyToPem(keypair.privateKey),
+    publicKey: forge.pki.publicKeyToPem(keypair.publicKey),
+  };
+};
 
 // sign an authentication token
 // sig: sha256(method + uri + params)
@@ -52,7 +57,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   return result.join('.');
 };
 
-export const SignOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, authorizationID: string, scope: string, keystore: Keystore) => {
+export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore) => {
   if (!keystore) {
     return '';
   }
@@ -72,12 +77,12 @@ export const SignOauthAccessToken = (methodRaw: string | undefined, uri: string,
 
   const payload = {
     uid: keystore.user_id,
-    aid: authorizationID,
+    aid: keystore.authorization_id,
     iat,
     exp,
     jti: uuid(),
     sig: md.digest().toHex(),
-    scp: scope,
+    scp: keystore.scope,
   };
 
   const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));

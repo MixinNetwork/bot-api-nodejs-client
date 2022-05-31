@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import Keystore from './types/keystore';
 import { signAuthenticationToken } from './utils/signToken';
 
-export function websocket(keystore: Keystore, url: string): WebSocket {
+export function websocket(keystore: Keystore | undefined, url: string): WebSocket {
   const jwtToken = signAuthenticationToken('GET', '/', '', keystore) || '';
   const headers = {
     Authorization: `Bearer ${ jwtToken }`,
