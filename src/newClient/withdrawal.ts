@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { SnapshotResponse } from './types/snapshot';
 import { WithdrawalRequest } from './types/withdrawal';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
 
 // User need to create an address before withdrawal

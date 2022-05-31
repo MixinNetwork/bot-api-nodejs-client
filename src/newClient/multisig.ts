@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUTXOResponse, MultisigRequestResponse } from './types/multisig';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 import { hashMembers } from './utils/uniq';
 import { buildClient } from './utils/client';
 

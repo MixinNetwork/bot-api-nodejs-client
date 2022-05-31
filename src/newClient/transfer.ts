@@ -3,7 +3,7 @@ import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
 import { TransferRequest, PaymentRequestResponse } from './types/transfer';
 import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
 
 // Methods to transfer asset, withdraw and obtain transfer information

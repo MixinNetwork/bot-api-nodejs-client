@@ -9,7 +9,7 @@ import { buildClient } from './utils/client';
 // Detail: https://developers.mixin.one/docs/api/oauth/oauth
 export const OAuthKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   // Get the access code based on authorization code
-  getToken: (code: string): Promise<AccessTokenResponse> => {
+  getToken: (code: string, publicKey: string): Promise<AccessTokenResponse> => {
     if (!keystore || !keystore.user_id || !keystore.client_secret) {
       throw new Error('Invalid keystore!');
     }
@@ -17,7 +17,8 @@ export const OAuthKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keys
     const data = {
       client_id: keystore!.user_id,
       client_secret: keystore!.client_secret,
-      code
+      code,
+      ed25519: publicKey
     };
     return axiosInstance.post<unknown, AccessTokenResponse>('/oauth/token', data);
   }

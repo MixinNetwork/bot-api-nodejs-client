@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AddressResponse, AddressRequest } from './types/address';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
 
 // All tokens withdrawal needs an address

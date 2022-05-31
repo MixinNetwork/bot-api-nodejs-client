@@ -60,13 +60,3 @@ export interface SnapshotRequest {
   limit: number | string;
   offset: string;
 }
-
-export interface SnapshotFilterRequest {
-  limit?: number | string;
-  offset?: string;
-  asset?: string;
-  opponent?: string;
-  tag?: string;
-  destination?: string; // query external transactions
-  order: 'ASC' | 'DESC';
-}

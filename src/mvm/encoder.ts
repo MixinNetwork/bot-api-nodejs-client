@@ -17,7 +17,7 @@ export const integerToBytes =  (x: number) => {
     i = (i / 2 ** 8) | 0;
   } while (i !== 0);
   return bytes;
-}
+};
 
 export default class Encoder {
   buf: Buffer;
