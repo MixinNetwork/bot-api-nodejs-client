@@ -9,6 +9,7 @@ export interface HTTPConfig {
 }
 
 export interface BaseClient<KeystoreReturnType> {
+  (): KeystoreReturnType & RequestClient;
   (config: HTTPConfig): KeystoreReturnType & RequestClient;
 }
 
