@@ -1,8 +1,8 @@
 export interface Keystore {
   user_id: string;
-  private_key: string;
 
   // oauth
+  private_key?: string;
   scope?: string;
   authorization_id?: string;
 
