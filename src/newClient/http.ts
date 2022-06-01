@@ -28,8 +28,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
     const requestID = uuid();
     config.headers['X-Request-Id'] = requestID;
 
-    let jwtToken = '';
-    if (keystore) jwtToken = signAccessToken(method, uri, data, requestID, keystore);
+    const jwtToken = signAccessToken(method, uri, data, requestID, keystore);
     config.headers.Authorization = `Bearer ${jwtToken}`;
 
     return config;

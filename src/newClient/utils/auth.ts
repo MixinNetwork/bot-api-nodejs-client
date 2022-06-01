@@ -92,7 +92,11 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
   return signToken(payload, keystore.private_key);
 };
 
-export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
+export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
+  if (!keystore) {
+    return '';
+  }
+
   if (keystore.sign === 'oauth') {
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
   }
