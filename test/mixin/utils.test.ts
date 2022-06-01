@@ -1,7 +1,9 @@
 import forge from 'node-forge';
+import { signAuthenticationToken } from '../../src/newClient/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/newClient/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/newClient/utils/uniq';
-import { sharedEd25519Key } from '../../src/newClient/utils/pin';
+import { sharedEd25519Key, signEd25519PIN } from '../../src/newClient/utils/pin';
+import keystore from './keystore';
 
 describe('Tests for utils', () => {
   test('base64 encode & decode should be url safe', () => {
@@ -66,5 +68,14 @@ describe('Tests for utils', () => {
     const share1 = sharedEd25519Key(Buffer.from(pubAlice, 'hex').toString('base64'), Buffer.from(privateBob, 'hex').toString('base64'));
     const share2 = sharedEd25519Key(Buffer.from(pubBob, 'hex').toString('base64'), Buffer.from(privateAlice, 'hex').toString('base64'));
     expect(Buffer.from(share1).toString('hex')).toBe(Buffer.from(share2).toString('hex'));
+
+    expect(signEd25519PIN('123456', undefined)).toBe('');
+    expect(signEd25519PIN('123456', keystore)).not.toBe('');
+  });
+
+  test('tests for auth', () => {
+    expect(signAuthenticationToken('GET', '/me', '', undefined)).toBe('');
+    expect(signAuthenticationToken('GET', '/me', '', keystore)).not.toBe('');
+    expect(signAuthenticationToken('POST', '/me', {foo: 'bar'}, keystore)).not.toBe('');
   });
 });
