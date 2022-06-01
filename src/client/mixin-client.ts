@@ -45,7 +45,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
 
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function Client(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
+export function MixinApi(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
 
