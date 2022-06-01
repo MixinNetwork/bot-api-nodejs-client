@@ -1,4 +1,4 @@
-import { ResponseError } from '../../src/newClient/error';
+import { ResponseError } from '../../src/client/error';
 
 describe('Tests for ResponseError', () => {
   test('Test response error', () => {

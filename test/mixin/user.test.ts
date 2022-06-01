@@ -1,5 +1,5 @@
-import User from '../../src/newClient/user';
-import Pin from '../../src/newClient/pin';
+import User from '../../src/client/user';
+import Pin from '../../src/client/pin';
 import keystore from './keystore';
 
 describe('Tests for users', () => {

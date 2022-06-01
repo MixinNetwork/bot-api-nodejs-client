@@ -1,6 +1,6 @@
 import forge from 'node-forge';
-import { base64RawURLEncode, base64RawURLDecode } from '../../src/newClient/utils/base64';
-import { hashMembers, uniqueConversationID } from '../../src/newClient/utils/uniq';
+import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
+import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
 
 describe('Tests for utils', () => {
   test('base64 encode & decode should be url safe', () => {

@@ -6,7 +6,7 @@ import { InvokeCodeParams, ExtraGenerateParams, PaymentGenerateParams } from '..
 import { Blank } from './registry';
 import Encoder from './encoder';
 import { registryAbi, registryAddress, registryProcess } from '../mixin/mvm_registry';
-import { RawTransactionRequest, PaymentRequestResponse, base64RawURLEncode } from '../newClient';
+import { RawTransactionRequest, PaymentRequestResponse, base64RawURLEncode } from '../client';
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
