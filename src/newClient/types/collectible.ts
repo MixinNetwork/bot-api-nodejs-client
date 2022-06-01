@@ -67,12 +67,12 @@ export interface CollectibleOutputsResponse {
   signed_tx: string;
 }
 
-export interface CollectibleGenerateRequest {
+export interface CollectibleTransactionRequest {
   action: CollectibleAction;
   raw: string;
 }
 
-export interface CollectibleGenerateResponse {
+export interface CollectibleTransactionResponse {
   type: '';
   request_id: string;
   user_id: string;

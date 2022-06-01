@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AuthenticationUserResponse } from './types/user';
 import { buildClient } from './utils/client';
-import { signEd25519PIN } from './utils/auth';
+import { signEd25519PIN } from './utils/pin';
 
 // Methods to verify or update pin with keystore
 // Note:

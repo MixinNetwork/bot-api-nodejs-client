@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import Keystore from './types/keystore';
-import { signAuthenticationToken } from './utils/signToken';
+import { signAuthenticationToken } from './utils/auth';
 
 export function websocket(keystore: Keystore | undefined, url: string): WebSocket {
   const jwtToken = signAuthenticationToken('GET', '/', '', keystore) || '';

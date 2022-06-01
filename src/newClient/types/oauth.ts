@@ -7,7 +7,6 @@ export type OAuthScope = 'PROFILE:READ'
   | 'CIRCLES:READ'
   | 'CIRCLES:WRITE';
 
-
 export interface AccessTokenResponse{
   scope: string;
   authorization_id: string;

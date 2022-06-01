@@ -1,10 +1,9 @@
-// @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { Keystore } from './types/keystore';
 import { ResponseError } from './error';
 import { delay } from '../mixin/tools';
-import { signAuthenticationToken, signOauthAccessToken } from './utils/signToken';
+import { signAuthenticationToken, signOauthAccessToken } from './utils/auth';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
