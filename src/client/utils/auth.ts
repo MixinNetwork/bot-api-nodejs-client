@@ -58,7 +58,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
     scp: keystore.scope || 'FULL',
   };
 
-  return signToken(payload, keystore.private_key);
+  return signToken(payload, keystore.private_key!);
 };
 
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
@@ -89,7 +89,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
     scp: keystore.scope,
   };
 
-  return signToken(payload, keystore.private_key);
+  return signToken(payload, keystore.private_key!);
 };
 
 export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
