@@ -19,7 +19,7 @@ describe('Tests for users', () => {
 
   test('verify user pin', async () => {
     const pin = Pin({ keystore });
-    const resp = await pin.verify(keystore.pin);
+    const resp = await pin.verify(keystore.pin!);
     expect(resp.user_id).toMatch(keystore.user_id);
     expect(resp.is_verified).toBe(false);
   });

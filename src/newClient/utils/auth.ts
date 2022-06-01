@@ -12,6 +12,23 @@ export const getED25519KeyPair = () => {
   };
 };
 
+const signToken = (payload: Object, private_key: string): string => {
+  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
+  const payloadStr = base64RawURLEncode(serialize(payload));
+
+  const privateKey = base64RawURLDecode(private_key);
+  const result = [header, payloadStr];
+  const signData = forge.pki.ed25519.sign({
+    message: result.join('.'),
+    encoding: 'utf8',
+    privateKey,
+  });
+
+  const sign = base64RawURLEncode(signData);
+  result.push(sign);
+  return result.join('.');
+};
+
 // sign an authentication token
 // sig: sha256(method + uri + params)
 export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore | undefined) => {
@@ -41,20 +58,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
     scp: keystore.scope || 'FULL',
   };
 
-  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
-  const payloadStr = base64RawURLEncode(serialize(payload));
-
-  const privateKey = base64RawURLDecode(keystore.private_key);
-  const result = [header, payloadStr];
-  const signData = forge.pki.ed25519.sign({
-    message: result.join('.'),
-    encoding: 'utf8',
-    privateKey,
-  });
-
-  const sign = base64RawURLEncode(signData);
-  result.push(sign);
-  return result.join('.');
+  return signToken(payload, keystore.private_key);
 };
 
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
@@ -85,18 +89,5 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
     scp: keystore.scope,
   };
 
-  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
-  const payloadStr = base64RawURLEncode(serialize(payload));
-
-  const privateKey = base64RawURLDecode(keystore.private_key);
-  const result = [header, payloadStr];
-  const signData = forge.pki.ed25519.sign({
-    message: result.join('.'),
-    encoding: 'utf8',
-    privateKey,
-  });
-
-  const sign = base64RawURLEncode(signData);
-  result.push(sign);
-  return result.join('.');
+  return signToken(payload, keystore.private_key);
 };
