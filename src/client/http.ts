@@ -7,7 +7,7 @@ import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): AxiosInstance {
+export function http(keystore?: Keystore, config?: AxiosRequestConfig): AxiosInstance {
   const domain = !!config?.baseURL;
 
   const ins = axios.create({
@@ -16,11 +16,6 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
     timeout: 3000,
     ...config,
   });
-
-  let keystore: Keystore | undefined;
-  if (arg) {
-    keystore = arg;
-  }
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
     const { method, data } = config;
