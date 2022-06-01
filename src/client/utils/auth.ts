@@ -1,11 +1,33 @@
 import serialize from 'serialize-javascript';
 import forge from 'node-forge';
 import { v4 as uuid } from 'uuid';
-import { generateKeyPair } from 'curve25519-js';
 import Keystore from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
 
-export const getKeyPair = () => generateKeyPair(Date.now());
+export const getED25519KeyPair = () => {
+  const keypair = forge.pki.ed25519.generateKeyPair();
+  return {
+    privateKey: base64RawURLEncode(keypair.privateKey),
+    publicKey: base64RawURLEncode(keypair.publicKey),
+  };
+};
+
+const signToken = (payload: Object, private_key: string): string => {
+  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
+  const payloadStr = base64RawURLEncode(serialize(payload));
+
+  const privateKey = base64RawURLDecode(private_key);
+  const result = [header, payloadStr];
+  const signData = forge.pki.ed25519.sign({
+    message: result.join('.'),
+    encoding: 'utf8',
+    privateKey,
+  });
+
+  const sign = base64RawURLEncode(signData);
+  result.push(sign);
+  return result.join('.');
+};
 
 // sign an authentication token
 // sig: sha256(method + uri + params)
@@ -36,23 +58,10 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
     scp: keystore.scope || 'FULL',
   };
 
-  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
-  const payloadStr = base64RawURLEncode(serialize(payload));
-
-  const privateKey = base64RawURLDecode(keystore.private_key);
-  const result = [header, payloadStr];
-  const signData = forge.pki.ed25519.sign({
-    message: result.join('.'),
-    encoding: 'utf8',
-    privateKey,
-  });
-
-  const sign = base64RawURLEncode(signData);
-  result.push(sign);
-  return result.join('.');
+  return signToken(payload, keystore.private_key);
 };
 
-export const SignOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, authorizationID: string, scope: string, keystore: Keystore) => {
+export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
   if (!keystore) {
     return '';
   }
@@ -71,27 +80,25 @@ export const SignOauthAccessToken = (methodRaw: string | undefined, uri: string,
   md.update(method + uri + data, 'utf8');
 
   const payload = {
-    uid: keystore.user_id,
-    aid: authorizationID,
+    iss: keystore.user_id,
+    aid: keystore.authorization_id,
     iat,
     exp,
-    jti: uuid(),
+    jti: requestID,
     sig: md.digest().toHex(),
-    scp: scope,
+    scp: keystore.scope,
   };
 
-  const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
-  const payloadStr = base64RawURLEncode(serialize(payload));
+  return signToken(payload, keystore.private_key);
+};
 
-  const privateKey = base64RawURLDecode(keystore.private_key);
-  const result = [header, payloadStr];
-  const signData = forge.pki.ed25519.sign({
-    message: result.join('.'),
-    encoding: 'utf8',
-    privateKey,
-  });
+export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
+  if (!keystore) {
+    return '';
+  }
 
-  const sign = base64RawURLEncode(signData);
-  result.push(sign);
-  return result.join('.');
+  if (keystore.sign === 'oauth') {
+    return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
+  }
+  return signAuthenticationToken(methodRaw, uri, params, keystore);
 };

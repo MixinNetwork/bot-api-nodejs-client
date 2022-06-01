@@ -1,2 +1,2 @@
-export * from './newClient';
+export * from './client';
 export * from './mvm';

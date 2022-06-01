@@ -31,7 +31,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   const blockSize = 16;
   const Uint64 = LittleEndian.Int64LE;
 
-  const sharedKey = sharedEd25519Key(keystore.pin_token, keystore.private_key);
+  const sharedKey = sharedEd25519Key(keystore.pin_token!, keystore.private_key);
 
   const iterator = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());
   const time = Buffer.from(new Uint64(Math.floor(new Date().getTime() / 1000)).toBuffer());

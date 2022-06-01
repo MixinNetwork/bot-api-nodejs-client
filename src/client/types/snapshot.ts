@@ -53,7 +53,6 @@ export interface RawTransactionResponse extends BaseSnapshotResponse {
   state: string;
 }
 
-
 export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
 
 export interface SnapshotRequest {

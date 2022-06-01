@@ -1,3 +1,6 @@
+// Mixin provides different APIs for different services and applications.
+// This is typescript & JS sdk for mixin developers
+// Docs: https://developers.mixin.one/docs/api-overview
 export * from './types';
 
 export { AddressClient } from './address';

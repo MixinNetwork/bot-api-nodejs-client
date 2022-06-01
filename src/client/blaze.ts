@@ -8,7 +8,7 @@ import { websocket } from './ws';
 
 const hostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 
-const BlazeKeystoreClient = (keystore: Keystore, wsOptions?: BlazeOptions) => {
+export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions?: BlazeOptions) => {
   let url = hostURL[0];
   let ws: WebSocket | null = null;
   let isAlive = false;

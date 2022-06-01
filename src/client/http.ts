@@ -1,10 +1,9 @@
-// @ts-ignore
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
-import { delay } from '../mixin/tools';
-import { Keystore } from '../types';
-import { signAuthenticationToken } from './utils/auth';
+import { Keystore } from './types/keystore';
+import { signAccessToken } from './utils/auth';
+import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -19,7 +18,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
   });
 
   let keystore: Keystore | undefined;
-  if (!arg) {
+  if (arg) {
     keystore = arg;
   }
 
@@ -28,8 +27,10 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
     const uri = ins.getUri(config);
     const requestID = uuid();
     config.headers['X-Request-Id'] = requestID;
-    const jwtToken = signAuthenticationToken(method, uri, data, keystore) || '';
+
+    const jwtToken = signAccessToken(method, uri, data, requestID, keystore);
     config.headers.Authorization = `Bearer ${jwtToken}`;
+
     return config;
   });
 
@@ -47,7 +48,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;
       }
-      await delay();
+      await sleep();
       return ins(e.config);
     },
   );

@@ -1,5 +1,5 @@
-import User from '../../src/newClient/user';
-import Pin from '../../src/newClient/pin';
+import User from '../../src/client/user';
+import Pin from '../../src/client/pin';
 import keystore from './keystore';
 
 describe('Tests for users', () => {
@@ -19,7 +19,7 @@ describe('Tests for users', () => {
 
   test('verify user pin', async () => {
     const pin = Pin({ keystore });
-    const resp = await pin.verify(keystore.pin);
+    const resp = await pin.verify(keystore.pin!);
     expect(resp.user_id).toMatch(keystore.user_id);
     expect(resp.is_verified).toBe(false);
   });
