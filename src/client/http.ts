@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
-import { Keystore } from './types/keystore';
 import { ResponseError } from './error';
-import { delay } from '../mixin/tools';
+import { Keystore } from './types/keystore';
 import { signAccessToken } from './utils/auth';
+import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -48,7 +48,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;
       }
-      await delay();
+      await sleep();
       return ins(e.config);
     },
   );

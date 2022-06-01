@@ -7,4 +7,4 @@ dist
 config.json
 test/index.js
 
-keystore.ts
+test/mixin/keystore.ts
