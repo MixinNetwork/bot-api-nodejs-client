@@ -2,12 +2,13 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { Keystore } from './types/keystore';
+import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
 import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseCallback?: (rep: unknown) => void): AxiosInstance {
+export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
     headers: { 'Content-Type': 'application/json' },
@@ -34,7 +35,7 @@ export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseC
       return data;
     },
     async (e: any) => {
-      await responseCallback?.(e);
+      await config?.responseCallback?.(e);
 
       if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
         if (config?.baseURL) return e.config;
