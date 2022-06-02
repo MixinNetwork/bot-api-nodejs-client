@@ -15,7 +15,7 @@ import { ExternalKeystoreClient } from './external';
 import { MessageKeystoreClient } from './message';
 import { MultisigKeystoreClient } from './multisig';
 import { NetworkBaseClient } from './network';
-import { OAuthKeystoreClient } from './oauth';
+import { OAuthBaseClient } from './oauth';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
@@ -36,7 +36,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   message: MessageKeystoreClient(axiosInstance, keystore),
   multisig: MultisigKeystoreClient(axiosInstance, keystore),
   network: NetworkBaseClient(axiosInstance),
-  oauth: OAuthKeystoreClient(axiosInstance),
+  oauth: OAuthBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),

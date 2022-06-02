@@ -6,7 +6,7 @@ import { buildClient } from './utils/client';
 // To access some information of Mixin Messenger users, the developer needs to apply for authorization from the user
 // After that, the page will automatically jump to the application's OAuth URL, accompanied by the authorization code
 // Detail: https://developers.mixin.one/docs/api/oauth/oauth
-export const OAuthKeystoreClient = (axiosInstance: AxiosInstance) => ({
+export const OAuthBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get the access code based on authorization code
   getToken: (client_id: string, client_secret: string, code: string, ed25519: string, code_verifier?: string): Promise<AccessTokenResponse> => {
     const data = {
@@ -20,6 +20,6 @@ export const OAuthKeystoreClient = (axiosInstance: AxiosInstance) => ({
   }
 });
 
-export const OAuthClient = buildClient(OAuthKeystoreClient);
+export const OAuthClient = buildClient(OAuthBaseClient);
 
 export default OAuthClient;
