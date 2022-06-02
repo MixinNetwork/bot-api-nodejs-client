@@ -36,7 +36,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   message: MessageKeystoreClient(axiosInstance, keystore),
   multisig: MultisigKeystoreClient(axiosInstance, keystore),
   network: NetworkBaseClient(axiosInstance),
-  oauth: OAuthKeystoreClient(axiosInstance, keystore),
+  oauth: OAuthKeystoreClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
