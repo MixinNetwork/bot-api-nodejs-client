@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Keystore from './keystore';
 import { BlazeOptions } from './blaze';
 
@@ -6,7 +6,7 @@ export interface HTTPConfig {
   requestConfig?: Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>;
   keystore?: Keystore;
   blazeOptions?: BlazeOptions
-  responseCallback?: (res: any) => void
+  responseCallback?: (res: AxiosResponse) => void
 }
 
 export interface BaseClient<KeystoreReturnType> {
@@ -25,8 +25,8 @@ export interface BuildClient {
 export interface RequestClient {
   request: <T>(
     config: Pick<
-      AxiosRequestConfig,
-      'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
-    >,
+    AxiosRequestConfig,
+    'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
+  >,
   ) => Promise<T>;
 }
