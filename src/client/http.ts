@@ -31,7 +31,6 @@ export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseC
     async (res: AxiosResponse) => {
       const { data, error } = res.data;
       if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
-      await responseCallback?.(data);
       return data;
     },
     async (e: any) => {
