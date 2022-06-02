@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { ethers, utils, BigNumber } from 'ethers';
+import { utils } from 'ethers';
 import { JsonFragment } from '@ethersproject/abi';
-import { v4 as newUUID, parse, stringify } from 'uuid';
+import { v4 } from 'uuid';
 import { InvokeCodeParams, ExtraGenerateParams, PaymentGenerateParams } from '../types';
-import { Blank } from './registry';
 import Encoder from './encoder';
-import { registryAbi, registryAddress, registryProcess } from '../mixin/mvm_registry';
+import { MVMMainnet } from './constant';
 import { RawTransactionRequest, PaymentRequestResponse, base64RawURLEncode } from '../client';
 
 // const OperationPurposeUnknown = 0
@@ -30,9 +29,9 @@ export const MVMApiClient = axios.create({
 export const getMvmTransaction = (params: InvokeCodeParams): RawTransactionRequest => ({
   asset_id: params.asset,
   amount: params.amount,
-  trace_id: params.trace || newUUID(),
+  trace_id: params.trace || v4(),
   opponent_multisig: { receivers, threshold },
-  memo: encodeMemo(params.extra, params.process || registryProcess),
+  memo: encodeMemo(params.extra, params.process || MVMMainnet.Registry.PID),
 });
 
 // 根据 abi 获取 extra
@@ -57,7 +56,7 @@ export const abiParamsGenerator = (contractAddress: string, abi: JsonFragment[])
 export const extraGenerateByInfo = async (params: ExtraGenerateParams): Promise<string> => {
   let { contractAddress, methodID } = params;
   const { methodName, types = [], values = [], options = {} } = params;
-  const { uploadkey, delegatecall, ignoreUpload, process = registryProcess, address = registryAddress } = options;
+  const { uploadkey, delegatecall, ignoreUpload, process = MVMMainnet.Registry.PID, address = MVMMainnet.Registry.Address} = options;
 
   if (!contractAddress) return Promise.reject(new Error('contractAddress is required'));
   if (contractAddress.startsWith('0x')) contractAddress = contractAddress.slice(2);
@@ -108,59 +107,6 @@ export const paymentGenerateByInfo = async (params: PaymentGenerateParams): Prom
   return res.data;
 };
 
-export const getContractByAssetID = (id: string, processAddress = registryAddress): Promise<string> =>
-  getRegistryContract(processAddress).contracts(`0x${ Buffer.from(parse(id) as Buffer).toString('hex') }`);
-
-export const getContractByUserIDs = (ids: string | string[], threshold?: number, processAddress = registryAddress): Promise<string> => {
-  if (typeof ids === 'string') ids = [ids];
-  if (!threshold) threshold = ids.length;
-  const encoder = new Encoder(Buffer.from([]));
-  encoder.writeInt(ids.length);
-  ids.forEach(id => encoder.writeUUID(id));
-  encoder.writeInt(threshold);
-  return getRegistryContract(processAddress).contracts(utils.keccak256(`0x${encoder.buf.toString('hex')}`));
-};
-
-export const getAssetIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
-  const registry = getRegistryContract(processAddress);
-  let res = await registry.assets(contract_address);
-
-  if (res instanceof BigNumber) res = res._hex;
-  if (res.length !== 34) return '';
-
-  res = res.slice(2);
-  return stringify(Buffer.from(res, 'hex'));
-};
-
-export const getUserIDByAddress = async (contract_address: string, processAddress = registryAddress): Promise<string> => {
-  const registry = getRegistryContract(processAddress);
-  let res = await registry.users(contract_address);
-
-  if (res instanceof BigNumber) res = res._hex;
-  if (res.length === 42) {
-    res = res.slice(6);
-    res = res.slice(0, 32);
-    return stringify(Buffer.from(res, 'hex'));
-  }
-
-  return res;
-};
-
-export const getUserAddressByID = async (userId: string, processAddress = registryAddress) => {
-  const identity = `0x0001${userId}0001`;
-  const hash = ethers.utils.keccak256(identity.replaceAll('-', ''));
-  const address = await getRegistryContract(processAddress).contracts(hash);
-  if (address === Blank) return '';
-  return address;
-};
-
-export const getAssetAddressByID = async (assetId: string, processAddress = registryAddress) => {
-  const address = await getRegistryContract(processAddress).contracts(assetId);
-  if (!address) return '';
-  return address;
-};
-
-const getRegistryContract = (address = registryAddress) => new ethers.Contract(address, registryAbi, new ethers.providers.JsonRpcProvider('https://quorum-testnet.mixin.zone/'));
 
 const getMethodIdByAbi = (methodName: string, types: string[]): string => utils.id(`${ methodName }(${ types.join(',') })`).slice(2, 10);
 
