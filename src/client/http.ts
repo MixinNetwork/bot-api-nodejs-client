@@ -7,9 +7,7 @@ import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function http(keystore?: Keystore, config?: AxiosRequestConfig): AxiosInstance {
-  const domain = !!config?.baseURL;
-
+export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseCallback?: (res: any) => void ): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
     headers: { 'Content-Type': 'application/json' },
@@ -32,13 +30,15 @@ export function http(keystore?: Keystore, config?: AxiosRequestConfig): AxiosIns
   ins.interceptors.response.use(
     (res: AxiosResponse) => {
       const { data, error } = res.data;
+      if (responseCallback) {
+        responseCallback(res.data);
+      }
       if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
-
       return data;
     },
     async (e: any) => {
       if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
-        if (domain) return e.config;
+        if (config?.baseURL) return e.config;
 
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;

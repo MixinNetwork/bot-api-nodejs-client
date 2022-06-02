@@ -6,6 +6,7 @@ export interface HTTPConfig {
   requestConfig?: Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>;
   keystore?: Keystore;
   blazeOptions?: BlazeOptions
+  responseCallback?: (res: any) => void
 }
 
 export interface BaseClient<KeystoreReturnType> {

@@ -3,8 +3,8 @@ import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, Uni
 import { http } from '../http';
 
 export const createAxiosClient = (config: HTTPConfig) => {
-  const { keystore, requestConfig: axiosConfig } = config;
-  return http(keystore, axiosConfig);
+  const { keystore, requestConfig: axiosConfig, responseCallback } = config;
+  return http(keystore, axiosConfig, responseCallback);
 };
 
 export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient => ({
