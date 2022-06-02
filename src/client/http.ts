@@ -8,22 +8,24 @@ import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.put['Content-Type'] = 'application/json';
+axios.defaults.headers.patch['Content-Type'] = 'application/json';
 export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
-    headers: { 'Content-Type': 'application/json' },
     timeout: 3000,
     ...config,
   });
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
-    const { method, data } = config;
-    const uri = ins.getUri(config);
-    const requestID = uuid();
-    config.headers['X-Request-Id'] = requestID;
-
-    const jwtToken = signAccessToken(method, uri, data, requestID, keystore);
-    config.headers.Authorization = `Bearer ${jwtToken}`;
+    const { method, data, url } = config;
+    if (config.headers) {
+      const requestID = uuid();
+      config.headers['X-Request-Id'] = requestID;
+      const jwtToken = signAccessToken(method, url!, data, requestID, keystore);
+      config.headers.Authorization = `Bearer ${jwtToken}`;
+    }
 
     return config;
   });
