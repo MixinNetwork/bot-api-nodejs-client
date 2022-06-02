@@ -7,7 +7,7 @@ import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseCallback?: (res: AxiosResponse) => void): AxiosInstance {
+export function http(keystore?: Keystore, config?: AxiosRequestConfig, responseCallback?: (rep: unknown) => void): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
     headers: { 'Content-Type': 'application/json' },
