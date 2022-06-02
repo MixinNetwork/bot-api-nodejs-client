@@ -35,7 +35,11 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
       const { data, error } = res.data;
       if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
       return data;
-    },
+    }
+  );
+
+  ins.interceptors.response.use(
+    undefined,
     async (e: any) => {
       await config?.responseCallback?.(e);
 
@@ -49,6 +53,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
       return ins(e.config);
     },
   );
+
   return ins;
 }
 
