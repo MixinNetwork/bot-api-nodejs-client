@@ -2,48 +2,49 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { Keystore } from './types/keystore';
+import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
 import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
-export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): AxiosInstance {
-  const domain = !!config?.baseURL;
-
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.put['Content-Type'] = 'application/json';
+axios.defaults.headers.patch['Content-Type'] = 'application/json';
+export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
   const ins = axios.create({
     baseURL: hostURL[0],
-    headers: { 'Content-Type': 'application/json' },
     timeout: 3000,
     ...config,
   });
 
-  let keystore: Keystore | undefined;
-  if (arg) {
-    keystore = arg;
-  }
-
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
-    const { method, data } = config;
-    const uri = ins.getUri(config);
-    const requestID = uuid();
-    config.headers['X-Request-Id'] = requestID;
-
-    const jwtToken = signAccessToken(method, uri, data, requestID, keystore);
-    config.headers.Authorization = `Bearer ${jwtToken}`;
+    const { method, data, url } = config;
+    if (config.headers) {
+      const requestID = uuid();
+      config.headers['X-Request-Id'] = requestID;
+      const jwtToken = signAccessToken(method, url!, data, requestID, keystore);
+      config.headers.Authorization = `Bearer ${jwtToken}`;
+    }
 
     return config;
   });
 
   ins.interceptors.response.use(
-    (res: AxiosResponse) => {
+    async (res: AxiosResponse) => {
       const { data, error } = res.data;
       if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
-
       return data;
-    },
+    }
+  );
+
+  ins.interceptors.response.use(
+    undefined,
     async (e: any) => {
+      await config?.responseCallback?.(e);
+
       if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
-        if (domain) return e.config;
+        if (config?.baseURL) return e.config;
 
         ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
         e.config.baseURL = ins.defaults.baseURL;
@@ -52,6 +53,7 @@ export function http(arg?: undefined | Keystore, config?: AxiosRequestConfig): A
       return ins(e.config);
     },
   );
+
   return ins;
 }
 

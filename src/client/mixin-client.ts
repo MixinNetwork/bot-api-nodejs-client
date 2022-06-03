@@ -15,7 +15,7 @@ import { ExternalKeystoreClient } from './external';
 import { MessageKeystoreClient } from './message';
 import { MultisigKeystoreClient } from './multisig';
 import { NetworkBaseClient } from './network';
-import { OAuthKeystoreClient } from './oauth';
+import { OAuthBaseClient } from './oauth';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
@@ -36,7 +36,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   message: MessageKeystoreClient(axiosInstance, keystore),
   multisig: MultisigKeystoreClient(axiosInstance, keystore),
   network: NetworkBaseClient(axiosInstance),
-  oauth: OAuthKeystoreClient(axiosInstance, keystore),
+  oauth: OAuthBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
@@ -45,7 +45,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
 
 type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function MixinApi(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
+export function MixinApi(config: HTTPConfig = {}): KeystoreClientReturnType & RequestClient {
   const axiosInstance = createAxiosClient(config);
   const requestClient = createRequestClient(axiosInstance);
 

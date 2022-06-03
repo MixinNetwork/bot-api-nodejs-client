@@ -1,5 +1,4 @@
 import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
 import { AccessTokenResponse } from './types/oauth';
 import { buildClient } from './utils/client';
 
@@ -7,23 +6,20 @@ import { buildClient } from './utils/client';
 // To access some information of Mixin Messenger users, the developer needs to apply for authorization from the user
 // After that, the page will automatically jump to the application's OAuth URL, accompanied by the authorization code
 // Detail: https://developers.mixin.one/docs/api/oauth/oauth
-export const OAuthKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+export const OAuthBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get the access code based on authorization code
-  getToken: (code: string, publicKey: string): Promise<AccessTokenResponse> => {
-    if (!keystore || !keystore.user_id || !keystore.client_secret) {
-      throw new Error('Invalid keystore!');
-    }
-
+  getToken: (client_id: string, client_secret: string, code: string, ed25519: string, code_verifier?: string): Promise<AccessTokenResponse> => {
     const data = {
-      client_id: keystore!.user_id,
-      client_secret: keystore!.client_secret,
+      client_id,
+      client_secret,
       code,
-      ed25519: publicKey
+      ed25519,
+      code_verifier,
     };
     return axiosInstance.post<unknown, AccessTokenResponse>('/oauth/token', data);
   }
 });
 
-export const OAuthClient = buildClient(OAuthKeystoreClient);
+export const OAuthClient = buildClient(OAuthBaseClient);
 
 export default OAuthClient;
