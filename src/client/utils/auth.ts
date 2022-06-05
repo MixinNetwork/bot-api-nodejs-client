@@ -61,6 +61,10 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   return signToken(payload, keystore.private_key!);
 };
 
+// Sign an OAuth access token
+// Notes:
+// requestID should equal the one in header
+// scope should be oauth returned
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
   if (!keystore) {
     return '';
