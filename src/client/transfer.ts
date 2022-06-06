@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { Keystore } from './types/keystore';
 import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
-import { TransferRequest, PaymentRequestResponse } from './types/transfer';
+import { TransferRequest } from './types/transfer';
 import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
 import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
@@ -19,9 +19,6 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
 
   // Get the snapshots of current user
   snapshots: (params: SnapshotRequest): Promise<SnapshotResponse[]> => axiosInstance.get<unknown, SnapshotResponse[]>(`/snapshots`, { params }),
-
-  // Generate code id for transaction/transfer or verify payments by trace id
-  verify: (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
 
   // Transfer to specific user
   // If you encounter 500 error, do it over again
