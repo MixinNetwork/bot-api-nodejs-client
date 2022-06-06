@@ -44,6 +44,16 @@ export class Registry {
     return this.fetchUsersAddress([userId]);
   }
 
+  // fetch an asset of mvm address
+  fetchAddressAsset(address: string) {
+    return this.contract.assets(address);
+  }
+
+  // fetch the user of mvm address
+  fetchAddressUsers(address: string) {
+    return this.contract.users(address);
+  }
+
   // Since extra for mtg memo is limited, it needs to
   // write a value to registry contract
   writeValue(value: string, key?: string) {
