@@ -8,7 +8,7 @@ const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f
 
 // Explanation of registry contract
 // https://mvm.dev/reference/registry.html
-class Registry {
+export class Registry {
   contract: Contract;
 
   constructor({ address = MVMMainnet.Registry.Address, uri = MVMMainnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {

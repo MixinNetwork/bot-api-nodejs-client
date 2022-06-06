@@ -19,7 +19,7 @@ export const integerToBytes =  (x: number) => {
   return bytes;
 };
 
-export default class Encoder {
+export class Encoder {
   buf: Buffer;
 
   constructor(buf: Buffer | undefined) {
@@ -216,3 +216,5 @@ export default class Encoder {
     });
   }
 }
+
+export default Encoder;
