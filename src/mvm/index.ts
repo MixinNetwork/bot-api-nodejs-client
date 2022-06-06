@@ -3,14 +3,9 @@ import { utils } from 'ethers';
 import { JsonFragment } from '@ethersproject/abi';
 import { v4 } from 'uuid';
 import { InvokeCodeParams, ExtraGenerateParams, PaymentGenerateParams } from '../types';
-import Encoder from './encoder';
 import { MVMMainnet } from './constant';
-import { RawTransactionRequest, PaymentRequestResponse, base64RawURLEncode } from '../client';
+import { RawTransactionRequest, PaymentRequestResponse } from '../client';
 
-// const OperationPurposeUnknown = 0
-const OperationPurposeGroupEvent = 1;
-// const OperationPurposeAddProcess = 11
-// const OperationPurposeCreditProcess = 12
 
 const receivers = ['a15e0b6d-76ed-4443-b83f-ade9eca2681a', 'b9126674-b07d-49b6-bf4f-48d965b2242b', '15141fe4-1cfd-40f8-9819-71e453054639', '3e72ca0c-1bab-49ad-aa0a-4d8471d375e7'];
 const mvmClient = axios.create({
@@ -105,17 +100,4 @@ export const paymentGenerateByInfo = async (params: PaymentGenerateParams): Prom
     amount,
   });
   return res.data;
-};
-
-
-const getMethodIdByAbi = (methodName: string, types: string[]): string => utils.id(`${ methodName }(${ types.join(',') })`).slice(2, 10);
-
-const encodeMemo = (extra: string, process: string): string => {
-  const enc = new Encoder(Buffer.from([]));
-  enc.writeInt(OperationPurposeGroupEvent);
-  enc.writeUUID(process);
-  enc.writeBytes(Buffer.from([]));
-  enc.writeBytes(Buffer.from([]));
-  enc.writeBytes(Buffer.from(extra, 'hex'));
-  return base64RawURLEncode(enc.buf);
 };
