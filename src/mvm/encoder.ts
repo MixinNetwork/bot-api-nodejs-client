@@ -1,6 +1,6 @@
 import BN from 'bn.js';
 import { parse } from 'uuid';
-import { Aggregated, Input, Output } from 'types';
+import { Aggregated, Input, Output } from './types';
 
 const MaximumEncodingInt = 0xffff;
 

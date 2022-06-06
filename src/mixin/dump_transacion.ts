@@ -1,4 +1,5 @@
-import { GhostKeys, Transaction } from '../types';
+import { Transaction } from '../mvm';
+import { GhostKeysResponse } from '../client';
 import { Encoder, magic, maxEcodingInt, OperatorCmp, OperatorSum } from './encoder';
 
 export function dumpTransaction(signed: Transaction): string {
@@ -31,7 +32,7 @@ export function dumpTransaction(signed: Transaction): string {
   return enc.buf.toString('hex');
 }
 
-export function DumpOutputFromGhostKey(gi: GhostKeys, amount: string, threshold: number) {
+export function DumpOutputFromGhostKey(gi: GhostKeysResponse, amount: string, threshold: number) {
   const { mask, keys } = gi;
   return {
     mask,

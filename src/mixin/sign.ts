@@ -2,7 +2,7 @@
 import { randomBytes, createCipheriv, createHash } from 'crypto';
 import { pki, util, md } from 'node-forge';
 import { Uint64LE } from 'int64-buffer';
-import { Keystore } from '../types';
+import { Keystore } from '../client';
 
 export const getSignPIN = (keystore: Keystore, pin?: any, iterator?: any) => {
   const { session_id, private_key, pin_token, pin: _pin } = keystore;
