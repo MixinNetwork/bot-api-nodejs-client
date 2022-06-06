@@ -1,5 +1,6 @@
 export const BlankAddress = '0x0000000000000000000000000000000000000000';
 
+// TODO: needs to replace with mainnet data later
 export const MVMMainnet = {
   ChainId: 83927,
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
