@@ -1,4 +1,4 @@
-import ethers from 'ethers';
+import { ethers } from 'ethers';
 import Encoder from './encoder';
 import { base64RawURLEncode } from '../client/utils/base64';
 
