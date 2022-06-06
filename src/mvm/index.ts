@@ -4,6 +4,6 @@ export * from './types';
 export * from './constant';
 export * from './utils';
 
-export { Client } from './client';
+export { MVMApi } from './client';
 export { Encoder } from './encoder';
 export { Registry } from './registry';
