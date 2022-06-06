@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { PaymentRequestResponse } from 'client/types/payment';
 import { PaymentRequest, ValueResponse } from './types';
-import { PaymentRequestResponse } from '../client';
 
 const MVMApiURI = 'https://mvm-api.test.mixinbots.com';
 
