@@ -11,6 +11,6 @@ export interface PaymentRequest {
   opponent_multisig: OpponentMultisigRequest;
 }
 
-export interface PaymentResponse {
+export interface PaymentCodeResponse {
   code_url: string;
 }
