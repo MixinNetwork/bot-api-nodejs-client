@@ -1,6 +1,6 @@
 import BN from 'bn.js';
 import { parse } from 'uuid';
-import { Aggregated, Input, Output } from 'types';
+import { Aggregated, Input, Output } from './types';
 
 const MaximumEncodingInt = 0xffff;
 
@@ -19,7 +19,7 @@ export const integerToBytes =  (x: number) => {
   return bytes;
 };
 
-export default class Encoder {
+export class Encoder {
   buf: Buffer;
 
   constructor(buf: Buffer | undefined) {
@@ -216,3 +216,5 @@ export default class Encoder {
     });
   }
 }
+
+export default Encoder;

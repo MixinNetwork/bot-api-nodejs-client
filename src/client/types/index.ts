@@ -13,6 +13,7 @@ export * from './message';
 export * from './multisig';
 export * from './network';
 export * from './oauth';
+export * from './payment';
 export * from './snapshot';
 export * from './transaction';
 export * from './transfer';

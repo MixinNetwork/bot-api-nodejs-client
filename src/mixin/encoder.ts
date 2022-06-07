@@ -1,6 +1,6 @@
 import { BN } from 'bn.js';
 import { parse } from 'uuid';
-import { Aggregated, Input, Output } from '../types';
+import { Aggregated, Input, Output } from '../mvm';
 
 const aggregatedSignaturePrefix = 0xff01;
 const empty = Buffer.from([0x00, 0x00]);

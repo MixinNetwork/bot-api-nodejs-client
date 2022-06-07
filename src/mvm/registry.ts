@@ -1,35 +1,20 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { ethers, Contract } from 'ethers';
+import { stringify as uuidStringify } from 'uuid';
 import { RegistryABI } from './abis';
+import { MVMMainnet } from './constant';
+import { RegistryUserResponse } from './types/registry';
 
-export const Blank = '0x0000000000000000000000000000000000000000';
-
-export const MVMMainnet = {};
-
-export const MVMTestnet = {
-  ChainId: '83927',
-  RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
-  RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
-  Registry: {
-    Address: '0x535E4e8b6013f344ece46e7b0932AB617B327C39',
-    PID: 'f6281e1c-53f7-3125-9cdd-30d5389189f8',
-  },
-  Refund: {
-    Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
-  },
-  MVMMembers: ['a15e0b6d-76ed-4443-b83f-ade9eca2681a', 'b9126674-b07d-49b6-bf4f-48d965b2242b', '15141fe4-1cfd-40f8-9819-71e453054639', '3e72ca0c-1bab-49ad-aa0a-4d8471d375e7'],
-  MVMThreshold: 3,
-};
-
+// A public Qurum secret for querying public information
 const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
 
 // Explanation of registry contract
 // https://mvm.dev/reference/registry.html
-class Registry {
+export class Registry {
   contract: Contract;
 
-  constructor({ address = MVMTestnet.Registry.Address, uri = MVMTestnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {
-    // private key uses for fetch some public informations from mvm
+  constructor({ address = MVMMainnet.Registry.Address, uri = MVMMainnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {
+    // private key uses for fetch some public information from mvm
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
     const signer = (uri: string) => new ethers.Wallet(secret, provider(uri));
 
@@ -37,15 +22,15 @@ class Registry {
   }
 
   // fetch a mvm address of a mixin address
-  fetchAssetAddress(assetId: string) {
+  fetchAssetContract(assetId: string) {
     const id = assetId.replaceAll('-', '');
     return this.contract.contracts(`0x${id}`);
   }
 
-  // fetch mixin users's mvm address
+  // fetch mixin users' mvm address
   // the address might be from a mixin multisig accounts
   // for the common mixin user, threshold is 1
-  fetchUsersAddress(userIds: string[], threshold: number = 1) {
+  fetchUsersContract(userIds: string[], threshold: number = 1) {
     const bufLen = Buffer.alloc(2);
     bufLen.writeUInt16BE(userIds.length);
     const bufThres = Buffer.alloc(2);
@@ -55,10 +40,32 @@ class Registry {
     return this.contract.contracts(ethers.utils.keccak256(identity));
   }
 
-  // Alias method for fetchUsersAddress
+  // Alias method for fetchUsersContract
   // for a single mixin user fetch mvm address
-  fetchUserAddress(userId: string) {
-    return this.fetchUsersAddress([userId]);
+  fetchUserContract(userId: string) {
+    return this.fetchUsersContract([userId]);
+  }
+
+  // fetch an asset of mvm address
+  fetchContractAsset(address: string) {
+    return this.contract.assets(address);
+  }
+
+  // fetch the user of mvm address
+  fetchContractUsers(address: string) {
+    return this.contract.users(address).then((data: string): RegistryUserResponse => {
+      const usersBuf = Buffer.from(data.slice(2), 'hex');
+      const users: string[] = [];
+      for (let i = 2; i < usersBuf.length - 2; i += 16) {
+        users.push(uuidStringify(usersBuf.slice(i, i+16)));
+      }
+
+      const threshold = usersBuf.readUInt16BE(usersBuf.length-2);
+      return {
+        users,
+        threshold,
+      };
+    });
   }
 
   // Since extra for mtg memo is limited, it needs to

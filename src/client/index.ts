@@ -15,6 +15,7 @@ export { MessageClient } from './message';
 export { MultisigClient } from './multisig';
 export { NetworkClient } from './network';
 export { OAuthClient } from './oauth';
+export { PaymentClient } from './payment';
 export { PinClient } from './pin';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';

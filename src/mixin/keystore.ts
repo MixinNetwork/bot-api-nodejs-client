@@ -1,7 +1,7 @@
 import { sign } from 'jsonwebtoken';
 import { v4 } from 'uuid';
 import { getEd25519Sign, toBuffer } from './sign';
-import { Keystore } from '../types';
+import { Keystore } from '../client';
 
 export class KeystoreAuth {
   keystore?: Keystore;
