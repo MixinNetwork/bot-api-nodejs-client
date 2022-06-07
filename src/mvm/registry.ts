@@ -1,7 +1,9 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { ethers, Contract } from 'ethers';
+import { stringify as uuidStringify } from 'uuid';
 import { RegistryABI } from './abis';
 import { MVMMainnet } from './constant';
+import { RegistryUserResponse } from './types/registry';
 
 // A public Qurum secret for querying public information
 const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
@@ -51,7 +53,19 @@ export class Registry {
 
   // fetch the user of mvm address
   fetchContractUsers(address: string) {
-    return this.contract.users(address);
+    return this.contract.users(address).then((data: string): RegistryUserResponse => {
+      const usersBuf = Buffer.from(data.slice(2), 'hex');
+      const users: string[] = [];
+      for (let i = 2; i < usersBuf.length - 2; i += 16) {
+        users.push(uuidStringify(usersBuf.slice(i, i+16)));
+      }
+
+      const threshold = usersBuf.readUInt16BE(usersBuf.length-2);
+      return {
+        users,
+        threshold,
+      };
+    });
   }
 
   // Since extra for mtg memo is limited, it needs to
