@@ -15,6 +15,6 @@ const axiosInstance = axios.create({
 //   We supply a method that put the long extra in contract.
 //   Docs: https://mvm.dev/reference/registry.html
 export const MVMApi = () => ({
-  requestPayment: (params: PaymentRequest): Promise<PaymentRequestResponse> => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
+  payments: (params: PaymentRequest): Promise<PaymentRequestResponse> => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params),
   writeValue: (key: string, value: string, address: string): Promise<ValueResponse> => axiosInstance.post<unknown, ValueResponse>('/values', { key, value, address }),
 });
