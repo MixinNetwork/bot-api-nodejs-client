@@ -20,7 +20,7 @@ export class Registry {
   }
 
   // fetch a mvm address of a mixin address
-  fetchAssetAddress(assetId: string) {
+  fetchAssetContract(assetId: string) {
     const id = assetId.replaceAll('-', '');
     return this.contract.contracts(`0x${id}`);
   }
@@ -28,7 +28,7 @@ export class Registry {
   // fetch mixin users' mvm address
   // the address might be from a mixin multisig accounts
   // for the common mixin user, threshold is 1
-  fetchUsersAddress(userIds: string[], threshold: number = 1) {
+  fetchUsersContract(userIds: string[], threshold: number = 1) {
     const bufLen = Buffer.alloc(2);
     bufLen.writeUInt16BE(userIds.length);
     const bufThres = Buffer.alloc(2);
@@ -38,19 +38,19 @@ export class Registry {
     return this.contract.contracts(ethers.utils.keccak256(identity));
   }
 
-  // Alias method for fetchUsersAddress
+  // Alias method for fetchUsersContract
   // for a single mixin user fetch mvm address
-  fetchUserAddress(userId: string) {
-    return this.fetchUsersAddress([userId]);
+  fetchUserContract(userId: string) {
+    return this.fetchUsersContract([userId]);
   }
 
   // fetch an asset of mvm address
-  fetchAddressAsset(address: string) {
+  fetchContractAsset(address: string) {
     return this.contract.assets(address);
   }
 
   // fetch the user of mvm address
-  fetchAddressUsers(address: string) {
+  fetchContractUsers(address: string) {
     return this.contract.users(address);
   }
 
