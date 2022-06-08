@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { PaymentRequestResponse } from 'client/types/payment';
+import { MVMApiURI } from './constant';
 import { PaymentRequest, ValueResponse } from './types';
-
-const MVMApiURI = 'https://mvm-api.test.mixinbots.com';
 
 const axiosInstance = axios.create({
   baseURL: MVMApiURI,
