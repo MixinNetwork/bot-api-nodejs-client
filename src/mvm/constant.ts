@@ -6,8 +6,8 @@ export const MVMMainnet = {
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
   RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
   Registry: {
-    Address: '0x535E4e8b6013f344ece46e7b0932AB617B327C39',
-    PID: 'f6281e1c-53f7-3125-9cdd-30d5389189f8',
+    Address: '0x98a33e3317214cfeE4E6451AC4Eb3210e055f5aC',
+    PID: '0c685a85-8fb0-326d-befd-3ee55370dbcf',
   },
   Refund: {
     Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
@@ -21,8 +21,8 @@ export const MVMTestnet = {
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
   RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
   Registry: {
-    Address: '0x535E4e8b6013f344ece46e7b0932AB617B327C39',
-    PID: 'f6281e1c-53f7-3125-9cdd-30d5389189f8',
+    Address: '0x98a33e3317214cfeE4E6451AC4Eb3210e055f5aC',
+    PID: '0c685a85-8fb0-326d-befd-3ee55370dbcf',
   },
   Refund: {
     Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
