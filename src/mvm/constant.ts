@@ -31,4 +31,4 @@ export const MVMTestnet = {
   MVMThreshold: 3,
 };
 
-export const MVMApiURI = 'https://mvm-api.test.mixinbots.com';
+export const MVMApiTestURI = 'https://mvm-api.test.mixinbots.com';
