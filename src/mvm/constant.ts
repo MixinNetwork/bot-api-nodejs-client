@@ -4,7 +4,7 @@ export const BlankAddress = '0x0000000000000000000000000000000000000000';
 export const MVMMainnet = {
   ChainId: 83927,
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
-  RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
+  RPCUriAlpha: 'https://quorum-testnet.mixin.zone',
   Registry: {
     Address: '0x98a33e3317214cfeE4E6451AC4Eb3210e055f5aC',
     PID: '0c685a85-8fb0-326d-befd-3ee55370dbcf',
@@ -19,7 +19,7 @@ export const MVMMainnet = {
 export const MVMTestnet = {
   ChainId: 83927,
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
-  RPCUriAlpha: 'https://mvm-api.test.mixinbots.com',
+  RPCUriAlpha: 'https://quorum-testnet.mixin.zone',
   Registry: {
     Address: '0x98a33e3317214cfeE4E6451AC4Eb3210e055f5aC',
     PID: '0c685a85-8fb0-326d-befd-3ee55370dbcf',
@@ -31,4 +31,4 @@ export const MVMTestnet = {
   MVMThreshold: 3,
 };
 
-export const MVMApiTestURI = 'https://mvm-api.test.mixinbots.com';
+export const MVMApiTestURI = 'https://api.test.mvm.dev';
