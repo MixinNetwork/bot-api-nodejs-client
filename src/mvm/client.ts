@@ -8,6 +8,8 @@ import { PaymentRequest, ValueResponse } from './types';
 //   The maximum memo size in mixin payment is 200, but in many cases the extra length will be greater than 200.
 //   We supply a method that put the long extra in contract.
 //   Docs: https://mvm.dev/reference/registry.html
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.get['Content-Type'] = 'application/json';
 export const MVMApi = (uri: string) => {
   const instance = axios.create({
     baseURL: uri,
