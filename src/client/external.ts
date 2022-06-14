@@ -1,5 +1,12 @@
 import { AxiosInstance } from 'axios';
-import { DepositRequest, ExternalTransactionResponse, CheckAddressRequest, CheckAddressResponse, ExchangeRateResponse } from './types/external';
+import {
+  DepositRequest,
+  ExternalTransactionResponse,
+  CheckAddressRequest,
+  CheckAddressResponse,
+  ExchangeRateResponse,
+  ProxyRequest
+} from './types/external';
 import { buildClient } from './utils/client';
 
 export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
@@ -11,7 +18,9 @@ export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
   checkAddress: (params: CheckAddressRequest): Promise<CheckAddressResponse> => axiosInstance.get<unknown, CheckAddressResponse>(`/external/addresses/check`, { params }),
 
   // GET the list of all fiat exchange rates based on US Dollar
-  exchangeRates: (): Promise<ExchangeRateResponse[]> => axiosInstance.get<unknown, ExchangeRateResponse[]>('/external/fiats')
+  exchangeRates: (): Promise<ExchangeRateResponse[]> => axiosInstance.get<unknown, ExchangeRateResponse[]>('/external/fiats'),
+
+  proxy: (params: ProxyRequest): Promise<any> => axiosInstance.post<unknown, any>('/external/proxy', params),
 });
 
 export const ExternalClient = buildClient(ExternalKeystoreClient);

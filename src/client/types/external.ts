@@ -35,3 +35,8 @@ export interface ExternalTransactionResponse {
   confirmations: string;
   threshold: string;
 }
+
+export interface ProxyRequest {
+  method: string,
+  params: any[],
+}
