@@ -6,8 +6,11 @@ export const MVMMainnet = {
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
   RPCUriAlpha: 'https://quorum-testnet.mixin.zone',
   Registry: {
-    Address: '0x77abC8Db76ac0190e15cC5588Ac668D41852D6b5',
-    PID: 'e0033bb2-eafb-3e08-970b-980f77b76715',
+    Address: '0xbb0860774b68b4Aaa07ED32fb118dA39e5b18454',
+    PID: '119f84c9-9f72-31b5-af71-611de05dace8',
+  },
+  Storage: {
+    Address: '0x510a9f1AAbE048912F6536A833ecB6039061e872',
   },
   Refund: {
     Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
@@ -21,8 +24,11 @@ export const MVMTestnet = {
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
   RPCUriAlpha: 'https://quorum-testnet.mixin.zone',
   Registry: {
-    Address: '0x77abC8Db76ac0190e15cC5588Ac668D41852D6b5',
-    PID: 'e0033bb2-eafb-3e08-970b-980f77b76715',
+    Address: '0xbb0860774b68b4Aaa07ED32fb118dA39e5b18454',
+    PID: '119f84c9-9f72-31b5-af71-611de05dace8',
+  },
+  Storage: {
+    Address: '0x510a9f1AAbE048912F6536A833ecB6039061e872',
   },
   Refund: {
     Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',

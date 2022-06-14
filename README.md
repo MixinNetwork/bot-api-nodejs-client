@@ -71,23 +71,18 @@ client.loopBlaze({
 
 > BlazeClient directly inherits Client, so all Client methods BlazeClient can be called directly.
 
-## Note
-
-1. If you are using the version of `mixin-node-sdk@2.xx.xx`, please see [https://github.com/liuzemei/mixin-node-sdk](https://github.com/liuzemei/mixin-node-sdk)
-
 ## Contribute
 
 Acceptable PRs.
 
-## Related articles or links
+## API
 
-> 1. [https://developers.mixin.one/document](https://developers.mixin.one/document)
-> 2. [https://github.com/fox-one/mixin-sdk-go](https://github.com/fox-one/mixin-sdk-go)
+> 1. [https://developers.mixin.one/docs/api-overview](https://developers.mixin.one/docs/api-overview)
 
 ## License
 
 ```
-Copyright 2021 Mixin.
+Copyright 2022 Mixin.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
