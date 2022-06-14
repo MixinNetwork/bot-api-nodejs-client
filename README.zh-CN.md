@@ -69,20 +69,14 @@ client.loopBlaze({
 
 > BlazeClient 直接继承了 Client，所以所有 Client 的方法 BlazeClient 都可以直接调用。
 
-## 注意
-
-1. 如果你使用的是 `mixin-node-sdk@2.xx.xx` 的版本，请看 [https://github.com/liuzemei/mixin-node-sdk](https://github.com/liuzemei/mixin-node-sdk)
-
 ## 贡献
 
 可接受 PRs.
 
-## 相关文章或链接
+## API
 
-> 1. [https://developers.mixin.one/document](https://developers.mixin.one/document)
-> 2. [https://github.com/fox-one/mixin-sdk-go](https://github.com/fox-one/mixin-sdk-go)
-> 3. [https://mixin.one](https://mixin.one)
+> 1. [https://developers.mixin.one/docs/api-overview](https://developers.mixin.one/docs/api-overview)
 
 ## License
 
-MIT © Richard McRichface
+Copyright 2021 Mixin.
