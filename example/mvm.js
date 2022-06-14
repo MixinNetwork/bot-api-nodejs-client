@@ -4,10 +4,10 @@ const {
   MVMMainnet,
   MVMApiTestURI,
   Registry,
-  getExtra } = require('mixin-node-sdk');
-const fs = require('fs');
+  getExtra
+} = require('mixin-node-sdk');
+const keystore = require('../keystore.json');
 
-const keystore = JSON.parse(fs.readFileSync(`${__dirname  }/../config.json`, 'utf8'));
 const mixinClient = MixinApi({ keystore });
 const mvmClient = MVMApi(MVMApiTestURI);
 const registry = Registry({
