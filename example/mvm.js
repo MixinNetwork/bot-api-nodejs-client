@@ -70,7 +70,7 @@ async function paymentTest() {
     }
   };
 
-  const tx = await mixinClient.transfer.toAddress(t);
+  const tx = await mixinClient.transfer.toAddress(keystore.pin, t);
   console.log(t);
   console.log(tx);
 }
