@@ -9,8 +9,7 @@ import {
   CollectibleTransactionRequest,
   CollectibleTransactionResponse
 } from './types/collectible';
-import { signEd25519PIN } from './utils/pin';
-import { buildClient } from './utils/client';
+import { hashMembers, signEd25519PIN, buildClient } from './utils';
 
 export const MintAssetID = 'c94ac88f-4671-3976-b60a-09064f1811e8';
 
@@ -48,7 +47,13 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
     fetchCollection: (collectionID: string): Promise<CollectionResponse> => axiosInstance.get<unknown, CollectionResponse>(`/collectibles/collections/${collectionID}`),
 
     // Get collectibles outputs
-    outputs: (params: CollectibleOutputsRequest): Promise<CollectibleOutputsResponse[]> => axiosInstance.get<unknown, CollectibleOutputsResponse[]>('/collectibles/outputs', { params }),
+    outputs: (params: CollectibleOutputsRequest): Promise<CollectibleOutputsResponse[]> => {
+      const hashedParams = {
+        ...params,
+        members: hashMembers(params.members)
+      };
+      return axiosInstance.get<unknown, CollectibleOutputsResponse[]>('/collectibles/outputs', { params: hashedParams });
+    },
 
     // Create a collectibles transfer request
     request: (data: CollectibleTransactionRequest): Promise<CollectibleTransactionResponse> => axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', data),

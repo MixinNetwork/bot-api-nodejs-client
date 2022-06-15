@@ -5,7 +5,6 @@ const {
   buildMintCollectibleMemo, 
   GroupMembers, 
   GroupThreshold,
-  hashMembers,
   TxVersion,
   DumpOutputFromGhostKey,
   dumpTransaction
@@ -39,7 +38,7 @@ async function main() {
     return;
   }
   const outputs = await client.collection.outputs({
-    members: hashMembers([client.keystore.client_id]),
+    members: [keystore.client_id],
     threshold: 1,
   });
   console.log(outputs);
@@ -96,7 +95,7 @@ async function handleUnspentOutput(output, token) {
 
 function handleSignedOutput(output) {
   console.log(`handle signed output ${output.output_id}`);
-  client.outputs.proxy({
+  client.external.proxy({
     method: 'sendrawtransaction',
     params: output.signed_tx
   }).then(res => console.log('send raw transaction finished...', res));
