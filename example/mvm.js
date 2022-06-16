@@ -10,10 +10,10 @@ const keystore = require('../keystore.json');
 
 const mixinClient = MixinApi({ keystore });
 const mvmClient = MVMApi(MVMApiTestURI);
-const registry = Registry({
+const registry = new Registry({
   address: MVMMainnet.Registry.Address,
   uri: MVMMainnet.RPCUri,
-  secret: keystore.privateKey,
+  secret: keystore.private_key,
 });
 
 async function main() {
@@ -29,7 +29,7 @@ async function main() {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     amount: '0.00000001',
     trace: 'uuid', // uuid 可以为空,
-    extra,
+    memo: extra,
     opponent_multisig: {
       receivers: MVMMainnet.MVMMembers,
       threshold: MVMMainnet.MVMThreshold,
@@ -43,13 +43,13 @@ async function main() {
   console.log(`mixin://codes/${res.code_id}`);
 
   const cnbAssetID = await registry.fetchContractAsset('0xbE48C98736E54c99d92f1616e90FC944Deb64030'); // cnb 的地址
-  console.log(cnbAssetID); // 965e5c6e-434c-3fa9-b780-c50f43cd955c
+  console.log(cnbAssetID);
 
   const btcAssetContract = await registry.fetchAssetContract('c6d0c728-2624-429b-8e0d-d9d19b6592fa');
-  console.log(btcAssetContract); // 0xe2E4137FF1553F2845084E3965E27937674264FC
+  console.log(btcAssetContract);
 
   const userAddress = await registry.fetchUserContract('e8e8cd79-cd40-4796-8c54-3a13cfe50115');
-  console.log(userAddress); // 0xc49E0F42A844273E41F0d00e8C2406468b55AFEa
+  console.log(userAddress);
 }
 
 async function paymentTest() {
@@ -63,7 +63,7 @@ async function paymentTest() {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     amount: '0.00000001',
     trace: 'uuid', // uuid 可以为空,
-    extra,
+    memo: extra,
     opponent_multisig: {
       receivers: MVMMainnet.MVMMembers,
       threshold: MVMMainnet.MVMThreshold,

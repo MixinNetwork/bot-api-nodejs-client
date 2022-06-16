@@ -18,7 +18,7 @@ async function main() {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     amount: '0.00000001',
     trace: 'uuid', // uuid 可以为空,
-    extra,
+    memo: extra,
     opponent_multisig: {
       receivers: MVMMainnet.MVMMembers,
       threshold: MVMMainnet.MVMThreshold,
