@@ -8,7 +8,7 @@ import { buildClient } from './utils/client';
 // Detail: https://developers.mixin.one/docs/api/oauth/oauth
 export const OAuthBaseClient = (axiosInstance: AxiosInstance) => ({
   // Get the access code based on authorization code
-  getToken: (client_id: string, client_secret: string, code: string, ed25519: string, code_verifier?: string): Promise<AccessTokenResponse> => {
+  getToken: (client_id: string, code: string, ed25519: string, client_secret?: string, code_verifier?: string): Promise<AccessTokenResponse> => {
     const data = {
       client_id,
       client_secret,
