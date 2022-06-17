@@ -11,13 +11,13 @@ mixin 的 nodejs 版 sdk
 ## 安装
 
 ```shell
-npm install mixin-node-sdk
+npm install @mixin.dev/mixin-node-sdk
 ```
 
 如果你使用 `yarn`
 
 ```shell
-yarn add mixin-node-sdk
+yarn add @mixin.dev/mixin-node-sdk
 ```
 
 ## 使用
@@ -25,21 +25,22 @@ yarn add mixin-node-sdk
 1. 仅使用 Mixin 的 Api
 
 ```js
-const { Client } = require('mixin-node-sdk');
-const client = new Client({
-  client_id: '',
-  session_id: '',
-  pin_token: '',
-  private_key: '',
-  pin: '',
-  client_secret: '',
-});
-// 使用 Promise
-client.userMe().then(console.log);
+const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
+const keystore = {
+  user_id: '',
+  authorization_id: '',
+  scope: '',
+  private_key: '',
+  sign: 'oauth'
+};
+const client = MixinApi({ keystore });
+
+// 使用 Promise
+client.user.profile().then(console.log);
 // 使用 async await
 async function getMe() {
-  const me = await client.userMe();
+  const me = await client.user.profile();
   console.log(me);
 }
 ```
@@ -47,27 +48,30 @@ async function getMe() {
 2. 使用 Mixin 的消息功能()
 
 ```js
-const { BlazeClient } = require('mixin-node-sdk');
-const client = new BlazeClient(
-  {
-    client_id: '',
-    session_id: '',
-    pin_token: '',
-    private_key: '',
-    pin: '',
-    client_secret: '',
-  },
-  { parse: true, syncAck: true },
-);
+const { MixinApi } = require('mixin-node-sdk');
 
-client.loopBlaze({
+const keystore = {
+  user_id: '',
+  authorization_id: '',
+  scope: '',
+  private_key: '',
+  sign: 'oauth'
+};
+const config = {
+  keystore,
+  blazeOptions: {
+    parse: true,
+    syncAck: true
+  },
+};
+
+const client = MixinApi(config);
+client.blaze.loop({
   onMessage(msg) {
     console.log(msg);
   },
 });
 ```
-
-> BlazeClient 直接继承了 Client，所以所有 Client 的方法 BlazeClient 都可以直接调用。
 
 ## 贡献
 
