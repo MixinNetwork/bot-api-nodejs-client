@@ -1,7 +1,8 @@
 {
-  "name": "mixin-node-sdk",
+  "name": "@mixin.dev/mixin-node-sdk",
   "version": "4.0.0",
   "license": "MIT",
+  "description": "Mixin SDK for Node.js and Javascript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -41,7 +42,7 @@
       "pre-commit": "prettier --write . && eslint 'src/**' --fix && tsdx lint"
     }
   },
-  "author": "neooosky@gmail.com",
+  "author": "contact@mixin.one",
   "module": "dist/mixin-node-sdk.esm.js",
   "size-limit": [
     {
@@ -102,5 +103,9 @@
     "sha3": "^2.1.4",
     "uuid": "^8.3.2",
     "ws": "^8.7.0"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
   }
 }
