@@ -1,5 +1,5 @@
-import {ethers} from 'ethers';
-import {base64RawURLEncode} from 'client/utils/base64';
+import { ethers } from 'ethers';
+import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
 
 // const OperationPurposeUnknown = 0

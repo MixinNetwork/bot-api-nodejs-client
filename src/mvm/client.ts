@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { PaymentRequestResponse } from 'client/types/payment';
+import axios, {AxiosResponse} from 'axios';
+import { ResponseError, PaymentRequestResponse } from '../client';
 import { PaymentRequest, ValueResponse } from './types';
 
 // Client supplies some APIs for mvm developer
@@ -14,6 +14,14 @@ export const MVMApi = (uri: string) => {
   const instance = axios.create({
     baseURL: uri,
   });
+
+  instance.interceptors.response.use(
+    async (res: AxiosResponse) => {
+      const { data, error } = res.data;
+      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+      return data;
+    }
+  );
 
   return {
     payments: (params: PaymentRequest): Promise<PaymentRequestResponse> => instance.post<unknown, PaymentRequestResponse>('/payments', params),
