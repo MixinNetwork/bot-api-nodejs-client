@@ -107,5 +107,9 @@
   "directories": {
     "example": "example",
     "test": "test"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
