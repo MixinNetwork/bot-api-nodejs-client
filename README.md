@@ -13,13 +13,13 @@ The Node.js version of the mixin SDK
 ## Install
 
 ```shell
-npm install mixin-node-sdk
+npm install @mixin.dev/mixin-node-sdk
 ```
 
 If you use `yarn`
 
 ```shell
-yarn add mixin-node-sdk
+yarn add @mixin.dev/mixin-node-sdk
 ```
 
 ## Usage
@@ -27,21 +27,23 @@ yarn add mixin-node-sdk
 1. Use Mixin API
 
 ```js
-const { Client } = require('mixin-node-sdk');
-const client = new Client({
-  client_id: '',
-  session_id: '',
-  pin_token: '',
-  private_key: '',
-  pin: '',
-  client_secret: '',
-});
-// Use Promise
-client.userMe().then(console.log);
+const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
-// use async await
+const keystore = {
+  user_id: '',
+  private_key: '',
+  session_id: '',
+  pin: '',
+  pin_token: '',
+  client_secret: ''
+};
+const client = MixinApi({ keystore });
+
+// Use Promise
+client.user.profile().then(console.log);
+// Use async await
 async function getMe() {
-  const me = await client.userMe();
+  const me = await client.user.profile();
   console.log(me);
 }
 ```
@@ -49,27 +51,31 @@ async function getMe() {
 2. Receive Mixin Messenger messages
 
 ```js
-const { BlazeClient } = require('mixin-node-sdk');
-const client = new BlazeClient(
-  {
-    client_id: '',
-    session_id: '',
-    pin_token: '',
-    private_key: '',
-    pin: '',
-    client_secret: '',
-  },
-  { parse: true, syncAck: true },
-);
+const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
-client.loopBlaze({
+const keystore = {
+  user_id: '',
+  private_key: '',
+  session_id: '',
+  pin: '',
+  pin_token: '',
+  client_secret: ''
+};
+const config = {
+  keystore,
+  blazeOptions: { 
+    parse: true, 
+    syncAck: true 
+  },
+};
+
+const client = MixinApi(config);
+client.blaze.loop({
   onMessage(msg) {
     console.log(msg);
   },
 });
 ```
-
-> BlazeClient directly inherits Client, so all Client methods BlazeClient can be called directly.
 
 ## Contribute
 
