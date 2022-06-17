@@ -50,7 +50,7 @@ async function getMe() {
 2. 使用 Mixin 的消息功能()
 
 ```js
-const { MixinApi } = require('mixin-node-sdk');
+const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
 const keystore = {
   user_id: '',

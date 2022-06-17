@@ -52,7 +52,7 @@ async function getMe() {
 2. Receive Mixin Messenger messages
 
 ```js
-const { MixinApi } = require('mixin-node-sdk');
+const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
 const keystore = {
   user_id: '',
