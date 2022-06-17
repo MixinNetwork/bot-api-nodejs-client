@@ -29,10 +29,12 @@ const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
 const keystore = {
   user_id: '',
-  authorization_id: '',
-  scope: '',
   private_key: '',
-  sign: 'oauth'
+  session_id: '',
+  pin: '',
+  pin_token: '',
+  client_secret: '',
+  sign: 'owner'
 };
 const client = MixinApi({ keystore });
 
@@ -52,10 +54,12 @@ const { MixinApi } = require('mixin-node-sdk');
 
 const keystore = {
   user_id: '',
-  authorization_id: '',
-  scope: '',
   private_key: '',
-  sign: 'oauth'
+  session_id: '',
+  pin: '',
+  pin_token: '',
+  client_secret: '',
+  sign: 'owner'
 };
 const config = {
   keystore,
