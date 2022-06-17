@@ -1,6 +1,6 @@
 # bot-api-nodejs-client
 
-The Node.js version of the mixin SDK
+The Node.js version of the mixin SDK [https://developers.mixin.one/docs/api-overview](https://developers.mixin.one/docs/api-overview)
 
 [中文版](./README.zh-CN.md)
 
@@ -76,14 +76,6 @@ client.blaze.loop({
   },
 });
 ```
-
-## Contribute
-
-Acceptable PRs.
-
-## API
-
-> 1. [https://developers.mixin.one/docs/api-overview](https://developers.mixin.one/docs/api-overview)
 
 ## License
 
