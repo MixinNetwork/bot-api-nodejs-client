@@ -101,7 +101,7 @@ export const signAccessToken = (methodRaw: string | undefined, uri: string, para
     return '';
   }
 
-  if (keystore.sign === 'oauth') {
+  if (keystore.authorization_id) {
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
   }
   return signAuthenticationToken(methodRaw, uri, params, keystore);

@@ -6,13 +6,11 @@ export interface Keystore {
   scope?: string;
   authorization_id?: string;
 
-  // owner
+  // owner private key
   session_id?: string;
   pin?: string;
   pin_token?: string;
   client_secret?: string;
-
-  sign: 'oauth' | 'owner';
 }
 
 export default Keystore;
