@@ -31,14 +31,11 @@ const signToken = (payload: Object, private_key: string): string => {
 
 // sign an authentication token
 // sig: sha256(method + uri + params)
-export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore | undefined) => {
-  if (!keystore) {
-    return '';
-  }
+export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore) => {
   const method = methodRaw!.toLocaleUpperCase() || 'GET';
   let data: string = '';
   if (typeof params === 'object') {
-    data = serialize(params);
+    data = serialize(params, {unsafe: true});
   } else if (typeof params === 'string') {
     data = params;
   }
@@ -66,14 +63,10 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 // requestID should equal the one in header
 // scope should be oauth returned
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
-  if (!keystore) {
-    return '';
-  }
-
   const method = methodRaw!.toLocaleUpperCase() || 'GET';
   let data: string = '';
   if (typeof params === 'object') {
-    data = serialize(params);
+    data = serialize(params, {unsafe: true});
   } else if (typeof params === 'string') {
     data = params;
   }
