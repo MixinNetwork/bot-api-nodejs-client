@@ -36,7 +36,6 @@ export interface AppRequest {
   name: string;
   description: string;
   icon_base64: string;
-  session_secret: string;
   category: string;
   capabilities: string[];
   resource_patterns: string[];
