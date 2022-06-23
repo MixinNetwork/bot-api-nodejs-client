@@ -56,6 +56,6 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   pinBuff.putBytes(iv);
   pinBuff.putBytes(cipher.output.getBytes());
 
-  const encryptedBytes = Buffer.from(pinBuff.getBytes().slice(0, 48), 'binary');
+  const encryptedBytes = Buffer.from(pinBuff.getBytes(48), 'binary');
   return base64RawURLEncode(encryptedBytes);
 };
