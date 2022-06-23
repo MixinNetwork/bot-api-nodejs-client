@@ -1,6 +1,6 @@
 import User from '../../src/client/user';
 import Pin from '../../src/client/pin';
-import keystore from './keystore';
+import keystore from '../keystore';
 
 describe('Tests for users', () => {
   const user = User({ keystore });
