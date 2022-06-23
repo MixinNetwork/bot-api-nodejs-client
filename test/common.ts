@@ -1,6 +1,17 @@
-import { Client } from '../src';
-import fs from 'fs';
-const keystore = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'utf8'));
-const client = new Client(keystore);
+import { MixinApi } from '../src';
+import keystore from './keystore';
 
-export { client };
+const config = {
+  requestConfig: {
+    responseCallback: (err: any) => {
+      console.log(err);
+    }
+  },
+  keystore
+};
+const client = MixinApi(config);
+
+export {
+  client ,
+  keystore
+};

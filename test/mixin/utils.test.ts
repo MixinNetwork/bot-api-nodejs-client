@@ -1,9 +1,11 @@
+// @ts-ignore
 import forge from 'node-forge';
+import { v4 as uuid } from 'uuid';
 import { signAuthenticationToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
 import { sharedEd25519Key, signEd25519PIN } from '../../src/client/utils/pin';
-import keystore from './keystore';
+import keystore from '../keystore';
 
 describe('Tests for utils', () => {
   test('base64 encode & decode should be url safe', () => {
@@ -74,8 +76,7 @@ describe('Tests for utils', () => {
   });
 
   test('tests for auth', () => {
-    expect(signAuthenticationToken('GET', '/me', '', undefined)).toBe('');
-    expect(signAuthenticationToken('GET', '/me', '', keystore)).not.toBe('');
-    expect(signAuthenticationToken('POST', '/me', {foo: 'bar'}, keystore)).not.toBe('');
+    expect(signAuthenticationToken('GET', '/me', '', uuid(), keystore)).not.toBe('');
+    expect(signAuthenticationToken('POST', '/me', {foo: 'bar'}, uuid(), keystore)).not.toBe('');
   });
 });
