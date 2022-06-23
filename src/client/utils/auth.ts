@@ -1,6 +1,5 @@
 import serialize from 'serialize-javascript';
 import forge from 'node-forge';
-import { v4 as uuid } from 'uuid';
 import Keystore from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
 
@@ -31,14 +30,11 @@ const signToken = (payload: Object, private_key: string): string => {
 
 // sign an authentication token
 // sig: sha256(method + uri + params)
-export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, keystore: Keystore | undefined) => {
-  if (!keystore) {
-    return '';
-  }
+export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
   const method = methodRaw!.toLocaleUpperCase() || 'GET';
   let data: string = '';
   if (typeof params === 'object') {
-    data = serialize(params);
+    data = serialize(params, {unsafe: true});
   } else if (typeof params === 'string') {
     data = params;
   }
@@ -53,7 +49,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
     sid: keystore.session_id,
     iat,
     exp,
-    jti: uuid(),
+    jti: requestID,
     sig: md.digest().toHex(),
     scp: keystore.scope || 'FULL',
   };
@@ -66,14 +62,10 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 // requestID should equal the one in header
 // scope should be oauth returned
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
-  if (!keystore) {
-    return '';
-  }
-
   const method = methodRaw!.toLocaleUpperCase() || 'GET';
   let data: string = '';
   if (typeof params === 'object') {
-    data = serialize(params);
+    data = serialize(params, {unsafe: true});
   } else if (typeof params === 'string') {
     data = params;
   }
@@ -104,5 +96,5 @@ export const signAccessToken = (methodRaw: string | undefined, uri: string, para
   if (keystore.authorization_id) {
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
   }
-  return signAuthenticationToken(methodRaw, uri, params, keystore);
+  return signAuthenticationToken(methodRaw, uri, params, requestID, keystore);
 };

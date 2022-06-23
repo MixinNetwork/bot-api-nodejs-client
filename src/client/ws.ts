@@ -1,9 +1,10 @@
 import WebSocket from 'ws';
+import { v4 as uuid } from 'uuid';
 import Keystore from './types/keystore';
-import { signAuthenticationToken } from './utils/auth';
+import { signAccessToken } from './utils/auth';
 
 export function websocket(keystore: Keystore | undefined, url: string): WebSocket {
-  const jwtToken = signAuthenticationToken('GET', '/', '', keystore) || '';
+  const jwtToken = signAccessToken('GET', '/', '', uuid(), keystore) || '';
   const headers = {
     Authorization: `Bearer ${ jwtToken }`,
   };
