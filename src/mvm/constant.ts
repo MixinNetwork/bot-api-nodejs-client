@@ -5,14 +5,14 @@ export const MVMMainnet = {
   ChainId: 73927,
   RPCUri: 'https://scan.mvm.dev',
   Registry: {
-    Address: '0x3c84B6C98FBeB813e05a7A7813F0442883450B1F',
+    Contract: '0x3c84B6C98FBeB813e05a7A7813F0442883450B1F',
     PID: 'bd670872-76ce-3263-b933-3aa337e212a4',
   },
   Storage: {
-    Address: '0xef241988D19892fE4efF4935256087F4fdc5ecAa',
+    Contract: '0xef241988D19892fE4efF4935256087F4fdc5ecAa',
   },
   Refund: {
-    Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
+    Contract: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
   },
   MVMMembers: [
     "d5a3a450-5619-47af-a3b1-aad08e6e10dd",
@@ -31,14 +31,14 @@ export const MVMTestnet = {
   RPCUri: 'https://quorum-mayfly-testnet.mixin.zone',
   RPCUriAlpha: 'https://quorum-testnet.mixin.zone',
   Registry: {
-    Address: '0xbb0860774b68b4Aaa07ED32fb118dA39e5b18454',
+    Contract: '0xbb0860774b68b4Aaa07ED32fb118dA39e5b18454',
     PID: '119f84c9-9f72-31b5-af71-611de05dace8',
   },
   Storage: {
-    Address: '0x510a9f1AAbE048912F6536A833ecB6039061e872',
+    Contract: '0x510a9f1AAbE048912F6536A833ecB6039061e872',
   },
   Refund: {
-    Address: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
+    Contract: '0x07B0bF340765CAE77b734D82EB8d35229796CeBc',
   },
   MVMMembers: ['a15e0b6d-76ed-4443-b83f-ade9eca2681a', 'b9126674-b07d-49b6-bf4f-48d965b2242b', '15141fe4-1cfd-40f8-9819-71e453054639', '3e72ca0c-1bab-49ad-aa0a-4d8471d375e7'],
   MVMThreshold: 3,

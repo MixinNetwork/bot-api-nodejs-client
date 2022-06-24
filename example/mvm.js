@@ -11,7 +11,7 @@ const keystore = require('../keystore.json');
 const mixinClient = MixinApi({ keystore });
 const mvmClient = MVMApi(MVMApiTestURI);
 const registry = new Registry({
-  address: MVMMainnet.Registry.Address,
+  address: MVMMainnet.Registry.Contract,
   uri: MVMMainnet.RPCUri,
   secret: keystore.private_key,
 });
