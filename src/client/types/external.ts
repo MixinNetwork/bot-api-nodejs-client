@@ -10,11 +10,12 @@ export interface CheckAddressResponse {
 }
 
 export interface DepositRequest {
-  limit: number | string;
-  offset?: string;
   asset?: string;
   destination?: string;
   tag?: string;
+  order?: string;
+  offset?: string;
+  limit?: number;
 }
 
 export interface ExchangeRateResponse {
