@@ -11,9 +11,9 @@ export interface CheckAddressResponse {
 
 export interface DepositRequest {
   limit: number | string;
-  offset: string;
+  offset?: string;
   asset?: string;
-  opponent?: string;
+  destination?: string;
   tag?: string;
 }
 
@@ -37,6 +37,6 @@ export interface ExternalTransactionResponse {
 }
 
 export interface ProxyRequest {
-  method: string,
-  params: any[],
+  method: string;
+  params: any[];
 }
