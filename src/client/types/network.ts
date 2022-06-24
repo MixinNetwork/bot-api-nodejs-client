@@ -96,7 +96,7 @@ export interface NetworkSnapshotRequest {
   limit: number | string;
   offset: string;
   asset?: string;
-  order?:string
+  order?: 'ASC' | 'DESC';
 }
 
 export interface DepositFilterRequest {
@@ -111,5 +111,5 @@ export interface SnapshotFilterRequest {
   limit: number | string;
   offset: string;
   asset?: string;
-  order?: string;
+  order?: 'ASC' | 'DESC';
 }
