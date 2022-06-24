@@ -9,6 +9,9 @@ import { buildClient } from './utils/client';
 // TODO add app api for developer document
 // https://developers.mixin.one/
 export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
+  // Get information of current user's a specific app
+  fetch: (appID: string): Promise<AppResponse> => axiosInstance.get<unknown, AppResponse>(`/apps/${appID}`),
+
   // Get app list of current user
   // Available for mixin official developer app only
   fetchList: (): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/apps`),
