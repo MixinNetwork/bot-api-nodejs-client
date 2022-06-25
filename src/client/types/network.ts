@@ -50,7 +50,7 @@ export interface NetworkSnapshotAsset {
 export interface NetworkSnapshotResponse {
   amount: number;
   asset: NetworkSnapshotAsset;
-  created_at: Date;
+  created_at: string;
   snapshot_id: string;
   source: string;
   type: string; // Options only for user (or App) who has access.
@@ -64,7 +64,7 @@ export interface NetworkSnapshotResponse {
 
 export interface ExternalTransactionResponse {
   transaction_id: string;
-  created_at: Date;
+  created_at: string;
   transaction_hash: string;
   sender: string;
   chain_id: string;

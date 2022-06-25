@@ -3,9 +3,9 @@ interface BaseSnapshotResponse {
   asset_id: string;
   amount: string;
   closing_balance: string;
-  created_at: Date;
+  created_at: string;
   opening_balance: string;
-  snapshot_at?: Date;
+  snapshot_at?: string;
   snapshot_hash?: string;
   transaction_hash: string;
   type: string;

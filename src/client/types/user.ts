@@ -10,7 +10,7 @@ export interface UserResponse {
   avatar_url: string;
   relationship: string;
   mute_until: string;
-  created_at: Date;
+  created_at: string;
   is_verified: boolean;
   is_scam: boolean;
 }
