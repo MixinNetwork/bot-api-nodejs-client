@@ -20,7 +20,7 @@ export interface PaymentRequestResponse {
   threshold: number;
   memo: string;
   trace_id: string;
-  created_at: Date;
+  created_at: string;
   status: string;
   code_id: string;
 }

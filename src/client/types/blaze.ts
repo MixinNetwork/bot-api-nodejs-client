@@ -10,7 +10,7 @@ interface TransferView {
   amount: string;
   trace_id: string;
   memo: string;
-  created_at: Date;
+  created_at: string;
 }
 
 interface SystemConversationPayload {

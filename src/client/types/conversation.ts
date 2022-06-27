@@ -19,7 +19,7 @@ export interface ConversationResponse {
   name: string;
   icon_url: string;
   announcement: string;
-  created_at: Date;
+  created_at: string;
 
   code_id: string;
   code_url: string;

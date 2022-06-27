@@ -27,7 +27,7 @@ export interface CollectibleResponse {
   meta: CollectibleMetaResponse;
   receivers: string[];
   receivers_threshold: number;
-  created_at: Date;
+  created_at: string;
 }
 
 export interface CollectionResponse {
@@ -36,11 +36,11 @@ export interface CollectionResponse {
   name: string;
   description: string;
   icon_url: string;
-  created_at: Date;
+  created_at: string;
 }
 
 export interface CollectibleOutputsRequest {
-  state?:	CollectibleOutputState;
+  state?: CollectibleOutputState;
   offset?: string;
   limit?: number;
   members: string[];
@@ -61,8 +61,8 @@ export interface CollectibleOutputsResponse {
   receivers_threshold: number;
   extra: string;
   state: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   signed_by: string;
   signed_tx: string;
 }
@@ -87,7 +87,7 @@ export interface CollectibleTransactionResponse {
   state: string;
   transaction_hash: string;
   raw_transaction: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   code_id: string;
 }

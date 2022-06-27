@@ -1,12 +1,6 @@
 import { AxiosInstance } from 'axios';
-import {
-  DepositRequest,
-  ExternalTransactionResponse,
-  CheckAddressRequest,
-  CheckAddressResponse,
-  ExchangeRateResponse,
-  ProxyRequest
-} from './types/external';
+import { DepositRequest, ProxyRequest } from './types/external';
+import { CheckAddressRequest, CheckAddressResponse, ExchangeRateResponse, ExternalTransactionResponse } from './types/network';
 import { buildClient } from './utils/client';
 
 export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
