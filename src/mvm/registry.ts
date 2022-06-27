@@ -13,7 +13,7 @@ const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f
 export class Registry {
   contract: Contract;
 
-  constructor({ address = MVMMainnet.Registry.Address, uri = MVMMainnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {
+  constructor({ address = MVMMainnet.Registry.Contract, uri = MVMMainnet.RPCUri, secret = PrivateKey }: { address?: string; uri?: string; secret?: string }) {
     // private key uses for fetch some public information from mvm
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
     const signer = (uri: string) => new ethers.Wallet(secret, provider(uri));
@@ -57,10 +57,10 @@ export class Registry {
       const usersBuf = Buffer.from(data.slice(2), 'hex');
       const users: string[] = [];
       for (let i = 2; i < usersBuf.length - 2; i += 16) {
-        users.push(uuidStringify(usersBuf.slice(i, i+16)));
+        users.push(uuidStringify(usersBuf.slice(i, i + 16)));
       }
 
-      const threshold = usersBuf.readUInt16BE(usersBuf.length-2);
+      const threshold = usersBuf.readUInt16BE(usersBuf.length - 2);
       return {
         users,
         threshold,
