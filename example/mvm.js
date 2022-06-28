@@ -5,7 +5,7 @@ const {
   MVMApiTestURI,
   Registry,
   getExtra
-} = require('mixin-node-sdk');
+} = require('@mixin.dev/mixin-node-sdk');
 const keystore = require('../keystore.json');
 
 const mixinClient = MixinApi({ keystore });
@@ -17,13 +17,20 @@ const registry = new Registry({
 });
 
 async function main() {
-  const contractAddress = '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0'; // 要调用的合约地址
-  const methodName = 'addAny'; // 要调用的合约方法
-  const types = ['uint256']; // 参数类型列表
-  const values = [2]; // 参数值列表
+  const contract1 = {
+    address: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+    method: 'addAny', // 要调用的合约方法
+    types: ['uint256'], // 参数类型列表
+    values: [2] // 参数值列表
+  };
+  const contract2 = {
+    address: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+    method: 'addOne', // 要调用的合约方法
+  };
+  const contracts = [contract1, contract2];
 
   // 1 使用参数进行生成 extra
-  const extra = getExtra(contractAddress, methodName, types, values);
+  const extra = getExtra(contracts);
   // 2 构造 payments 请求
   const transactionInput = {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
@@ -53,12 +60,15 @@ async function main() {
 }
 
 async function paymentTest() {
-  const contractAddress = '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c';
-  const methodName = 'addAny';
-  const types = ['uint256'];
-  const values = ['11'];
+  const contract = {
+    address: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+    method: 'addAny', // 要调用的合约方法
+    types: ['uint256'], // 参数类型列表
+    values: [2] // 参数值列表
+  };
+  const contracts = [contract];
 
-  const extra = getExtra(contractAddress, methodName, types, values);
+  const extra = getExtra(contracts);
   const t = {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c', // cnb 的 asset_id
     amount: '0.00000001',

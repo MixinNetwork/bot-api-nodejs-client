@@ -8,7 +8,7 @@ const {
   TxVersion,
   DumpOutputFromGhostKey,
   dumpTransaction
-} = require('mixin-node-sdk');
+} = require('@mixin.dev/mixin-node-sdk');
 const { v4: uuid } = require('uuid');
 const keystore = require('../keystore.json');
 
