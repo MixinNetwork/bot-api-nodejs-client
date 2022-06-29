@@ -8,7 +8,7 @@ export interface Context {
   conversation_id?: string;
 }
 
-interface Messengers {
+export interface Messengers {
   getContext: () => string;
   playlist: (audio: string[]) => any;
   reloadTheme: (args?: string) => void;
