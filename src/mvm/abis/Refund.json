@@ -1,11 +1,9 @@
-{
-  "abi": [
-    {
-      "inputs": [],
-      "name": "work",
-      "outputs": [],
-      "stateMutability": "pure",
-      "type": "function"
-    }
-  ]
-}
+[
+  {
+    "inputs": [],
+    "name": "work",
+    "outputs": [],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]

@@ -1,9 +1,13 @@
 export const BlankAddress = '0x0000000000000000000000000000000000000000';
+export const baseGasLimit = 21000 * 20;
 
 // https://bridge.mvm.dev/
 export const MVMMainnet = {
   ChainId: 73927,
   RPCUri: 'https://geth.mvm.dev',
+  Bridge: {
+    Contract: '0x12266b2BbdEAb152f8A0CF83c3997Bc8dbAD0be0'
+  },
   Registry: {
     Contract: '0x3c84B6C98FBeB813e05a7A7813F0442883450B1F',
     PID: 'bd670872-76ce-3263-b933-3aa337e212a4',
