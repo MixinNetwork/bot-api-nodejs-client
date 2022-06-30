@@ -1,4 +1,5 @@
 export const BlankAddress = '0x0000000000000000000000000000000000000000';
+export const baseGasLimit = 21000 * 20;
 
 // https://bridge.mvm.dev/
 export const MVMMainnet = {

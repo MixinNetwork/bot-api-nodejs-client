@@ -1,7 +1,6 @@
 import { Contract, ethers, providers } from 'ethers';
 import { AssetABI } from './abis';
-import { MVMMainnet } from './constant';
-import { baseGasLimit } from '../constant';
+import { MVMMainnet, baseGasLimit } from './constant';
 
 class AssetContract {
   contract: Contract;
