@@ -1,6 +1,6 @@
 import { BigNumber, Contract, ethers, providers } from 'ethers';
-import { BridgeABI } from 'mvm/abis';
-import { MVMMainnet } from 'mvm/constant';
+import { BridgeABI } from '../abis';
+import { MVMMainnet } from '../../mvm/constant';
 import { baseGasLimit } from '../../constant';
 
 class BridgeContract {
