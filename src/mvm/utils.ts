@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { MixinAssetID } from '../constant';
 import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
 
@@ -25,7 +26,7 @@ export const encodeMemo = (extra: string, process: string): string => {
 };
 
 export const getMethodIdByAbi = (func: string, params: string[]): string => {
-  const paramStr =  params.map((i) => i.trim()).join(',');
+  const paramStr = params.map(i => i.trim()).join(',');
   return ethers.utils.id(`${func}(${paramStr})`).slice(2, 10);
 };
 
@@ -47,4 +48,11 @@ export const getExtra = (contract: string, methodName: string, types: string[] =
   }
 
   return extra;
+};
+
+export const parseValueForBridge = (assetId: string, amount: string) => {
+  if (assetId === MixinAssetID) {
+    return ethers.utils.parseEther(Number(amount).toFixed(8));
+  }
+  return Math.round(ethers.utils.parseUnits(amount, 8).toNumber());
 };

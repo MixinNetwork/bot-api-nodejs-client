@@ -18,7 +18,7 @@ export class Registry {
     const provider = (uri: string) => new StaticJsonRpcProvider(uri);
     const signer = (uri: string) => new ethers.Wallet(secret, provider(uri));
 
-    this.contract = new ethers.Contract(address, RegistryABI.abi, signer(uri));
+    this.contract = new ethers.Contract(address, RegistryABI, signer(uri));
   }
 
   // fetch a mvm address of a mixin address
