@@ -5,7 +5,6 @@ import { buildClient } from './utils/client';
 export const AttachmentKeystoreClient = (axiosInstance: AxiosInstance) => {
   const createAttachment = (): Promise<AttachmentResponse> => axiosInstance.post<unknown, AttachmentResponse>(`/attachments`);
 
-  // todo move to other dir?
   const uploadAttachmentTo = (uploadURL: string, file: File): Promise<any> =>
     axios.create()({
       url: uploadURL,
