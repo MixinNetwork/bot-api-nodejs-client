@@ -4,7 +4,7 @@ import { buildClient } from './utils/client';
 
 /** Methods to obtain or edit users' profile and relationships */
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
-  /** Get the current user's personal information
+  /** Get the current user's personal information */
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
   /** Get the contact list of the users, containing users and bots */
