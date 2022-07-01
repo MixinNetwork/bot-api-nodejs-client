@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import {ContractRequest} from './types';
+import { ContractRequest } from './types';
 import { MixinAssetID } from '../constant';
 import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
@@ -67,7 +67,7 @@ export const getExtra = (contracts: ContractRequest[]) => {
     extra += singleExtra;
   }
 
-  return extra;
+  return `0x${extra}`;
 };
 
 export const parseValueForBridge = (assetId: string, amount: string) => {
