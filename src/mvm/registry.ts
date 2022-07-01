@@ -8,8 +8,10 @@ import { RegistryUserResponse } from './types/registry';
 // A public Qurum secret for querying public information
 const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f0eeb';
 
-// Explanation of registry contract
-// https://mvm.dev/reference/registry.html
+/**
+ * Explanation of registry contract
+ * https://mvm.dev/reference/registry.html
+ */
 export class Registry {
   contract: Contract;
 
@@ -21,15 +23,17 @@ export class Registry {
     this.contract = new ethers.Contract(address, RegistryABI, signer(uri));
   }
 
-  // fetch a mvm address of a mixin address
+  /** fetch a mvm address of a mixin address */
   fetchAssetContract(assetId: string) {
     const id = assetId.replaceAll('-', '');
     return this.contract.contracts(`0x${id}`);
   }
 
-  // fetch mixin users' mvm address
-  // the address might be from a mixin multisig accounts
-  // for the common mixin user, threshold is 1
+  /**
+   * fetch mixin users' mvm address
+   * the address might be from a mixin multisig accounts
+   * for the common mixin user, threshold is 1
+   */
   fetchUsersContract(userIds: string[], threshold: number = 1) {
     const bufLen = Buffer.alloc(2);
     bufLen.writeUInt16BE(userIds.length);
@@ -40,18 +44,20 @@ export class Registry {
     return this.contract.contracts(ethers.utils.keccak256(identity));
   }
 
-  // Alias method for fetchUsersContract
-  // for a single mixin user fetch mvm address
+  /**
+   * Alias method for fetchUsersContract
+   * for a single mixin user fetch mvm address
+   */
   fetchUserContract(userId: string) {
     return this.fetchUsersContract([userId]);
   }
 
-  // fetch an asset of mvm address
+  /** fetch an asset of mvm address */
   fetchContractAsset(address: string) {
     return this.contract.assets(address);
   }
 
-  // fetch the user of mvm address
+  /** fetch the user of mvm address */
   fetchContractUsers(address: string) {
     return this.contract.users(address).then((data: string): RegistryUserResponse => {
       const usersBuf = Buffer.from(data.slice(2), 'hex');
@@ -68,8 +74,7 @@ export class Registry {
     });
   }
 
-  // Since extra for mtg memo is limited, it needs to
-  // write a value to registry contract
+  /** Since extra for mtg memo is limited, it needs to write a value to registry contract */
   writeValue(value: string, key?: string) {
     const identity = ethers.utils.keccak256(value);
     if (key && key !== identity) {

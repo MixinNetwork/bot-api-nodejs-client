@@ -55,6 +55,7 @@ export interface NetworkSnapshotResponse {
   source: string;
   type: string; // Options only for user (or App) who has access.
 
+  // todo use union type
   // 4 private fields that only be returned with correct permission
   user_id?: string;
   trace_id?: string;

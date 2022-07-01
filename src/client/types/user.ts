@@ -4,7 +4,8 @@ export interface UserResponse {
   type: 'user';
   user_id: string;
   identity_number: string;
-  phone: string; // need `PHONE:READ` permission granted
+  /** If there is no `PHONE:READ` permission, it will always be empty string */
+  phone: string;
   full_name: string;
   biography: string;
   avatar_url: string;
@@ -48,6 +49,8 @@ export interface PreferenceRequest {
 export interface RelationshipRequest {
   user_id: string;
   action: Operation;
-  phone?: string; // for ADD only
-  full_name?: string; // for ADD only
+}
+export interface RelationshipAddRequest extends RelationshipRequest {
+  phone?: string;
+  full_name?: string;
 }

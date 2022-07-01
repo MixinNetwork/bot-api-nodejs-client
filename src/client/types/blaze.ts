@@ -21,8 +21,10 @@ interface SystemConversationPayload {
 }
 
 export interface BlazeOptions {
-  parse?: boolean; // parse message
-  syncAck?: boolean; // sync ack
+  /** whether to parse message */
+  parse?: boolean;
+  /** whether to sync ack */
+  syncAck?: boolean;
 }
 
 export interface BlazeHandler {

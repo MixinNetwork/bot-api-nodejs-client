@@ -3,7 +3,7 @@ export interface RawTransactionRequest {
   amount?: string;
   trace_id?: string;
   memo?: string;
-  // OpponentKey used for raw transaction
+  /** OpponentKey used for raw transaction */
   opponent_key?: string;
   opponent_multisig?: {
     receivers: string[];

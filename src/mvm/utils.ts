@@ -30,11 +30,12 @@ export const getMethodIdByAbi = (func: string, params: string[]): string => {
   return ethers.utils.id(`${func}(${paramStr})`).slice(2, 10);
 };
 
-// Extra consists of
-// 1 contract address without '0x'
-// 2 top 8 characters(without '0x') of KECCAK256 hash for contract function name and function parameter types
-//   e.g., addLiquidity(address,uint256)
-// 3 abi code(without '0x') of contract function arguments, if arguments exist
+/**
+ * Extra consists of
+ * 1. contract address without '0x'
+ * 2. top 8 characters(without '0x') of KECCAK256 hash for contract function name and function parameter types e.g., addLiquidity(address,uint256)
+ * 3. abi code(without '0x') of contract function arguments, if arguments exist
+ */
 export const getExtra = (contract: string, methodName: string, types: string[] = [], values: any[] = []) => {
   if (types.length !== values.length) return '';
 

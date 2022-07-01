@@ -2,6 +2,7 @@ import { UserResponse } from './user';
 import { AssetResponse } from './asset';
 import { AddressResponse } from './address';
 
+// todo remove?
 // For 1to1 transfer
 export interface PaymentResponse {
   recipient: UserResponse;
