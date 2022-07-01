@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { ContractRequest } from './types';
 import { MixinAssetID } from '../constant';
 import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
@@ -31,24 +32,43 @@ export const getMethodIdByAbi = (func: string, params: string[]): string => {
 };
 
 /**
- * Extra consists of
- * 1. contract address without '0x'
- * 2. top 8 characters(without '0x') of KECCAK256 hash for contract function name and function parameter types e.g., addLiquidity(address,uint256)
- * 3. abi code(without '0x') of contract function arguments, if arguments exist
+ * Get extra for one contract, consists of
+ * 1 contract address without '0x'
+ * 2 contract input length
+ * 3 contract input:
+ *     top 8 characters(without '0x') of KECCAK256 hash for contract function name and function parameter types
+ *       e.g., addLiquidity(address,uint256) with
+ *     abi code(without '0x') of contract function arguments, if arguments exist
  */
-export const getExtra = (contract: string, methodName: string, types: string[] = [], values: any[] = []) => {
+const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRequest) => {
   if (types.length !== values.length) return '';
 
-  const contractAddress = contract.startsWith('0x') ? contract.slice(2) : contract;
-  const methodId = getMethodIdByAbi(methodName, types);
-  let extra = `${contractAddress}${methodId}`;
+  const addr = address.toLocaleLowerCase();
+  const contractAddress = `${ addr.slice(0, 2) === '0x' ? addr.slice(2) : addr }` ;
 
+  const methodId = getMethodIdByAbi(method, types);
+  let contractInput = `${methodId}`;
   if (values.length > 0) {
     const abiCoder = new ethers.utils.AbiCoder();
-    extra += abiCoder.encode(types, values).slice(2);
+    contractInput += abiCoder.encode(types, values).slice(2);
   }
 
+  const inputLength = Buffer.from([0, contractInput.length / 2]).toString('hex');
+  const extra = `${contractAddress}${inputLength}${contractInput}`;
   return extra;
+};
+
+// Get total extra for multiple contracts, started with number of contracts
+export const getExtra = (contracts: ContractRequest[]) => {
+  if (contracts.length === 0) return '';
+  let extra = Buffer.from([0, contracts.length]).toString('hex');
+
+  for (let i = 0; i < contracts.length; i++) {
+    const singleExtra = Buffer.from(getSingleExtra(contracts[i]));
+    extra += singleExtra;
+  }
+
+  return `0x${extra}`;
 };
 
 export const parseValueForBridge = (assetId: string, amount: string) => {

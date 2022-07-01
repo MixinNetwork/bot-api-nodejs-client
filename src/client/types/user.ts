@@ -50,6 +50,7 @@ export interface RelationshipRequest {
   user_id: string;
   action: Operation;
 }
+
 export interface RelationshipAddRequest extends RelationshipRequest {
   phone?: string;
   full_name?: string;
