@@ -11,8 +11,12 @@ export interface RegisteredUser {
   };
 }
 
+/**
+ * signature: signature of the user.
+ * example: wallet.signMessage(keccak256(toUtf8Bytes(`MVM:Bridge:Proxy:${server_public_key_base64}:${address}`))).slice(2)
+ */
 export interface RegisterRequest {
-  public_key?: string;
+  public_key: string;
   signature?: string;
 }
 

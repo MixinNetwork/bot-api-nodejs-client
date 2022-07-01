@@ -10,6 +10,10 @@ export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
     return res.data;
   });
   return {
+    // wallet.signMessage(keccak256(toUtf8Bytes(message))).slice(2)
+    /**
+     * @param params RegisterRequest.public_key - public key of the user, RegisterRequest.signature - signature of the user
+     */
     register: async (params: RegisterRequest) => (await instance.post<undefined, { user: RegisteredUser }>('/users', params)).user,
     generateExtra: async (params: GenerateExtraRequest) => `0x${(await instance.post<undefined, { extra: string }>('/extra', params)).extra}`,
   };
