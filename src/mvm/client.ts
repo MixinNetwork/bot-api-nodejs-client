@@ -1,6 +1,6 @@
-import axios, {AxiosResponse} from 'axios';
-import {PaymentRequestResponse} from '../client';
-import {PaymentRequest, ValueResponse} from './types';
+import axios, { AxiosResponse } from 'axios';
+import { PaymentRequestResponse } from '../client';
+import { PaymentRequest, ValueResponse } from './types';
 
 // Client supplies some APIs for mvm developer
 // * POST /payments, generate a payment code url for mixin user
@@ -16,7 +16,13 @@ export const MVMApi = (uri: string) => {
   });
 
   instance.interceptors.response.use(
-    async (res: AxiosResponse) => res.data,
+    async (res: AxiosResponse) => {
+      console.log(res);
+      return res.data;
+    },
+    (err) => {
+      throw new Error(`${err.response.status}, ${err.response.statusText}`);
+    }
   );
 
   return {

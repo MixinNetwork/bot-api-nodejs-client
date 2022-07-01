@@ -7,10 +7,9 @@ export const PaymentBaseClient = (axiosInstance: AxiosInstance) => ({
   // Generate code id for transaction/transfer or verify payments by trace id
   request: (params: TransferRequest | RawTransactionRequest, process = MVMMainnet.Registry.PID) => {
     const paymentRequest = {...params};
-    if (paymentRequest.memo && paymentRequest.memo.startsWith('0x')) {
+    if (paymentRequest.memo && paymentRequest.memo.slice(0, 2) === '0x') {
       paymentRequest.memo = encodeMemo(paymentRequest.memo.slice(2), process);
     }
-    console.log(paymentRequest);
     return axiosInstance.post<unknown, PaymentRequestResponse>('/payments', paymentRequest);
   },
 });

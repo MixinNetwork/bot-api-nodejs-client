@@ -43,7 +43,7 @@ const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRe
   if (types.length !== values.length) return '';
 
   const addr = address.toLocaleLowerCase();
-  const contractAddress = `${ addr.startsWith('0x') ? addr.slice(2) : addr }` ;
+  const contractAddress = `${ addr.slice(0, 2) === '0x' ? addr.slice(2) : addr }` ;
 
   const methodId = getMethodIdByAbi(method, types);
   let contractInput = `${methodId}`;
@@ -59,7 +59,7 @@ const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRe
 
 // Get total extra for multiple contracts, started with number of contracts
 export const getExtra = (contracts: ContractRequest[]) => {
-  if (!contracts.length) return '';
+  if (contracts.length === 0) return '';
   let extra = Buffer.from([0, contracts.length]).toString('hex');
 
   for (let i = 0; i < contracts.length; i++) {
