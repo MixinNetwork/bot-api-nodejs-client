@@ -1,42 +1,44 @@
 import { AxiosInstance } from 'axios';
-import { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest } from './types/user';
+import { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest, RelationshipAddRequest } from './types/user';
 import { buildClient } from './utils/client';
 
-// Methods to obtain or edit users' profile and relationships
+/** Methods to obtain or edit users' profile and relationships */
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
-  // Get the current user's personal information
+  /** Get the current user's personal information
   profile: () => axiosInstance.get<unknown, AuthenticationUserResponse>(`/me`),
 
-  // Get the contact list of the users, containing users and bots
+  /** Get the contact list of the users, containing users and bots */
   friends: () => axiosInstance.get<unknown, UserResponse[]>(`/friends`),
 
-  // Get users' block list
+  /** Get users' block list */
   blockings: () => axiosInstance.get<unknown, UserResponse[]>(`/blocking_users`),
 
-  // Rotate user's code
+  /** Rotate user's code */
   rotateCode: () => axiosInstance.get<unknown, AuthenticationUserResponse>('/me/code'),
 
-  // Search users by keyword
+  /** Search users by keyword */
   search: (identityNumberOrPhone: string) => axiosInstance.get<unknown, UserResponse>(`/search/${identityNumberOrPhone}`),
 
-  // Get user information by userID
+  /** Get user information by userID */
   fetch: (id: string) => axiosInstance.get<unknown, UserResponse>(`/users/${id}`),
 
-  // Get users' information by userIDs in bulk
-  // This API will only return the list of existing users
+  /**
+   * Get users' information by userIDs in bulk
+   * This API will only return the list of existing users
+   */
   fetchList: (userIDs: string[]) => axiosInstance.post<unknown, UserResponse[]>(`/users/fetch`, userIDs),
 
-  // Create a network user, can be created by bot only with no permission
+  /** Create a network user, can be created by bot only with no permission */
   createBareUser: (fullName: string, sessionSecret: string) => axiosInstance.post<unknown, UserResponse>('/users', { full_name: fullName, session_secret: sessionSecret }),
 
-  // Modify current user's personal name and avatar
+  /** Modify current user's personal name and avatar */
   update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
-  // update user's preferences
+  /** update user's preferences */
   updatePreferences: (params: PreferenceRequest) => axiosInstance.post<unknown, AuthenticationUserResponse>(`/me/preferences`, params),
 
-  // Manage the relationship between two users, one can 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK' a user
-  updateRelationships: (relationship: RelationshipRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
+  /** Manage the relationship between two users, one can 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK' a user */
+  updateRelationships: (relationship: RelationshipRequest | RelationshipAddRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
 });
 
 export const UserClient = buildClient(UserKeystoreClient);

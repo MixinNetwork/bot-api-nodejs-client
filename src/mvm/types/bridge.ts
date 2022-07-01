@@ -12,7 +12,7 @@ export interface RegisteredUser {
 }
 
 export interface RegisterRequest {
-  public_key?: string;
+  public_key: string;
   signature?: string;
 }
 

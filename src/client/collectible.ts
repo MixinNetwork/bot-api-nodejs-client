@@ -25,12 +25,14 @@ export const GroupMembers = [
 
 export const GroupThreshold = 5;
 
-// Users can use those APIs to manage their NFTs
-// Note:
-// * Before transferring a collectible, user should create a request first.
-// * only unsigned request can be canceled.
-// * only uncompleted sign transaction can be unlocked.
-// Docs: https://developers.mixin.one/docs/api/collectibles/request
+/**
+ * Users can use those APIs to manage their NFTs
+ * Note:
+ * * Before transferring a collectible, user should create a request first.
+ * * only unsigned request can be canceled.
+ * * only uncompleted sign transaction can be unlocked.
+ * Docs: https://developers.mixin.one/docs/api/collectibles/request
+ */
 export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const manageRequest = (pin: string, requestID: string, action: CollectibleRequestAction): Promise<CollectibleTransactionResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
@@ -38,13 +40,13 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
   };
 
   return {
-    // Get the information of the collectible
+    /** Get the information of the collectible */
     fetch: (tokenID: string): Promise<CollectibleResponse> => axiosInstance.get<unknown, CollectibleResponse>(`/collectibles/tokens/${tokenID}`),
 
-    // Get the information of the collectible collection
+    /** Get the information of the collectible collection */
     fetchCollection: (collectionID: string): Promise<CollectionResponse> => axiosInstance.get<unknown, CollectionResponse>(`/collectibles/collections/${collectionID}`),
 
-    // Get collectibles outputs
+    /** Get collectibles outputs */
     outputs: (params: CollectibleOutputsRequest): Promise<CollectibleOutputsResponse[]> => {
       const hashedParams = {
         ...params,
@@ -53,17 +55,17 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
       return axiosInstance.get<unknown, CollectibleOutputsResponse[]>('/collectibles/outputs', { params: hashedParams });
     },
 
-    // Create a collectibles transfer request
+    /** Create a collectibles transfer request */
     request: (data: CollectibleTransactionRequest): Promise<CollectibleTransactionResponse> =>
       axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', data),
 
-    // Initiate or participate in signing
+    /** Initiate or participate in signing */
     sign: (pin: string, requestID: string) => manageRequest(pin, requestID, 'sign'),
 
-    // Cancel my signature
+    /** Cancel my signature */
     cancel: (pin: string, requestID: string) => manageRequest(pin, requestID, 'cancel'),
 
-    // Cancel collectibles
+    /** Cancel collectibles */
     unlock: (pin: string, requestID: string) => manageRequest(pin, requestID, 'unlock'),
   };
 };

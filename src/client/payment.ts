@@ -15,7 +15,7 @@ export const PaymentBaseClient = (axiosInstance: AxiosInstance) => ({
     }
 
     return axiosInstance.post<unknown, PaymentRequestResponse>('/payments', paymentRequest);
-  },
+  }
 });
 
 export const PaymentClient = buildClient(PaymentBaseClient);

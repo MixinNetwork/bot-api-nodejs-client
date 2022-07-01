@@ -3,7 +3,7 @@ import forge from 'node-forge';
 import { stringify as uuidStringify, v4 as uuid } from 'uuid';
 
 // TODO: maybe try https://www.npmjs.com/package/node-forge#sha256
-// Supporting multisig for tokens & collectibles
+/** Supporting multisig for tokens & collectibles */
 export const hashMembers = (ids: string[]): string => {
   const key = ids.sort().join('');
   const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
@@ -11,7 +11,7 @@ export const hashMembers = (ids: string[]): string => {
   return sha.getHash('HEX');
 };
 
-// Generate an unique conversation id for contact
+/** Generate an unique conversation id for contact */
 export const uniqueConversationID = (userID: string, recipientID: string): string => {
   const [minId, maxId] = [userID, recipientID].sort();
   const md5 = forge.md.md5.create();

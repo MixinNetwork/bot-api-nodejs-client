@@ -14,6 +14,8 @@ export interface AddressResponse {
 export interface AddressRequest {
   asset_id: string;
   label: string;
-  destination: string; // alias public_key
-  tag?: string; // alias memo
+  /** alias public_key */
+  destination: string;
+  /** alias memo */
+  tag?: string;
 }

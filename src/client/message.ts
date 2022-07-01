@@ -24,13 +24,14 @@ import { base64url } from '../mixin/sign';
 import { uniqueConversationID } from './utils/uniq';
 import { buildClient } from './utils/client';
 
-// Methods to send messages
-// Note:
-// * To receive a list of messages from Mixin message service, you need to setup a websocket connection.
-//   After receiving the message via WebSocket, you need to acknowledge the message to Mixin message service,
-//   otherwise it will keep pushing the message.
+/**
+ * Methods to send messages
+ * Note:
+ * * To receive a list of messages from Mixin message service, you need to setup a websocket connection.
+ *   After receiving the message via WebSocket, you need to acknowledge the message to Mixin message service,
+ *   otherwise it will keep pushing the message.
+ */
 export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
-
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
   const sendMsg = (recipientID: string, category: MessageCategory, data: any): Promise<MessageView> => {
@@ -46,20 +47,22 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
   };
 
   return {
-    // Send the status of single message in bulk to Mixin Server
+    /** Send the status of single message in bulk to Mixin Server */
     sendAcknowledgement: (message: AcknowledgementRequest): Promise<MessageResponse[]> => axiosInstance.post<unknown, MessageResponse[]>('/acknowledgements', [message]),
 
-    // Send the status of messages in bulk to Mixin Server
+    /** Send the status of messages in bulk to Mixin Server */
     sendAcknowledges: (messages: AcknowledgementRequest[]): Promise<MessageResponse[]> => axiosInstance.post<unknown, MessageResponse[]>('/acknowledgements', messages),
 
-    // Send one message
+    /** Send one message */
     sendOne: send,
 
-    // Send messages in bulk
-    // A maximum of 100 messages can be sent in batch each time, and the message body cannot exceed 128Kb
+    /**
+     * Send messages in bulk
+     * A maximum of 100 messages can be sent in batch each time, and the message body cannot exceed 128Kb
+     */
     sendBatch: (messages: MessageRequest[]) => axiosInstance.post<unknown, any>('/messages', messages),
 
-    // send one kind of message
+    /** send one kind of message */
     sendMsg,
 
     sendText: (userID: string, text: string): Promise<MessageView> => sendMsg(userID, 'PLAIN_TEXT', text),
