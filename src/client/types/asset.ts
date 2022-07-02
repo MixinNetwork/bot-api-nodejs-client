@@ -1,6 +1,7 @@
 export interface DepositEntryResponse {
   destination: string;
   tag: string;
+  properties: string[];
 }
 
 export interface AssetCommonResponse {
