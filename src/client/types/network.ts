@@ -53,7 +53,7 @@ export interface NetworkSnapshotResponse {
   created_at: string;
   snapshot_id: string;
   source: string;
-  type: string; // Options only for user (or App) who has access.
+  type: string;
 
   // 4 private fields that only be returned with correct permission
   user_id?: string;
