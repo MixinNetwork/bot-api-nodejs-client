@@ -7,6 +7,7 @@ export * from './utils';
 export { MVMApi } from './client';
 export { Encoder } from './encoder';
 export { Registry } from './registry';
+export { MixinStorage } from './storage';
 
 export * from './bridge';
 export * from './asset';
