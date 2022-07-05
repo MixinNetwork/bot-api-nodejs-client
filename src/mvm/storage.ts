@@ -12,7 +12,7 @@ const PrivateKey = 'fd9477620edb11e46679122475d61c56d8bfb753fe68ca5565bc1f752c5f
  * * write keccak256 hash of extra as key and extra as value to storage first
  * * then use Registry PID(without '-') + Storage Address(without '0x') + key(without '0x') as new extra
  */
-export class MixinStorage {
+export class StorageContract {
   contract: Contract;
 
   constructor({ address = MVMMainnet.Storage.Contract, uri = MVMMainnet.RPCUri, privateKey = PrivateKey }: { address?: string; uri?: string; privateKey?: string } = {}) {
@@ -43,4 +43,4 @@ export class MixinStorage {
   }
 }
 
-export default MixinStorage;
+export default StorageContract;

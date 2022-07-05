@@ -3,7 +3,7 @@ const {
   MixinApi,
   MVMMainnet,
   Registry,
-  MixinStorage,
+  StorageContract,
   getExtra,
   getExtraWithStorageKey,
 } = require('@mixin.dev/mixin-node-sdk');
@@ -17,7 +17,7 @@ const registry = new Registry({
   address: MVMMainnet.Registry.Contract,
   uri: MVMMainnet.RPCUri,
 });
-const storage = new MixinStorage();
+const storage = new StorageContract();
 
 async function main() {
   const contractReadCount = {

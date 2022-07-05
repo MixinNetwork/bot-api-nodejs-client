@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethers/lib/utils';
-import { getExtra, MixinStorage } from '../../src';
+import { getExtra, StorageContract } from '../../src';
 
 describe('Tests for Storage Contract', () => {
   const contractReadCount = {
@@ -29,7 +29,7 @@ describe('Tests for Storage Contract', () => {
   const key = keccak256(extra);
 
   test('Test for read', async () => {
-    const storage = new MixinStorage();
+    const storage = new StorageContract();
     const storageValue = await storage.readValue(key);
 
     expect(storageValue).toEqual(extra);
