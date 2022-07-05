@@ -3,6 +3,7 @@ import { ContractRequest } from './types';
 import { MixinAssetID } from '../constant';
 import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
+import {MVMMainnet} from "./constant";
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
@@ -70,6 +71,9 @@ export const getExtra = (contracts: ContractRequest[]) => {
 
   return `0x${extra}`;
 };
+
+export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet.Registry.PID, storage: string = MVMMainnet.Storage.Contract) =>
+  `${process.replaceAll('-', '')}${storage.slice(2)}${key.slice(2)}`;
 
 export const parseValueForBridge = (assetId: string, amount: string) => {
   if (assetId === MixinAssetID) {
