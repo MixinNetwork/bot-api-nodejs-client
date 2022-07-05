@@ -24,6 +24,18 @@ export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
      * all params are optional
      */
     generateExtra: async (params: GenerateExtraRequest) => `0x${(await instance.post<undefined, { extra: string }>('/extra', params)).extra}`,
+
+    /**
+     * get the registry asset address of an mixin asset
+     * will return 0x0000000000000000000000000000000000000000 for non existing asset.
+     */
+    getAssetContract: async(id: string) => (await instance.get<undefined, { contract: string }>(`/assets/${id}/contract`)).contract,
+
+    /**
+     * get the mixin asset id of an registry address
+     * will return 00000000-0000-0000-0000-000000000000" for non existing asset.
+     */
+    getContractAsset: async(contract: string) => (await instance.get<undefined, { id: string }>(`/assets/${contract}/id`)).id,
   };
 };
 
