@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { ResponseError } from '../../client/error';
-import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from '../types/bridge';
+import { ResponseError } from 'client/error';
+import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from 'mvm/types/bridge';
 
 export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
   const instance = axios.create({ baseURL: uri });
