@@ -1,6 +1,7 @@
 export interface DepositEntryResponse {
   destination: string;
-  tag: string;
+  tag?: string;
+  properties?: string[];
 }
 
 export interface AssetCommonResponse {
@@ -29,6 +30,9 @@ export interface AssetCommonResponse {
 export interface AssetResponse extends AssetCommonResponse {
   balance: string;
   deposit_entries: DepositEntryResponse[];
+  /**
+   * @Deprecated use deposit_entries
+   */
   destination: string;
   tag: string;
 }

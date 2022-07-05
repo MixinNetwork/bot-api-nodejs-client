@@ -72,7 +72,7 @@ async function main() {
     },
   };
 
-  // 3. Request a code_id，then post /transaction to pay
+  // 4 Request a code_id，then post /transaction to pay
   const res = await mixinClient.payment.request(transactionInput);
   // Or you can use mixin address to pay in Mixin Messenger
   console.log(`mixin://codes/${res.code_id}`);
@@ -80,6 +80,7 @@ async function main() {
   // The original extra is stored in Storage Contract
   const storageValue = await storage.readValue(key);
   console.log(storageValue === extra);
+
 
   // Fetch asset's asset_id using its contract address
   const cnbAssetID = await registry.fetchContractAsset(
