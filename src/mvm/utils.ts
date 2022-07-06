@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { ContractRequest } from './types';
 import { MixinAssetID } from '../constant';
+import { MVMMainnet } from './constant';
 import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
 
@@ -58,7 +59,7 @@ const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRe
   return extra;
 };
 
-// Get total extra for multiple contracts, started with number of contracts
+/**  Get extra for multiple contracts calling, started with number of contracts to be called */
 export const getExtra = (contracts: ContractRequest[]) => {
   if (contracts.length === 0) return '';
   let extra = Buffer.from([0, contracts.length]).toString('hex');
@@ -70,6 +71,10 @@ export const getExtra = (contracts: ContractRequest[]) => {
 
   return `0x${extra}`;
 };
+
+/** Get extra when extra > 200 and save its hash to Storage Contract */
+export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet.Registry.PID, storage: string = MVMMainnet.Storage.Contract) =>
+  `${process.replaceAll('-', '')}${storage.slice(2)}${key.slice(2)}`;
 
 export const parseValueForBridge = (assetId: string, amount: string) => {
   if (assetId === MixinAssetID) {
