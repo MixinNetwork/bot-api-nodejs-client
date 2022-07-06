@@ -1,6 +1,6 @@
 import { BigNumber, Contract, ethers, providers } from 'ethers';
-import { BridgeABI } from '../abis';
-import { MVMMainnet, baseGasLimit } from '../../mvm/constant';
+import { MVMMainnet, baseGasLimit } from 'mvm/constant';
+import { BridgeABI } from 'mvm/abis';
 
 class BridgeContract {
   contract: Contract;
@@ -20,6 +20,15 @@ class BridgeContract {
       gasLimit,
       value,
     });
+
+  vault = (address: string, amount: string) =>
+    this.contract.vault(address, amount);
+
+  bind = (address: string) =>
+    this.contract.bind(address);
+
+  pass = (address: string, amount: string) =>
+    this.contract.pass(address, amount);
 }
 
 export default BridgeContract;
