@@ -8,6 +8,9 @@ export const MVMMainnet = {
   Bridge: {
     Contract: '0x12266b2BbdEAb152f8A0CF83c3997Bc8dbAD0be0'
   },
+  Withdrawal: {
+    Contract: '0xb27C8e0665D2Afa10F50A7CF4D2B9B6B461FD438'
+  },
   Registry: {
     Contract: '0x3c84B6C98FBeB813e05a7A7813F0442883450B1F',
     PID: 'bd670872-76ce-3263-b933-3aa337e212a4',
