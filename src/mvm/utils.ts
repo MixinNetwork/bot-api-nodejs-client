@@ -80,14 +80,14 @@ export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet
 
 /** Get extra for Bridge Contract */
 export const getBridgeExtra = (
-  payload: GenerateExtraRequest,
+  action: GenerateExtraRequest,
   process = MVMMainnet.Registry.PID,
   storage = MVMMainnet.Storage.Contract
 ) => {
-  const payloadStr = serialize(payload);
-  const buf = Buffer.from(payloadStr).toString('hex');
-  const action = ethers.utils.id(payloadStr);
-  return `0x${process.replaceAll('-', '')}${storage.toLowerCase().slice(2)}${action.slice(2)}${buf}`;
+  const actionStr = serialize(action);
+  const actionHex = Buffer.from(actionStr).toString('hex');
+  const actionHash = ethers.utils.id(actionStr);
+  return `0x${process.replaceAll('-', '')}${storage.toLowerCase().slice(2)}${actionHash.slice(2)}${actionHex}`;
 };
 
 export const parseValueForBridge = (assetId: string, amount: string) => {
