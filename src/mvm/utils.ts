@@ -1,5 +1,7 @@
 import { ethers } from 'ethers';
+import serialize from 'serialize-javascript';
 import { ContractRequest } from './types';
+import { GenerateExtraRequest } from './types/bridge';
 import { MixinAssetID } from '../constant';
 import { MVMMainnet } from './constant';
 import { base64RawURLEncode } from '../client/utils/base64';
@@ -75,6 +77,18 @@ export const getExtra = (contracts: ContractRequest[]) => {
 /** Get extra when extra > 200 and save its hash to Storage Contract */
 export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet.Registry.PID, storage: string = MVMMainnet.Storage.Contract) =>
   `${process.replaceAll('-', '')}${storage.slice(2)}${key.slice(2)}`;
+
+/** Get extra for Bridge Contract */
+export const getBridgeExtra = (
+  payload: GenerateExtraRequest,
+  process = MVMMainnet.Registry.PID,
+  storage = MVMMainnet.Storage.Contract
+) => {
+  const payloadStr = serialize(payload);
+  const buf = Buffer.from(payloadStr).toString('hex');
+  const action = ethers.utils.id(payloadStr);
+  return `0x${process.replaceAll('-', '')}${storage.toLowerCase().slice(2)}${action.slice(2)}${buf}`;
+};
 
 export const parseValueForBridge = (assetId: string, amount: string) => {
   if (assetId === MixinAssetID) {
