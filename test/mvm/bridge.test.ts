@@ -1,42 +1,21 @@
 import { Wallet } from 'ethers';
-import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
-import BridgeApi from '../../src/mvm/bridge/client';
+import { BridgeApi, getBridgeExtra } from '../../src';
 
 describe('Tests for BridgeApi', () => {
-  const api = BridgeApi();
-
   test('Test for register', async () => {
-    const result = await api.register({
-      public_key: '0x914DFf811EF12267e1b644d9cb9B65743B98B131',
-    });
+    const api = BridgeApi();
+    const privateKey = '3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5';
 
-    expect(result.contract).toEqual('0x5b6e9BdeD656F70314f9CE818aFF2Af83a2D2f0D');
-    expect(result.created_at).toEqual('2022-06-22T11:08:22.48765745Z');
-    expect(result.full_name).toEqual('0x914DFf811EF12267e1b644d9cb9B65743B98B131');
-    expect(result.user_id).toEqual('3da8327c-aabf-3636-a8ab-3b7990f9bf60');
-  });
+    const wallet = new Wallet(privateKey);
+    const result = await api.register(wallet);
 
-  test('Test for register, use signature', async () => {
-    const api = BridgeApi('https://bridge.pinstripe.mvm.dev');
-
-    const wallet = new Wallet('3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5');
-
-    const message = keccak256(toUtf8Bytes(`MVM:Bridge:Proxy:8MfEmL3g8s-PoDpZ4OcDCUDQPDiH4u1_OmxB0Aaknzg:${wallet.address}`));
-
-    const signature = (await wallet.signMessage(message)).slice(2);
-
-    const result = await api.register({
-      public_key: wallet.address,
-      signature,
-    });
-
-    expect(result.created_at).toEqual('2022-07-01T05:37:41.675196103Z');
+    expect(result.created_at).toEqual('2022-06-23T10:40:21.140700627Z');
     expect(result.full_name).toEqual('0xE2aD78Fdf6C29338f5E2434380740ac889457256');
-    expect(result.user_id).toEqual('8fb4f791-cdf3-30a0-a511-f56d6f3366ba');
+    expect(result.user_id).toEqual('59bba472-b943-3cf0-a505-6289e56a719c');
   });
 
   test('Test for extra', async () => {
-    const result = await api.generateExtra({
+    const result = getBridgeExtra({
       receivers: ['fcb87491-4fa0-4c2f-b387-262b63cbc112'],
       threshold: 1,
       extra: 'Hello from MVM',

@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
+import { Wallet } from 'ethers';
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { ResponseError } from '../../client/error';
-import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from '../types/bridge';
+import { GenerateExtraRequest, RegisteredUser } from '../types/bridge';
 
 export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
   const instance = axios.create({ baseURL: uri });
@@ -9,12 +11,24 @@ export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
     if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
     return res.data;
   });
+
   return {
     /**
      * signature: signature of the user.
      * example: wallet.signMessage(keccak256(toUtf8Bytes(`MVM:Bridge:Proxy:${server_public_key_base64}:${address}`))).slice(2)
      */
-    register: async (params: RegisterRequest) => (await instance.post<undefined, { user: RegisteredUser }>('/users', params)).user,
+    register: async (wallet: Wallet) => {
+      const message = keccak256(toUtf8Bytes(
+        `MVM:Bridge:Proxy:8MfEmL3g8s-PoDpZ4OcDCUDQPDiH4u1_OmxB0Aaknzg:${wallet.address ?? '' }`
+      ));
+      const signature = await wallet.signMessage(message);
+      const params = {
+        public_key: wallet.address,
+        signature
+      };
+      const { user } = await instance.post<undefined, { user: RegisteredUser }>('/users', params);
+      return user;
+    },
     generateExtra: async (params: GenerateExtraRequest) => `0x${(await instance.post<undefined, { extra: string }>('/extra', params)).extra}`,
   };
 };
