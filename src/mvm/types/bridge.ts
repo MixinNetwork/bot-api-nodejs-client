@@ -11,11 +11,6 @@ export interface RegisteredUser {
   };
 }
 
-export interface RegisterRequest {
-  public_key: string;
-  signature?: string;
-}
-
 export interface GenerateExtraRequest {
   destination?: string;
   tag?: string;
