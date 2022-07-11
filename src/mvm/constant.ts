@@ -1,6 +1,8 @@
 export const BlankAddress = '0x0000000000000000000000000000000000000000';
 export const baseGasLimit = 21000 * 20;
 
+export const bridgeServerPrivateKey = '3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5';
+
 // https://bridge.mvm.dev/
 export const MVMMainnet = {
   ChainId: 73927,

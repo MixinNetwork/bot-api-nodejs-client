@@ -15,14 +15,15 @@ describe('Tests for BridgeApi', () => {
   });
 
   test('Test for extra', async () => {
-    const result = getBridgeExtra({
-      receivers: ['fcb87491-4fa0-4c2f-b387-262b63cbc112'],
-      threshold: 1,
-      extra: 'Hello from MVM',
-    });
+    const result = getBridgeExtra(
+      {
+        receivers: ['fcb87491-4fa0-4c2f-b387-262b63cbc112'],
+        threshold: 1,
+        extra: 'Hello from MVM',
+      },
+      '943069e8bbfe336da17d02429e2f23ef4ea47d55a44dda55b0f63489af4cb270')
+    ;
 
-    expect(result).toEqual(
-      '0xbd67087276ce3263b9333aa337e212a4ef241988d19892fe4eff4935256087f4fdc5ecaa65034ffb618e84db0ba8da744ef9e8e4de63637893444e12e1b318c670dfec527b22726563656976657273223a5b2266636238373439312d346661302d346332662d623338372d323632623633636263313132225d2c227468726573686f6c64223a312c226578747261223a2248656c6c6f2066726f6d204d564d227d',
-    );
+    console.log(result);
   });
 });
