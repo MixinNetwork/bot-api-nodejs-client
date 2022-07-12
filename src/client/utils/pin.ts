@@ -44,6 +44,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
     paddings.push(paddingLen);
   }
   buffer.putBytes(Buffer.from(paddings).toString('binary'));
+  const len = buffer.length() + blockSize;
 
   const iv = forge.random.getBytesSync(blockSize);
   const sharedKey = sharedEd25519Key(keystore.pin_token!, keystore.private_key!);
@@ -56,6 +57,6 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   pinBuff.putBytes(iv);
   pinBuff.putBytes(cipher.output.getBytes());
 
-  const encryptedBytes = Buffer.from(pinBuff.getBytes(48), 'binary');
+  const encryptedBytes = Buffer.from(pinBuff.getBytes(len), 'binary');
   return base64RawURLEncode(encryptedBytes);
 };
