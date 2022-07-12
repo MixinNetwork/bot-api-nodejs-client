@@ -1,12 +1,14 @@
 import { Wallet } from 'ethers';
-import { BridgeApi, getBridgeExtra } from '../../src';
+import { keccak256 } from 'ethers/lib/utils';
+import { BridgeApi, getBridgeExtra, getExtraWithStorageKey } from '../../src';
 
 describe('Tests for BridgeApi', () => {
-  test('Test for register', async () => {
-    const api = BridgeApi();
-    const privateKey = '3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5';
+  const api = BridgeApi();
 
-    const wallet = new Wallet(privateKey);
+  const privateKey = '3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5';
+  const wallet = new Wallet(privateKey);
+
+  test('Test for register', async () => {
     const result = await api.register(wallet);
 
     expect(result.created_at).toEqual('2022-06-23T10:40:21.140700627Z');
@@ -15,15 +17,14 @@ describe('Tests for BridgeApi', () => {
   });
 
   test('Test for extra', async () => {
-    const result = getBridgeExtra(
-      {
-        receivers: ['fcb87491-4fa0-4c2f-b387-262b63cbc112'],
-        threshold: 1,
-        extra: 'Hello from MVM',
-      },
-      '943069e8bbfe336da17d02429e2f23ef4ea47d55a44dda55b0f63489af4cb270')
-    ;
-
-    console.log(result);
+    const value = getBridgeExtra({
+      receivers: ['fcb87491-4fa0-4c2f-b387-262b63cbc112'],
+      threshold: 1,
+      extra: 'Hello from MVM',
+    });
+    const key = keccak256(value);
+    // Write to Storage Contract...
+    const extra = getExtraWithStorageKey(key);
+    console.log(extra);
   });
 });

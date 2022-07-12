@@ -1,15 +1,14 @@
 import { ethers } from 'ethers';
-import { keccak256 } from 'ethers/lib/utils';
 import serialize from 'serialize-javascript';
 import { convertPublicKey, convertSecretKey } from 'ed2curve';
 import { sharedKey } from 'curve25519-js';
 import forge from 'node-forge';
 import { ContractRequest } from './types';
 import { GenerateExtraRequest } from './types/bridge';
-import { MixinAssetID } from '../constant';
-import { MVMMainnet, bridgeServerPrivateKey } from './constant';
-import { base64RawURLEncode } from '../client/utils/base64';
 import Encoder from './encoder';
+import { MixinAssetID } from '../constant';
+import { bridgeServerPublicKey, MVMMainnet } from './constant';
+import { getED25519KeyPair, base64RawURLDecode, base64RawURLEncode } from '../client';
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
@@ -78,17 +77,18 @@ export const getExtra = (contracts: ContractRequest[]) => {
   return `0x${extra}`;
 };
 
-/** Get extra when extra > 200 and save its hash to Storage Contract */
+/** Get new extra when extra > 200, and it has been written to Storage Contract */
 export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet.Registry.PID, storage: string = MVMMainnet.Storage.Contract) =>
   `${process.replaceAll('-', '')}${storage.slice(2)}${key.slice(2)}`;
 
-export const signEd25519Action = (action: GenerateExtraRequest, publicKey: string) => {
-  const publicBuffer = Buffer.from(publicKey, 'hex');
-  const privateBuffer = Buffer.from(bridgeServerPrivateKey, 'hex');
-  const key = sharedKey(
-    convertSecretKey(privateBuffer),
-    convertPublicKey(publicBuffer)
-  );
+export const signEd25519Action = (
+  action: GenerateExtraRequest,
+  clientPrivateKey: string,
+  serverPublicKey: string,
+) => {
+  const privateBuffer = convertSecretKey(base64RawURLDecode(clientPrivateKey));
+  const publicBuffer = convertPublicKey(Buffer.from(serverPublicKey, 'hex'));
+  const key = sharedKey(privateBuffer, publicBuffer);
 
   const BLOCK_SIZE = 16;
 
@@ -112,21 +112,21 @@ export const signEd25519Action = (action: GenerateExtraRequest, publicKey: strin
   pinBuff.putBytes(iv);
   pinBuff.putBytes(cipher.output.getBytes());
 
-  const res = publicBuffer.toString('hex') + Buffer.from(pinBuff.getBytes(len), 'binary').toString('hex');
-  return keccak256(`0x${res}`);
+  return Buffer.from(pinBuff.getBytes(len), 'binary').toString('hex');
 };
 
-/** Get extra for Bridge Contract */
-export const getBridgeExtra = (
-  action: GenerateExtraRequest,
-  publicKey: string,
-  process = MVMMainnet.Registry.PID,
-  storage = MVMMainnet.Storage.Contract
-) => {
-  const actionStr = serialize(action);
-  const actionHex = Buffer.from(actionStr).toString('hex');
-  const actionHash = signEd25519Action(action, publicKey);
-  return `0x${process.replaceAll('-', '')}${storage.toLowerCase().slice(2)}${actionHash.slice(2)}${actionHex}`;
+/**
+ * Get extra for Bridge Contract
+ * * action is encrypted by the shared key of the privateKey of client and publicKey of server
+ * * Bridge Extra is the publicKey of client + encrypted action
+ * Considering the privacy protection, extra for Bridge MUST write to Storage Contract with its keccak256 hash and itself
+ * Then the new extra would be Registry PID + Storage Contract Address + keccak256 hash of Bridge Extra (getExtraWithStorageKey)
+ * */
+export const getBridgeExtra = (action: GenerateExtraRequest, serverPublicKey = bridgeServerPublicKey) => {
+  const keyPair = getED25519KeyPair();
+  const encryptedAction = signEd25519Action(action, keyPair.privateKey, serverPublicKey);
+  const publicKeyHex = base64RawURLDecode(keyPair.publicKey).toString('hex');
+  return `0x${publicKeyHex}${encryptedAction}`;
 };
 
 export const parseValueForBridge = (assetId: string, amount: string) => {

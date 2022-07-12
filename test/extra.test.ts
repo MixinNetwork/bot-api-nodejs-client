@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { utils } from 'ethers';
-import { MVMMainnet, getExtra, getBridgeExtra, BridgeApi } from '../src';
+import { MVMMainnet, getExtra } from '../src';
 import { client } from './common';
 
 const value = utils.id('GrayPigeon');
@@ -40,19 +40,5 @@ describe('address', () => {
     const tx = await client.payment.request(input);
     // console.log(tx);
     console.log(`mixin://codes/${tx.code_id}`);
-
-  });
-
-  it('Bridge extra', async () => {
-    const payload = {
-      receivers: ['d53acaa9-6e20-4e35-9cf8-3ea25186e235'],
-      threshold: 1,
-      extra: '123',
-    };
-    const extra = getBridgeExtra(payload);
-
-    const client = BridgeApi();
-    const remoteExtra = await client.generateExtra(payload);
-    expect(extra).toEqual(remoteExtra);
   });
 });
