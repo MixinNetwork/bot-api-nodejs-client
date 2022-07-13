@@ -8,7 +8,8 @@ import { GenerateExtraRequest } from './types/bridge';
 import Encoder from './encoder';
 import { MixinAssetID } from '../constant';
 import { bridgeServerPublicKey, MVMMainnet } from './constant';
-import { getED25519KeyPair, base64RawURLDecode, base64RawURLEncode } from '../client';
+import { base64RawURLDecode, base64RawURLEncode } from '../client/utils/base64';
+import { getED25519KeyPair } from '../client/utils/auth';
 
 // const OperationPurposeUnknown = 0
 const OperationPurposeGroupEvent = 1;
