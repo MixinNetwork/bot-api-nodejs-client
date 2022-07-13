@@ -1,23 +1,31 @@
 const { v4 } = require('uuid');
 const {
-  MixinApi,
   MVMMainnet,
+  MixinApi,
+  BridgeApi,
   Registry,
   StorageContract,
   getExtra,
+  getBridgeExtra,
   getExtraWithStorageKey,
 } = require('@mixin.dev/mixin-node-sdk');
+const { Wallet } = require('ethers');
 const { keccak256 } = require('ethers/lib/utils');
 const keystore = require('../keystore.json');
 
-keystore.user_id = keystore.client_id;
+const walletPrivateKey = '';
+const wallet = new Wallet(walletPrivateKey);
 
+keystore.user_id = keystore.client_id;
 const mixinClient = MixinApi({ keystore });
+const bridgeClient = BridgeApi();
+
 const registry = new Registry({
   address: MVMMainnet.Registry.Contract,
   uri: MVMMainnet.RPCUri,
 });
-const storage = new StorageContract();
+// It costs about 0.001 XIN to write value to Storage, private key of wallet needed.
+const storage = new StorageContract({ privateKey: walletPrivateKey });
 
 async function main() {
   const contractReadCount = {
@@ -84,7 +92,7 @@ async function main() {
   // Fetch asset's asset_id using its contract address
   const cnbAssetID = await registry.fetchContractAsset(
     '0x910Fb1751B946C7D691905349eC5dD250EFBF40a'
-  ); // cnb 的地址
+  );
   console.log(cnbAssetID._hex);
 
   // Fetch asset's contract address using its asset_id
@@ -98,6 +106,31 @@ async function main() {
     '2fd00f14-ed87-4aaf-ab91-e37659a65a25'
   );
   console.log(userAddress);
+
+  // Bind wallet address to mvm user contract
+  const user = bridgeClient.register(wallet); // need wallet to sign the message
+  console.log(user);
+
+  // Generate extra for depositing to mvm
+  // deposit params
+  const action = {
+    'receivers': ['58099349-b159-4662-ad51-c18e809c9035'],
+    'threshold': 1,
+    'extra': 'blahblahblah'
+  };
+  // get public_key || encrypted_action
+  // 1 generate ed25519 pairs
+  // 2 encrypt action with private key and public key from server
+  // 3 return public_key || encrypted_action
+  const value = getBridgeExtra(action);
+
+  // Bridge extra MUST be written to Storage Contract
+  const bridgeKey = keccak256(value);
+  await storage.writeValue(value, bridgeKey);
+
+  // Extra for bridge would be process || storage || key
+  const bridgeExtra = getExtraWithStorageKey(bridgeKey);
+  console.log(bridgeExtra);
 }
 
 main();
