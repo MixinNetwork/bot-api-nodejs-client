@@ -79,7 +79,7 @@ export const getExtra = (contracts: ContractRequest[]) => {
 
 /** Get new extra when extra > 200, and it has been written to Storage Contract */
 export const getExtraWithStorageKey = (key: string, process: string = MVMMainnet.Registry.PID, storage: string = MVMMainnet.Storage.Contract) =>
-  `${process.replaceAll('-', '')}${storage.slice(2)}${key.slice(2)}`;
+  `${process.replaceAll('-', '')}${storage.toLowerCase().slice(2)}${key.slice(2)}`;
 
 export const signEd25519Action = (
   action: GenerateExtraRequest,
