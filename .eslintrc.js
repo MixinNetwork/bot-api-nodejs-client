@@ -6,34 +6,25 @@ module.exports = {
     'jest/globals': true,
   },
   extends: ['airbnb-base', 'prettier'],
+  plugins: ['@typescript-eslint', 'jest'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'prettier', 'jest'],
   rules: {
     'no-bitwise': 'off',
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',
-    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-    camelcase: 'off',
     'no-underscore-dangle': 'off',
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'no-redeclare': 'off',
     '@typescript-eslint/no-redeclare': ['error'],
+    camelcase: 'off',
 
-    'semi': 'off',
-    '@typescript-eslint/semi': ['error'],
-
-    'indent': ['error', 2],
-
-    quotes: ['error', 'single', { 'allowTemplateLiterals': true }],
-
-    // todo remove
-    // 'no-redeclare': 'off',
+    // toro remove
     'no-use-before-define': 'off',
     'no-param-reassign': 'off',
   },

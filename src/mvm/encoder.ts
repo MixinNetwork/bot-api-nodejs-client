@@ -9,7 +9,7 @@ const AggregatedSignaturePrefix = 0xff01;
 const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
-export const integerToBytes =  (x: number) => {
+export const integerToBytes = (x: number) => {
   const bytes = [];
   let i = x;
   do {

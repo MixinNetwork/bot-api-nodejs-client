@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-unresolved */
 const { MVMApi, MVMMainnet, getExtra } = require('@mixin.dev/mixin-node-sdk');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json');
@@ -23,13 +25,7 @@ async function main() {
     method: 'addOne', // contract function
   };
   // contracts array
-  const contracts = [
-    contractReadCount,
-    contractAddOneCount,
-    contractReadCount,
-    contractAddAnyCount,
-    contractReadCount,
-  ];
+  const contracts = [contractReadCount, contractAddOneCount, contractReadCount, contractAddAnyCount, contractReadCount];
 
   // 1 build extra for contracts
   const extra = getExtra(contracts);

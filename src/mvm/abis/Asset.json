@@ -61,9 +61,7 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "remaining", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "remaining", "internalType": "uint256" }],
     "name": "allowance",
     "inputs": [
       { "type": "address", "name": "_owner", "internalType": "address" },
@@ -83,13 +81,9 @@
   {
     "type": "function",
     "stateMutability": "view",
-    "outputs": [
-      { "type": "uint256", "name": "balance", "internalType": "uint256" }
-    ],
+    "outputs": [{ "type": "uint256", "name": "balance", "internalType": "uint256" }],
     "name": "balanceOf",
-    "inputs": [
-      { "type": "address", "name": "_owner", "internalType": "address" }
-    ]
+    "inputs": [{ "type": "address", "name": "_owner", "internalType": "address" }]
   },
   {
     "type": "function",

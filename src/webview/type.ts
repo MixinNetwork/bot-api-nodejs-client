@@ -22,8 +22,8 @@ declare global {
         MixinContext?: any;
         playlist?: { postMessage: Messengers['playlist'] };
         reloadTheme?: { postMessage: Messengers['reloadTheme'] };
-        close?: { postMessage: Messengers['close'] }
-      }
+        close?: { postMessage: Messengers['close'] };
+      };
     };
     MixinContext?: {
       getContext?: Messengers['getContext'];

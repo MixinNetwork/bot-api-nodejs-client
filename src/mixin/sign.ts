@@ -96,7 +96,7 @@ function scalarMulti(curvePriv: any, publicKey: any) {
 }
 
 export function base64url(buffer: Buffer) {
-  return Buffer.from(buffer).toString('base64').replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  return Buffer.from(buffer).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 
 function privateKeyToCurve25519(privateKey: any) {

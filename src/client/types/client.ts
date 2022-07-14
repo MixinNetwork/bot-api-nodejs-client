@@ -2,7 +2,8 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Keystore from './keystore';
 import { BlazeOptions } from './blaze';
 
-export interface RequestConfig extends Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
+export interface RequestConfig
+  extends Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
   responseCallback?: (rep: unknown) => void;
 }
 
@@ -28,8 +29,8 @@ export interface BuildClient {
 export interface RequestClient {
   request: <T>(
     config: Pick<
-    AxiosRequestConfig,
-    'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
-  >,
+      AxiosRequestConfig,
+      'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
+    >,
   ) => Promise<T>;
 }

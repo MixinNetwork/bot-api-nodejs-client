@@ -2,7 +2,7 @@ import Registry from '../../src/mvm/registry';
 import { BlankAddress, MVMTestnet } from '../../src';
 
 describe('Tests for registry', () => {
-  const registry = new Registry({ address: MVMTestnet.Registry.Contract, uri: MVMTestnet.RPCUri});
+  const registry = new Registry({ address: MVMTestnet.Registry.Contract, uri: MVMTestnet.RPCUri });
 
   test('Test for fetch mvm address of mixin asset', async () => {
     const address = await registry.fetchAssetContract('965e5c6e-434c-3fa9-b780-c50f43cd955c');

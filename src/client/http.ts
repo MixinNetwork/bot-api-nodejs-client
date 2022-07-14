@@ -30,29 +30,24 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     return config;
   });
 
-  ins.interceptors.response.use(
-    async (res: AxiosResponse) => {
-      const { data, error } = res.data;
-      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
-      return data;
+  ins.interceptors.response.use(async (res: AxiosResponse) => {
+    const { data, error } = res.data;
+    if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+    return data;
+  });
+
+  ins.interceptors.response.use(undefined, async (e: any) => {
+    await config?.responseCallback?.(e);
+
+    if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
+      if (config?.baseURL) return e.config;
+
+      ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+      e.config.baseURL = ins.defaults.baseURL;
     }
-  );
-
-  ins.interceptors.response.use(
-    undefined,
-    async (e: any) => {
-      await config?.responseCallback?.(e);
-
-      if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
-        if (config?.baseURL) return e.config;
-
-        ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-        e.config.baseURL = ins.defaults.baseURL;
-      }
-      await sleep();
-      return ins(e.config);
-    },
-  );
+    await sleep();
+    return ins(e.config);
+  });
 
   return ins;
 }

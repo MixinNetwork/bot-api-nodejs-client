@@ -77,6 +77,6 @@ describe('Tests for utils', () => {
 
   test('tests for auth', () => {
     expect(signAuthenticationToken('GET', '/me', '', uuid(), keystore)).not.toBe('');
-    expect(signAuthenticationToken('POST', '/me', {foo: 'bar'}, uuid(), keystore)).not.toBe('');
+    expect(signAuthenticationToken('POST', '/me', { foo: 'bar' }, uuid(), keystore)).not.toBe('');
   });
 });
