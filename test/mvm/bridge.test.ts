@@ -1,5 +1,3 @@
-import { Wallet } from 'ethers';
-import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import BridgeApi from '../../src/mvm/bridge/client';
 
 describe('Tests for BridgeApi', () => {
@@ -16,24 +14,25 @@ describe('Tests for BridgeApi', () => {
     expect(result.user_id).toEqual('3da8327c-aabf-3636-a8ab-3b7990f9bf60');
   });
 
-  test('Test for register, use signature', async () => {
-    const api = BridgeApi('https://bridge.pinstripe.mvm.dev');
+  // todo wating for release
+  // test('Test for register, use signature', async () => {
+  //   const api = BridgeApi('https://bridge.pinstripe.mvm.dev');
 
-    const wallet = new Wallet('3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5');
+  //   const wallet = new Wallet('3b793568539ae0211ce15502a7e8b460f76754eb824cf3d59839efe636bbeab5');
 
-    const message = keccak256(toUtf8Bytes(`MVM:Bridge:Proxy:8MfEmL3g8s-PoDpZ4OcDCUDQPDiH4u1_OmxB0Aaknzg:${wallet.address}`));
+  //   const message = keccak256(toUtf8Bytes(`MVM:Bridge:Proxy:8MfEmL3g8s-PoDpZ4OcDCUDQPDiH4u1_OmxB0Aaknzg:${wallet.address}`));
 
-    const signature = (await wallet.signMessage(message)).slice(2);
+  //   const signature = (await wallet.signMessage(message)).slice(2);
 
-    const result = await api.register({
-      public_key: wallet.address,
-      signature,
-    });
+  //   const result = await api.register({
+  //     public_key: wallet.address,
+  //     signature,
+  //   });
 
-    expect(result.created_at).toEqual('2022-07-01T05:37:41.675196103Z');
-    expect(result.full_name).toEqual('0xE2aD78Fdf6C29338f5E2434380740ac889457256');
-    expect(result.user_id).toEqual('8fb4f791-cdf3-30a0-a511-f56d6f3366ba');
-  });
+  //   expect(result.created_at).toEqual('2022-07-01T05:37:41.675196103Z');
+  //   expect(result.full_name).toEqual('0xE2aD78Fdf6C29338f5E2434380740ac889457256');
+  //   expect(result.user_id).toEqual('8fb4f791-cdf3-30a0-a511-f56d6f3366ba');
+  // });
 
   test('Test for extra', async () => {
     const result = await api.generateExtra({
