@@ -11,17 +11,16 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
   request: config => axiosInstance.request(config),
 });
 
-export const buildClient: BuildClient = <KeystoreReturnType>(
-  KeystoreClient: UnionKeystoreClient<KeystoreReturnType>
-): BaseClient<KeystoreReturnType> =>
-    (config: HTTPConfig = {}): any => {
-      if (!KeystoreClient) throw new Error('keystore client is required');
+export const buildClient: BuildClient =
+  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType> =>
+  (config: HTTPConfig = {}): any => {
+    if (!KeystoreClient) throw new Error('keystore client is required');
 
-      const axiosInstance = createAxiosClient(config);
-      const requestClient = createRequestClient(axiosInstance);
+    const axiosInstance = createAxiosClient(config);
+    const requestClient = createRequestClient(axiosInstance);
 
-      const { keystore } = config;
-      const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
+    const { keystore } = config;
+    const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
 
-      return Object.assign(keystoreClient, requestClient);
-    };
+    return Object.assign(keystoreClient, requestClient);
+  };

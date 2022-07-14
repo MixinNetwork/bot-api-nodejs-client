@@ -33,7 +33,7 @@ const keystore = {
   session_id: '',
   pin: '',
   pin_token: '',
-  client_secret: ''
+  client_secret: '',
 };
 const client = MixinApi({ keystore });
 
@@ -57,13 +57,13 @@ const keystore = {
   session_id: '',
   pin: '',
   pin_token: '',
-  client_secret: ''
+  client_secret: '',
 };
 const config = {
   keystore,
   blazeOptions: {
     parse: true,
-    syncAck: true
+    syncAck: true,
   },
 };
 

@@ -1,12 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-unresolved */
 const { v4: uuid } = require('uuid');
-const { 
-  MixinApi, 
-  MixinAssetID,
-  MintMinimumCost,
-  GroupMembers, 
-  GroupThreshold,
-  buildMintCollectibleMemo,
-} = require('@mixin.dev/mixin-node-sdk');
+const { MixinApi, MixinAssetID, MintMinimumCost, GroupMembers, GroupThreshold, buildMintCollectibleMemo } = require('@mixin.dev/mixin-node-sdk');
 const keystore = require('../keystore.json');
 
 const client = MixinApi({ keystore });
@@ -21,11 +16,11 @@ async function main() {
     opponent_multisig: {
       receivers: GroupMembers,
       threshold: GroupThreshold,
-    }
+    },
   };
 
   const payment = await client.payment.request(tr);
-  console.log('mint collectibles', id, `mixin://codes/${ payment.code_id }`);
+  console.log('mint collectibles', id, `mixin://codes/${payment.code_id}`);
 }
 
 main();

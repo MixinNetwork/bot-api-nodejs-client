@@ -8,20 +8,18 @@ const key = utils.keccak256(value);
 console.log(key);
 
 describe('address', () => {
-
   // const contract1 = ({
   //   address: MVMMainnet.Refund.Contract,
   //   method: 'work',
   // });
-  const contract2 = ({
+  const contract2 = {
     address: MVMMainnet.Storage.Contract,
     method: 'read',
     types: ['uint256'],
     values: [key],
-  });
+  };
 
   it('extra', async () => {
-
     const contracts = [contract2];
     const extra = getExtra(contracts);
     console.log(extra);
@@ -32,14 +30,13 @@ describe('address', () => {
       trace_id: v4(),
       opponent_multisig: {
         receivers: MVMMainnet.MVMMembers,
-        threshold: MVMMainnet.MVMThreshold
+        threshold: MVMMainnet.MVMThreshold,
       },
-      memo: extra
+      memo: extra,
     };
 
     const tx = await client.payment.request(input);
     // console.log(tx);
     console.log(`mixin://codes/${tx.code_id}`);
-
   });
 });

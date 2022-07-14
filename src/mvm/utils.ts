@@ -45,7 +45,7 @@ const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRe
   if (types.length !== values.length) return '';
 
   const addr = address.toLocaleLowerCase();
-  const contractAddress = `${ addr.slice(0, 2) === '0x' ? addr.slice(2) : addr }` ;
+  const contractAddress = `${addr.slice(0, 2) === '0x' ? addr.slice(2) : addr}`;
 
   const methodId = getMethodIdByAbi(method, types);
   let contractInput = `${methodId}`;

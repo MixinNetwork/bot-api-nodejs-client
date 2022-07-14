@@ -19,33 +19,35 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions?: 
     syncAck: wsOptions?.syncAck || false,
   };
 
-  const decode = (data: Uint8Array): Promise<MessageView> => new Promise(resolve => {
-    const t = ungzip(data, { to: 'string' });
-    const msgObj = JSON.parse(t);
+  const decode = (data: Uint8Array): Promise<MessageView> =>
+    new Promise(resolve => {
+      const t = ungzip(data, { to: 'string' });
+      const msgObj = JSON.parse(t);
 
-    if (option?.parse && msgObj.data && msgObj.data.data) {
-      msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString();
+      if (option?.parse && msgObj.data && msgObj.data.data) {
+        msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString();
 
-      try {
-        msgObj.data.data = JSON.parse(msgObj.data.data);
-      } catch (e) {
-        // ignore error
+        try {
+          msgObj.data.data = JSON.parse(msgObj.data.data);
+        } catch (e) {
+          // ignore error
+        }
       }
-    }
-    resolve(msgObj.data);
-  });
+      resolve(msgObj.data);
+    });
 
-  const sendRaw = (message: BlazeMessage): Promise<boolean> => new Promise(resolve => {
-    const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
-    const zipped = gzip(buffer);
+  const sendRaw = (message: BlazeMessage): Promise<boolean> =>
+    new Promise(resolve => {
+      const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
+      const zipped = gzip(buffer);
 
-    if (ws!.readyState === WebSocket.OPEN) {
-      ws!.send(zipped);
-      resolve(true);
-    } else {
-      resolve(false);
-    }
-  });
+      if (ws!.readyState === WebSocket.OPEN) {
+        ws!.send(zipped);
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
 
   const heartbeat = () => {
     ws!.on('pong', () => {

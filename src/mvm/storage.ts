@@ -32,10 +32,7 @@ export class StorageContract {
     const storageValue = await this.contract.read(BigNumber.from(key));
     if (storageValue === value) return {};
 
-    return this.contract.write(
-      BigNumber.from(identity),
-      value
-    );
+    return this.contract.write(BigNumber.from(identity), value);
   }
 
   readValue(key: string) {

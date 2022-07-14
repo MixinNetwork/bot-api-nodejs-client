@@ -1,12 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-unresolved */
 const { v4 } = require('uuid');
-const {
-  MixinApi,
-  MVMMainnet,
-  Registry,
-  StorageContract,
-  getExtra,
-  getExtraWithStorageKey,
-} = require('@mixin.dev/mixin-node-sdk');
+const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey } = require('@mixin.dev/mixin-node-sdk');
 const { keccak256 } = require('ethers/lib/utils');
 const keystore = require('../keystore.json');
 
@@ -35,13 +30,7 @@ async function main() {
     method: 'addOne', // contract function
   };
   // contracts array to call
-  const contracts = [
-    contractReadCount,
-    contractAddOneCount,
-    contractReadCount,
-    contractAddAnyCount,
-    contractReadCount,
-  ];
+  const contracts = [contractReadCount, contractAddOneCount, contractReadCount, contractAddAnyCount, contractReadCount];
 
   // 1 build extra for contracts
   const extra = getExtra(contracts);
@@ -82,21 +71,15 @@ async function main() {
   console.log(storageValue === extra);
 
   // Fetch asset's asset_id using its contract address
-  const cnbAssetID = await registry.fetchContractAsset(
-    '0x910Fb1751B946C7D691905349eC5dD250EFBF40a'
-  ); // cnb 的地址
+  const cnbAssetID = await registry.fetchContractAsset('0x910Fb1751B946C7D691905349eC5dD250EFBF40a'); // cnb 的地址
   console.log(cnbAssetID._hex);
 
   // Fetch asset's contract address using its asset_id
-  const btcAssetContract = await registry.fetchAssetContract(
-    'c6d0c728-2624-429b-8e0d-d9d19b6592fa'
-  );
+  const btcAssetContract = await registry.fetchAssetContract('c6d0c728-2624-429b-8e0d-d9d19b6592fa');
   console.log(btcAssetContract);
 
   // Fetch user's corresponding contract address using its client_id
-  const userAddress = await registry.fetchUserContract(
-    '2fd00f14-ed87-4aaf-ab91-e37659a65a25'
-  );
+  const userAddress = await registry.fetchUserContract('2fd00f14-ed87-4aaf-ab91-e37659a65a25');
   console.log(userAddress);
 }
 

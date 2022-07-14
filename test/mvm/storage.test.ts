@@ -17,13 +17,7 @@ describe('Tests for Storage Contract', () => {
     method: 'addOne', // contract function
   };
   // contracts array
-  const contracts = [
-    contractReadCount,
-    contractAddOneCount,
-    contractReadCount,
-    contractAddAnyCount,
-    contractReadCount,
-  ];
+  const contracts = [contractReadCount, contractAddOneCount, contractReadCount, contractAddAnyCount, contractReadCount];
 
   const extra = getExtra(contracts);
   const key = keccak256(extra);

@@ -9,7 +9,7 @@ export interface Context {
 }
 
 export interface Messengers {
-  getContext: () => string;
+  getContext: (args?: string) => string;
   playlist: (audio: string[]) => any;
   reloadTheme: (args?: string) => void;
   close: (args?: string) => void;
@@ -19,11 +19,11 @@ declare global {
   interface Window {
     webkit?: {
       messageHandlers?: {
-        MixinContext?: any;
+        MixinContext?: { postMessage: Messengers['getContext'] };
         playlist?: { postMessage: Messengers['playlist'] };
         reloadTheme?: { postMessage: Messengers['reloadTheme'] };
-        close?: { postMessage: Messengers['close'] }
-      }
+        close?: { postMessage: Messengers['close'] };
+      };
     };
     MixinContext?: {
       getContext?: Messengers['getContext'];

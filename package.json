@@ -32,15 +32,11 @@
     "build": "tsdx build",
     "build:umd": "tsdx build --format umd",
     "test": "tsdx test",
-    "lint": "tsdx lint",
+    "lint": "eslint 'src/**' && prettier --check .",
+    "format": "prettier --write .",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier --write . && eslint 'src/**' --fix && tsdx lint"
-    }
   },
   "author": "contact@mixin.one",
   "module": "dist/mixin-node-sdk.esm.js",
@@ -73,7 +69,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.4.6",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^8.0.1",
     "prettier": "^2.6.2",
     "size-limit": "^7.0.8",
     "tsdx": "^0.14.1",

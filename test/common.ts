@@ -5,13 +5,10 @@ const config = {
   requestConfig: {
     responseCallback: (err: any) => {
       console.log(err);
-    }
+    },
   },
-  keystore
+  keystore,
 };
 const client = MixinApi(config);
 
-export {
-  client ,
-  keystore
-};
+export { client, keystore };
