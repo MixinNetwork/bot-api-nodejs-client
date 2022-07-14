@@ -1,12 +1,5 @@
 const { v4 } = require('uuid');
-const {
-  MixinApi,
-  MVMMainnet,
-  Registry,
-  StorageContract,
-  getExtra,
-  getExtraWithStorageKey,
-} = require('@mixin.dev/mixin-node-sdk');
+const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey } = require('@mixin.dev/mixin-node-sdk');
 const { keccak256 } = require('ethers/lib/utils');
 const keystore = require('../keystore.json');
 
@@ -50,11 +43,7 @@ async function main() {
     const { error } = storage.writeValue(finalExtra, key);
     if (error) throw new Error(error);
 
-    finalExtra = getExtraWithStorageKey(
-      key,
-      MVMMainnet.Registry.PID,
-      MVMMainnet.Storage.Contract
-    );
+    finalExtra = getExtraWithStorageKey(key, MVMMainnet.Registry.PID, MVMMainnet.Storage.Contract);
 
     // The original extra is stored in Storage Contract
     const storageValue = await storage.readValue(key);
@@ -83,29 +72,20 @@ async function main() {
     console.log(`mixin://codes/${res.code_id}`);
   } else {
     // Or you can pay with the bot according to keystore, your bot must have the enough asset to pay
-    const res = await mixinClient.transfer.toAddress(
-      keystore.pin,
-      transactionInput
-    );
+    const res = await mixinClient.transfer.toAddress(keystore.pin, transactionInput);
     console.log(res);
   }
 
   // Fetch asset's asset_id using its contract address
-  const cnbAssetID = await registry.fetchContractAsset(
-    '0x910Fb1751B946C7D691905349eC5dD250EFBF40a'
-  ); // cnb 的地址
+  const cnbAssetID = await registry.fetchContractAsset('0x910Fb1751B946C7D691905349eC5dD250EFBF40a'); // cnb 的地址
   console.log(cnbAssetID._hex);
 
   // Fetch asset's contract address using its asset_id
-  const btcAssetContract = await registry.fetchAssetContract(
-    'c6d0c728-2624-429b-8e0d-d9d19b6592fa'
-  );
+  const btcAssetContract = await registry.fetchAssetContract('c6d0c728-2624-429b-8e0d-d9d19b6592fa');
   console.log(btcAssetContract);
 
   // Fetch user's corresponding contract address using its client_id
-  const userAddress = await registry.fetchUserContract(
-    '2fd00f14-ed87-4aaf-ab91-e37659a65a25'
-  );
+  const userAddress = await registry.fetchUserContract('2fd00f14-ed87-4aaf-ab91-e37659a65a25');
   console.log(userAddress);
 }
 

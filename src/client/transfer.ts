@@ -35,7 +35,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     const request: TransferRequest = {
       ...params,
       pin: signEd25519PIN(pin, keystore),
-      memo: encodeMemo(memo, process)
+      memo: encodeMemo(memo, process),
     };
     return axiosInstance.post<unknown, SnapshotResponse>('/transfers', request);
   },
@@ -48,7 +48,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     const request: RawTransactionRequest = {
       ...params,
       pin: signEd25519PIN(pin, keystore),
-      memo: encodeMemo(memo, process)
+      memo: encodeMemo(memo, process),
     };
     return axiosInstance.post<unknown, SnapshotResponse>('/transactions', request);
   },
