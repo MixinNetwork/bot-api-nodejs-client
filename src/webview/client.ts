@@ -4,7 +4,7 @@ export const WebViewApi = () => {
   const getMixinContext = () => {
     let ctx: Context = {};
     if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
-      const contextString = prompt('MixinContext.getContext()');
+      const contextString = window.webkit.messageHandlers.MixinContext.postMessage('');
       if (contextString) {
         ctx = JSON.parse(contextString);
         ctx.platform = ctx.platform || 'iOS';
