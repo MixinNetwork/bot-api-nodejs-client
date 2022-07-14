@@ -49,3 +49,5 @@ export const MVMTestnet = {
 };
 
 export const MVMApiTestURI = 'https://api.test.mvm.dev';
+// FIXME: mvmapi for mainnet is not deploed yet
+export const MVMApiURI = 'https://api.mvm.dev'
