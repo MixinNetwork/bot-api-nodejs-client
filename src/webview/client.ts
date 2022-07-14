@@ -1,6 +1,6 @@
 import { Context } from './type';
 
-export const WebviewApi = () => {
+export const WebViewApi = () => {
   const getMixinContext = () => {
     let ctx: Context = {};
     if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
