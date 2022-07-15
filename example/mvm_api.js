@@ -1,13 +1,11 @@
-/* eslint-disable no-console */
-/* eslint-disable import/no-unresolved */
-const { MVMApi, MVMMainnet, getExtra } = require('@mixin.dev/mixin-node-sdk');
+const { MVMApi, MVMMainnet, MVMApiURI, getExtra } = require('@mixin.dev/mixin-node-sdk');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
 
-// TODO: MVMApi deployed url
-const mvmClient = MVMApi('http://localhost:9091');
+// FIXME: mvmapi for mainnet is not deploed yet
+const mvmClient = MVMApi(MVMApiURI);
 
 async function main() {
   const contractReadCount = {
@@ -29,6 +27,8 @@ async function main() {
 
   // 1 build extra for contracts
   const extra = getExtra(contracts);
+  console.log(extra.length);
+
   // 2 build request to generate payment
   const transactionInput = {
     // '965e5c6e-434c-3fa9-b780-c50f43cd955c' cnb asset_id
@@ -42,11 +42,10 @@ async function main() {
     },
   };
 
-  console.log(extra.length);
-  // 3. when extra.length > 200，use mvmClient.payments() to get code_id，then post /transaction to pay
+  // 3. When extra.length > 200
+  // use mvmClient.payments() to get code_id,
+  // then pay with code_id in Mixin Messenger
   const res = await mvmClient.payments(transactionInput);
-  console.log(res);
-  // you can also use mixin address to pay in Mixin Messenger
   console.log(`mixin://codes/${res.code_id}`);
 }
 

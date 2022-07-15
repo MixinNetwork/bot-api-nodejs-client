@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { PaymentRequestResponse } from '../client';
 import { PaymentRequest, ValueResponse } from './types';
+import ResponseError from '../client/error';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
@@ -18,7 +19,11 @@ export const MVMApi = (uri: string) => {
   });
 
   instance.interceptors.response.use(
-    async (res: AxiosResponse) => res.data,
+    async (res: AxiosResponse) => {
+      const { error } = res.data;
+      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+      return res.data;
+    },
     err => {
       throw new Error(`${err.response.status}, ${err.response.statusText}`);
     },

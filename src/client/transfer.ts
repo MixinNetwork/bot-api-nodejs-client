@@ -5,6 +5,7 @@ import { TransferRequest } from './types/transfer';
 import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
 import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
+import { encodeMemo, MVMMainnet } from '../mvm';
 
 /**
  * Methods to transfer asset, withdraw and obtain transfer information
@@ -27,16 +28,28 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
    * If you encounter 500 error, do it over again
    * If you see the error 20119 password is wrong, do not try again. It is recommended to call the PIN Verification API to confirm
    */
-  toUser: (pin: string, params: TransferRequest): Promise<SnapshotResponse> => {
-    const encrypted = signEd25519PIN(pin, keystore);
-    const request: TransferRequest = { ...params, pin: encrypted };
+  toUser: (pin: string, params: TransferRequest, process = MVMMainnet.Registry.PID): Promise<SnapshotResponse> => {
+    let memo = params.memo ? params.memo : '';
+    memo = memo.slice(0, 2) === '0x' ? memo.slice(2) : memo;
+
+    const request: TransferRequest = {
+      ...params,
+      pin: signEd25519PIN(pin, keystore),
+      memo: encodeMemo(memo, process),
+    };
     return axiosInstance.post<unknown, SnapshotResponse>('/transfers', request);
   },
 
   /** Send raw transactions to the mainnet or multisig address */
-  toAddress: (pin: string, params: RawTransactionRequest): Promise<SnapshotResponse> => {
-    const encrypted = signEd25519PIN(pin, keystore);
-    const request: RawTransactionRequest = { ...params, pin: encrypted };
+  toAddress: (pin: string, params: RawTransactionRequest, process = MVMMainnet.Registry.PID): Promise<SnapshotResponse> => {
+    let memo = params.memo ? params.memo : '';
+    memo = memo.slice(0, 2) === '0x' ? memo.slice(2) : memo;
+
+    const request: RawTransactionRequest = {
+      ...params,
+      pin: signEd25519PIN(pin, keystore),
+      memo: encodeMemo(memo, process),
+    };
     return axiosInstance.post<unknown, SnapshotResponse>('/transactions', request);
   },
 
