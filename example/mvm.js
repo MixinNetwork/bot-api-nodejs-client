@@ -6,11 +6,11 @@ const keystore = require('../keystore.json');
 keystore.user_id = keystore.client_id;
 const mixinClient = MixinApi({
   requestConfig: {
-    responseCallback: (err) => {
-      console.log(err)
-    }
+    responseCallback: err => {
+      console.log(err);
+    },
   },
-  keystore
+  keystore,
 });
 
 const registry = new Registry({
