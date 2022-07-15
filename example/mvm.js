@@ -4,7 +4,14 @@ const { keccak256 } = require('ethers/lib/utils');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
-const mixinClient = MixinApi({ keystore });
+const mixinClient = MixinApi({
+  requestConfig: {
+    responseCallback: (err) => {
+      console.log(err)
+    }
+  },
+  keystore
+});
 
 const registry = new Registry({
   address: MVMMainnet.Registry.Contract,
