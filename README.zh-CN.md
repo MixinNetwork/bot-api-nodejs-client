@@ -1,6 +1,6 @@
 # bot-api-nodejs-client
 
-mixin 的 nodejs 版 sdk
+mixin 的 js 版 sdk
 
 ## 新版本特性
 
@@ -14,7 +14,7 @@ mixin 的 nodejs 版 sdk
 npm install @mixin.dev/mixin-node-sdk
 ```
 
-如果你使用 `yarn`
+使用 `yarn` 安装
 
 ```shell
 yarn add @mixin.dev/mixin-node-sdk
@@ -46,7 +46,7 @@ async function getMe() {
 }
 ```
 
-2. 使用 Mixin 的消息功能()
+2. 使用 Mixin 的消息功能
 
 ```js
 const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
@@ -83,6 +83,6 @@ client.blaze.loop({
 
 > 1. [https://developers.mixin.one/docs/api-overview](https://developers.mixin.one/docs/api-overview)
 
-## License
+## 版本所有
 
-Copyright 2021 Mixin.
+Copyright 2022 Mixin.
