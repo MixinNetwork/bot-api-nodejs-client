@@ -21,7 +21,7 @@ export const MVMApi = (uri: string) => {
   instance.interceptors.response.use(
     async (res: AxiosResponse) => {
       const { error } = res.data;
-      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+      if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, error.requestId, error);
       return res.data;
     },
     err => {
