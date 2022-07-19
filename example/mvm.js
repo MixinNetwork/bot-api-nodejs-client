@@ -1,6 +1,6 @@
 const { v4 } = require('uuid');
-const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey, encodeMemo } = require('@mixin.dev/mixin-node-sdk');
 const { keccak256 } = require('ethers/lib/utils');
+const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey, encodeMemo } = require('..');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
@@ -23,12 +23,6 @@ async function main() {
   const contractReadCount = {
     address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
     method: 'count', // contract function
-  };
-  const contractAddAnyCount = {
-    address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
-    method: 'addAny', // contract function
-    types: ['uint256'], // function parameters type array
-    values: [2], // function parameters value array
   };
   const contractAddOneCount = {
     address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
@@ -72,7 +66,7 @@ async function main() {
   };
 
   // 4 Send transaction
-  const way = 'transaction';
+  const way = 'code_id';
   if (way === 'code_id') {
     // You can Request a code_id, and pay in mixin messenger with code_id
     const res = await mixinClient.payment.request(transactionInput);

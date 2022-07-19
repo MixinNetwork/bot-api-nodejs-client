@@ -1,5 +1,5 @@
-const { MVMApi, MVMMainnet, MVMApiURI, getExtra, encodeMemo } = require('@mixin.dev/mixin-node-sdk');
 const { v4 } = require('uuid');
+const { MVMApi, MVMMainnet, MVMApiURI, getExtra, encodeMemo } = require('..');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
