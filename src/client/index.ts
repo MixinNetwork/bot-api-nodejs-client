@@ -22,6 +22,7 @@ export { UserClient } from './user';
 export { BlazeClient } from './blaze';
 export * from './mixin-client';
 
+export { MintMinimumCost, GroupMembers, GroupThreshold } from './collectible';
 export { mixinRequest } from './http';
 export { ResponseError } from './error';
 export * from './utils';
