@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey } = require('@mixin.dev/mixin-node-sdk');
+const { MixinApi, MVMMainnet, Registry, StorageContract, getExtra, getExtraWithStorageKey, encodeMemo } = require('@mixin.dev/mixin-node-sdk');
 const { keccak256 } = require('ethers/lib/utils');
 const keystore = require('../keystore.json');
 
@@ -21,17 +21,17 @@ const storage = new StorageContract();
 
 async function main() {
   const contractReadCount = {
-    address: '0xAAD1736090A126687c318cB67B369A31eBcFc19a', // contract address
+    address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
     method: 'count', // contract function
   };
   const contractAddAnyCount = {
-    address: '0xAAD1736090A126687c318cB67B369A31eBcFc19a', // contract address
+    address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
     method: 'addAny', // contract function
     types: ['uint256'], // function parameters type array
     values: [2], // function parameters value array
   };
   const contractAddOneCount = {
-    address: '0xAAD1736090A126687c318cB67B369A31eBcFc19a', // contract address
+    address: '0x2E8f70631208A2EcFC6FA47Baf3Fde649963baC7', // contract address
     method: 'addOne', // contract function
   };
   // contracts array to call
@@ -39,14 +39,14 @@ async function main() {
 
   // 1 build extra for contracts
   const extra = getExtra(contracts);
-  let finalExtra = extra;
   console.log(extra.length);
-  const key = keccak256(finalExtra);
+  let finalExtra = extra;
 
   // 2 if extra.length > 200
   //   write keccak256 hash of extra as key to Storage contract，
   //   then build a new extra with key
   if (extra.length > 200) {
+    const key = keccak256(finalExtra);
     const { error } = storage.writeValue(finalExtra, key);
     if (error) throw new Error(error);
 
@@ -64,7 +64,7 @@ async function main() {
     asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c',
     amount: '0.00000001',
     trace_id: v4(),
-    memo: finalExtra,
+    memo: encodeMemo(finalExtra, MVMMainnet.Registry.PID),
     opponent_multisig: {
       receivers: MVMMainnet.MVMMembers,
       threshold: MVMMainnet.MVMThreshold,
