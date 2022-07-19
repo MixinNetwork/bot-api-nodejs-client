@@ -9,7 +9,7 @@ export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
 export { CodeClient } from './code';
 export { CircleClient } from './circle';
-export { CollectibleClient } from './collectible';
+export { CollectibleClient, MintMinimumCost, GroupMembers, GroupThreshold } from './collectible';
 export { ConversationClient } from './conversation';
 export { MessageClient } from './message';
 export { MultisigClient } from './multisig';
@@ -22,7 +22,6 @@ export { UserClient } from './user';
 export { BlazeClient } from './blaze';
 export * from './mixin-client';
 
-export { MintMinimumCost, GroupMembers, GroupThreshold } from './collectible';
 export { mixinRequest } from './http';
 export { ResponseError } from './error';
 export * from './utils';
