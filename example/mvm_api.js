@@ -1,10 +1,9 @@
-const { MVMApi, MVMMainnet, MVMApiURI, getExtra } = require('@mixin.dev/mixin-node-sdk');
+const { MVMApi, MVMMainnet, MVMApiURI, getExtra, encodeMemo } = require('@mixin.dev/mixin-node-sdk');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
 
-// FIXME: mvmapi for mainnet is not deploed yet
 const mvmClient = MVMApi(MVMApiURI);
 
 async function main() {
@@ -35,7 +34,7 @@ async function main() {
     asset_id: 'c94ac88f-4671-3976-b60a-09064f1811e8', // XIN asset_id
     amount: '0.00000001',
     trace_id: v4(),
-    memo: extra,
+    memo: encodeMemo(extra, MVMMainnet.Registry.PID),
     opponent_multisig: {
       receivers: MVMMainnet.MVMMembers,
       threshold: MVMMainnet.MVMThreshold,

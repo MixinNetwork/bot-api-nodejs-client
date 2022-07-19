@@ -10,20 +10,16 @@ const OperationPurposeGroupEvent = 1;
 // const OperationPurposeAddProcess = 11
 // const OperationPurposeCreditProcess = 12
 
-export const buildMemo = (contract: string, memo: string, isDelegateCall: boolean) => {
-  const op = isDelegateCall ? '01' : '00';
-  const address = contract.toLowerCase().slice(2);
-  return `${op}${address}${memo}`;
-};
-
 // TODO: writeBytes twice why?
 export const encodeMemo = (extra: string, process: string): string => {
+  const pureExtra = extra.slice(0, 2) === '0x' ? extra.slice(2) : extra;
+
   const enc = new Encoder(Buffer.from([]));
   enc.writeInt(OperationPurposeGroupEvent);
   enc.writeUUID(process);
   enc.writeBytes(Buffer.from([]));
   enc.writeBytes(Buffer.from([]));
-  enc.writeBytes(Buffer.from(extra, 'hex'));
+  enc.writeBytes(Buffer.from(pureExtra, 'hex'));
   return base64RawURLEncode(enc.buf);
 };
 

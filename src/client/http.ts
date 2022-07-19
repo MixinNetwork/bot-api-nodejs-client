@@ -32,7 +32,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
 
   ins.interceptors.response.use(async (res: AxiosResponse) => {
     const { data, error } = res.data;
-    if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['X-Request-Id'], error);
+    if (error) throw new ResponseError(error.code, error.description, error.status, error.extra, res.headers['x-request-id'], error);
     return data;
   });
 

@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { utils } from 'ethers';
-import { MVMMainnet, getExtra } from '../src';
+import { MVMMainnet, getExtra, encodeMemo } from '../src';
 import { client } from './common';
 
 const value = utils.id('GrayPigeon');
@@ -32,7 +32,7 @@ describe('address', () => {
         receivers: MVMMainnet.MVMMembers,
         threshold: MVMMainnet.MVMThreshold,
       },
-      memo: extra,
+      memo: encodeMemo(extra, MVMMainnet.Registry.PID),
     };
 
     const tx = await client.payment.request(input);
