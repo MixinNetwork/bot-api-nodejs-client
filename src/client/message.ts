@@ -2,11 +2,10 @@ import { AxiosInstance } from 'axios';
 import { v4 as uuid } from 'uuid';
 import Keystore from './types/keystore';
 import {
-  MessageResponse,
   AcknowledgementRequest,
+  AcknowledgementResponse,
   MessageCategory,
   MessageRequest,
-  MessageView,
   StickerMessageRequest,
   ImageMessageRequest,
   AudioMessageRequest,
@@ -34,24 +33,26 @@ import { buildClient } from './utils/client';
 export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
-  const sendMsg = (recipientID: string, category: MessageCategory, data: any): Promise<MessageView> => {
+  const sendMsg = async (recipientID: string, category: MessageCategory, data: any): Promise<MessageRequest> => {
     if (typeof data === 'object') data = JSON.stringify(data);
 
-    return send({
+    const messageRequest = {
       category,
       recipient_id: recipientID,
       conversation_id: uniqueConversationID(keystore!.user_id, recipientID),
       message_id: uuid(),
       data: base64url(Buffer.from(data)),
-    });
+    };
+    await send(messageRequest);
+    return messageRequest;
   };
 
   return {
     /** Send the status of single message in bulk to Mixin Server */
-    sendAcknowledgement: (message: AcknowledgementRequest): Promise<MessageResponse[]> => axiosInstance.post<unknown, MessageResponse[]>('/acknowledgements', [message]),
+    sendAcknowledgement: (message: AcknowledgementRequest): Promise<AcknowledgementResponse[]> => axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', [message]),
 
     /** Send the status of messages in bulk to Mixin Server */
-    sendAcknowledges: (messages: AcknowledgementRequest[]): Promise<MessageResponse[]> => axiosInstance.post<unknown, MessageResponse[]>('/acknowledgements', messages),
+    sendAcknowledges: (messages: AcknowledgementRequest[]): Promise<AcknowledgementResponse[]> => axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', messages),
 
     /** Send one message */
     sendOne: send,
@@ -65,33 +66,33 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
     /** send one kind of message */
     sendMsg,
 
-    sendText: (userID: string, text: string): Promise<MessageView> => sendMsg(userID, 'PLAIN_TEXT', text),
+    sendText: (userID: string, text: string): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_TEXT', text),
 
-    sendSticker: (userID: string, sticker: StickerMessageRequest) => sendMsg(userID, 'PLAIN_STICKER', sticker),
+    sendSticker: (userID: string, sticker: StickerMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_STICKER', sticker),
 
-    sendImage: (userID: string, image: ImageMessageRequest): Promise<MessageView> => sendMsg(userID, 'PLAIN_IMAGE', image),
+    sendImage: (userID: string, image: ImageMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_IMAGE', image),
 
-    sendAudio: (userID: string, audio: AudioMessageRequest) => sendMsg(userID, 'PLAIN_AUDIO', audio),
+    sendAudio: (userID: string, audio: AudioMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_AUDIO', audio),
 
-    sendVideo: (userID: string, video: VideoMessageRequest) => sendMsg(userID, 'PLAIN_VIDEO', video),
+    sendVideo: (userID: string, video: VideoMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_VIDEO', video),
 
-    sendContact: (userID: string, contact: ContactMessageRequest) => sendMsg(userID, 'PLAIN_CONTACT', contact),
+    sendContact: (userID: string, contact: ContactMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_CONTACT', contact),
 
-    sendAppCard: (userID: string, appCard: AppCardMessageRequest): Promise<MessageView> => sendMsg(userID, 'APP_CARD', appCard),
+    sendAppCard: (userID: string, appCard: AppCardMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'APP_CARD', appCard),
 
-    sendFile: (userID: string, file: FileMessageRequest): Promise<MessageView> => sendMsg(userID, 'PLAIN_DATA', file),
+    sendFile: (userID: string, file: FileMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_DATA', file),
 
-    sendLive: (userID: string, live: LiveMessageRequest) => sendMsg(userID, 'PLAIN_LIVE', live),
+    sendLive: (userID: string, live: LiveMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_LIVE', live),
 
-    sendLocation: (userID: string, location: LocationMessageRequest) => sendMsg(userID, 'PLAIN_LOCATION', location),
+    sendLocation: (userID: string, location: LocationMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_LOCATION', location),
 
-    sendPost: (userID: string, text: string): Promise<MessageView> => sendMsg(userID, 'PLAIN_POST', text),
+    sendPost: (userID: string, text: string): Promise<MessageRequest> => sendMsg(userID, 'PLAIN_POST', text),
 
-    sendAppButton: (userID: string, appButton: AppButtonMessageRequest[]) => sendMsg(userID, 'APP_BUTTON_GROUP', appButton),
+    sendAppButton: (userID: string, appButton: AppButtonMessageRequest[]): Promise<MessageRequest> => sendMsg(userID, 'APP_BUTTON_GROUP', appButton),
 
-    sendTransfer: (userID: string, transfer: TransferMessageRequest) => sendMsg(userID, 'SYSTEM_ACCOUNT_SNAPSHOT', transfer),
+    sendTransfer: (userID: string, transfer: TransferMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'SYSTEM_ACCOUNT_SNAPSHOT', transfer),
 
-    sendRecall: (userID: string, message: RecallMessageRequest) => sendMsg(userID, 'MESSAGE_RECALL', message),
+    sendRecall: (userID: string, message: RecallMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'MESSAGE_RECALL', message),
   };
 };
 
