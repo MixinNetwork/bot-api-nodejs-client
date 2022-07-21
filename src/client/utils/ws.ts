@@ -17,7 +17,7 @@ export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageV
   }
 
   return msgObj.data;
-}
+};
 
 export const sendRaw = (ws: WebSocket, message: BlazeMessage): boolean => {
   const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
@@ -28,4 +28,4 @@ export const sendRaw = (ws: WebSocket, message: BlazeMessage): boolean => {
     return true;
   }
   return false;
-}
+};

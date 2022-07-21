@@ -10,8 +10,8 @@ export function websocket(
   handler: BlazeHandler,
   option: BlazeOptions = {
     parse: false,
-    syncAck: false
-  }
+    syncAck: false,
+  },
 ): WebSocket {
   const jwtToken = signAccessToken('GET', '/', '', uuid(), keystore) || '';
   const headers = {
@@ -21,7 +21,7 @@ export function websocket(
     headers,
     handshakeTimeout: 3000,
   });
-  
+
   ws.onmessage = async event => {
     const msg = decodeMessage(event.data as Uint8Array, option);
     if (!msg) return;

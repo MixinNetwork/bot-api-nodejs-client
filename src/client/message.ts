@@ -49,10 +49,12 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
 
   return {
     /** Send the status of single message in bulk to Mixin Server */
-    sendAcknowledgement: (message: AcknowledgementRequest): Promise<AcknowledgementResponse[]> => axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', [message]),
+    sendAcknowledgement: (message: AcknowledgementRequest): Promise<AcknowledgementResponse[]> =>
+      axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', [message]),
 
     /** Send the status of messages in bulk to Mixin Server */
-    sendAcknowledges: (messages: AcknowledgementRequest[]): Promise<AcknowledgementResponse[]> => axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', messages),
+    sendAcknowledges: (messages: AcknowledgementRequest[]): Promise<AcknowledgementResponse[]> =>
+      axiosInstance.post<unknown, AcknowledgementResponse[]>('/acknowledgements', messages),
 
     /** Send one message */
     sendOne: send,

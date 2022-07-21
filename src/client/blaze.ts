@@ -10,7 +10,7 @@ const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
   let url = wsHostURL[0];
   let ws: WebSocket | null;
-  let isAlive = false
+  let isAlive = false;
   let pingInterval: ReturnType<typeof setInterval> | null;
 
   const heartbeat = () => {
@@ -30,7 +30,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
       ws!.ping();
     }, 1000 * 30);
   };
-  
+
   const loopBlaze = (h: BlazeHandler) => {
     ws = websocket(keystore, url, h, wsOptions);
     heartbeat();
