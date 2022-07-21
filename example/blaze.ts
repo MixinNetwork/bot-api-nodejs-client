@@ -14,7 +14,7 @@ const handler = {
   // callback when bot receive message
   onMessage: async msg => {
     const user = await client.user.fetch(msg.user_id);
-    console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`, );
+    console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`);
 
     // make your bot automatically reply
     const res = await client.message.sendText(msg.user_id, 'received');
