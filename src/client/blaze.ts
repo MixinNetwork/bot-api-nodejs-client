@@ -54,7 +54,6 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   return {
     loop: (h: BlazeHandler) => {
       if (!h.onMessage) throw new Error('OnMessage not set');
-      console.log('open', new Date().getTime());
       loopBlaze(h);
     },
   };
