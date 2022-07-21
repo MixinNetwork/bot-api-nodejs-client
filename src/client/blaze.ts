@@ -1,53 +1,17 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
-import { gzip, ungzip } from 'pako';
 import Keystore from './types/keystore';
-import { MessageView } from './types/message';
-import { BlazeOptions, BlazeHandler, BlazeMessage } from './types/blaze';
+import { BlazeOptions, BlazeHandler } from './types';
 import { websocket } from './ws';
+import { sendRaw } from './utils';
 
-const hostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
+const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 
-export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions?: BlazeOptions) => {
-  let url = hostURL[0];
-  let ws: WebSocket | null = null;
-  let isAlive = false;
-  let pingInterval: ReturnType<typeof setInterval> | null = null;
-
-  const option: BlazeOptions = {
-    parse: wsOptions?.parse || false,
-    syncAck: wsOptions?.syncAck || false,
-  };
-
-  const decode = (data: Uint8Array): Promise<MessageView> =>
-    new Promise(resolve => {
-      const t = ungzip(data, { to: 'string' });
-      const msgObj = JSON.parse(t);
-
-      if (option?.parse && msgObj.data && msgObj.data.data) {
-        msgObj.data.data = Buffer.from(msgObj.data.data, 'base64').toString();
-
-        try {
-          msgObj.data.data = JSON.parse(msgObj.data.data);
-        } catch (e) {
-          // ignore error
-        }
-      }
-      resolve(msgObj.data);
-    });
-
-  const sendRaw = (message: BlazeMessage): Promise<boolean> =>
-    new Promise(resolve => {
-      const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
-      const zipped = gzip(buffer);
-
-      if (ws!.readyState === WebSocket.OPEN) {
-        ws!.send(zipped);
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-    });
+export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
+  let url = wsHostURL[0];
+  let ws: WebSocket | null;
+  let isAlive = false
+  let pingInterval: ReturnType<typeof setInterval> | null;
 
   const heartbeat = () => {
     ws!.on('pong', () => {
@@ -66,27 +30,14 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions?: 
       ws!.ping();
     }, 1000 * 30);
   };
-
+  
   const loopBlaze = (h: BlazeHandler) => {
-    ws = websocket(keystore, url);
+    ws = websocket(keystore, url, h, wsOptions);
     heartbeat();
 
-    ws.onmessage = async event => {
-      const msg = await decode(event.data as Uint8Array);
-      if (!msg) return;
-
-      if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && h.onAckReceipt) await h.onAckReceipt(msg);
-      else if (msg.category === 'SYSTEM_CONVERSATION' && h.onConversation) await h.onConversation(msg);
-      else if (msg.category === 'SYSTEM_ACCOUNT_SNAPSHOT' && h.onTransfer) await h.onTransfer(msg);
-      else await h.onMessage(msg);
-
-      if (option.syncAck) {
-        await sendRaw({
-          id: uuid(),
-          action: 'ACKNOWLEDGE_MESSAGE_RECEIPT',
-          params: { message_id: msg.message_id, status: 'READ' },
-        });
-      }
+    ws.onopen = () => {
+      isAlive = true;
+      sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
     };
 
     ws.onclose = () => {
@@ -96,18 +47,14 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions?: 
 
     ws.onerror = e => {
       if (e.message !== 'Opening handshake has timed out') return;
-      url = url === hostURL[0] ? hostURL[1] : hostURL[0];
-    };
-
-    ws.onopen = () => {
-      isAlive = true;
-      sendRaw({ id: uuid(), action: 'LIST_PENDING_MESSAGES' });
+      url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
     };
   };
 
   return {
     loop: (h: BlazeHandler) => {
       if (!h.onMessage) throw new Error('OnMessage not set');
+      console.log('open', new Date().getTime());
       loopBlaze(h);
     },
   };
