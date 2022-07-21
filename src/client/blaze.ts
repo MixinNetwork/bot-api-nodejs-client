@@ -17,6 +17,9 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     ws!.on('pong', () => {
       isAlive = true;
     });
+    ws!.on('ping', () => {
+      isAlive = true;
+    });
 
     pingInterval = setInterval(() => {
       if (ws!.readyState === WebSocket.CONNECTING) return;
