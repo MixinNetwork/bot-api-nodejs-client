@@ -13,12 +13,16 @@ const client = MixinApi({
 const handler = {
   // callback when bot receive message
   onMessage: async msg => {
-    const user = await client.user.fetch(msg.user_id);
-    console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`);
+    if (msg.category) {
+      const user = await client.user.fetch(msg.user_id);
+      console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`);
 
-    // make your bot automatically reply
-    const res = await client.message.sendText(msg.user_id, 'received');
-    console.log(`message ${res.message_id} is sent`);
+      // make your bot automatically reply the same message
+      const res = client.blaze.sendMsg(msg.user_id, msg.category, msg.data);
+      console.log(`send received, id: ${res.message_id}`)
+    } else {
+      console.log(`${msg.message_id} is sent`);
+    }
   },
   // callback when bot receive message status update
   // msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT'
