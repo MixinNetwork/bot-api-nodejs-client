@@ -19,7 +19,7 @@ const handler = {
 
       // make your bot automatically reply the same message
       const res = client.blaze.sendMsg(msg.user_id, msg.category, msg.data);
-      console.log(`send received, id: ${res.message_id}`)
+      console.log(`send received, id: ${res.message_id}`);
     } else {
       console.log(`${msg.message_id} is sent`);
     }

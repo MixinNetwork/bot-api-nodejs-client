@@ -15,7 +15,7 @@ import {
   LocationMessageRequest,
   AppButtonMessageRequest,
   TransferMessageRequest,
-  RecallMessageRequest
+  RecallMessageRequest,
 } from './types';
 import { websocket } from './ws';
 import { base64RawURLEncode, sendRaw, uniqueConversationID } from './utils';
@@ -45,7 +45,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
       sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
     };
     ws.on('ping', () => {
-      heartbeat()
+      heartbeat();
     });
 
     ws.onclose = () => {
@@ -75,7 +75,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     };
     sendRaw(ws!, message);
     return message.params;
-  }
+  };
 
   return {
     loop: (h: BlazeHandler) => {
