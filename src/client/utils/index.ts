@@ -4,3 +4,4 @@ export * from './client';
 export * from './pin';
 export * from './sleep';
 export * from './uniq';
+export * from './ws';

@@ -19,24 +19,14 @@ export type MessageCategory =
 
 export type EncryptedMessageStatus = 'SUCCESS' | 'FAILED';
 
-export type MessageResponse = {
+export interface AcknowledgementResponse {
   message_id: string;
   status: MessageStatus;
-};
+}
 
 export interface AcknowledgementRequest {
   message_id: string;
   status: string;
-}
-
-export interface MessageRequest {
-  conversation_id: string;
-  message_id: string;
-  category: MessageCategory;
-  data: string;
-  recipient_id?: string;
-  representative_id?: string;
-  quote_message_id?: string;
 }
 
 export interface MessageView {
@@ -54,6 +44,16 @@ export interface MessageView {
   source: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface MessageRequest {
+  conversation_id: string;
+  message_id: string;
+  category: MessageCategory;
+  data: string;
+  recipient_id?: string;
+  representative_id?: string;
+  quote_message_id?: string;
 }
 
 export interface StickerMessageRequest {
