@@ -37,7 +37,6 @@ const handler = {
     const { data: transfer } = msg;
     if (transfer.amount < 0) return;
 
-    console.log(transfer);
     const user = await client.user.fetch(transfer.counter_user_id);
     const asset = await client.asset.fetch(transfer.asset_id);
     console.log(`user ${user.full_name} transfer ${transfer.amount} ${asset.symbol} to you`);
@@ -49,7 +48,7 @@ const handler = {
       trace_id: uuid(),
     });
     client.blaze.sendMsg(msg.user_id, 'SYSTEM_ACCOUNT_SNAPSHOT', res);
-    console.log('send back')
+    console.log('send back');
   },
   // callback when group information update, which your bot is in
   // msg.category === 'SYSTEM_CONVERSATION'
