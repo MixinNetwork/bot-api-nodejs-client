@@ -17,6 +17,20 @@ export type MessageCategory =
   | 'SYSTEM_CONVERSATION'
   | 'SYSTEM_ACCOUNT_SNAPSHOT';
 
+export type MessageViewData =
+  | string
+  | StickerMessageRequest
+  | ImageMessageRequest
+  | AudioMessageRequest
+  | VideoMessageRequest
+  | ContactMessageRequest
+  | AppCardMessageRequest
+  | FileMessageRequest
+  | LiveMessageRequest
+  | LocationMessageRequest
+  | AppButtonMessageRequest
+  | TransferMessageRequest;
+
 export type EncryptedMessageStatus = 'SUCCESS' | 'FAILED';
 
 export interface AcknowledgementResponse {
@@ -38,7 +52,7 @@ export interface MessageView {
   session_id: string;
   message_id: string;
   category: MessageCategory;
-  data: string;
+  data: MessageViewData;
   data_base64: string;
   status: MessageStatus;
   source: string;

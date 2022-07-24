@@ -1,3 +1,4 @@
+const { v4: uuid } = require('uuid');
 const { MixinApi } = require('..');
 const keystore = require('../keystore.json'); // keystore from your bot
 
@@ -13,12 +14,16 @@ const client = MixinApi({
 const handler = {
   // callback when bot receive message
   onMessage: async msg => {
-    const user = await client.user.fetch(msg.user_id);
-    console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`);
+    if (msg.category) {
+      const user = await client.user.fetch(msg.user_id);
+      console.log(`${user.full_name} send you a ${msg.category} message: ${msg.data}`);
 
-    // make your bot automatically reply
-    const res = await client.message.sendText(msg.user_id, 'received');
-    console.log(`message ${res.message_id} is sent`);
+      // make your bot automatically reply the same message
+      const res = client.blaze.sendMsg(msg.user_id, msg.category, msg.data);
+      console.log(`send received, id: ${res.message_id}`);
+    } else {
+      console.log(`${msg.message_id} is sent`);
+    }
   },
   // callback when bot receive message status update
   // msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT'
@@ -30,9 +35,20 @@ const handler = {
   // RECOMMEND use /snapshots api to listen transfer
   onTransfer: async msg => {
     const { data: transfer } = msg;
+    if (transfer.amount < 0) return;
+
     const user = await client.user.fetch(transfer.counter_user_id);
     const asset = await client.asset.fetch(transfer.asset_id);
     console.log(`user ${user.full_name} transfer ${transfer.amount} ${asset.symbol} to you`);
+
+    const res = await client.transfer.toUser(keystore.pin, {
+      asset_id: transfer.asset_id,
+      opponent_id: transfer.counter_user_id,
+      amount: transfer.amount,
+      trace_id: uuid(),
+    });
+    client.blaze.sendMsg(msg.user_id, 'SYSTEM_ACCOUNT_SNAPSHOT', res);
+    console.log('send back');
   },
   // callback when group information update, which your bot is in
   // msg.category === 'SYSTEM_CONVERSATION'
