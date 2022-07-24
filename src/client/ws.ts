@@ -12,7 +12,11 @@ export function websocket(
     parse: false,
     syncAck: false,
   },
-): WebSocket {
+): WebSocket | null {
+  if (!keystore) {
+    return null;
+  }
+
   const jwtToken = signAccessToken('GET', '/', '', uuid(), keystore) || '';
   const headers = {
     Authorization: `Bearer ${jwtToken}`,

@@ -24,32 +24,32 @@ const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 
 export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
   let url = wsHostURL[0];
-  let ws: WebSocket | null;
-  let pingInterval: ReturnType<typeof setInterval> | null;
+  let ws: WebSocket | null = null;
+  let pingTimeout: ReturnType<typeof setTimeout> | undefined;
 
   const heartbeat = () => {
-    clearTimeout(Number(pingInterval));
+    clearTimeout(Number(setTimeout));
 
     // Delay should be equal to the interval at which your server
     // sends out pings plus a conservative assumption of the latency.
-    pingInterval = setTimeout(() => {
+    pingTimeout = setTimeout(() => {
       ws?.terminate();
     }, 1000 * 5 + 1000 * 5);
   };
 
   const loopBlaze = (h: BlazeHandler) => {
     ws = websocket(keystore, url, h, wsOptions);
+    if (!ws) throw new Error('Ws is null, check keystore');
 
     ws.onopen = () => {
       heartbeat();
       sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
     };
-    ws.on('ping', () => {
-      heartbeat();
-    });
+
+    ws.on('ping', heartbeat);
 
     ws.onclose = () => {
-      clearInterval(Number(pingInterval));
+      clearInterval(Number(pingTimeout));
       loopBlaze(h);
     };
 
@@ -80,6 +80,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   return {
     loop: (h: BlazeHandler) => {
       if (!h.onMessage) throw new Error('OnMessage not set');
+      if (!keystore) throw new Error('Keystore not set in MixinApi')
       loopBlaze(h);
     },
 
