@@ -28,7 +28,9 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   let pingTimeout: ReturnType<typeof setTimeout> | undefined;
 
   const heartbeat = () => {
-    clearTimeout(Number(setTimeout));
+    if (pingTimeout) {
+      clearTimeout(Number(pingTimeout));
+    }
 
     // Delay should be equal to the interval at which your server
     // sends out pings plus a conservative assumption of the latency.
