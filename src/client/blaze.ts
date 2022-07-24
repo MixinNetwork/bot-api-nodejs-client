@@ -80,7 +80,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   return {
     loop: (h: BlazeHandler) => {
       if (!h.onMessage) throw new Error('OnMessage not set');
-      if (!keystore) throw new Error('Keystore not set in MixinApi')
+      if (!keystore) throw new Error('Keystore not set in MixinApi');
       loopBlaze(h);
     },
 
