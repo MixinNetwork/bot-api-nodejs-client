@@ -1,3 +1,4 @@
+const { v4: uuid } = require('uuid');
 const { MixinApi } = require('..');
 const keystore = require('../keystore.json'); // keystore from your bot
 
@@ -34,9 +35,21 @@ const handler = {
   // RECOMMEND use /snapshots api to listen transfer
   onTransfer: async msg => {
     const { data: transfer } = msg;
+    if (transfer.amount < 0) return;
+
+    console.log(transfer);
     const user = await client.user.fetch(transfer.counter_user_id);
     const asset = await client.asset.fetch(transfer.asset_id);
     console.log(`user ${user.full_name} transfer ${transfer.amount} ${asset.symbol} to you`);
+
+    const res = await client.transfer.toUser(keystore.pin, {
+      asset_id: transfer.asset_id,
+      opponent_id: transfer.counter_user_id,
+      amount: transfer.amount,
+      trace_id: uuid(),
+    });
+    client.blaze.sendMsg(msg.user_id, 'SYSTEM_ACCOUNT_SNAPSHOT', res);
+    console.log('send back')
   },
   // callback when group information update, which your bot is in
   // msg.category === 'SYSTEM_CONVERSATION'
