@@ -29,7 +29,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
 
   const heartbeat = () => {
     if (pingTimeout) {
-      clearTimeout(Number(pingTimeout));
+      clearTimeout(pingTimeout);
     }
 
     // Delay should be equal to the interval at which your server
@@ -51,7 +51,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     ws.on('ping', heartbeat);
 
     ws.onclose = () => {
-      clearInterval(Number(pingTimeout));
+      clearTimeout(pingTimeout);
       loopBlaze(h);
     };
 
