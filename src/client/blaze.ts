@@ -22,7 +22,7 @@ import { base64RawURLEncode, sendRaw, uniqueConversationID } from './utils';
 
 const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 
-export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
+export const BlazeKeystoreClient = (keystore: Keystore, wsOptions: BlazeOptions | undefined) => {
   let url = wsHostURL[0];
   let ws: WebSocket | null = null;
   let pingTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -62,15 +62,16 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   };
 
   const sendMsg = (recipientID: string, category: string, data: any) => {
-    if (typeof data === 'object') data = JSON.stringify(data);
+    if (!keystore.user_id) throw new Error('Keystore.user_id is needed to send message');
 
+    if (typeof data === 'object') data = JSON.stringify(data);
     const message = {
       id: uuid(),
       action: 'CREATE_MESSAGE',
       params: {
         category,
         recipient_id: recipientID,
-        conversation_id: uniqueConversationID(keystore!.user_id, recipientID),
+        conversation_id: uniqueConversationID(keystore.user_id, recipientID),
         message_id: uuid(),
         data: base64RawURLEncode(Buffer.from(data)),
       },
