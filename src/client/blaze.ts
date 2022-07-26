@@ -15,7 +15,7 @@ import {
   LocationMessageRequest,
   AppButtonMessageRequest,
   TransferMessageRequest,
-  RecallMessageRequest,
+  RecallMessageRequest, MessageViewData,
 } from './types';
 import { websocket } from './ws';
 import { base64RawURLEncode, sendRaw, uniqueConversationID } from './utils';
@@ -61,7 +61,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     };
   };
 
-  const sendMsg = (recipientID: string, category: string, data: any) => {
+  const sendMsg = (recipientID: string, category: string, data: MessageViewData) => {
     if (!keystore || !keystore.user_id) throw new Error('Keystore.user_id is needed to send message');
 
     if (typeof data === 'object') data = JSON.stringify(data);

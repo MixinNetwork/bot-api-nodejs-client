@@ -28,8 +28,9 @@ export type MessageViewData =
   | FileMessageRequest
   | LiveMessageRequest
   | LocationMessageRequest
-  | AppButtonMessageRequest
-  | TransferMessageRequest;
+  | AppButtonMessageRequest[]
+  | TransferMessageRequest
+  | RecallMessageRequest;
 
 export type EncryptedMessageStatus = 'SUCCESS' | 'FAILED';
 
