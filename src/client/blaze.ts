@@ -15,7 +15,8 @@ import {
   LocationMessageRequest,
   AppButtonMessageRequest,
   TransferMessageRequest,
-  RecallMessageRequest, MessageViewData,
+  RecallMessageRequest,
+  MessageViewData,
 } from './types';
 import { websocket } from './ws';
 import { base64RawURLEncode, sendRaw, uniqueConversationID } from './utils';
