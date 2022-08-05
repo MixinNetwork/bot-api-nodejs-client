@@ -62,7 +62,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     };
   };
 
-  const sendMsg = (recipientID: string, category: string, data: MessageViewData) => {
+  const sendMsg = async (recipientID: string, category: string, data: MessageViewData): Promise<MessageViewData | {error: string}> => {
     if (!keystore || !keystore.user_id) throw new Error('Keystore.user_id is needed to send message');
 
     if (typeof data === 'object') data = JSON.stringify(data);
@@ -77,8 +77,9 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
         data: base64RawURLEncode(Buffer.from(data)),
       },
     };
-    sendRaw(ws!, message);
-    return message.params;
+    const flag = await sendRaw(ws!, message);
+    if (flag) return message.params as MessageViewData;
+    return { error: 'Timeout' };
   };
 
   return {
