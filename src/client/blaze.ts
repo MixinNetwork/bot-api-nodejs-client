@@ -62,7 +62,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     };
   };
 
-  const sendMsg = async (recipientID: string, category: string, data: MessageViewData): Promise<MessageViewData | {error: string}> => {
+  const sendMsg = async (recipientID: string, category: string, data: MessageViewData): Promise<MessageViewData | { error: string }> => {
     if (!keystore || !keystore.user_id) throw new Error('Keystore.user_id is needed to send message');
 
     if (typeof data === 'object') data = JSON.stringify(data);
