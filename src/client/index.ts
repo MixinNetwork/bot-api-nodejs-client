@@ -22,8 +22,8 @@ export { PinClient } from './pin';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
 export { WithdrawalClient } from './withdrawal';
-export * from './mixin-client';
 
+export * from './mixin-client';
 export { mixinRequest } from './http';
 export { ResponseError } from './error';
 export * from './utils';
