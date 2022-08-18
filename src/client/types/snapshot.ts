@@ -44,7 +44,7 @@ export interface WithdrawalWithFeeResponse extends WithdrawalResponse {
 }
 
 export interface RawTransactionResponse extends BaseSnapshotResponse {
-  type: string;
+  type: 'raw';
   opponent_key: string;
   opponent_receivers: string[];
   opponent_threshold: number;
