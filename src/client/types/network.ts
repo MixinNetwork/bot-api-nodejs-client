@@ -48,12 +48,14 @@ export interface NetworkSnapshotAsset {
 }
 
 export interface NetworkSnapshotResponse {
+  type: 'snapshot';
   amount: number;
   asset: NetworkSnapshotAsset;
   created_at: string;
   snapshot_id: string;
   source: string;
-  type: string;
+  state: string;
+  snapshot_hash: string;
 
   // 4 private fields that only be returned with correct permission
   user_id?: string;
