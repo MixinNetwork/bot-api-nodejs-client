@@ -5,6 +5,7 @@ import { BlazeOptions } from './blaze';
 export interface RequestConfig
   extends Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
   responseCallback?: (rep: unknown) => void;
+  retry?: number;
 }
 
 export interface HTTPConfig {

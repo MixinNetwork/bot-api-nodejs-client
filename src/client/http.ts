@@ -18,6 +18,9 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     ...config,
   });
 
+  const retry = config?.retry || 5;
+  let count = 0;
+
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
     const { method, data, url } = config;
     if (config.headers) {
@@ -37,7 +40,15 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   });
 
   ins.interceptors.response.use(undefined, async (e: any) => {
+    count++
+    e.retryCount = count;
+    e.retryNumber = retry;
     await config?.responseCallback?.(e);
+
+    if (count >= retry) {
+      count = 0;
+      return Promise.reject(new Error(e.code));
+    }
 
     if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
       if (config?.baseURL) return e.config;
@@ -45,6 +56,12 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
       ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
       e.config.baseURL = ins.defaults.baseURL;
     }
+
+    // Error thrown in response onFulfilled interceptor or generated in runtime has no config,
+    // but would still trigger another time of onFulfilled interceptor, then finish.
+    // Reject here to void it.
+    if (!e.config) return Promise.reject(e);
+
     await sleep();
     return ins(e.config);
   });
