@@ -40,7 +40,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   });
 
   ins.interceptors.response.use(undefined, async (e: any) => {
-    count++
+    count++;
     e.retryCount = count;
     e.retryNumber = retry;
     await config?.responseCallback?.(e);
