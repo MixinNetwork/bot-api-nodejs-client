@@ -45,6 +45,11 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     e.retryNumber = retry;
     await config?.responseCallback?.(e);
 
+    // Error thrown in response onFulfilled interceptor or generated in runtime has no config,
+    // but would still trigger another time of onFulfilled interceptor, then finish.
+    // Reject here to void it.
+    if (!e.config) return Promise.reject(e);
+
     if (count >= retry) {
       count = 0;
       return Promise.reject(new Error(e.code));
@@ -56,11 +61,6 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
       ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
       e.config.baseURL = ins.defaults.baseURL;
     }
-
-    // Error thrown in response onFulfilled interceptor or generated in runtime has no config,
-    // but would still trigger another time of onFulfilled interceptor, then finish.
-    // Reject here to void it.
-    if (!e.config) return Promise.reject(e);
 
     await sleep();
     return ins(e.config);
