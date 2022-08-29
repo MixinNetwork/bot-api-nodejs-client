@@ -9,7 +9,7 @@ import { base64RawURLEncode } from './base64';
 export const getNanoTime = () => {
   const now: number[] = nano.now();
   return now[0] * 1e9 + now[1];
-}
+};
 
 const privateKeyToCurve25519 = (privateKey: Buffer) => {
   const seed = forge.util.createBuffer(privateKey.subarray(0, 32), 'raw');
