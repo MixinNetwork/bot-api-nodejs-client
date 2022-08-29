@@ -1,8 +1,15 @@
+// @ts-ignore
+import nano from 'nano-seconds';
 import { sharedKey } from 'curve25519-js';
 import forge from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import Keystore from '../types/keystore';
 import { base64RawURLEncode } from './base64';
+
+export const getNanoTime = () => {
+  const now: number[] = nano.now();
+  return now[0] * 1e9 + now[1];
+}
 
 const privateKeyToCurve25519 = (privateKey: Buffer) => {
   const seed = forge.util.createBuffer(privateKey.subarray(0, 32), 'raw');
@@ -33,7 +40,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   const blockSize = 16;
 
   const _pin = Buffer.from(pin, 'utf8');
-  const iterator = Buffer.from(new Uint64(Date.now() * 1000000).toBuffer());
+  const iterator = Buffer.from(new Uint64(getNanoTime()).toBuffer());
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
   const buf = Buffer.concat([_pin, time, iterator]);
 

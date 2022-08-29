@@ -2610,6 +2610,11 @@ brorand@^1.1.0:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha512-cKV8tMCEpQs4hK/ik71d6LrPOnpkpGBR0wzxqr68g2m/LB2GxVYQroAjMJZRVM1Y4BCjCKc3vAamxSzOY2RP+w==
 
+browser-hrtime@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/browser-hrtime/-/browser-hrtime-1.1.8.tgz#6a17cc212c19bdaf60faa499b7ae10a0dfb65d5e"
+  integrity sha512-kzXheikaJsBtzUBlyVtPIY5r0soQePzjwVwT4IlDpU2RvfB5Py52gpU98M77rgqMCheoSSZvrcrdj3t6cZ3suA==
+
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
@@ -5892,6 +5897,11 @@ mute-stream@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+
+nano-seconds@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmmirror.com/nano-seconds/-/nano-seconds-1.2.2.tgz#e8d89971547a57083201ca121543aeeafeab4b02"
+  integrity sha512-s06EY41x1hM6BJE2HhIFRzvXuVUlZNd4761lduv+hjgtDDR7W4RzhShkap2wJcWMO6+CahR+49cCQJfFmgf7gw==
 
 nanoid@^3.2.0:
   version "3.3.4"
