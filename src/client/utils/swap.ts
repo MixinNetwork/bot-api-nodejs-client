@@ -9,11 +9,8 @@ instance.interceptors.response.use(async (res: AxiosResponse) => {
   return res.data;
 });
 
-export const fetch4SwapPreOrder = (
-  from: string,
-  to: string,
-  toAmount: string
-): Promise<PreOrderResponse> => instance.post<undefined, PreOrderResponse>('/orders/pre', {
+export const fetch4SwapPreOrder = (from: string, to: string, toAmount: string): Promise<PreOrderResponse> =>
+  instance.post<undefined, PreOrderResponse>('/orders/pre', {
     pay_asset_id: from,
     fill_asset_id: to,
     amount: toAmount,

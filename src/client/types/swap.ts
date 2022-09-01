@@ -13,5 +13,5 @@ export interface PreOrderResponse {
     transactions: [];
     funds: string;
     amount: string;
-  }
+  };
 }
