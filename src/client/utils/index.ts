@@ -5,3 +5,4 @@ export * from './pin';
 export * from './sleep';
 export * from './uniq';
 export * from './ws';
+export * from './swap';
