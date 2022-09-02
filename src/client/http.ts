@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import qs from 'qs';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { Keystore } from './types/keystore';
@@ -23,7 +22,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     const { method, data, params, url: initUrl } = config;
 
     let url = initUrl;
-    if (method?.toUpperCase() === 'GET' && !!params) url += `?${qs.stringify(params)}`;
+    if (method?.toUpperCase() === 'GET' && !!params) url = axios.getUri(config).slice(config.baseURL?.length);
 
     if (config.headers) {
       const requestID = uuid();
