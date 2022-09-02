@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import qs from 'qs';
 import { v4 as uuid } from 'uuid';
 import { ResponseError } from './error';
 import { Keystore } from './types/keystore';
@@ -19,7 +20,11 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   });
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
-    const { method, data, url } = config;
+    const { method, data, params, url: initUrl } = config;
+
+    let url = initUrl;
+    if (method?.toUpperCase() === 'GET' && !!params) url += `?${qs.stringify(params)}`;
+
     if (config.headers) {
       const requestID = uuid();
       config.headers['X-Request-Id'] = requestID;
