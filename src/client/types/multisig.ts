@@ -1,4 +1,4 @@
-import { Input, Output } from '../../mvm'
+import { Input, Output } from '../../mvm';
 
 export type UTXOState = 'unspent' | 'signed' | 'spent';
 

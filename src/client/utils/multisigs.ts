@@ -5,11 +5,11 @@ export const TxVersion = 0x02;
 
 export const encodeScript = (threshold: number) => {
   let s = threshold.toString(16);
-  if (s.length === 1) s = `0${ s }`;
-  if (s.length > 2) throw new Error(`INVALID THRESHOLD ${ threshold }`);
+  if (s.length === 1) s = `0${s}`;
+  if (s.length > 2) throw new Error(`INVALID THRESHOLD ${threshold}`);
 
-  return `fffe${ s }`;
-}
+  return `fffe${s}`;
+};
 
 export const encodeTx = (tx: MultisigTransaction) => {
   const enc = new Encoder(Buffer.from([]));
@@ -19,33 +19,32 @@ export const encodeTx = (tx: MultisigTransaction) => {
   enc.write(Buffer.from(tx.asset, 'hex'));
 
   enc.writeInt(tx.inputs.length);
-  tx.inputs.forEach((input) => {
-    enc.encodeInput(input)
-  })
+  tx.inputs.forEach(input => {
+    enc.encodeInput(input);
+  });
 
   enc.writeInt(tx.outputs.length);
-  tx.outputs.forEach((output) => {
-    enc.encodeOutput(output)
-  })
+  tx.outputs.forEach(output => {
+    enc.encodeOutput(output);
+  });
 
   const extra = Buffer.from(tx.extra, 'hex');
   enc.writeInt(extra.byteLength);
   enc.write(extra);
 
-  enc.writeInt(0)
-  enc.write(Buffer.from([]))
+  enc.writeInt(0);
+  enc.write(Buffer.from([]));
 
   return enc.buf.toString('hex');
-}
-
+};
 
 export const buildMultiSigsTransaction = (input: MultisigTransaction) => {
-  if (input.version !== TxVersion) throw new Error('Invalid Version!')
+  if (input.version !== TxVersion) throw new Error('Invalid Version!');
 
   const tx = {
     ...input,
-    outputs: input.outputs.filter((output) => !!output.mask),
-    extra: Buffer.from(input.extra).toString('hex')
+    outputs: input.outputs.filter(output => !!output.mask),
+    extra: Buffer.from(input.extra).toString('hex'),
   };
   return encodeTx(tx);
 };
