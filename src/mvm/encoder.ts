@@ -6,14 +6,14 @@ const MaximumEncodingInt = 0xffff;
 
 const AggregatedSignaturePrefix = 0xff01;
 
-const magic = Buffer.from([0x77, 0x77]);
+export const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
 export const integerToBytes = (x: number) => {
   const bytes = [];
   let i = x;
   do {
-    bytes.unshift(x & 255);
+    bytes.unshift(i & 255);
     i = (i / 2 ** 8) | 0;
   } while (i !== 0);
   return bytes;
@@ -140,7 +140,6 @@ export class Encoder {
     const s = Buffer.from(o.script!, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
-
     const w = o.withdrawal;
     if (typeof w === 'undefined') {
       this.write(empty);

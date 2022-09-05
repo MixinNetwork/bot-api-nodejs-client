@@ -5,7 +5,7 @@ export * from './constant';
 export * from './utils';
 
 export { MVMApi } from './client';
-export { Encoder } from './encoder';
+export * from './encoder';
 export { Registry } from './registry';
 export { StorageContract } from './storage';
 

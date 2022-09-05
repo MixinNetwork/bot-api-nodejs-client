@@ -1,3 +1,5 @@
+import { Input, Output } from '../../mvm'
+
 export type UTXOState = 'unspent' | 'signed' | 'spent';
 
 export type MultisigInitAction = 'sign' | 'unlock';
@@ -54,4 +56,14 @@ export interface MultisigRequestResponse {
   created_at: string;
   updated_at: string;
   code_id: string;
+}
+
+export interface MultisigTransaction {
+  /* 2 */
+  version: number;
+  /* mixin_id */
+  asset: string;
+  inputs: Input[];
+  outputs: Output[];
+  extra: string;
 }
