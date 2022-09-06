@@ -12,7 +12,7 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
 });
 
 export const buildClient: BuildClient =
-  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType> =>
+  <KeystoreReturnType extends object>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType> =>
   (config: HTTPConfig = {}): any => {
     if (!KeystoreClient) throw new Error('keystore client is required');
 
