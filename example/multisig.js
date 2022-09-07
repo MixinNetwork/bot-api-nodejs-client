@@ -12,13 +12,13 @@ const client = MixinApi({
   keystore,
 });
 
-const readOutput = async (hash, members, threshold, offset='') => {
+const readOutput = async (hash, members, threshold, offset = '') => {
   let new_offset = offset;
   const outputs = await client.multisig.outputs({
     members,
     threshold,
     offset,
-    limit: 10
+    limit: 10,
   });
 
   // eslint-disable-next-line no-restricted-syntax
@@ -29,7 +29,7 @@ const readOutput = async (hash, members, threshold, offset='') => {
 
   await sleep(1000 * 5);
   return readOutput(hash, members, threshold, new_offset);
-}
+};
 
 const main = async () => {
   const bot = await client.user.profile();
@@ -40,19 +40,16 @@ const main = async () => {
 
   // 1. send to multisig account
   // should have balance in your bot
-  const sendTxReceipt = await client.transfer.toAddress(
-    keystore.pin,
-    {
-      asset_id,
-      amount,
-      trace_id: v4(),
-      memo: 'send to multisig',
-      opponent_multisig: {
-        threshold,
-        receivers: members,
-      },
-    }
-  );
+  const sendTxReceipt = await client.transfer.toAddress(keystore.pin, {
+    asset_id,
+    amount,
+    trace_id: v4(),
+    memo: 'send to multisig',
+    opponent_multisig: {
+      threshold,
+      receivers: members,
+    },
+  });
   console.log('send to multi-signature account');
   console.log('transaction hash:', sendTxReceipt.transaction_hash);
 
@@ -68,29 +65,33 @@ const main = async () => {
     receivers: [keystore.user_id],
     index: 0,
   });
-  console.log('generate raw transaction')
+  console.log('generate raw transaction');
   const raw = buildMultiSigsTransaction({
     version: 2,
     asset: asset.mixin_id,
-    inputs: [{
-      hash: utxo.transaction_hash,
-      index: utxo.output_index
-    }],
-    outputs: [{
-      amount,
-      mask: receivers.mask,
-      keys: receivers.keys,
-      script: encodeScript(threshold)
-    }],
-    extra: 'refund'
+    inputs: [
+      {
+        hash: utxo.transaction_hash,
+        index: utxo.output_index,
+      },
+    ],
+    outputs: [
+      {
+        amount,
+        mask: receivers.mask,
+        keys: receivers.keys,
+        script: encodeScript(threshold),
+      },
+    ],
+    extra: 'refund',
   });
 
   // Generate a multi-signature
-  console.log('generate a multi-signature request...')
+  console.log('generate a multi-signature request...');
   const multisig = await client.multisig.create('sign', raw);
 
   // Sign a multi-signature
-  console.log('sign...')
+  console.log('sign...');
   const signed = await client.multisig.sign(keystore.pin, multisig.request_id);
   console.log(signed);
 
@@ -98,9 +99,9 @@ const main = async () => {
   console.log('send to mainnet...');
   const res = await client.external.proxy({
     method: 'sendrawtransaction',
-    params: [signed.raw_transaction]
+    params: [signed.raw_transaction],
   });
   console.log(res);
-}
+};
 
 main();
