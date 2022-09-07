@@ -2,6 +2,7 @@ const { v4: uuid } = require('uuid');
 const { MixinApi, MixinAssetID, MintMinimumCost, GroupMembers, GroupThreshold, buildMintCollectibleMemo } = require('..');
 const keystore = require('../keystore.json');
 
+keystore.user_id = keystore.client_id;
 const client = MixinApi({ keystore });
 
 async function main() {
