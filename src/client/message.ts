@@ -19,9 +19,7 @@ import {
   TransferMessageRequest,
   RecallMessageRequest,
 } from './types/message';
-import { base64url } from '../mixin/sign';
-import { uniqueConversationID } from './utils/uniq';
-import { buildClient } from './utils/client';
+import { uniqueConversationID, base64RawURLEncode, buildClient } from './utils';
 
 /**
  * Methods to send messages
@@ -41,7 +39,7 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
       recipient_id: recipientID,
       conversation_id: uniqueConversationID(keystore!.user_id, recipientID),
       message_id: uuid(),
-      data: base64url(Buffer.from(data)),
+      data: base64RawURLEncode(Buffer.from(data)),
     };
     await send(messageRequest);
     return messageRequest;
