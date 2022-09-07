@@ -38,13 +38,17 @@ export const encodeTx = (tx: MultisigTransaction) => {
   return enc.buf.toString('hex');
 };
 
-export const buildMultiSigsTransaction = (input: MultisigTransaction) => {
-  if (input.version !== TxVersion) throw new Error('Invalid Version!');
+/**
+ * Generate raw for multi-signature transaction.
+ * The amount of input utxos should be equal to the amount of output utxos.
+ * */
+export const buildMultiSigsTransaction = (transaction: MultisigTransaction) => {
+  if (transaction.version !== TxVersion) throw new Error('Invalid Version!');
 
   const tx = {
-    ...input,
-    outputs: input.outputs.filter(output => !!output.mask),
-    extra: Buffer.from(input.extra).toString('hex'),
+    ...transaction,
+    outputs: transaction.outputs.filter(output => !!output.mask),
+    extra: Buffer.from(transaction.extra).toString('hex'),
   };
   return encodeTx(tx);
 };
