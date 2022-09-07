@@ -1,4 +1,4 @@
-import BN from 'bn.js';
+import utils from 'ethers/lib/utils';
 import { parse } from 'uuid';
 import { Aggregated, Input, Output } from './types';
 
@@ -130,7 +130,7 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(new BN(1e8).mul(new BN(o.amount!)).toNumber());
+    this.writeInteger(utils.parseUnits(Number(o.amount!).toFixed(8), 8).toNumber());
     this.writeInt(o.keys!.length);
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
