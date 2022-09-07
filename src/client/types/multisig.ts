@@ -59,9 +59,9 @@ export interface MultisigRequestResponse {
 }
 
 export interface MultisigTransaction {
-  /* 2 */
+  /** 2 */
   version: number;
-  /* mixin_id */
+  /** mixin_id of asset */
   asset: string;
   inputs: Input[];
   outputs: Output[];

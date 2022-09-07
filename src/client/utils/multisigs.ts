@@ -40,7 +40,7 @@ export const encodeTx = (tx: MultisigTransaction) => {
 
 /**
  * Generate raw for multi-signature transaction.
- * The amount of input utxos should be equal to the amount of output utxos.
+ * The total amount of input utxos should be equal to the total amount of output utxos.
  * */
 export const buildMultiSigsTransaction = (transaction: MultisigTransaction) => {
   if (transaction.version !== TxVersion) throw new Error('Invalid Version!');
