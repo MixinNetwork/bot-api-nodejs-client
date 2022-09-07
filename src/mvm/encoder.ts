@@ -59,13 +59,13 @@ export class Encoder {
     this.write(buf);
   }
 
-  wirteUint16(i: number) {
+  writeUint16(i: number) {
     const buf = Buffer.alloc(2);
     buf.writeUInt16BE(i);
     this.write(buf);
   }
 
-  wirteUint64(i: bigint) {
+  writeUint64(i: bigint) {
     const buf = Buffer.alloc(8);
     buf.writeBigUInt64BE(i);
     this.write(buf);
@@ -109,7 +109,7 @@ export class Encoder {
       this.writeInt(tx.byteLength);
       this.write(tx);
 
-      this.wirteUint64(d.index);
+      this.writeUint64(d.index);
       this.writeInteger(d.amount);
     }
     const m = i.mint;
@@ -121,7 +121,7 @@ export class Encoder {
       this.writeInt(m.group.length);
       this.write(Buffer.from(m.group));
 
-      this.wirteUint64(m.batch);
+      this.writeUint64(m.batch);
       this.writeInteger(m.amount);
     }
   }
@@ -210,7 +210,7 @@ export class Encoder {
 
     this.writeInt(ss.length);
     ss.forEach(s => {
-      this.wirteUint16(Number(s.index));
+      this.writeUint16(Number(s.index));
       this.write(Buffer.from(s.sig, 'hex'));
     });
   }
