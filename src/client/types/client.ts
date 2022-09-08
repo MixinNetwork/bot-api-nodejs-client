@@ -19,12 +19,12 @@ export interface BaseClient<KeystoreReturnType> {
   (config: HTTPConfig): KeystoreReturnType & RequestClient;
 }
 
-export type BaseInnerClient<KeystoreReturnType> = (axiosInstance: AxiosInstance) => KeystoreReturnType;
-export type KeystoreClient<KeystoreReturnType> = (axiosInstance: AxiosInstance, keystore?: Keystore) => KeystoreReturnType;
-export type UnionKeystoreClient<KeystoreReturnType> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
+export type BaseInnerClient<KeystoreReturnType extends object> = (axiosInstance: AxiosInstance) => KeystoreReturnType;
+export type KeystoreClient<KeystoreReturnType extends object> = (axiosInstance: AxiosInstance, keystore?: Keystore) => KeystoreReturnType;
+export type UnionKeystoreClient<KeystoreReturnType extends object> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {
-  <KeystoreReturnType>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType>;
+  <KeystoreReturnType extends object>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType>;
 }
 
 export interface RequestClient {

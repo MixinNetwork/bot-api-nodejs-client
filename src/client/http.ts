@@ -22,11 +22,13 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   let count = 0;
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
-    const { method, data, url } = config;
+    const { method, data } = config;
+    const url = axios.getUri(config).slice(config.baseURL?.length);
+
     if (config.headers) {
       const requestID = uuid();
       config.headers['X-Request-Id'] = requestID;
-      const jwtToken = signAccessToken(method, url!, data, requestID, keystore);
+      const jwtToken = signAccessToken(method, url, data, requestID, keystore);
       config.headers.Authorization = `Bearer ${jwtToken}`;
     }
 
