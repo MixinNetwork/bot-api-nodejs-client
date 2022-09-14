@@ -1,4 +1,4 @@
-import { ethers} from 'ethers';
+import { ethers } from 'ethers';
 import { ContractRequest } from './types';
 import { MixinAssetID } from '../constant';
 import { MVMMainnet } from './constant';
