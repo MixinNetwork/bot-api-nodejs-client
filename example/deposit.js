@@ -13,16 +13,16 @@ const main = async () => {
   // Get the Mixin User bound to an address
   const bridgeClient = BridgeApi();
   const user = await bridgeClient.register({
-    public_key: await signer.getAddress(),
+    public_key: await signer.getAddress()
   });
 
   // Fetch the deposit address of a specific asset
   const mixinClient = MixinApi({
     keystore: {
       ...user,
-      ...user.key,
-    },
-  });
+      ...user.key
+    }
+  })
   const { destination } = await mixinClient.asset.fetch(depositAsset);
 
   // Send tx
@@ -30,11 +30,11 @@ const main = async () => {
   console.log(`balance before: ${ethers.utils.formatEther(await signer.getBalance())}`);
   const tx = {
     to: destination,
-    value: ethers.utils.parseEther(amount),
+    value: ethers.utils.parseEther(amount)
   };
   const receipt = await signer.sendTransaction(tx);
   await receipt.wait();
   console.log(`balance after: ${ethers.utils.formatEther(await signer.getBalance())}`);
-};
+}
 
 main();
