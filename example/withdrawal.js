@@ -18,36 +18,36 @@ const main = async () => {
   // Get the Mixin User bound to an address
   const bridgeClient = BridgeApi();
   const user = await bridgeClient.register({
-    public_key: await signer.getAddress()
+    public_key: await signer.getAddress(),
   });
 
   // Get withdrawal fee
   const mixinClient = MixinApi({
     keystore: {
       ...user,
-      ...user.key
-    }
+      ...user.key,
+    },
   });
   const { fee } = await mixinClient.external.checkAddress({
     destination,
-    asset: withdrawAsset
+    asset: withdrawAsset,
   });
-  console.log(`withdraw fee is ${fee}`)
+  console.log(`withdraw fee is ${fee}`);
   const asset = await mixinClient.asset.fetch(withdrawAsset);
 
-  console.log('generate extras...')
+  console.log('generate extras...');
   const traceId = v4();
   // Generate extra for withdraw asset
   const assetExtra = await bridgeClient.generateExtra({
     destination,
     tag,
-    extra: `${traceId}:A`
+    extra: `${traceId}:A`,
   });
   // Generate extra for withdraw fee
   const feeExtra = await bridgeClient.generateExtra({
     destination,
     tag,
-    extra: `${traceId}:B`
+    extra: `${traceId}:B`,
   });
 
   if (mode === 'contract') {
@@ -60,24 +60,20 @@ const main = async () => {
 };
 
 const contractWithdrawal = async (user, asset, fee, assetExtra, feeExtra) => {
-  const bridge = new ethers.Contract(
-    '0x0915EaE769D68128EEd9711A0bc4097831BE57F3',
-    BridgeABI,
-    signer,
-  );
+  const bridge = new ethers.Contract('0x0915EaE769D68128EEd9711A0bc4097831BE57F3', BridgeABI, signer);
 
-  console.log('withdraw...')
+  console.log('withdraw...');
   if (withdrawAsset === MixinAssetID) {
     await bridge.release(user.contract, assetExtra, {
       gasPrice: 10000000, // 0.01 Gwei
       gasLimit: 350000,
-      value: ethers.utils.parseEther(Number(amount).toFixed(8))
+      value: ethers.utils.parseEther(Number(amount).toFixed(8)),
     });
 
     await bridge.release(user.contract, feeExtra, {
       gasPrice: 10000000, // 0.01 Gwei
       gasLimit: 350000,
-      value: ethers.utils.parseEther(Number(fee).toFixed(8))
+      value: ethers.utils.parseEther(Number(fee).toFixed(8)),
     });
 
     return;
@@ -90,12 +86,12 @@ const contractWithdrawal = async (user, asset, fee, assetExtra, feeExtra) => {
 
     await tokenContract.transferWithExtra(user.contract, value, assetExtra, {
       gasPrice: 10000000,
-      gasLimit: 350000
+      gasLimit: 350000,
     });
     await bridge.release(user.contract, assetExtra, {
       gasPrice: 10000000, // 0.01 Gwei
       gasLimit: 350000,
-      value: ethers.utils.parseEther(Number(amount).toFixed(8))
+      value: ethers.utils.parseEther(Number(amount).toFixed(8)),
     });
   }
 };
@@ -107,12 +103,14 @@ const registryWithdrawal = async (user, asset, fee, assetExtra, feeExtra) => {
   const withdrawalFeeAsset = asset.asset_id === asset.chain_id ? withdrawalAsset : await registry.fetchAssetContract(asset.asset_id);
 
   console.log('withdraw...');
-  const assetContractExtra = getExtra([{
-    address: withdrawalAsset,
-    method: 'transferWithExtra',
-    types: ['address', 'uint256', 'bytes'],
-    values: [user.contract, ethers.utils.parseUnits(amount, 8), assetExtra]
-  }]);
+  const assetContractExtra = getExtra([
+    {
+      address: withdrawalAsset,
+      method: 'transferWithExtra',
+      types: ['address', 'uint256', 'bytes'],
+      values: [user.contract, ethers.utils.parseUnits(amount, 8), assetExtra],
+    },
+  ]);
   const assetTx = {
     asset_id: withdrawAsset,
     amount,
@@ -126,13 +124,15 @@ const registryWithdrawal = async (user, asset, fee, assetExtra, feeExtra) => {
   const assetPayment = await mvmClient.payments(assetTx);
   console.log(`mixin://codes/${assetPayment.code_id}`);
 
-  fee = Number(fee) === 0 ? '0.00000001' : fee
-  const feeContractExtra = getExtra([{
-    address: withdrawalFeeAsset,
-    method: 'transferWithExtra',
-    types: ['address', 'uint256', 'bytes'],
-    values: [user.contract, ethers.utils.parseUnits(fee, 8), feeExtra]
-  }]);
+  fee = Number(fee) === 0 ? '0.00000001' : fee;
+  const feeContractExtra = getExtra([
+    {
+      address: withdrawalFeeAsset,
+      method: 'transferWithExtra',
+      types: ['address', 'uint256', 'bytes'],
+      values: [user.contract, ethers.utils.parseUnits(fee, 8), feeExtra],
+    },
+  ]);
   const feeTx = {
     asset_id: withdrawAsset,
     amount: fee,
