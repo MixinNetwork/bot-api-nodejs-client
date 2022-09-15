@@ -17,9 +17,13 @@ export interface RegisterRequest {
 }
 
 export interface GenerateExtraRequest {
+  /** for cross-chain withdrawal */
   destination?: string;
   tag?: string;
-  receivers: string[];
-  threshold: number;
+
+  /** for mixin user transfer */
+  receivers?: string[];
+  threshold?: number;
+
   extra: string;
 }

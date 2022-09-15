@@ -6,7 +6,7 @@ export const MVMMainnet = {
   ChainId: 73927,
   RPCUri: 'https://geth.mvm.dev',
   Bridge: {
-    Contract: '0x12266b2BbdEAb152f8A0CF83c3997Bc8dbAD0be0',
+    Contract: '0x0915EaE769D68128EEd9711A0bc4097831BE57F3',
   },
   Registry: {
     Contract: '0x3c84B6C98FBeB813e05a7A7813F0442883450B1F',
