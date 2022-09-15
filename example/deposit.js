@@ -6,8 +6,10 @@ const depositAsset = MixinAssetID; // asset_id of ETH
 const amount = '0.0001';
 
 const privateKey = ''; // private key of wallet
-const provider = new JsonRpcProvider('https://eth-mainnet.nodereal.io/v1/1659dfb40aa24bbb8153a677b98064d7');
+const provider = new JsonRpcProvider('https://cloudflare-eth.com');
 const signer = new Wallet(privateKey, provider);
+
+// from ethereum deposit to mvm
 
 const main = async () => {
   // Get the Mixin User bound to an address
