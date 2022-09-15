@@ -1,10 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import { v4 as uuid } from 'uuid';
+import isRetryAllowed from 'is-retry-allowed';
 import { ResponseError } from './error';
 import { Keystore } from './types/keystore';
 import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
-import { sleep } from './utils/sleep';
 
 const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
 
@@ -12,14 +13,14 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
 export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
+  const timeout = config?.timeout || 3000;
+  const retries = config?.retry || 5;
+
   const ins = axios.create({
     baseURL: hostURL[0],
-    timeout: 3000,
+    timeout,
     ...config,
   });
-
-  const retry = config?.retry || 5;
-  let count = 0;
 
   ins.interceptors.request.use((config: AxiosRequestConfig) => {
     const { method, data } = config;
@@ -42,30 +43,26 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   });
 
   ins.interceptors.response.use(undefined, async (e: any) => {
-    count++;
-    e.retryCount = count;
-    e.retryNumber = retry;
     await config?.responseCallback?.(e);
 
-    // Error thrown in response onFulfilled interceptor or generated in runtime has no config,
-    // but would still trigger another time of onFulfilled interceptor, then finish.
-    // Reject here to void it.
-    if (!e.config) return Promise.reject(e);
+    return Promise.reject(e);
+  });
 
-    if (count >= retry) {
-      count = 0;
-      return Promise.reject(new Error(e.code));
+  axiosRetry(ins, {
+    retries,
+    shouldResetTimeout: true,
+    retryDelay: () => 500,
+    retryCondition: (error) => (
+        !error.response &&
+        Boolean(error.code) && // Prevents retrying cancelled requests
+        isRetryAllowed(error)) || isIdempotentRequestError(error),
+    onRetry: (_count, err, requestConfig) => {
+      if (err.code && ['ETIMEDOUT', 'ECONNABORTED'].includes(err.code)) {
+        if (config?.baseURL) return;
+        requestConfig.baseURL = err.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+        ins.defaults.baseURL = err.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+      }
     }
-
-    if (['ETIMEDOUT', 'ECONNABORTED'].includes(e.code)) {
-      if (config?.baseURL) return e.config;
-
-      ins.defaults.baseURL = e.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-      e.config.baseURL = ins.defaults.baseURL;
-    }
-
-    await sleep();
-    return ins(e.config);
   });
 
   return ins;
