@@ -4,6 +4,6 @@ describe('Tests for network', () => {
   const network = Network();
   test('Test for fetch network chains', async () => {
     const resp = await network.chains();
-    expect(resp.length).toBe(39);
+    expect(resp.length).toBe(40);
   });
 });
