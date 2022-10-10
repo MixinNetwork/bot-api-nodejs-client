@@ -8,6 +8,7 @@ export interface AssetCommonResponse {
   type: 'asset';
   asset_id: string;
   chain_id: string;
+  fee_asset_id: string;
   symbol: string;
   name: string;
   icon_url: string;
