@@ -60,8 +60,8 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     onRetry: (_count, err, requestConfig) => {
       if (err.code && ['ETIMEDOUT', 'ECONNABORTED'].includes(err.code)) {
         if (config?.baseURL) return;
-        requestConfig.baseURL = err.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-        ins.defaults.baseURL = err.config.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+        requestConfig.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+        ins.defaults.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
       }
     },
   });
