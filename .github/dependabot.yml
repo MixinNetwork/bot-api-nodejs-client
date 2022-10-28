@@ -12,5 +12,5 @@ updates:
       day: 'monday'
 
     ignore:
-      - dependency-name: "is-retry-allowed"
-        versions: ["3.x"]
+      - dependency-name: 'is-retry-allowed'
+        versions: ['3.x']
