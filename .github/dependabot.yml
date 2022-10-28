@@ -10,3 +10,7 @@ updates:
     schedule:
       interval: 'weekly'
       day: 'monday'
+
+    ignore:
+      - dependency-name: "is-retry-allowed"
+        versions: ["3.x"]
