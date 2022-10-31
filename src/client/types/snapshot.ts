@@ -58,4 +58,10 @@ export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalRe
 export interface SnapshotRequest {
   limit: number | string;
   offset: string;
+  order?: 'ASC' | 'DESC';
+  asset?: string;
+  opponent?: string;
+  /** only for withdrawals */
+  destination?: string;
+  tag?: string;
 }
