@@ -6,6 +6,7 @@ export * from './utils';
 
 export { MVMApi } from './client';
 export { Encoder } from './encoder';
+export { Decoder } from './decoder';
 export { Registry } from './registry';
 export { StorageContract } from './storage';
 
