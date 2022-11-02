@@ -1,6 +1,7 @@
 import JsSHA from 'jssha';
 import forge from 'node-forge';
 import { stringify as uuidStringify, v4 as uuid } from 'uuid';
+import {SHA3} from "sha3";
 
 // TODO: maybe try https://www.npmjs.com/package/node-forge#sha256
 /** Supporting multisig for tokens & collectibles */
@@ -25,4 +26,7 @@ export const uniqueConversationID = (userID: string, recipientID: string): strin
   return uuidStringify(bytes);
 };
 
+export const newHash = (str: string) => new SHA3(256).update(str).digest('hex');
+
 export const getUuid = () => uuid();
+
