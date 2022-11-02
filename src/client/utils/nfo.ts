@@ -1,8 +1,8 @@
 import { parse as UUIDParse, stringify } from 'uuid';
-import { NFOMemo } from "../types";
+import { NFOMemo } from '../types';
 import { newHash } from './uniq';
 import { base64RawURLEncode } from './base64';
-import { Encoder, Decoder } from "../../mvm";
+import { Encoder, Decoder } from '../../mvm';
 
 const Prefix = 'NFO';
 const Version = 0x00;
@@ -53,11 +53,11 @@ export const decodeNfoMemo = (hexMemo: string) => {
     if (nm.class !== DefaultClass) throw Error(`Invalid NFO memo chain: ${nm.class}`);
 
     const collection = Buffer.from(decoder.readBytes(), 'hex');
-    nm.collection = stringify(collection)
+    nm.collection = stringify(collection);
 
     nm.token = decoder.readBytes();
   }
 
   nm.extra = decoder.readBytes();
   return nm;
-}
+};

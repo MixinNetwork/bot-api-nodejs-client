@@ -3,9 +3,9 @@ export interface NFOMemo {
   version: number;
 
   mask?: number;
-  chain?: string; /** chain uuid */
-  class?: string; /** contract address */
-  collection?: string; /** collection uuid */
+  chain?: string /** chain uuid */;
+  class?: string /** contract address */;
+  collection?: string /** collection uuid */;
   token?: string;
   extra: string;
 }

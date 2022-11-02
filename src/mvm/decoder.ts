@@ -11,7 +11,7 @@ export class Decoder {
 
   readByte() {
     const value = this.buf.readUint8();
-    this.read(1)
+    this.read(1);
     return value;
   }
 
@@ -24,13 +24,13 @@ export class Decoder {
 
   readUInt64() {
     const value = this.buf.readBigUInt64BE();
-    this.read(8)
+    this.read(8);
     return value;
   }
 
   readUUID() {
     const value = this.buf.subarray(0, 16);
-    this.read(16)
+    this.read(16);
     return value;
   }
 }
