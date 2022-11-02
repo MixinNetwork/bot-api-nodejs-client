@@ -24,3 +24,7 @@ export function buildMintCollectibleMemo(collection_id: string, token_id: string
   encoder.writeSlice(Buffer.from(newHash(content), 'hex'));
   return base64url(encoder.buf);
 }
+
+// export function decodeNfoMemo(hexMemo: string) {
+//
+// }
