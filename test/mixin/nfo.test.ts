@@ -20,10 +20,10 @@ describe('Tests for nfo', () => {
       const tokenId = stringify(bytes);
       expect(tokenId).toEqual('8048de2d-8092-3ccc-a47d-e30da9764f05');
 
-      const res = buildCollectibleMemo(nfo.collection, Number(nfo.token), '')
-      const hex = Buffer.from(res, 'base64').toString('hex')
+      const res = buildCollectibleMemo(nfo.collection, Number(nfo.token), '');
+      const hex = Buffer.from(res, 'base64').toString('hex');
       // Compare without content
-      expect(hex.slice(0, hex.length - 66)).toEqual(memo.slice(0, memo.length - 66))
+      expect(hex.slice(0, hex.length - 66)).toEqual(memo.slice(0, memo.length - 66));
     }
   });
 });
