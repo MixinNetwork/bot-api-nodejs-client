@@ -10,7 +10,7 @@ const Version = 0x00;
 const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
 const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
 
-export function buildMintCollectibleMemo(collection_id: string, token_id: string, content: string): string {
+export function buildCollectibleMemo(collection_id: string, token_id: number, content: string): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
 
@@ -20,7 +20,7 @@ export function buildMintCollectibleMemo(collection_id: string, token_id: string
 
   encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
   encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));
-  encoder.writeSlice(Buffer.from(UUIDParse(token_id) as Buffer));
+  encoder.writeSlice(Buffer.from([token_id]));
 
   encoder.writeSlice(Buffer.from(newHash(content), 'hex'));
   return base64RawURLEncode(encoder.buf);
