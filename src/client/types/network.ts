@@ -86,6 +86,7 @@ export interface ExchangeRateResponse {
 export interface CheckAddressResponse {
   destination: string;
   tag: string;
+  fee: string;
 }
 
 export interface CheckAddressRequest {

@@ -50,9 +50,11 @@ const getSingleExtra = ({ address, method, types = [], values = [] }: ContractRe
     contractInput += abiCoder.encode(types, values).slice(2);
   }
 
-  const inputLength = Buffer.from([0, contractInput.length / 2]).toString('hex');
-  const extra = `${contractAddress}${inputLength}${contractInput}`;
-  return extra;
+  const inputByteLength = Buffer.from(contractInput, 'hex').byteLength;
+  const inputLengthBuffer = inputByteLength > 256 ? [Math.floor(inputByteLength / 256), inputByteLength % 256] : [0, inputByteLength];
+  const inputLength = Buffer.from(inputLengthBuffer).toString('hex');
+
+  return `${contractAddress}${inputLength}${contractInput}`;
 };
 
 /**  Get extra for multiple contracts calling, started with number of contracts to be called */

@@ -45,7 +45,7 @@ export const TransferKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
   },
 
   /** Get one-time user keys for mainnet */
-  outputs: (input: GhostInputRequest): Promise<GhostKeysResponse[]> => axiosInstance.post<unknown, GhostKeysResponse[]>(`/outputs`, input),
+  outputs: (input: GhostInputRequest[]): Promise<GhostKeysResponse[]> => axiosInstance.post<unknown, GhostKeysResponse[]>(`/outputs`, input),
 });
 
 export const TransferClient = buildClient(TransferKeystoreClient);

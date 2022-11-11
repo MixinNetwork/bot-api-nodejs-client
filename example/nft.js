@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const { MixinApi, MixinAssetID, MintMinimumCost, GroupMembers, GroupThreshold, buildMintCollectibleMemo } = require('..');
+const { MixinApi, MixinAssetID, MintMinimumCost, GroupMembers, GroupThreshold, buildCollectibleMemo } = require('..');
 const keystore = require('../keystore.json');
 
 keystore.user_id = keystore.client_id;
@@ -10,7 +10,7 @@ async function main() {
   const tr = {
     asset_id: MixinAssetID,
     amount: MintMinimumCost,
-    memo: buildMintCollectibleMemo(id, id, 'test'),
+    memo: buildCollectibleMemo(id, 1, 'test'),
     trace_id: id,
     opponent_multisig: {
       receivers: GroupMembers,

@@ -1,7 +1,7 @@
 // @ts-ignore
 import forge from 'node-forge';
 import { v4 as uuid } from 'uuid';
-import { signAuthenticationToken } from '../../src/client/utils/auth';
+import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
 import { sharedEd25519Key, signEd25519PIN } from '../../src/client/utils/pin';
@@ -76,7 +76,7 @@ describe('Tests for utils', () => {
   });
 
   test('tests for auth', () => {
-    expect(signAuthenticationToken('GET', '/me', '', uuid(), keystore)).not.toBe('');
-    expect(signAuthenticationToken('POST', '/me', { foo: 'bar' }, uuid(), keystore)).not.toBe('');
+    expect(signAccessToken('GET', '/me', '', uuid(), keystore)).not.toBe('');
+    expect(signAccessToken('POST', '/me', { foo: 'bar' }, uuid(), keystore)).not.toBe('');
   });
 });

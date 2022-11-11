@@ -14,6 +14,7 @@ export * from './keystore';
 export * from './message';
 export * from './multisig';
 export * from './network';
+export * from './nfo';
 export * from './oauth';
 export * from './payment';
 export * from './snapshot';
