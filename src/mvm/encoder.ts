@@ -1,4 +1,4 @@
-import BN from 'bn.js';
+import utils from 'ethers/lib/utils';
 import { parse } from 'uuid';
 import { Aggregated, Input, Output } from './types';
 
@@ -6,14 +6,14 @@ const MaximumEncodingInt = 0xffff;
 
 const AggregatedSignaturePrefix = 0xff01;
 
-const magic = Buffer.from([0x77, 0x77]);
+export const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
 export const integerToBytes = (x: number) => {
   const bytes = [];
   let i = x;
   do {
-    bytes.unshift(x & 255);
+    bytes.unshift(i & 255);
     i = (i / 2 ** 8) | 0;
   } while (i !== 0);
   return bytes;
@@ -130,7 +130,7 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(new BN(1e8).mul(new BN(o.amount!)).toNumber());
+    this.writeInteger(utils.parseUnits(Number(o.amount!).toFixed(8), 8).toNumber());
     this.writeInt(o.keys!.length);
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
@@ -140,7 +140,6 @@ export class Encoder {
     const s = Buffer.from(o.script!, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
-
     const w = o.withdrawal;
     if (typeof w === 'undefined') {
       this.write(empty);

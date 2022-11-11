@@ -20,6 +20,13 @@ export const ExternalKeystoreClient = (axiosInstance: AxiosInstance) => ({
    */
   exchangeRates: (): Promise<ExchangeRateResponse[]> => axiosInstance.get<unknown, ExchangeRateResponse[]>('/external/fiats'),
 
+  /**
+   * Submit a raw transaction to a random mainnet node
+   *   {
+   *     method: 'sendrawtransaction',
+   *     params: array of transaction hash
+   *   }
+   * */
   proxy: (params: ProxyRequest): Promise<any> => axiosInstance.post<unknown, any>('/external/proxy', params),
 });
 

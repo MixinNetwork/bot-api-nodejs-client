@@ -81,8 +81,6 @@
     "@ethersproject/abi": "^5.6.3",
     "@ethersproject/providers": "^5.6.8",
     "@types/axios": "^0.14.0",
-    "@types/bn.js": "^5.1.0",
-    "@types/jsonwebtoken": "^8.5.8",
     "@types/node-forge": "^1.0.2",
     "@types/serialize-javascript": "^5.0.2",
     "@types/uuid": "^8.3.4",

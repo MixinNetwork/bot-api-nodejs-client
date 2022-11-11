@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from 'mvm/types/bridge';
+import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from '../types/bridge';
 import ResponseError from '../../client/error';
 
 export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {

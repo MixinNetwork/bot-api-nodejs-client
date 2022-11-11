@@ -16,7 +16,7 @@ export interface RawTransactionRequest {
 export interface GhostInputRequest {
   receivers: string[];
   index: number;
-  hint: string;
+  hint?: string;
 }
 
 export interface GhostKeysResponse {
