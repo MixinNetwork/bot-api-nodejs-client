@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { client } from './common';
 import { MintMinimumCost, GroupMembers, GroupThreshold } from '../src/client/collectible';
-import { buildMintCollectibleMemo, MixinAssetID } from '../src';
+import { buildCollectibleMemo, MixinAssetID } from '../src';
 
 describe('address', () => {
   it('create nft', async () => {
@@ -10,7 +10,7 @@ describe('address', () => {
       asset_id: MixinAssetID,
       amount: MintMinimumCost,
       trace_id: id,
-      memo: buildMintCollectibleMemo(id, id, 'test'),
+      memo: buildCollectibleMemo(id, 1, 'test'),
       opponent_multisig: {
         receivers: GroupMembers,
         threshold: GroupThreshold,
