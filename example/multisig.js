@@ -61,10 +61,10 @@ const main = async () => {
   // 3. refund
   console.log('refund to bot:');
   const asset = await client.asset.fetch(asset_id);
-  const receivers = await client.transfer.outputs({
+  const receivers = await client.transfer.outputs([{
     receivers: [keystore.user_id],
     index: 0,
-  });
+  }]);
   console.log('generate raw transaction');
   const raw = buildMultiSigsTransaction({
     version: 2,
@@ -78,8 +78,8 @@ const main = async () => {
     outputs: [
       {
         amount,
-        mask: receivers.mask,
-        keys: receivers.keys,
+        mask: receivers[0].mask,
+        keys: receivers[0].keys,
         script: encodeScript(threshold),
       },
     ],
