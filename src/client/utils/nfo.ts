@@ -1,7 +1,7 @@
 import { parse as UUIDParse, stringify } from 'uuid';
 import { NFOMemo } from '../types';
 import { base64RawURLEncode } from './base64';
-import { newHash } from "./uniq";
+import { newHash } from './uniq';
 import { Encoder, Decoder } from '../../mvm';
 
 const Prefix = 'NFO';
