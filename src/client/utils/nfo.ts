@@ -1,14 +1,25 @@
+import forge from "node-forge";
 import { parse as UUIDParse, stringify } from 'uuid';
 import { NFOMemo } from '../types';
 import { base64RawURLEncode } from './base64';
-import { newHash } from './uniq';
-import { Encoder, Decoder } from '../../mvm';
+import { Encoder, Decoder, integerToBytes } from '../../mvm';
 
 const Prefix = 'NFO';
 const Version = 0x00;
 
-const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
-const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
+export const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
+export const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
+
+export function buildTokenId(collection_id: string, token: number): string {
+  const tokenStr = Buffer.from(integerToBytes(token)).toString('hex')
+  const msg = DefaultChain.replaceAll('-', '') + DefaultClass + collection_id.replaceAll('-', '') + tokenStr;
+  const md5 = forge.md.md5.create();
+  md5.update(Buffer.from(msg, 'hex').toString('binary'));
+  const bytes = Buffer.from(md5.digest().bytes(), 'binary');
+  bytes[6] = (bytes[6] & 0x0f) | 0x30;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  return stringify(bytes)
+}
 
 export function buildCollectibleMemo(collection_id: string, token_id: number, content: string): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
@@ -20,9 +31,9 @@ export function buildCollectibleMemo(collection_id: string, token_id: number, co
 
   encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
   encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));
-  encoder.writeSlice(Buffer.from([token_id]));
+  encoder.writeSlice(Buffer.from(integerToBytes(token_id)));
 
-  encoder.writeSlice(Buffer.from(newHash(content), 'hex'));
+  encoder.writeSlice(Buffer.from(content, 'hex'));
   return base64RawURLEncode(encoder.buf);
 }
 
@@ -55,9 +66,9 @@ export const decodeNfoMemo = (hexMemo: string) => {
     const collection = Buffer.from(decoder.readBytes(), 'hex');
     nm.collection = stringify(collection);
 
-    nm.token = decoder.readBytes();
+    nm.token = parseInt(decoder.readBytes(), 16);
   }
 
-  nm.extra = decoder.readBytes();
+  nm.extra = Buffer.from(decoder.readBytes(), 'hex').toString();
   return nm;
 };
