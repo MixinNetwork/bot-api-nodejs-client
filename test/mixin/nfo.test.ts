@@ -10,7 +10,7 @@ describe('Tests for nfo', () => {
       const tokenId = buildTokenId(nfo.collection, nfo.token);
       expect(tokenId).toEqual('8048de2d-8092-3ccc-a47d-e30da9764f05');
 
-      const res = buildCollectibleMemo(nfo.collection, nfo.token, '');
+      const res = buildCollectibleMemo('', nfo.collection, nfo.token);
       const hex = base64RawURLDecode(res).toString('hex');
       // Compare without content
       expect(hex.slice(0, hex.length - 2)).toEqual(memo.slice(0, memo.length - 66));

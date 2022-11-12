@@ -1,7 +1,6 @@
 import forge from "node-forge";
 import { parse as UUIDParse, stringify } from 'uuid';
 import { NFOMemo } from '../types';
-import { base64RawURLEncode } from './base64';
 import { Encoder, Decoder, integerToBytes } from '../../mvm';
 
 const Prefix = 'NFO';
@@ -21,20 +20,24 @@ export function buildTokenId(collection_id: string, token: number): string {
   return stringify(bytes)
 }
 
-export function buildCollectibleMemo(collection_id: string, token_id: number, content: string): string {
+export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: number, ): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
 
-  encoder.write(Buffer.from([1]));
-  encoder.writeUint64(BigInt(1));
-  encoder.writeUUID(DefaultChain);
+  if (collection_id && token_id) {
+    encoder.write(Buffer.from([1]));
+    encoder.writeUint64(BigInt(1));
+    encoder.writeUUID(DefaultChain);
 
-  encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
-  encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));
-  encoder.writeSlice(Buffer.from(integerToBytes(token_id)));
+    encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
+    encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));
+    encoder.writeSlice(Buffer.from(integerToBytes(token_id)));
+  } else {
+    encoder.write(Buffer.from([0]));
+  }
 
   encoder.writeSlice(Buffer.from(content, 'hex'));
-  return base64RawURLEncode(encoder.buf);
+  return encoder.buf.toString('hex');
 }
 
 export const decodeNfoMemo = (hexMemo: string) => {
