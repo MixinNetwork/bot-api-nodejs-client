@@ -1,12 +1,12 @@
-import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
-import {
+import type { AxiosInstance } from 'axios';
+import type Keystore from './types/keystore';
+import type { MultisigInitAction } from './types/multisig';
+import type {
   CollectibleRequestAction,
   CollectibleResponse,
   CollectionResponse,
   CollectibleOutputsRequest,
   CollectibleOutputsResponse,
-  CollectibleTransactionRequest,
   CollectibleTransactionResponse,
 } from './types/collectible';
 import { hashMembers, signEd25519PIN, buildClient } from './utils';
@@ -56,8 +56,8 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
     },
 
     /** Create a collectibles transfer request */
-    request: (data: CollectibleTransactionRequest): Promise<CollectibleTransactionResponse> =>
-      axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', data),
+    request: (action: MultisigInitAction, raw: string): Promise<CollectibleTransactionResponse> =>
+      axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', { action, raw }),
 
     /** Initiate or participate in signing */
     sign: (pin: string, requestID: string) => manageRequest(pin, requestID, 'sign'),
