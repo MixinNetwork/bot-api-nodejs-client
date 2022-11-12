@@ -1,4 +1,4 @@
-import forge from "node-forge";
+import forge from 'node-forge';
 import { parse as UUIDParse, stringify } from 'uuid';
 import { NFOMemo } from '../types';
 import { Encoder, Decoder, integerToBytes } from '../../mvm';
@@ -10,17 +10,17 @@ export const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
 export const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
 
 export function buildTokenId(collection_id: string, token: number): string {
-  const tokenStr = Buffer.from(integerToBytes(token)).toString('hex')
+  const tokenStr = Buffer.from(integerToBytes(token)).toString('hex');
   const msg = DefaultChain.replaceAll('-', '') + DefaultClass + collection_id.replaceAll('-', '') + tokenStr;
   const md5 = forge.md.md5.create();
   md5.update(Buffer.from(msg, 'hex').toString('binary'));
   const bytes = Buffer.from(md5.digest().bytes(), 'binary');
   bytes[6] = (bytes[6] & 0x0f) | 0x30;
   bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  return stringify(bytes)
+  return stringify(bytes);
 }
 
-export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: number, ): string {
+export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: number): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
 
