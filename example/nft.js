@@ -10,7 +10,7 @@ const keystore = {
   scope: 'PROFILE:READ COLLECTIBLES:READ',
   authorization_id: '',
   private_key: '',
-  pin_token: botKeystore.pin_token
+  pin_token: botKeystore.pin_token,
 };
 
 const client = MixinApi({
@@ -28,7 +28,7 @@ const readCollectibleOutput = async (id, receivers, offset = '') => {
     offset,
     limit: 500,
     members: receivers,
-    threshold: 1
+    threshold: 1,
   });
 
   // eslint-disable-next-line no-restricted-syntax
@@ -54,7 +54,7 @@ async function main() {
 
   // Fetch the transaction that user received nft token
   const utxo = await readCollectibleOutput(tokenUuid, [user.user_id]);
-  console.log(utxo)
+  console.log(utxo);
 
   const multisig = await buildNfoTransferRequest(client, utxo.transaction_hash, receivers, threshold, 'test');
   console.log(multisig);
@@ -66,24 +66,24 @@ async function main() {
     const signed = await client.collection.sign(botKeystore.pin, multisig.request_id);
     raw_transaction = signed.raw_transaction;
   } else {
-    console.log('Sign in messenger')
+    console.log('Sign in messenger');
     console.log(`mixin://codes/${multisig.code_id}`);
-    raw_transaction = await new Promise((resolve) => {
+    raw_transaction = await new Promise(resolve => {
       const timer = setInterval(async () => {
         const payment = await client.code.fetch(multisig.code_id);
-        if (payment.state === "signed") {
+        if (payment.state === 'signed') {
           clearInterval(timer);
           resolve(payment.raw_transaction);
         }
-      }, 1000)
-    })
+      }, 1000);
+    });
   }
 
   console.log('send to mainnet...');
   console.log(raw_transaction);
   const res = await client.external.proxy({
     method: 'sendrawtransaction',
-    params: [ raw_transaction ],
+    params: [raw_transaction],
   });
   console.log(res);
 }
