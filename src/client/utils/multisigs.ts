@@ -28,7 +28,7 @@ export const encodeTx = (tx: MultisigTransaction) => {
     enc.encodeOutput(output);
   });
 
-  const extra = Buffer.from(tx.extra);
+  const extra = Buffer.from(tx.extra, 'hex');
   enc.writeInt(extra.byteLength);
   enc.write(extra);
 
@@ -48,7 +48,6 @@ export const buildMultiSigsTransaction = (transaction: MultisigTransaction) => {
   const tx = {
     ...transaction,
     outputs: transaction.outputs.filter(output => !!output.mask),
-    extra: Buffer.from(transaction.extra).toString('hex'),
   };
   return encodeTx(tx);
 };

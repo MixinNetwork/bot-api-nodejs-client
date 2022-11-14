@@ -10,7 +10,7 @@ describe('address', () => {
       asset_id: MixinAssetID,
       amount: MintMinimumCost,
       trace_id: id,
-      memo: buildCollectibleMemo(id, 1, 'test'),
+      memo: buildCollectibleMemo(Buffer.from('test').toString('hex'), id, 1),
       opponent_multisig: {
         receivers: GroupMembers,
         threshold: GroupThreshold,

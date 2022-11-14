@@ -6,6 +6,6 @@ export interface NFOMemo {
   chain?: string /** chain uuid */;
   class?: string /** contract address */;
   collection?: string /** collection uuid */;
-  token?: string;
+  token?: number;
   extra: string;
 }
