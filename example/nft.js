@@ -1,4 +1,4 @@
-const { MixinApi, buildMultiSigsTransaction, encodeScript, sleep, buildCollectibleMemo, buildTokenId, DefaultNftAssetId } = require('..');
+const { MixinApi, sleep, buildTokenId, buildNfoTransferRequest } = require('..');
 const botKeystore = require('../keystore.json');
 botKeystore.user_id = botKeystore.client_id;
 
@@ -30,7 +30,6 @@ const readCollectibleOutput = async (id, receivers, offset = '') => {
     members: receivers,
     threshold: 1
   });
-  console.log(outputs)
 
   // eslint-disable-next-line no-restricted-syntax
   for (const output of outputs) {
@@ -45,7 +44,7 @@ const readCollectibleOutput = async (id, receivers, offset = '') => {
 async function main() {
   const user = await client.user.profile();
   // The mixin user or multisigs account that user want transfer the nft to
-  const receivers = [''];
+  const receivers = [owner === 'user' ? botKeystore.user_id : '7766b24c-1a03-4c3a-83a3-b4358266875d'];
   const threshold = 1;
 
   // The nft token information that user owns
@@ -58,31 +57,7 @@ async function main() {
   utxo.hash = utxo.transaction_hash;
   console.log(utxo)
 
-  const keys = await client.transfer.outputs([
-    {
-      receivers,
-      index: 0,
-    },
-  ]);
-  console.log('generate raw transaction');
-  const raw = buildMultiSigsTransaction({
-    version: 2,
-    asset: DefaultNftAssetId,
-    inputs: [utxo],
-    outputs: [
-      {
-        amount: 1,
-        mask: keys[0].mask,
-        keys: keys[0].keys,
-        script: encodeScript(threshold),
-      },
-    ],
-    extra: buildCollectibleMemo('test'),
-  });
-
-  // Generate a multi-signature
-  console.log('generate a multi-signature request...');
-  const multisig = await client.collection.request('sign', raw);
+  const multisig = await buildNfoTransferRequest(client, utxo, receivers, threshold, 'test');
   console.log(multisig);
 
   // If a bot owns the nft, sign the transaction
@@ -106,6 +81,7 @@ async function main() {
   }
 
   console.log('send to mainnet...');
+  console.log(raw_transaction);
   const res = await client.external.proxy({
     method: 'sendrawtransaction',
     params: [ raw_transaction ],
