@@ -108,5 +108,5 @@ export const buildNfoTransferRequest = async (client: KeystoreClientReturnType, 
     ],
     extra: buildCollectibleMemo(content),
   });
-  return await client.collection.request('sign', raw);
+  return client.collection.request('sign', raw);
 };

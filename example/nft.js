@@ -56,13 +56,7 @@ async function main() {
   const utxo = await readCollectibleOutput(tokenUuid, [user.user_id]);
   console.log(utxo);
 
-  const multisig = await buildNfoTransferRequest(
-    client,
-    utxo.transaction_hash,
-    receivers,
-    threshold,
-    Buffer.from('test').toString('hex')
-  );
+  const multisig = await buildNfoTransferRequest(client, utxo.transaction_hash, receivers, threshold, Buffer.from('test').toString('hex'));
   console.log(multisig);
 
   // If a bot owns the nft, sign the transaction
