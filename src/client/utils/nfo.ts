@@ -23,6 +23,9 @@ export function buildTokenId(collection_id: string, token: number): string {
   return stringify(bytes);
 }
 
+/**
+ * Content must be hex string without '0x'
+ * */
 export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: number): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
