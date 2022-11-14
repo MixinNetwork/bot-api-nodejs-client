@@ -8,6 +8,7 @@ const Version = 0x00;
 
 export const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
 export const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
+export const DefaultNftAssetId = '1700941284a95f31b25ec8c546008f208f88eee4419ccdcdbe6e3195e60128ca';
 
 export function buildTokenId(collection_id: string, token: number): string {
   const tokenStr = Buffer.from(integerToBytes(token)).toString('hex');
