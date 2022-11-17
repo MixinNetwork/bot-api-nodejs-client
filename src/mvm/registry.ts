@@ -64,7 +64,7 @@ export class Registry {
   async fetchContractAsset(address: string) {
     return this.contract.assets(address).then((data: BigNumber) => {
       return uuidStringify(Buffer.from(data.toHexString().slice(2), 'hex'));
-    })
+    });
   }
 
   /** fetch the user of mvm address */
