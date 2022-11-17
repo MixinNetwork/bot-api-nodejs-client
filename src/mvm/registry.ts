@@ -47,7 +47,7 @@ export class Registry {
     bufLen.writeUInt16BE(userIds.length);
     const bufThres = Buffer.alloc(2);
     bufThres.writeUInt16BE(threshold);
-    const ids = userIds.join('').replaceAll('-', '');
+    const ids = userIds.sort().join('').replaceAll('-', '');
     const identity = `0x${bufLen.toString('hex')}${ids}${bufThres.toString('hex')}`;
     return this.contract.contracts(ethers.utils.keccak256(identity));
   }
