@@ -1,5 +1,5 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
-import { ethers, Contract } from 'ethers';
+import { ethers, Contract, BigNumber } from 'ethers';
 import { stringify as uuidStringify } from 'uuid';
 import { RegistryABI } from './abis';
 import { MVMMainnet } from './constant';
@@ -61,8 +61,10 @@ export class Registry {
   }
 
   /** fetch an asset of mvm address */
-  fetchContractAsset(address: string) {
-    return this.contract.assets(address);
+  async fetchContractAsset(address: string) {
+    return this.contract.assets(address).then((data: BigNumber) => {
+      return uuidStringify(Buffer.from(data.toHexString().slice(2), 'hex'));
+    })
   }
 
   /** fetch the user of mvm address */
