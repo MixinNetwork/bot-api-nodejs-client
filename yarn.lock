@@ -1621,8 +1621,8 @@
     pretty-format "^25.2.1"
 
 "@types/jest@^29.0.1":
-  version "29.1.2"
-  resolved "https://registry.npmjs.org/@types/jest/-/jest-29.1.2.tgz"
+  version "29.2.4"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.2.4.tgz#9c155c4b81c9570dbd183eb8604aa0ae80ba5a5b"
   dependencies:
     expect "^29.0.0"
     pretty-format "^29.0.0"
