@@ -59,6 +59,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
       if (!h.onMessage) throw new Error('OnMessage not set');
       loopBlaze(h);
     },
+    getWebSocket: () => ws,
   };
 };
 
