@@ -9,55 +9,61 @@ const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
 
 export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
   let url = wsHostURL[0];
-  let ws: WebSocket | null;
-  let isAlive = false;
-  let pingInterval: ReturnType<typeof setInterval> | null;
+  let ws: WebSocket | undefined;
+  let pingTimeout: ReturnType<typeof setTimeout> | undefined;
+  let onTerminate: (() => void) | undefined;
+
+  const terminate = () => {
+    clearTimeout(Number(pingTimeout));
+    if (!ws) return;
+    ws?.terminate();
+    onTerminate?.();
+  };
 
   const heartbeat = () => {
-    ws!.on('pong', () => {
-      isAlive = true;
-    });
-    ws!.on('ping', () => {
-      isAlive = true;
-    });
-
-    pingInterval = setInterval(() => {
-      if (ws!.readyState === WebSocket.CONNECTING) return;
-
-      if (!isAlive) {
-        ws!.terminate();
-        return;
-      }
-
-      isAlive = false;
-      ws!.ping();
-    }, 1000 * 30);
+    clearTimeout(Number(pingTimeout));
+    pingTimeout = setTimeout(terminate, 1000 * 30);
   };
 
   const loopBlaze = (h: BlazeHandler) => {
-    ws = websocket(keystore, url, h, wsOptions);
-    heartbeat();
+    const connect = () => {
+      ws = websocket(keystore, url, h, wsOptions);
+      heartbeat();
 
-    ws.onopen = () => {
-      isAlive = true;
-      sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
+      ws.on('ping', heartbeat);
+
+      ws.onopen = () => {
+        heartbeat();
+        sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
+      };
+
+      ws.onclose = () => {
+        clearTimeout(Number(pingTimeout));
+        loopBlaze(h);
+      };
+
+      ws.onerror = e => {
+        if (e.message !== 'Opening handshake has timed out') return;
+        url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
+        terminate();
+      };
     };
 
-    ws.onclose = () => {
-      clearInterval(Number(pingInterval));
-      loopBlaze(h);
-    };
+    onTerminate = connect;
 
-    ws.onerror = e => {
-      if (e.message !== 'Opening handshake has timed out') return;
-      url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
-    };
+    connect();
   };
 
   return {
     loop: (h: BlazeHandler) => {
+      if (ws) throw new Error('Blaze is already running');
       if (!h.onMessage) throw new Error('OnMessage not set');
       loopBlaze(h);
+    },
+    stopLoop: () => {
+      onTerminate = undefined;
+      terminate();
+      ws = undefined;
     },
     getWebSocket: () => ws,
   };
