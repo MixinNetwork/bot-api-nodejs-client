@@ -92,7 +92,7 @@
     "ethers": "^5.6.8",
     "int64-buffer": "^1.0.1",
     "is-retry-allowed": "2.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jssha": "^3.2.0",
     "lodash.merge": "^4.6.2",
     "nano-seconds": "^1.2.2",
