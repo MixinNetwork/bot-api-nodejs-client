@@ -5,6 +5,7 @@ export interface DepositRequest {
   order?: 'ASC' | 'DESC';
   offset?: string;
   limit?: number;
+  user?: string;
 }
 
 export interface ProxyRequest {
