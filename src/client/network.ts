@@ -14,8 +14,11 @@ export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({
   /** Get the list of all public chains supported by Mixin */
   chains: (): Promise<NetworkChainResponse[]> => axiosInstance.get<unknown, NetworkChainResponse[]>('/network/chains'),
 
+  /** Get information of a chain */
+  fetchChain: (chainID: string): Promise<NetworkChainResponse> => axiosInstance.get<unknown, NetworkChainResponse>(`/network/chains/${chainID}`),
+
   /** Get public information of an asset */
-  fetchAsset: (assetID: string): Promise<NetworkAssetResponse> => axiosInstance.get<unknown, NetworkAssetResponse>(`network/assets/${assetID}`),
+  fetchAsset: (assetID: string): Promise<NetworkAssetResponse> => axiosInstance.get<unknown, NetworkAssetResponse>(`/network/assets/${assetID}`),
 
   /**
    * Get the list of the top 100 assets on the entire network
