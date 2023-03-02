@@ -19,6 +19,7 @@ export { NetworkClient } from './network';
 export { OAuthClient } from './oauth';
 export { PaymentClient } from './payment';
 export { PinClient } from './pin';
+export { RpcClient } from './rpc';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
 export { WithdrawalClient } from './withdrawal';
