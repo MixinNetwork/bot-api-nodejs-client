@@ -1,16 +1,17 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { 
   NodeInfoRpcResponse, 
-  GraphHead, 
-  SendRawTransactionResponse, 
-  TransactionResponse, 
+  SyncPoint, 
+  SendRawTransactionRpcResponse, 
+  TransactionRpcResponse, 
   UTXORpcResponse, 
   KeyRpcResponse,
   SnapshotRpcResponse,
-  MintWork,
-  MintDistribution,
-  Node,
+  MintWorkRpcResponse,
+  MintDistributionRpcResponse,
+  NodeRpcResponse,
   RoundRpcResponse,
+  RoundLinkRpcResponse
 } from './types';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -31,13 +32,13 @@ export const RpcClient = () => {
   return {
     getInfo: (): Promise<NodeInfoRpcResponse> => ins.post<unknown, NodeInfoRpcResponse>('/', { method: 'getinfo', params: [] }),
 
-    dumpGraphHead: (): Promise<GraphHead[]> => ins.post<unknown, GraphHead[]>('/', { method: 'dumpgraphhead', params: [] }),
+    dumpGraphHead: (): Promise<SyncPoint[]> => ins.post<unknown, SyncPoint[]>('/', { method: 'dumpgraphhead', params: [] }),
 
-    sendRawTransaction: (raw: string): Promise<SendRawTransactionResponse> => ins.post<unknown, SendRawTransactionResponse>('/', { method: 'sendrawtransaction', params: [ raw ] }),
+    sendRawTransaction: (raw: string): Promise<SendRawTransactionRpcResponse> => ins.post<unknown, SendRawTransactionRpcResponse>('/', { method: 'sendrawtransaction', params: [ raw ] }),
 
-    getTransaction: (hash: string): Promise<TransactionResponse> => ins.post<unknown, TransactionResponse>('/', { method: 'gettransaction', params: [ hash ] }),
+    getTransaction: (hash: string): Promise<TransactionRpcResponse> => ins.post<unknown, TransactionRpcResponse>('/', { method: 'gettransaction', params: [ hash ] }),
 
-    getCacheTransaction: (hash: string): Promise<TransactionResponse> => ins.post<unknown, TransactionResponse>('/', { method: 'getcachetransaction', params: [ hash ] }),
+    getCacheTransaction: (hash: string): Promise<TransactionRpcResponse> => ins.post<unknown, TransactionRpcResponse>('/', { method: 'getcachetransaction', params: [ hash ] }),
 
     getUTXO: (hash: string, index: string): Promise<UTXORpcResponse> => ins.post<unknown, UTXORpcResponse>('/', { method: 'getutxo', params: [ hash, index ] }),
 
@@ -48,19 +49,18 @@ export const RpcClient = () => {
     listSnapshots: (offset: string, count: string, sig: boolean, tx: boolean): Promise<SnapshotRpcResponse[]> => 
       ins.post<unknown, SnapshotRpcResponse[]>('/', { method: 'listsnapshots', params: [ offset, count, sig, tx ] }),
 
-    listMintWorks: (offset: string): Promise<MintWork[]> => ins.post<unknown, MintWork[]>('/', { method: 'listmintworks', params: [ offset ] }),
+    listMintWorks: (offset: string): Promise<MintWorkRpcResponse[]> => ins.post<unknown, MintWorkRpcResponse[]>('/', { method: 'listmintworks', params: [ offset ] }),
 
-    listMintDistributions: (offset: string, count: string, tx: boolean): Promise<MintDistribution[]> => 
-      ins.post<unknown, MintDistribution[]>('/', { method: 'listmintdistributions', params: [ offset, count, tx ] }),
+    listMintDistributions: (offset: string, count: string, tx: boolean): Promise<MintDistributionRpcResponse[]> => 
+      ins.post<unknown, MintDistributionRpcResponse[]>('/', { method: 'listmintdistributions', params: [ offset, count, tx ] }),
 
-    listAllNodes: (threshold: string, state?: boolean): Promise<Node[]> => ins.post<unknown, Node[]>('/', { method: 'listallnodes', params: [ threshold, state ] }),
+    listAllNodes: (threshold: string, state?: boolean): Promise<NodeRpcResponse[]> => ins.post<unknown, NodeRpcResponse[]>('/', { method: 'listallnodes', params: [ threshold, state ] }),
 
     getRoundByNumber: (node: string, number: string): Promise<RoundRpcResponse> => ins.post<unknown, RoundRpcResponse>('/', { method: 'getroundbynumber', params: [ node, number ] }),
 
     getRoundByHash: (hash: string): Promise<RoundRpcResponse> => ins.post<unknown, RoundRpcResponse>('/', { method: 'getroundbyhash', params: [ hash ] }),
 
-    getRoundLink: (from: string, to: string) => ins.post('/', { method: 'getroundlink', params: [ from, to ] }),
-
+    getRoundLink: (from: string, to: string): Promise<RoundLinkRpcResponse> => ins.post<unknown, RoundLinkRpcResponse>('/', { method: 'getroundlink', params: [ from, to ] }),
   }
 }
 

@@ -2,6 +2,11 @@ import { Input, Output } from '../../mvm/types/encoder';
 
 type NodeState = 'PLEDGING' | 'ACCEPTED' | 'REMOVED' | 'CANCELLED';
 
+type References = null | {
+  external: string;
+  self: string;
+}
+
 export interface NodeInfoRpcResponse {
   network: string;
   node: string;
@@ -14,6 +19,102 @@ export interface NodeInfoRpcResponse {
   graph?: Gragh;
   queue?: Queue;
   metric?: Metric;
+}
+
+export interface SyncPoint {
+  node: string;
+  round: number;
+  hash: string;
+  pool: {
+    count: number;
+    index: number;
+  }
+}
+
+export interface SendRawTransactionRpcResponse {
+  hash: string;
+}
+
+export interface TransactionRpcResponse {
+  version: number;
+  asset: string;
+  inputs: Input[];
+  outputs: Output[];
+  extra: string;
+  hash: string;
+  hex: string;
+  snapshot?: string;
+}
+
+export interface UTXORpcResponse {
+  type: string;
+  hash: string;
+  index: number;
+  amount: string;
+
+  keys?: string[];
+  script?: string;
+  mask?: string;
+  lock?: string;
+}
+
+export interface KeyRpcResponse {
+  transaction: string;
+}
+
+export interface SnapshotRpcResponse {
+  version: number;
+  node: string;
+  references: References;
+  round: number;
+  timestamp: number;
+  hash: string;
+  hex?: string;
+  topology?: number;
+  witness?: {
+    signature: string;
+    timestamp: number;
+  }
+
+  transaction: TransactionRpcResponse | string;
+  transactions?: TransactionRpcResponse[] | string[];
+
+  signature?: string;
+  signatures?: string[];
+}
+
+export interface MintWorkRpcResponse {
+  [key: string]: number[];
+}
+
+export interface MintDistributionRpcResponse {
+  batch: number;
+  group: string;
+  amount: string;
+  transaction: TransactionRpcResponse | string;
+}
+
+export interface NodeRpcResponse {
+  id: string;
+  payee: string;
+  signer: string;
+  state: NodeState;
+  timestamp: number;
+  transaction: string;
+}
+
+export interface RoundRpcResponse {
+  node: string;
+  hash: string;
+  start: number;
+  end: number;
+  number: number;
+  references: References;
+  snapshots: SnapshotRpcResponse[];
+}
+
+export interface RoundLinkRpcResponse {
+  link: number;
 }
 
 interface Mint {
@@ -36,23 +137,11 @@ interface Gragh {
   tps: number;
 }
 
-export interface Node {
-  node: string;
-  signer: string;
-  payee: string;
-  state: NodeState;
-  timestamp: number;
-  transaction: string;
-  aggregator?: number;
-  works?: number[];
-  spaces?: number[];
-}
-
 interface CacheGraph {
   node: string;
   round: number;
   timestamp: number;
-  snapshots: GraphSnapshot[];
+  snapshots: SnapshotRpcResponse[];
   references: References;
 }
 
@@ -62,18 +151,6 @@ interface FinalGraph {
   round: number;
   start: number;
   end: number;
-}
-
-interface GraphSnapshot {
-  version: string;
-  node: string;
-  references: References;
-  round: number;
-  timestamp: number;
-  hash: string;
-  transaction: string;
-  transactions?: string[];
-  signature: string;
 }
 
 interface Queue {
@@ -110,95 +187,4 @@ interface MetricPool {
 
   bundle: number;
   'gossip-neighbors': number;
-}
-
-export interface GraphHead {
-  node: string;
-  round: number;
-  hash: string;
-  pool: {
-    count: number;
-    index: number;
-  }
-}
-
-export interface TransactionResponse {
-  hash?: string;
-  snapshot?: string;
-  signatures?: {
-    [key: number]: string;
-  };
-  aggregated?: {
-    signers: number[];
-    signature: string;
-  };
-
-  version?: number;
-  asset: string;
-  inputs?: Input[];
-  outputs?: Output[];
-  extra: string;
-}
-
-export interface UTXORpcResponse {
-  amount: string;
-  hash: string;
-  index: number;
-  keys: string[];
-  lock: string;
-  mask: string;
-  script: string;
-  type: string;
-}
-
-export interface KeyRpcResponse {
-  transaction: string;
-}
-
-export interface SnapshotRpcResponse {
-  hash?: string;
-  hex?: string;
-  node?: string;
-  references?: References | null;
-  round: number;
-  signature: string | null;
-  timestamp: number;
-  topology: number;
-  transaction: TransactionResponse | string;
-  transactions?: TransactionResponse[];
-  version?: number;
-  witness: {
-    signature: string;
-    timestamp: number;
-  }
-}
-
-export interface MintWork{
-  [key: string]: number[];
-}
-
-export interface MintDistribution {
-  amount: string;
-  batch: number;
-  group: string;
-  transaction: TransactionResponse | string;
-}
-
-interface References {
-  external: string;
-  self: string;
-}
-
-export interface RoundRpcResponse {
-  node: string;
-  hash: string;
-  start: number;
-  end: number;
-  number: number;
-  references: References;
-  snapshots: SnapshotRpcResponse[];
-}
-
-export interface SendRawTransactionResponse {
-  hash: string;
 }
