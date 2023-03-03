@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { 
-  NodeInfoResponse, 
+  NodeInfoRpcResponse, 
   GraphHead, 
   SendRawTransactionResponse, 
   TransactionResponse, 
@@ -29,7 +29,7 @@ export const RpcClient = () => {
   });
   
   return {
-    getInfo: (): Promise<NodeInfoResponse> => ins.post<unknown, NodeInfoResponse>('/', { method: 'getinfo', params: [] }),
+    getInfo: (): Promise<NodeInfoRpcResponse> => ins.post<unknown, NodeInfoRpcResponse>('/', { method: 'getinfo', params: [] }),
 
     dumpGraphHead: (): Promise<GraphHead[]> => ins.post<unknown, GraphHead[]>('/', { method: 'dumpgraphhead', params: [] }),
 

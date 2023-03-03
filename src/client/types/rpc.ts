@@ -1,44 +1,29 @@
 import { Input, Output } from '../../mvm/types/encoder';
 
+type NodeState = 'PLEDGING' | 'ACCEPTED' | 'REMOVED' | 'CANCELLED';
+
+export interface NodeInfoRpcResponse {
+  network: string;
+  node: string;
+  version: string;
+  uptime: string;
+  epoch: string;
+  timestamp: string;
+
+  mint?: Mint;
+  graph?: Gragh;
+  queue?: Queue;
+  metric?: Metric;
+}
+
 interface Mint {
   pool: string;
   batch: number;
   pledge: string;
 }
 
-type NodeState = 'ACCEPTED';
-
-export interface Node {
-  node: string;
-  signer: string;
-  payee: string;
-  state: NodeState;
-  timestamp: number;
-  transaction: string;
-  aggregator?: number;
-  works?: number[];
-}
-
-interface CacheGraph {
-  node: string;
-  reference: {
-    external: string;
-    self: string;
-  };
-  round: number;
-  snapshot: [];
-  timestamp: number;
-}
-
-interface FinalGraph {
-  hash: string;
-  node: string;
-  round: number;
-  start: number;
-  end: number;
-}
-
 interface Gragh {
+  /** node state is 'PLEDGING' | 'ACCEPTED' */
   consensus: Node[];
   cache: {
     [key: string]: CacheGraph
@@ -51,25 +36,63 @@ interface Gragh {
   tps: number;
 }
 
-export interface GraphHead {
+export interface Node {
+  node: string;
+  signer: string;
+  payee: string;
+  state: NodeState;
+  timestamp: number;
+  transaction: string;
+  aggregator?: number;
+  works?: number[];
+  spaces?: number[];
+}
+
+interface CacheGraph {
   node: string;
   round: number;
+  timestamp: number;
+  snapshots: GraphSnapshot[];
+  references: References;
+}
+
+interface FinalGraph {
   hash: string;
-  pool: {
-    count: number;
-    index: number;
-  }
+  node: string;
+  round: number;
+  start: number;
+  end: number;
+}
+
+interface GraphSnapshot {
+  version: string;
+  node: string;
+  references: References;
+  round: number;
+  timestamp: number;
+  hash: string;
+  transaction: string;
+  transactions?: string[];
+  signature: string;
 }
 
 interface Queue {
   finals: number;
   caches: number;
+  /** key is chain id */
   state: {
     [key: string]: number[];
   }
 }
 
-interface MetricCount {
+interface Metric {
+  transport: {
+    received: MetricPool;
+    sent: MetricPool;
+  }
+}
+
+interface MetricPool {
   ping: number;
   authentication: number;
   graph: number;
@@ -89,24 +112,14 @@ interface MetricCount {
   'gossip-neighbors': number;
 }
 
-interface Metric {
-  transport: {
-    received: MetricCount;
-    sent: MetricCount;
-  }
-}
-
-export interface NodeInfoResponse {
-  network: string;
+export interface GraphHead {
   node: string;
-  version: string;
-  uptime: string;
-  epoch: string;
-  timestamp: string;
-  mint?: Mint;
-  graph?: Gragh;
-  queue?: Queue;
-  metric?: Metric;
+  round: number;
+  hash: string;
+  pool: {
+    count: number;
+    index: number;
+  }
 }
 
 export interface TransactionResponse {
