@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import isRetryAllowed from 'is-retry-allowed';
 import type {
