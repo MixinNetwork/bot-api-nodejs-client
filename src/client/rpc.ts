@@ -2,6 +2,7 @@ import axios, { type AxiosResponse } from 'axios';
 import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import isRetryAllowed from 'is-retry-allowed';
 import type { 
+  HTTPConfig,
   NodeInfoRpcResponse, 
   SyncPoint, 
   SendRawTransactionRpcResponse, 
@@ -20,20 +21,30 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export const MixinMainnetRPC = "https://rpc.mixin.dev";
 
-export const RpcClient = () => {
+export const RpcClient = ({ requestConfig: config }: HTTPConfig = {}) => {
+  const timeout = config?.timeout || 1000 * 10;
+  const retries = config?.retry || 5;
+
   const ins = axios.create({
+    ...config,
+    timeout,
     baseURL: MixinMainnetRPC,
-    timeout: 1000 * 10
   });
 
   ins.interceptors.response.use(async (res: AxiosResponse) => {
     const { data, error } = res.data;
     if (error) throw new Error(error);
     return data;
-  }, async (e: any) => Promise.reject(e));
+  });
+  
+  ins.interceptors.response.use(undefined, async (e: any) => {
+    await config?.responseCallback?.(e);
+
+    return Promise.reject(e)
+  })
    
   axiosRetry(ins, {
-    retries: 5,
+    retries,
     shouldResetTimeout: true,
     retryDelay: () => 500,
     retryCondition: error =>

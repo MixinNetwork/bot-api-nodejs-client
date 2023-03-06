@@ -41,7 +41,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   oauth: OAuthBaseClient(axiosInstance),
   payment: PaymentBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
-  rpc: RpcClient(),
+  rpc: RpcClient(config),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
