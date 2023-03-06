@@ -1,4 +1,4 @@
-import { Input, Output } from '../../mvm/types/encoder';
+import { Input, Output } from '../mvm/types/encoder';
 
 type NodeState = 'PLEDGING' | 'ACCEPTED' | 'REMOVED' | 'CANCELLED';
 

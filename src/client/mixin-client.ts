@@ -19,7 +19,6 @@ import { NetworkBaseClient } from './network';
 import { OAuthBaseClient } from './oauth';
 import { PaymentBaseClient } from './payment';
 import { PinKeystoreClient } from './pin';
-import { RpcClient } from './rpc';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
@@ -42,7 +41,6 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   oauth: OAuthBaseClient(axiosInstance),
   payment: PaymentBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
-  rpc: RpcClient(config),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),

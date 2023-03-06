@@ -1,6 +1,6 @@
-import { RpcClient } from '../../src';
+import { MainnetRpcClient } from '../../src';
 
-const client = RpcClient();
+const client = MainnetRpcClient();
 
 describe('Tests for rpc', () => {
   test('Test for rpc', async () => {

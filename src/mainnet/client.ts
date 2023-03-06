@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import isRetryAllowed from 'is-retry-allowed';
+import type { RequestConfig } from '../client';
 import type {
-  HTTPConfig,
   NodeInfoRpcResponse,
   SyncPoint,
   SendRawTransactionRpcResponse,
@@ -15,13 +15,13 @@ import type {
   NodeRpcResponse,
   RoundRpcResponse,
   RoundLinkRpcResponse,
-} from './types';
+} from './type';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export const MixinMainnetRPC = 'https://rpc.mixin.dev';
 
-export const RpcClient = ({ requestConfig: config }: HTTPConfig = {}) => {
+export const MainnetRpcClient = (config: RequestConfig = {}) => {
   const timeout = config?.timeout || 1000 * 10;
   const retries = config?.retry || 5;
 
@@ -94,4 +94,4 @@ export const RpcClient = ({ requestConfig: config }: HTTPConfig = {}) => {
   };
 };
 
-export default RpcClient;
+export default MainnetRpcClient;
