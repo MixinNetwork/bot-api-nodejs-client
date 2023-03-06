@@ -55,9 +55,8 @@ export function MixinApi(config: HTTPConfig = {}): KeystoreClientReturnType & Re
   const requestClient = createRequestClient(axiosInstance);
 
   const { keystore } = config;
-  if (keystore && !keystore.user_id && keystore.client_id && validate(keystore.client_id)) 
-    keystore.user_id = keystore.client_id;
-    
+  if (keystore && !keystore.user_id && keystore.client_id && validate(keystore.client_id)) keystore.user_id = keystore.client_id;
+
   const keystoreClient = KeystoreClient(axiosInstance, keystore, config);
 
   return merge(keystoreClient, requestClient);
