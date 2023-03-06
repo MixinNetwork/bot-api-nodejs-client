@@ -5,7 +5,7 @@ type NodeState = 'PLEDGING' | 'ACCEPTED' | 'REMOVED' | 'CANCELLED';
 type References = null | {
   external: string;
   self: string;
-}
+};
 
 export interface NodeInfoRpcResponse {
   network: string;
@@ -28,7 +28,7 @@ export interface SyncPoint {
   pool: {
     count: number;
     index: number;
-  }
+  };
 }
 
 export interface SendRawTransactionRpcResponse {
@@ -74,7 +74,7 @@ export interface SnapshotRpcResponse {
   witness?: {
     signature: string;
     timestamp: number;
-  }
+  };
 
   transaction: TransactionRpcResponse | string;
   transactions?: TransactionRpcResponse[] | string[];
@@ -127,11 +127,11 @@ interface Gragh {
   /** node state is 'PLEDGING' | 'ACCEPTED' */
   consensus: Node[];
   cache: {
-    [key: string]: CacheGraph
-  },
+    [key: string]: CacheGraph;
+  };
   final: {
-    [key: string]: FinalGraph
-  },
+    [key: string]: FinalGraph;
+  };
   sps: number;
   topology: number;
   tps: number;
@@ -159,14 +159,14 @@ interface Queue {
   /** key is chain id */
   state: {
     [key: string]: number[];
-  }
+  };
 }
 
 interface Metric {
   transport: {
     received: MetricPool;
     sent: MetricPool;
-  }
+  };
 }
 
 interface MetricPool {
