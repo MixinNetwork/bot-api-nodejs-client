@@ -1,7 +1,5 @@
 import { RpcClient } from '../../src';
 
-jest.setTimeout(30000);
-
 const client = RpcClient();
 
 describe('Tests for rpc', () => {
