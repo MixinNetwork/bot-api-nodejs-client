@@ -2460,10 +2460,6 @@ ci-info@^3.2.0:
   version "3.4.0"
   resolved "https://registry.npmjs.org/ci-info/-/ci-info-3.4.0.tgz"
 
-ci-job-number@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.npmjs.org/ci-job-number/-/ci-job-number-1.2.2.tgz"
-
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.npmjs.org/class-utils/-/class-utils-0.3.6.tgz"
@@ -5224,10 +5220,6 @@ mkdirp@0.x, mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mkdirp@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
-
 mri@^1.1.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/mri/-/mri-1.2.0.tgz"
@@ -6181,15 +6173,13 @@ sisteransi@^1.0.5:
   resolved "https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz"
 
 size-limit@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.npmjs.org/size-limit/-/size-limit-8.1.0.tgz"
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/size-limit/-/size-limit-8.2.4.tgz#0ab0df7cbc89007d544a50b451f5fb4d110694ca"
   dependencies:
     bytes-iec "^3.1.1"
     chokidar "^3.5.3"
-    ci-job-number "^1.2.2"
     globby "^11.1.0"
     lilconfig "^2.0.6"
-    mkdirp "^1.0.4"
     nanospinner "^1.1.0"
     picocolors "^1.0.0"
 
