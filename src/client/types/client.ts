@@ -29,9 +29,8 @@ export interface BuildClient {
 
 export interface RequestClient {
   request: <T>(
-    config: Partial<Pick<
-      AxiosRequestConfig,
-      'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
-    >>,
+    config: Partial<
+      Pick<AxiosRequestConfig, 'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'>
+    >,
   ) => Promise<T>;
 }
