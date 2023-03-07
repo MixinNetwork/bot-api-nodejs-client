@@ -2,8 +2,10 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Keystore from './keystore';
 import { BlazeOptions } from './blaze';
 
+type OptionalPick<T, TRequired extends keyof T> = Partial<T> & Pick<T, TRequired>;
+
 export interface RequestConfig
-  extends Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
+  extends OptionalPick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
   responseCallback?: (rep: unknown) => void;
   retry?: number;
 }
