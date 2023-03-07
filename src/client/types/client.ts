@@ -3,7 +3,7 @@ import Keystore from './keystore';
 import { BlazeOptions } from './blaze';
 
 export interface RequestConfig
-  extends Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'> {
+  extends Partial<Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>> {
   responseCallback?: (rep: unknown) => void;
   retry?: number;
 }
@@ -29,9 +29,9 @@ export interface BuildClient {
 
 export interface RequestClient {
   request: <T>(
-    config: Pick<
+    config: Partial<Pick<
       AxiosRequestConfig,
       'url' | 'method' | 'data' | 'headers' | 'proxy' | 'httpAgent' | 'httpsAgent' | 'cancelToken' | 'baseURL' | 'onDownloadProgress' | 'onUploadProgress'
-    >,
+    >>,
   ) => Promise<T>;
 }
