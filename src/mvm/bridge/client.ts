@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { MVMMainnet } from '../constant';
 import axios, { AxiosResponse } from 'axios';
+import { MVMMainnet } from '../constant';
 import ResponseError from '../../client/error';
 import { GenerateExtraRequest, RegisteredUser, RegisterRequest } from '../types/bridge';
 
