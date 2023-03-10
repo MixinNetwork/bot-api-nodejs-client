@@ -21,7 +21,7 @@ export const BridgeApi = (uri: string = 'https://bridge.mvm.dev') => {
       const action = JSON.stringify(params);
       const value = Buffer.from(action).toString('hex');
       const hash = ethers.utils.keccak256(`0x${value}`).slice(2);
-      return `0x${MVMMainnet.Registry.PID.replaceAll('-', '')}${MVMMainnet.Storage.Contract.toLocaleLowerCase().slice(2)}${hash}${value}`
+      return `0x${MVMMainnet.Registry.PID.replaceAll('-', '')}${MVMMainnet.Storage.Contract.toLocaleLowerCase().slice(2)}${hash}${value}`;
     },
   };
 };
