@@ -35,6 +35,8 @@ export interface AuthenticationUserResponse extends UserResponse {
 
   public_key?: string;
   private_key?: string;
+  tip_counter: number;
+  tip_key_base64: string;
 }
 
 export interface PreferenceRequest {
@@ -54,4 +56,18 @@ export interface RelationshipRequest {
 export interface RelationshipAddRequest extends RelationshipRequest {
   phone?: string;
   full_name?: string;
+}
+
+export interface LogRequest {
+  category?: string;
+  offset?: string;
+  limit?: number;
+}
+
+export interface LogResponse {
+  type: string;
+  log_id: string;
+  code: string;
+  ip_address: string;
+  created_at: string;
 }

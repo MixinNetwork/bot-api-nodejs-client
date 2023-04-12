@@ -96,22 +96,7 @@ export interface CheckAddressRequest {
 }
 
 export interface NetworkSnapshotRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  order?: 'ASC' | 'DESC';
-}
-
-export interface DepositFilterRequest {
-  limit: number | string;
-  offset: string;
-  asset?: string;
-  opponent?: string;
-  tag?: string;
-}
-
-export interface SnapshotFilterRequest {
-  limit: number | string;
+  limit: number;
   offset: string;
   asset?: string;
   order?: 'ASC' | 'DESC';
