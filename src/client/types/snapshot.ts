@@ -56,7 +56,7 @@ export interface RawTransactionResponse extends BaseSnapshotResponse {
 export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
 
 export interface SnapshotRequest {
-  limit: number | string;
+  limit: number;
   offset: string;
   order?: 'ASC' | 'DESC';
   asset?: string;

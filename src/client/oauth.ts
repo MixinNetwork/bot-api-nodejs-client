@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { AccessTokenResponse } from './types/oauth';
+import { AccessTokenRequest, AccessTokenResponse, AuthorizationResponse, AuthorizeRequest } from './types/oauth';
 import { buildClient } from './utils/client';
 
 /**
@@ -10,16 +10,13 @@ import { buildClient } from './utils/client';
  */
 export const OAuthBaseClient = (axiosInstance: AxiosInstance) => ({
   /** Get the access code based on authorization code */
-  getToken: (client_id: string, code: string, ed25519: string, client_secret?: string, code_verifier?: string): Promise<AccessTokenResponse> => {
-    const data = {
-      client_id,
-      client_secret,
-      code,
-      ed25519,
-      code_verifier,
-    };
-    return axiosInstance.post<unknown, AccessTokenResponse>('/oauth/token', data);
-  },
+  getToken: (data: AccessTokenRequest) => axiosInstance.post<unknown, AccessTokenResponse>('/oauth/token', data),
+
+  authorize: (data: AuthorizeRequest) => axiosInstance.post<unknown, AuthorizationResponse>('/oauth/authorize', data),
+
+  authorizations: (appId?: string) => axiosInstance.get<unknown, AuthorizationResponse[]>('/authorizations', { params: { app: appId } }),
+
+  deAuthorize: (clientId: string) => axiosInstance.post<unknown, void>('/oauth/cancel', { client_id: clientId }),
 });
 
 export const OAuthClient = buildClient(OAuthBaseClient);

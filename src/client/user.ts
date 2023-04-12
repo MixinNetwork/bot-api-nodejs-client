@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios';
-import { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest, RelationshipAddRequest } from './types/user';
+import { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest, RelationshipAddRequest, LogRequest, LogResponse } from './types/user';
 import { buildClient } from './utils/client';
+import { AtLeastOne } from '../types';
 
 /** Methods to obtain or edit users' profile and relationships */
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
@@ -35,10 +36,13 @@ export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({
   update: (fullName: string, avatarBase64: string) => axiosInstance.post<unknown, UserResponse>(`/me`, { full_name: fullName, avatar_base64: avatarBase64 }),
 
   /** update user's preferences */
-  updatePreferences: (params: PreferenceRequest) => axiosInstance.post<unknown, AuthenticationUserResponse>(`/me/preferences`, params),
+  updatePreferences: (params: AtLeastOne<PreferenceRequest>) => axiosInstance.post<unknown, AuthenticationUserResponse>(`/me/preferences`, params),
 
   /** Manage the relationship between two users, one can 'ADD' | 'REMOVE' | 'BLOCK' | 'UNBLOCK' a user */
   updateRelationships: (relationship: RelationshipRequest | RelationshipAddRequest) => axiosInstance.post<unknown, UserResponse>(`/relationships`, relationship),
+
+  /** Get pin logs of user */
+  logs: (params: LogRequest) => axiosInstance.get<unknown, LogResponse[]>(`/logs`, { params }),
 });
 
 export const UserClient = buildClient(UserKeystoreClient);
