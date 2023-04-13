@@ -16,7 +16,7 @@ export const OAuthBaseClient = (axiosInstance: AxiosInstance) => ({
 
   authorizations: (appId?: string) => axiosInstance.get<unknown, AuthorizationResponse[]>('/authorizations', { params: { app: appId } }),
 
-  deAuthorize: (clientId: string) => axiosInstance.post<unknown, void>('/oauth/cancel', { client_id: clientId }),
+  revokeAuthorize: (clientId: string) => axiosInstance.post<unknown, void>('/oauth/cancel', { client_id: clientId }),
 });
 
 export const OAuthClient = buildClient(OAuthBaseClient);
