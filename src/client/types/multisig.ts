@@ -6,7 +6,7 @@ export type MultisigInitAction = 'sign' | 'unlock';
 
 export type MultisigAction = MultisigInitAction | 'cancel';
 
-export type MultisigState = 'initial' | 'signed';
+export type MultisigState = 'initial' | 'signed' | 'unlocked';
 
 export type MultisigOrder = 'created' | 'updated';
 
