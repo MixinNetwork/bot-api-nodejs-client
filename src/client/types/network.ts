@@ -80,7 +80,7 @@ export interface ExternalTransactionResponse {
 
 export interface ExchangeRateResponse {
   code: string;
-  rate: string;
+  rate: number;
 }
 
 export interface CheckAddressResponse {
