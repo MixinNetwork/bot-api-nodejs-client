@@ -39,6 +39,9 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
     return axiosInstance.post<unknown, CollectibleTransactionResponse>(`/collectibles/requests/${requestID}/${action}`, { pin: encrypted });
   };
 
+  const transfer = (action: MultisigInitAction, raw: string): Promise<CollectibleTransactionResponse> =>
+    axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', { action, raw });
+
   return {
     /** Get the information of the collectible */
     fetch: (tokenID: string): Promise<CollectibleResponse> => axiosInstance.get<unknown, CollectibleResponse>(`/collectibles/tokens/${tokenID}`),
@@ -55,9 +58,11 @@ export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore
       return axiosInstance.get<unknown, CollectibleOutputsResponse[]>('/collectibles/outputs', { params: hashedParams });
     },
 
+    /** @deprecated Use transfer() instead */
+    request: transfer,
+
     /** Create a collectibles transfer request */
-    request: (action: MultisigInitAction, raw: string): Promise<CollectibleTransactionResponse> =>
-      axiosInstance.post<unknown, CollectibleTransactionResponse>('/collectibles/requests', { action, raw }),
+    transfer,
 
     /** Initiate or participate in signing */
     sign: (pin: string, requestID: string) => manageRequest(pin, requestID, 'sign'),

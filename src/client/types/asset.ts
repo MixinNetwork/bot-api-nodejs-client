@@ -22,6 +22,7 @@ export interface AssetCommonResponse {
   capitalization: number;
   liquidity: string;
   reserve: string;
+  precision: number;
 }
 
 // fields for
