@@ -58,11 +58,9 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
         isRetryAllowed(error)) ||
       isIdempotentRequestError(error),
     onRetry: (_count, err, requestConfig) => {
-      if (err.code && ['ETIMEDOUT', 'ECONNABORTED'].includes(err.code)) {
-        if (config?.baseURL) return;
-        requestConfig.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-        ins.defaults.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-      }
+      if (config?.baseURL) return;
+      requestConfig.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
+      ins.defaults.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
     },
   });
 
