@@ -23,6 +23,7 @@ export interface AuthorizeRequest {
 }
 
 export interface AuthorizationResponse {
+  type: 'authorization';
   authorization_id: string;
   authorization_code: string;
   scopes: OAuthScope[];

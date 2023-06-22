@@ -39,7 +39,7 @@ export interface MultisigUTXOResponse {
 }
 
 export interface MultisigRequestResponse {
-  type: string;
+  type: 'multisig_request';
   request_id: string;
   user_id: string;
   asset_id: string;
