@@ -28,7 +28,7 @@ export const encodeTx = (tx: MultisigTransaction) => {
     enc.encodeOutput(output);
   });
 
-  const extra = Buffer.from(tx.extra, 'hex');
+  const extra = Buffer.from(tx.extra);
   enc.writeInt(extra.byteLength);
   enc.write(extra);
 
