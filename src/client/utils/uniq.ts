@@ -26,6 +26,6 @@ export const uniqueConversationID = (userID: string, recipientID: string): strin
   return uuidStringify(bytes);
 };
 
-export const newHash = (str: string) => new SHA3(256).update(str).digest('hex');
+export const newHash = (data: Buffer) => new SHA3(256).update(data).digest('hex');
 
 export const getUuid = () => uuid();
