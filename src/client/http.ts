@@ -7,7 +7,7 @@ import { Keystore } from './types/keystore';
 import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
 
-const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one'];
+const hostURL = ['https://api.mixin.one', 'https://mixin-api.zeromesh.net'];
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
