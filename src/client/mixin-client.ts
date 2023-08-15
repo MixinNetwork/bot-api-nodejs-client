@@ -2,7 +2,7 @@ import merge from 'lodash.merge';
 import type { AxiosInstance } from 'axios';
 import type Keystore from './types/keystore';
 import type { HTTPConfig, RequestClient } from './types/client';
-import { createAxiosClient, createRequestClient } from './utils/client';
+import { createAxiosClient, createKeystore, createRequestClient } from './utils/client';
 import { AddressKeystoreClient } from './address';
 import { AppKeystoreClient } from './app';
 import { AssetKeystoreClient } from './asset';
@@ -48,10 +48,12 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
 export function MixinApi(config: HTTPConfig = {}): KeystoreClientReturnType & RequestClient {
-  const axiosInstance = createAxiosClient(config);
+  const { keystore: initKeystore, requestConfig } = config;
+  const keystore = createKeystore(initKeystore);
+
+  const axiosInstance = createAxiosClient(keystore, requestConfig);
   const requestClient = createRequestClient(axiosInstance);
 
-  const { keystore } = config;
   const keystoreClient = KeystoreClient(axiosInstance, keystore, config);
 
   return merge(keystoreClient, requestClient);
