@@ -23,6 +23,7 @@ export interface AssetCommonResponse {
   liquidity: string;
   reserve: string;
   precision: number;
+  withdrawal_memo_possibility: 'negative' | 'positive' | 'possible';
 }
 
 // fields for
