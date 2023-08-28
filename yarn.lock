@@ -2178,9 +2178,9 @@ axe-core@^4.3.5:
   version "4.4.2"
   resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.4.2.tgz"
 
-axios-retry@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.npmjs.org/axios-retry/-/axios-retry-3.4.0.tgz"
+axios-retry@3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/axios-retry/-/axios-retry-3.7.0.tgz#d5007755d257b97e08d846089976f838b9db9ef9"
   dependencies:
     "@babel/runtime" "^7.15.4"
     is-retry-allowed "^2.2.0"
