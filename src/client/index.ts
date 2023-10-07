@@ -22,6 +22,7 @@ export { PinClient } from './pin';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
 export { WithdrawalClient } from './withdrawal';
+export { UtxoClient } from './utxo';
 
 export * from './mixin-client';
 export { mixinRequest } from './http';
