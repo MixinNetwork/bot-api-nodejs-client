@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUTXOResponse, MultisigRequestResponse } from './types/multisig';
+import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse } from './types/multisig';
 import { signEd25519PIN } from './utils/pin';
 import { hashMembers } from './utils/uniq';
 import { buildClient } from './utils/client';
@@ -21,7 +21,7 @@ export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
 
   return {
     /** Get signature outputs, if an account participates in it */
-    outputs: (params: MultisigRequest): Promise<MultisigUTXOResponse[]> => {
+    outputs: (params: MultisigRequest): Promise<MultisigUtxoResponse[]> => {
       const { members, threshold } = params;
       if (members.length === 0 || threshold < 1 || threshold > members.length) return Promise.reject(new Error('Invalid threshold or members'));
 
@@ -29,7 +29,7 @@ export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
         ...params,
         members: hashMembers(members),
       };
-      return axiosInstance.get<unknown, MultisigUTXOResponse[]>(`/multisigs/outputs`, { params: hashedParams });
+      return axiosInstance.get<unknown, MultisigUtxoResponse[]>(`/multisigs/outputs`, { params: hashedParams });
     },
 
     /** Generate a multi-signature request to obtain request_id */

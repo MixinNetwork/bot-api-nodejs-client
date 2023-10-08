@@ -22,6 +22,7 @@ import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
 import { BlazeKeystoreClient } from './blaze';
+import { UtxoKeystoreClient } from './utxo';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -43,6 +44,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
+  utxo: UtxoKeystoreClient(axiosInstance),
 });
 
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
