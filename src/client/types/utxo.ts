@@ -44,7 +44,7 @@ export interface RegisterResponse {
   created_at: string;
 }
 
-export interface RegisterRequest {
+export interface SafeRegisterRequest {
   public_key: string;
   signature: string;
 }

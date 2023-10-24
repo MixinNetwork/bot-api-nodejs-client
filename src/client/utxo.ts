@@ -5,7 +5,7 @@ import {
   OutputRequest,
   DepositEntryRequest,
   Deposit,
-  RegisterRequest,
+  SafeRegisterRequest,
   RegisterResponse,
   GhostKeyRequest,
   GhostKey,
@@ -26,7 +26,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   createDeposit: (params: DepositEntryRequest): Promise<Deposit[]> => axiosInstance.post<unknown, Deposit[]>('/safe/deposit_entries', params),
 
-  registerPublicKey: (params: RegisterRequest): Promise<RegisterResponse> => axiosInstance.post<unknown, RegisterResponse>('/safe/users', params),
+  registerPublicKey: (params: SafeRegisterRequest): Promise<RegisterResponse> => axiosInstance.post<unknown, RegisterResponse>('/safe/users', params),
 
   ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey> => axiosInstance.post<unknown, GhostKey>('/safe/keys', params),
 
