@@ -14,6 +14,7 @@ import {
   OutputFetchRequest,
 } from './types/utxo';
 import { hashMembers } from './utils';
+import { AssetResponse } from './types';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   fetchList: (params: OutputRequest): Promise<UtxoOutput[]> =>
@@ -35,6 +36,8 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   transactions: (params: TransactionRequest): Promise<TransactionResponse> => axiosInstance.post<unknown, TransactionResponse>('/safe/transactions', params),
 
   fetch: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
+
+  assetByMixinId: (mixinId: string): Promise<AssetResponse> => axiosInstance.get<unknown, AssetResponse>(`/safe/assets/${mixinId}`),
 });
 
 export const UtxoClient = buildClient(UtxoKeystoreClient);
