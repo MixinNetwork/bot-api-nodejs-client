@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { buildClient } from './utils/client';
+import { buildClient } from './utils';
 import {
   UtxoOutput,
   OutputRequest,
@@ -12,7 +12,7 @@ import {
   TransactionRequest,
   TransactionResponse,
   OutputFetchRequest,
-} from './types/utxo';
+} from './types';
 import { hashMembers } from './utils';
 import { AssetResponse } from './types';
 
@@ -34,6 +34,8 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   transactionRequest: (params: TransactionRequest): Promise<TransactionResponse> => axiosInstance.post<unknown, TransactionResponse>('/safe/transaction/requests', params),
 
   transactions: (params: TransactionRequest): Promise<TransactionResponse> => axiosInstance.post<unknown, TransactionResponse>('/safe/transactions', params),
+
+  transactionById: (transactionId: string): Promise<TransactionResponse> => axiosInstance.get<unknown, TransactionResponse>(`/safe/transactions/${transactionId}`),
 
   fetch: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
 

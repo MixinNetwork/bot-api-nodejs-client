@@ -23,6 +23,7 @@ export { TransferClient } from './transfer';
 export { UserClient } from './user';
 export { WithdrawalClient } from './withdrawal';
 export { UtxoClient } from './utxo';
+export { TokenClient } from './token';
 
 export * from './mixin-client';
 export { mixinRequest } from './http';

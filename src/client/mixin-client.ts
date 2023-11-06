@@ -1,8 +1,8 @@
 import merge from 'lodash.merge';
 import type { AxiosInstance } from 'axios';
 import type Keystore from './types/keystore';
-import type { HTTPConfig, RequestClient } from './types/client';
-import { createAxiosClient, createKeystore, createRequestClient } from './utils/client';
+import type { HTTPConfig, RequestClient } from './types';
+import { createAxiosClient, createKeystore, createRequestClient } from './utils';
 import { AddressKeystoreClient } from './address';
 import { AppKeystoreClient } from './app';
 import { AssetKeystoreClient } from './asset';
@@ -23,6 +23,7 @@ import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
 import { BlazeKeystoreClient } from './blaze';
 import { UtxoKeystoreClient } from './utxo';
+import { TokenKeystoreClient } from './token';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -45,6 +46,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   user: UserKeystoreClient(axiosInstance),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
   utxo: UtxoKeystoreClient(axiosInstance),
+  token: TokenKeystoreClient(axiosInstance),
 });
 
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
