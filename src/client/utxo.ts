@@ -1,20 +1,19 @@
 import { AxiosInstance } from 'axios';
-import { buildClient } from './utils';
 import {
-  UtxoOutput,
-  OutputRequest,
-  DepositEntryRequest,
+  AssetResponse,
   Deposit,
-  SafeRegisterRequest,
-  RegisterResponse,
-  GhostKeyRequest,
+  DepositEntryRequest,
   GhostKey,
+  GhostKeyRequest,
+  OutputFetchRequest,
+  OutputRequest,
+  RegisterResponse,
+  SafeRegisterRequest,
   TransactionRequest,
   TransactionResponse,
-  OutputFetchRequest,
+  UtxoOutput,
 } from './types';
-import { hashMembers } from './utils';
-import { AssetResponse } from './types';
+import { buildClient, hashMembers } from './utils';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   fetchList: (params: OutputRequest): Promise<UtxoOutput[]> =>
