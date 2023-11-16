@@ -89,14 +89,10 @@ export const GetMixAddress = (ma: MixAddress): string => {
     throw new Error(`invalid threshold: ${ma.threshold}`);
   }
 
-  const prefix = Buffer.concat([
-    Buffer.from([MixAddressVersion]), 
-    Buffer.from([ma.threshold]), 
-    Buffer.from([ma.members.length])
-  ]);
+  const prefix = Buffer.concat([Buffer.from([MixAddressVersion]), Buffer.from([ma.threshold]), Buffer.from([ma.members.length])]);
 
   let type = '';
-  let memberData: Buffer[] = [];
+  const memberData: Buffer[] = [];
   ma.members.forEach(addr => {
     if (addr.startsWith(MainAddressPrefix)) {
       if (!type) type = 'xin';
