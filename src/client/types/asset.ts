@@ -30,6 +30,8 @@ export interface AssetCommonResponse {
 // GET /assets/:id
 // GET /network/assets/top
 // GET /network/search/:q
+// GET /network/assets/:id
+// GET /safe/assets/:id
 export interface AssetResponse extends AssetCommonResponse {
   balance: string;
   deposit_entries: DepositEntryResponse[];
