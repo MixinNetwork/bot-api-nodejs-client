@@ -20,3 +20,8 @@ export interface AddressRequest {
   /** alias memo */
   tag?: string;
 }
+
+export interface MixAddress {
+  members: string[];
+  threshold: number;
+}
