@@ -5,17 +5,17 @@ import {
   DepositEntryRequest,
   GhostKey,
   GhostKeyRequest,
+  Keystore,
   OutputFetchRequest,
   OutputRequest,
   RegisterResponse,
-  SafeRegisterRequest,
   TransactionRequest,
   TransactionResponse,
   UtxoOutput,
 } from './types';
-import { buildClient, hashMembers } from './utils';
+import { buildClient, hashMembers, signSafeRegistration, signEd25519PIN } from './utils';
 
-export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
+export const UtxoKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   fetchList: (params: OutputRequest): Promise<UtxoOutput[]> =>
     axiosInstance.get<unknown, UtxoOutput[]>(`/safe/outputs`, {
       params: {
@@ -26,7 +26,11 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   createDeposit: (params: DepositEntryRequest): Promise<Deposit[]> => axiosInstance.post<unknown, Deposit[]>('/safe/deposit_entries', params),
 
-  registerPublicKey: (params: SafeRegisterRequest): Promise<RegisterResponse> => axiosInstance.post<unknown, RegisterResponse>('/safe/users', params),
+  registerPublicKey: (tipPin: string, seed: string, user_id: string): Promise<RegisterResponse> => {
+    const data = signSafeRegistration(tipPin, seed, user_id);
+    data.pin_base64 = signEd25519PIN(data.pin_base64, keystore)
+    return axiosInstance.post<unknown, RegisterResponse>('/safe/users', data);
+  },
 
   ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey> => axiosInstance.post<unknown, GhostKey>('/safe/keys', params),
 

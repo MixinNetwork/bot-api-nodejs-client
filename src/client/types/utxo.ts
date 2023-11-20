@@ -44,11 +44,6 @@ export interface RegisterResponse {
   created_at: string;
 }
 
-export interface SafeRegisterRequest {
-  public_key: string;
-  signature: string;
-}
-
 export interface GhostKey {
   mask: string;
   keys: string[];

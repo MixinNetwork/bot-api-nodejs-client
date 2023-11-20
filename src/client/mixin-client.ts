@@ -42,11 +42,11 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   oauth: OAuthBaseClient(axiosInstance),
   payment: PaymentBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
+  token: TokenKeystoreClient(axiosInstance),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
+  utxo: UtxoKeystoreClient(axiosInstance, keystore),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
-  utxo: UtxoKeystoreClient(axiosInstance),
-  token: TokenKeystoreClient(axiosInstance),
 });
 
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;

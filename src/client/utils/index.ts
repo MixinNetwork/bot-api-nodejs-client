@@ -4,6 +4,8 @@ export * from './client';
 export * from './multisigs';
 export * from './nfo';
 export * from './pin';
+export * from './safe';
 export * from './sleep';
+export * from './tip';
 export * from './uniq';
 export * from './ws';
