@@ -36,9 +36,9 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
 
 export const getTipPin = (pub: Buffer, counter: number) => {
   const enc = new Encoder(pub);
-  enc.writeUint64(BigInt(counter))
+  enc.writeUint64(BigInt(counter));
   return enc.buf;
-}
+};
 
 export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
   if (!keystore) {
@@ -78,15 +78,15 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
 
 export const buildTipPin = (pin: string) => {
   const timestamp = getNanoTime();
-  const msg = `TIP:VERIFY:${`${timestamp}`.padStart(32, "0")}`;
-  const privateKey = Buffer.from(pin, "hex");
+  const msg = `TIP:VERIFY:${`${timestamp}`.padStart(32, '0')}`;
+  const privateKey = Buffer.from(pin, 'hex');
   const signData = forge.pki.ed25519.sign({
     message: msg,
     encoding: 'utf8',
     privateKey,
   });
   return {
-    "pin_base64": signData.toString('hex'), 
-    timestamp 
+    pin_base64: signData.toString('hex'),
+    timestamp,
   };
-}
+};

@@ -5,7 +5,7 @@ import { TIPBodyForSequencerRegister } from './tip';
 
 export const signSafeRegistration = (tipPin: string, seed: string, user_id: string) => {
   const keys = forge.pki.ed25519.generateKeyPair({ seed });
-  const public_key = keys.publicKey.toString("hex");
+  const public_key = keys.publicKey.toString('hex');
 
   const hash = new SHA3(256).update(user_id).digest('utf8');
   let signData = forge.pki.ed25519.sign({
@@ -25,6 +25,6 @@ export const signSafeRegistration = (tipPin: string, seed: string, user_id: stri
   return {
     public_key,
     signature,
-    pin_base64: signData.toString("hex"),
-  }
-}
+    pin_base64: signData.toString('hex'),
+  };
+};

@@ -18,9 +18,9 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
   }
 
   function updateTipPin(firstPin: string, secondPin: string, counter: number): Promise<AuthenticationUserResponse> {
-    let pubTipBuf = Buffer.from(secondPin, "hex");
-    if (pubTipBuf.byteLength !== 32) throw new Error("invalid public key");
-    const pubTipHex = getTipPin(pubTipBuf, counter).toString("hex");
+    const pubTipBuf = Buffer.from(secondPin, 'hex');
+    if (pubTipBuf.byteLength !== 32) throw new Error('invalid public key');
+    const pubTipHex = getTipPin(pubTipBuf, counter).toString('hex');
 
     const oldEncrypted = signEd25519PIN(firstPin, keystore);
     const newEncrypted = signEd25519PIN(pubTipHex, keystore);
@@ -43,7 +43,7 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
     /** Change the PIN of the user, or setup a new PIN if it is not set yet */
     update: updatePin,
 
-    updateTipPin
+    updateTipPin,
   };
 };
 

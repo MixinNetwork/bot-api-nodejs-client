@@ -28,7 +28,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
 
   registerPublicKey: (tipPin: string, seed: string, user_id: string): Promise<RegisterResponse> => {
     const data = signSafeRegistration(tipPin, seed, user_id);
-    data.pin_base64 = signEd25519PIN(data.pin_base64, keystore)
+    data.pin_base64 = signEd25519PIN(data.pin_base64, keystore);
     return axiosInstance.post<unknown, RegisterResponse>('/safe/users', data);
   },
 
