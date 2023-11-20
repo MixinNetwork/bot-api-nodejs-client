@@ -24,6 +24,7 @@ export interface AuthenticationUserResponse extends UserResponse {
   code_url: string;
   device_status: string;
 
+  has_safe: boolean;
   has_pin: boolean;
   has_emergency_contact: boolean;
   receive_message_source: string;
