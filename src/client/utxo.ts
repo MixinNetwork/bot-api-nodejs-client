@@ -1,14 +1,5 @@
 import { AxiosInstance } from 'axios';
-import {
-  GhostKey,
-  GhostKeyRequest,
-  OutputFetchRequest,
-  OutputsRequest,
-  SafeOutputsRequest,
-  TransactionRequest,
-  TransactionResponse,
-  UtxoOutput,
-} from './types';
+import { GhostKey, GhostKeyRequest, OutputFetchRequest, OutputsRequest, SafeOutputsRequest, TransactionRequest, TransactionResponse, UtxoOutput } from './types';
 import { buildClient, hashMembers } from './utils';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
@@ -27,7 +18,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
         members: hashMembers(params.members),
       },
     }),
-  
+
   fetchSafeOutputs: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
 
   fetchTransaction: (transactionId: string): Promise<TransactionResponse> => axiosInstance.get<unknown, TransactionResponse>(`/safe/transactions/${transactionId}`),
