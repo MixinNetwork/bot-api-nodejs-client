@@ -26,8 +26,8 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
 
   createDeposit: (params: DepositEntryRequest): Promise<Deposit[]> => axiosInstance.post<unknown, Deposit[]>('/safe/deposit_entries', params),
 
-  registerPublicKey: (tipPin: string, seed: string, user_id: string): Promise<RegisterResponse> => {
-    const data = signSafeRegistration(tipPin, seed, user_id);
+  registerPublicKey: (user_id: string, tipPin: string, seed: Buffer): Promise<RegisterResponse> => {
+    const data = signSafeRegistration(user_id, tipPin, seed);
     data.pin_base64 = signEd25519PIN(data.pin_base64, keystore);
     return axiosInstance.post<unknown, RegisterResponse>('/safe/users', data);
   },
