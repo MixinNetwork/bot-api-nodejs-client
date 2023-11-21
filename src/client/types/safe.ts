@@ -83,3 +83,12 @@ export interface SafeWithdrawal {
   withdrawal_hash: string;
   receiver: string;
 }
+
+export interface SafeTransactionRecipient {
+  members: string[];
+  threshold: number;
+	mixAddress: string;
+	amount:     string;
+	destination?: string;
+	tag?:         string;
+}
