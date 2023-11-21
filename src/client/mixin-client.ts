@@ -23,7 +23,7 @@ import { UserKeystoreClient } from './user';
 import { WithdrawalKeystoreClient } from './withdrawal';
 import { BlazeKeystoreClient } from './blaze';
 import { UtxoKeystoreClient } from './utxo';
-import { TokenKeystoreClient } from './token';
+import { SafeKeystoreClient } from './safe';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
@@ -42,10 +42,10 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   oauth: OAuthBaseClient(axiosInstance),
   payment: PaymentBaseClient(axiosInstance),
   pin: PinKeystoreClient(axiosInstance, keystore),
-  token: TokenKeystoreClient(axiosInstance),
+  safe: SafeKeystoreClient(axiosInstance, keystore),
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
-  utxo: UtxoKeystoreClient(axiosInstance, keystore),
+  utxo: UtxoKeystoreClient(axiosInstance),
   withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
 });
 

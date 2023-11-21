@@ -18,30 +18,17 @@ export interface UtxoOutput {
   spent_at: string;
 }
 
-export interface OutputRequest {
+export interface OutputsRequest {
   members: string[];
   threshold: number;
   state?: UtxoState;
   offset?: string;
   limit?: number;
+  order?: 'ASC' | 'DESC';
 }
 
-export interface Deposit {
-  entry_id: string;
-  chain_id: string;
-  destination: string;
-  members: string[];
-  tag: string;
-  threshold: number;
-}
-export interface DepositEntryRequest {
-  chain_id: string;
-}
-
-export interface RegisterResponse {
-  user_id: string;
-  public_key: string;
-  created_at: string;
+export interface SafeOutputsRequest extends OutputsRequest {
+  asset?: string;
 }
 
 export interface GhostKey {

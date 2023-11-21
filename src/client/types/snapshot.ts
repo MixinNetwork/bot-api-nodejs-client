@@ -65,3 +65,11 @@ export interface SnapshotRequest {
   destination?: string;
   tag?: string;
 }
+
+export interface SafeSnapshotsRequest {
+  app?: string;
+  asset?: string;
+  opponent?: string;
+  offset?: string;
+  limit?: number;
+}
