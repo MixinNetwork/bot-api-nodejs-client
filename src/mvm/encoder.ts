@@ -154,7 +154,7 @@ export class Encoder {
     } else {
       // TODO... not check...
       this.write(magic);
-      
+
       const addr = Buffer.from(w.address);
       this.writeInt(addr.byteLength);
       this.write(addr);

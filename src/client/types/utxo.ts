@@ -18,7 +18,7 @@ export interface UtxoOutput {
   spent_at: string;
 }
 
-export interface SafeUtxoOutput extends UtxoOutput{
+export interface SafeUtxoOutput extends UtxoOutput {
   receivers: string[];
   receivers_hash: string;
   receivers_threshold: number;

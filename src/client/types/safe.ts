@@ -87,8 +87,8 @@ export interface SafeWithdrawal {
 export interface SafeTransactionRecipient {
   members: string[];
   threshold: number;
-	mixAddress: string;
-	amount:     string;
-	destination?: string;
-	tag?:         string;
+  mixAddress: string;
+  amount: string;
+  destination?: string;
+  tag?: string;
 }

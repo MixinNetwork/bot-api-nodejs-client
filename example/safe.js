@@ -29,13 +29,13 @@ const main = async () => {
 
   const members = ['7766b24c-1a03-4c3a-83a3-b4358266875d'];
   const threshold = 1;
-  const recipients = [buildSafeTransactionRecipient(members, threshold, "1")];
+  const recipients = [buildSafeTransactionRecipient(members, threshold, '1')];
   const ghosts = await client.utxo.ghostKey(
     recipients.map((r, i) => ({
       hint: v4(),
       receivers: r.members,
-      index: i
-    }))
+      index: i,
+    })),
   );
   // todo: For Mixin Kernel Address start with 'XIN'
 
@@ -47,23 +47,20 @@ const main = async () => {
   });
   console.log(outputs);
 
-  const tx = buildSafeTransaction(
-    outputs,
-    recipients,
-    ghosts,
-    "test-memo", 
-  );
-  console.log(tx)
-  const raw = encodeSafeTransaction(tx)
-  console.log(raw)
+  const tx = buildSafeTransaction(outputs, recipients, ghosts, 'test-memo');
+  console.log(tx);
+  const raw = encodeSafeTransaction(tx);
+  console.log(raw);
 
   const request_id = v4();
-  console.log("trace", request_id)
-  const txRequest = await client.utxo.verifyTransaction([{
-    raw,
-    request_id
-  }]);
-  console.log(txRequest)
+  console.log('trace', request_id);
+  const txRequest = await client.utxo.verifyTransaction([
+    {
+      raw,
+      request_id,
+    },
+  ]);
+  console.log(txRequest);
 };
 
 main();

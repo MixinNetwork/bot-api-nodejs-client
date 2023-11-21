@@ -1,5 +1,15 @@
 import { AxiosInstance } from 'axios';
-import { GhostKey, GhostKeyRequest, OutputFetchRequest, OutputsRequest, SafeOutputsRequest, SafeUtxoOutput, TransactionRequest, SequencerTransactionRequest, UtxoOutput } from './types';
+import {
+  GhostKey,
+  GhostKeyRequest,
+  OutputFetchRequest,
+  OutputsRequest,
+  SafeOutputsRequest,
+  SafeUtxoOutput,
+  TransactionRequest,
+  SequencerTransactionRequest,
+  UtxoOutput,
+} from './types';
 import { buildClient, hashMembers } from './utils';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
@@ -23,14 +33,13 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   fetchTransaction: (transactionId: string): Promise<SequencerTransactionRequest> => axiosInstance.get<unknown, SequencerTransactionRequest>(`/safe/transactions/${transactionId}`),
 
-  verifyTransaction: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> => axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transaction/requests', params),
+  verifyTransaction: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
+    axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transaction/requests', params),
 
   sendTransactions: (params: TransactionRequest): Promise<SequencerTransactionRequest> => axiosInstance.post<unknown, SequencerTransactionRequest>('/safe/transactions', params),
 
   /** Get one-time information to transfer assets to single user or multisigs group, no required for Mixin Kernel Address */
-  ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => {
-    return axiosInstance.post<unknown, GhostKey[]>('/safe/keys', params)
-  },
+  ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => axiosInstance.post<unknown, GhostKey[]>('/safe/keys', params),
 });
 
 export const UtxoClient = buildClient(UtxoKeystoreClient);
