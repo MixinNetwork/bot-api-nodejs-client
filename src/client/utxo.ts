@@ -5,12 +5,13 @@ import {
   OutputFetchRequest,
   OutputsRequest,
   SafeOutputsRequest,
+  SafeBalanceRequest,
   SafeUtxoOutput,
   TransactionRequest,
   SequencerTransactionRequest,
   UtxoOutput,
 } from './types';
-import { buildClient, hashMembers } from './utils';
+import { buildClient, getTotalBalanceFromOutputs, hashMembers } from './utils';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   outputs: (params: OutputsRequest): Promise<UtxoOutput[]> =>
@@ -29,6 +30,17 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
       },
     }),
 
+  safeAssetBalance: async (params: SafeBalanceRequest) => {
+    const outputs = await axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
+      params: {
+        ...params,
+        members: hashMembers(params.members),
+        state: 'unspent',
+      },
+    });
+    return getTotalBalanceFromOutputs(outputs).toString();
+  },
+
   fetchSafeOutputs: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
 
   fetchTransaction: (transactionId: string): Promise<SequencerTransactionRequest> => axiosInstance.get<unknown, SequencerTransactionRequest>(`/safe/transactions/${transactionId}`),
@@ -36,7 +48,8 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   verifyTransaction: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
     axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transaction/requests', params),
 
-  sendTransactions: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> => axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transactions', params),
+  sendTransactions: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
+    axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transactions', params),
 
   /** Get one-time information to transfer assets to single user or multisigs group, no required for Mixin Kernel Address */
   ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => axiosInstance.post<unknown, GhostKey[]>('/safe/keys', params),

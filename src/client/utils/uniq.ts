@@ -31,8 +31,6 @@ export const newHash = (data: Buffer) => new SHA3(256).update(data).digest('hex'
 
 export const sha512Hash = (data: Buffer) => forge.md.sha512.create().update(data.toString('binary')).digest().toHex();
 
-export const blake3Hash = async (data: Buffer) => {
-  return Buffer.from(blake3.create({}).update(data).digest());
-};
+export const blake3Hash = async (data: Buffer) => Buffer.from(blake3.create({}).update(data).digest());
 
 export const getUuid = () => uuid();

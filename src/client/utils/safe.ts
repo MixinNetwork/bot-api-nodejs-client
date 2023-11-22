@@ -133,7 +133,7 @@ export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] 
   enc.writeInt(sigs.length);
   sigs.forEach(s => {
     enc.encodeSignature(s);
-  })
+  });
 
   return enc.buf.toString('hex');
 };

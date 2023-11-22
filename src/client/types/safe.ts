@@ -19,7 +19,6 @@ export interface SafeAsset {
   confirmations: number;
   kernel_asset_id: string;
   price_updated_at: string;
-  fee_asset_id: string;
 }
 
 export interface SafeDepositEntriesRequest {

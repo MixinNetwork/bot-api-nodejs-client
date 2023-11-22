@@ -41,6 +41,10 @@ export interface SafeOutputsRequest extends OutputsRequest {
   asset?: string;
 }
 
+export interface SafeBalanceRequest extends OutputsRequest {
+  asset: string;
+}
+
 export interface GhostKey {
   mask: string;
   keys: string[];

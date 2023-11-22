@@ -1,7 +1,10 @@
-import { MultisigTransaction } from '../types';
+import { FixedNumber } from 'ethers';
+import { MultisigTransaction, UtxoOutput } from '../types';
 import { Encoder, magic } from '../../mvm';
 
 export const TxVersion = 0x02;
+
+export const getTotalBalanceFromOutputs = (outputs: UtxoOutput[]) => outputs.reduce((prev, cur) => prev.addUnsafe(FixedNumber.from(cur.amount)), FixedNumber.from('0'));
 
 export const encodeScript = (threshold: number) => {
   let s = threshold.toString(16);
