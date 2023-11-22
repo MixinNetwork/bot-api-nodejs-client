@@ -36,7 +36,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
   verifyTransaction: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
     axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transaction/requests', params),
 
-  sendTransactions: (params: TransactionRequest): Promise<SequencerTransactionRequest> => axiosInstance.post<unknown, SequencerTransactionRequest>('/safe/transactions', params),
+  sendTransactions: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> => axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transactions', params),
 
   /** Get one-time information to transfer assets to single user or multisigs group, no required for Mixin Kernel Address */
   ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => axiosInstance.post<unknown, GhostKey[]>('/safe/keys', params),

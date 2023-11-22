@@ -106,7 +106,7 @@ export const buildSafeRawTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransac
   };
 };
 
-export const encodeSafeTransaction = (tx: MultisigTransaction) => {
+export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] = []) => {
   const enc = new Encoder(Buffer.from([]));
 
   enc.write(magic);
@@ -130,9 +130,10 @@ export const encodeSafeTransaction = (tx: MultisigTransaction) => {
   enc.writeUint32(extra.byteLength);
   enc.write(extra);
 
-  // FIXME: signature
-  enc.writeInt(0);
-  enc.write(Buffer.from([]));
+  enc.writeInt(sigs.length);
+  sigs.forEach(s => {
+    enc.encodeSignature(s);
+  })
 
   return enc.buf.toString('hex');
 };
@@ -156,14 +157,16 @@ export const signSafeTransaction = async (tx: MultisigTransaction, views: string
   const spenty = sha512Hash(Buffer.from(tipPin.slice(0, 64), 'hex'));
   const y = ed.setBytesWithClamping(Buffer.from(spenty, 'hex').subarray(0, 32));
 
-  const sigs = [];
+  const signaturesMap = [];
   for (let i = 0; i < tx.inputs.length; i++) {
     const viewBuffer = Buffer.from(views[i], 'hex');
     const x = ed.setCanonicalBytes(viewBuffer);
     const t = ed.scalar.add(x, y);
     const key = Buffer.from(ed.scalar.toBytes(t));
     const sig = ed.sign(msg, key);
-    sigs.push(sig.toString('hex'));
+    const sigs = [sig.toString('hex')]; // for 1/1 bot transaction
+    signaturesMap.push(sigs);
   }
-  return sigs;
+
+  return encodeSafeTransaction(tx, signaturesMap);
 };
