@@ -3,6 +3,7 @@
 node_modules
 dist
 .idea
+yarn.lock
 
 config.json
 test/index.js
