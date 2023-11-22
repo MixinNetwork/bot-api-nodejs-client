@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import { v4 as uuid } from 'uuid';
 import isRetryAllowed from 'is-retry-allowed';
@@ -22,7 +22,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     ...config,
   });
 
-  ins.interceptors.request.use((config: AxiosRequestConfig) => {
+  ins.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const { method, data } = config;
     const url = axios.getUri(config).slice(config.baseURL?.length);
 
