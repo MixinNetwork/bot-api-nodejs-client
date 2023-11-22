@@ -34,7 +34,7 @@ export const sha512Hash = (data: Buffer) => forge.md.sha512.create().update(data
 
 export const blake3Hash = async (data: Buffer) => {
   await blake3.load();
-  return blake3.hash(data)
-}
+  return blake3.hash(data);
+};
 
 export const getUuid = () => uuid();

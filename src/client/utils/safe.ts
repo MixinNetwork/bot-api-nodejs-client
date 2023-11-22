@@ -151,19 +151,19 @@ export const buildSafeTransaction = (outputs: SafeUtxoOutput[], rs: SafeTransact
 
 export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], tipPin: string) => {
   const raw = encodeSafeTransaction(tx);
-  const msg = await blake3Hash(Buffer.from(raw, "hex"));
+  const msg = await blake3Hash(Buffer.from(raw, 'hex'));
 
-  const spenty = sha512Hash(Buffer.from(tipPin.slice(0, 64), "hex"))
-  const y = ed.setBytesWithClamping(Buffer.from(spenty, "hex").subarray(0, 32))
+  const spenty = sha512Hash(Buffer.from(tipPin.slice(0, 64), 'hex'));
+  const y = ed.setBytesWithClamping(Buffer.from(spenty, 'hex').subarray(0, 32));
 
   const sigs = [];
-  for (let i = 0; i < tx.inputs.length; i++ ) { 
-    const viewBuffer = Buffer.from(views[i], "hex");
+  for (let i = 0; i < tx.inputs.length; i++) {
+    const viewBuffer = Buffer.from(views[i], 'hex');
     const x = ed.setCanonicalBytes(viewBuffer);
     const t = ed.scalar.add(x, y);
     const key = Buffer.from(ed.scalar.toBytes(t));
     const sig = ed.sign(msg, key);
-    sigs.push(sig.toString("hex"));
+    sigs.push(sig.toString('hex'));
   }
   return sigs;
-}
+};

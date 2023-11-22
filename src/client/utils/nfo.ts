@@ -96,7 +96,7 @@ export const buildNfoTransferRequest = async (client: KeystoreClientReturnType, 
     inputs: [
       {
         hash: utxo.transaction_hash,
-        index: utxo.output_index
+        index: utxo.output_index,
       },
     ],
     outputs: [
