@@ -8,6 +8,8 @@ import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
 import { GetMixAddress } from './address';
 import { encodeScript } from './multisigs';
+import { blake3Hash, sha512Hash } from './uniq';
+import { edwards25519 as ed } from './ed25519';
 
 export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
@@ -44,7 +46,7 @@ export const buildSafeTransactionRecipient = (members: string[], threshold: numb
   mixAddress: GetMixAddress({ members, threshold }),
 });
 
-const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
+export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
   const totalOutput = rs.reduce((prev, cur) => prev.addUnsafe(FixedNumber.from(cur.amount)), FixedNumber.from('0'));
 
   let totalInput = FixedNumber.from('0');
@@ -62,7 +64,7 @@ const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTrans
   throw new Error('insufficient total input outputs');
 };
 
-const buildSafeRawTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {
+export const buildSafeRawTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {
   let asset = '';
   const inputs: Input[] = [];
   utxos.forEach(o => {
@@ -146,3 +148,22 @@ export const buildSafeTransaction = (outputs: SafeUtxoOutput[], rs: SafeTransact
 
   return buildSafeRawTransaction(utxos, rs, gs, memo);
 };
+
+export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], tipPin: string) => {
+  const raw = encodeSafeTransaction(tx);
+  const msg = await blake3Hash(Buffer.from(raw, "hex"));
+
+  const spenty = sha512Hash(Buffer.from(tipPin.slice(0, 64), "hex"))
+  const y = ed.setBytesWithClamping(Buffer.from(spenty, "hex").subarray(0, 32))
+
+  const sigs = [];
+  for (let i = 0; i < tx.inputs.length; i++ ) { 
+    const viewBuffer = Buffer.from(views[i], "hex");
+    const x = ed.setCanonicalBytes(viewBuffer);
+    const t = ed.scalar.add(x, y);
+    const key = Buffer.from(ed.scalar.toBytes(t));
+    const sig = ed.sign(msg, key);
+    sigs.push(sig.toString("hex"));
+  }
+  return sigs;
+}
