@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "@ethersproject/providers": "^5.6.8",
-    "axios": "1.2.3",
+    "axios": "1.6.0",
     "axios-retry": "3.4.0",
     "curve25519-js": "^0.0.4",
     "ethers": "^5.6.8",
