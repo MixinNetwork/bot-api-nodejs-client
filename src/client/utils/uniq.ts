@@ -1,7 +1,6 @@
 import JsSHA from 'jssha';
 import forge from 'node-forge';
-// @ts-ignore
-import * as blake3 from 'blake3';
+import { blake3 } from '@noble/hashes/blake3';
 import { stringify as uuidStringify, v4 as uuid } from 'uuid';
 import { SHA3 } from 'sha3';
 
@@ -33,8 +32,7 @@ export const newHash = (data: Buffer) => new SHA3(256).update(data).digest('hex'
 export const sha512Hash = (data: Buffer) => forge.md.sha512.create().update(data.toString('binary')).digest().toHex();
 
 export const blake3Hash = async (data: Buffer) => {
-  await blake3.load();
-  return blake3.hash(data);
+  return Buffer.from(blake3.create({}).update(data).digest());
 };
 
 export const getUuid = () => uuid();
