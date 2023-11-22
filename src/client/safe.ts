@@ -14,8 +14,8 @@ import { buildClient, signEd25519PIN, signSafeRegistration } from './utils';
 
 export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   /** If you want to register safe user, you need to upgrade TIP PIN first. */
-  register: (user_id: string, tipPin: string, seed: Buffer): Promise<AuthenticationUserResponse> => {
-    const data = signSafeRegistration(user_id, tipPin, seed);
+  register: (user_id: string, tipPin: string, priv: Buffer): Promise<AuthenticationUserResponse> => {
+    const data = signSafeRegistration(user_id, tipPin, priv);
     data.pin_base64 = signEd25519PIN(data.pin_base64, keystore);
     return axiosInstance.post<unknown, AuthenticationUserResponse>('/safe/users', data);
   },

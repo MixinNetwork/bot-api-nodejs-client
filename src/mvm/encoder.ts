@@ -1,4 +1,4 @@
-import utils from 'ethers/lib/utils';
+import { utils } from 'ethers';
 import { parse } from 'uuid';
 import { Aggregated, Input, Output } from './types';
 

@@ -15,14 +15,13 @@ export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
 export const OutputTypeWithdrawalSubmit = 0xa1;
 
-export const signSafeRegistration = (user_id: string, tipPin: string, seed: Buffer) => {
-  const keys = forge.pki.ed25519.generateKeyPair({ seed });
-  const public_key = keys.publicKey.toString('hex');
+export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
+  const public_key = forge.pki.ed25519.publicKeyFromPrivateKey({ privateKey }).toString('hex');
 
   const hash = new SHA3(256).update(user_id).digest();
   let signData = forge.pki.ed25519.sign({
     message: hash,
-    privateKey: keys.privateKey,
+    privateKey,
   });
   const signature = base64RawURLEncode(signData);
 
@@ -150,11 +149,11 @@ export const buildSafeTransaction = (outputs: SafeUtxoOutput[], rs: SafeTransact
   return buildSafeRawTransaction(utxos, rs, gs, memo);
 };
 
-export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], tipPin: string) => {
+export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], privateKey: string) => {
   const raw = encodeSafeTransaction(tx);
   const msg = await blake3Hash(Buffer.from(raw, 'hex'));
 
-  const spenty = sha512Hash(Buffer.from(tipPin.slice(0, 64), 'hex'));
+  const spenty = sha512Hash(Buffer.from(privateKey.slice(0, 64), 'hex'));
   const y = ed.setBytesWithClamping(Buffer.from(spenty, 'hex').subarray(0, 32));
 
   const signaturesMap = [];
