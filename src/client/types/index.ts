@@ -22,5 +22,4 @@ export * from './snapshot';
 export * from './transaction';
 export * from './transfer';
 export * from './user';
-export * from './withdrawal';
 export * from './utxo';

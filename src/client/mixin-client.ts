@@ -20,7 +20,6 @@ import { PaymentBaseClient } from './payment';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
-import { WithdrawalKeystoreClient } from './withdrawal';
 import { BlazeKeystoreClient } from './blaze';
 import { UtxoKeystoreClient } from './utxo';
 import { SafeKeystoreClient } from './safe';
@@ -46,7 +45,6 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
   transfer: TransferKeystoreClient(axiosInstance, keystore),
   user: UserKeystoreClient(axiosInstance),
   utxo: UtxoKeystoreClient(axiosInstance),
-  withdrawal: WithdrawalKeystoreClient(axiosInstance, keystore),
 });
 
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
