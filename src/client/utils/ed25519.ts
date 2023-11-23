@@ -1,9 +1,11 @@
 import { ed25519 } from '@noble/curves/ed25519';
 import { Field } from '@noble/curves/abstract/modular';
 import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
-import { sha512Hash } from './uniq';
+import { blake3Hash, sha512Hash } from './uniq';
+import { putUvarInt } from '../../mvm/encoder';
 
 const scMinusOne = Buffer.from('ecd3f55c1a631258d69cf7a2def9de1400000000000000000000000000000010', 'hex');
+const base = ed25519.ExtendedPoint.fromHex('5866666666666666666666666666666666666666666666666666666666666666');
 const fn = Field(ed25519.CURVE.n, undefined, true);
 
 const isReduced = (x: Buffer) => {
@@ -41,16 +43,16 @@ const setCanonicalBytes = (x: Buffer) => {
 };
 
 const scalarBaseMult = (x: bigint) => {
-  const base = ed25519.ExtendedPoint.fromHex('5866666666666666666666666666666666666666666666666666666666666666');
   const res = base.multiply(x);
-  // @ts-ignore
-  return res.toRawBytes();
+  return Buffer.from(res.toRawBytes());
 };
+
+const scalarBaseMultToPoint = (x: bigint) => base.multiply(x);
 
 const publicFromPrivate = (priv: Buffer) => {
   const x = setCanonicalBytes(priv);
   const v = scalarBaseMult(x);
-  return Buffer.from(v);
+  return v;
 };
 
 const sign = (msg: Buffer, key: Buffer) => {
@@ -69,6 +71,31 @@ const sign = (msg: Buffer, key: Buffer) => {
   return Buffer.concat([r, s]);
 };
 
+const newPoint = (x: Buffer) => ed25519.ExtendedPoint.fromHex(x.toString('hex'));
+
+const keyMultPubPriv = (pub: Buffer, priv: Buffer) => {
+  const q = newPoint(pub);
+  const x = setCanonicalBytes(priv);
+  const res = q.multiply(x);
+  return Buffer.from(res.toRawBytes());
+}
+
+const hashScalar = (k: Buffer, index: number) => {
+const tmp = Buffer.from(putUvarInt(index));
+  const src = Buffer.alloc(64);
+  let hash = blake3Hash(Buffer.concat([k, tmp]));
+  hash.copy(src, 0, 0, 32)
+  hash = blake3Hash(hash);
+  hash.copy(src, 32, 0, 32)
+  const s = setUniformBytes(src)
+
+  hash = blake3Hash(Buffer.from(numberToBytesLE(s, 32)));
+  hash.copy(src, 0, 0, 32)
+  hash = blake3Hash(hash);
+  hash.copy(src, 32, 0, 32)
+  return setUniformBytes(src)
+}
+
 export const edwards25519 = {
   scalar: fn,
 
@@ -79,5 +106,10 @@ export const edwards25519 = {
   isReduced,
   publicFromPrivate,
   scalarBaseMult,
+  scalarBaseMultToPoint,
   sign,
+
+  newPoint,
+  keyMultPubPriv,
+  hashScalar,
 };

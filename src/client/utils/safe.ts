@@ -1,12 +1,12 @@
 import { SHA3 } from 'sha3';
 import forge from 'node-forge';
 import { FixedNumber } from 'ethers';
-import { GhostKey, MultisigTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import { GhostKey, GhostKeyRequest, MultisigTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Input, Output } from '../../mvm/types';
 import { Encoder, magic } from '../../mvm';
 import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
-import { GetMixAddress } from './address';
+import { GetMixAddress, GetPublicFromMainnetAddress } from './address';
 import { encodeScript } from './multisigs';
 import { blake3Hash, sha512Hash } from './uniq';
 import { edwards25519 as ed } from './ed25519';
@@ -37,6 +37,35 @@ export const signSafeRegistration = (user_id: string, tipPin: string, privateKey
     pin_base64: signData.toString('hex'),
   };
 };
+
+export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: number) => {
+  const x = ed.hashScalar(ed.keyMultPubPriv(A, r), index);
+  const p1 = ed.newPoint(B);
+  const p2 = ed.scalarBaseMultToPoint(x);
+  const p4 = p1.add(p2);
+  return Buffer.from(p4.toRawBytes())
+};
+
+export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = '') => {
+  if (recipient.receivers.length === 0) return undefined;
+  if (hexSeed && hexSeed.length !== 128) return undefined;
+
+  const publics = recipient.receivers.map(d => GetPublicFromMainnetAddress(d));
+  if (!publics.every(p => !!p)) return undefined;
+  
+  const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : Buffer.from(forge.random.getBytesSync(64), 'binary');
+  const r = Buffer.from(ed.scalar.toBytes(ed.setUniformBytes(seed)));
+  const keys = publics.map(addressPubic => {
+    const spendKey = addressPubic!.subarray(0, 32);
+    const viewKey = addressPubic!.subarray(32, 64);
+    const k = deriveGhostPublicKey(r, viewKey, spendKey, recipient.index);
+    return k.toString("hex");
+  })
+  return {
+    mask: ed.publicFromPrivate(r).toString("hex"),
+    keys
+  }
+}
 
 export const buildSafeTransactionRecipient = (members: string[], threshold: number, amount: string): SafeTransactionRecipient => ({
   members,

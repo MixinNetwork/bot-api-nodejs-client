@@ -19,6 +19,18 @@ export const integerToBytes = (x: number) => {
   return bytes;
 };
 
+export const putUvarInt = (x: number) => {
+  const buf = []
+	let i = 0
+	while (x >= 0x80) {
+		buf[i] = x | 0x80
+		x = x >> 7
+		i++
+	}
+	buf[i] = x
+	return buf
+}
+
 export class Encoder {
   buf: Buffer;
 

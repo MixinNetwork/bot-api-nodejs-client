@@ -1,4 +1,5 @@
-import { encodeSafeTransaction, signSafeTransaction } from '../../src';
+import { v4 } from 'uuid';
+import { encodeSafeTransaction, signSafeTransaction, getMainnetAddressGhostKey } from '../../src';
 
 describe('Tests for safe', () => {
   test('Test for safe transaction signature', async () => {
@@ -37,4 +38,14 @@ describe('Tests for safe', () => {
     const signedRaw = await signSafeTransaction(tx, views, priv)
     expect(signedRaw).toEqual(raw2);
   });
+
+  test('Test for safe ghost key for mainnet address', () => {
+    const ghostKey = getMainnetAddressGhostKey({
+      receivers: ['XINJkpCdwVk3qFqmS3AAAoTmC5Gm2fR3iRF7Rtt7hayuaLXNrtztS3LGPSxTmq5KQh3KJ2qYXYE5a9w8BWXhZAdsJKXqcvUr'],
+      index: 255,
+      hint: v4(),
+    }, '518fad2b5eb4ddbd64d2bd5537a73266451ac0eeaff044d6d4e1adfe09da9373ce6ad9b1bc2b55e371c452f84472d741c927989dc3ea91773964492618c02ece');
+    expect(ghostKey?.mask).toEqual("f2459f77513526c156a5cf2ec831e849b75514f0614e2bd7acdde70afc224f40");
+    expect(ghostKey?.keys[0]).toEqual("40567a0c5696cd3c7160f910248e9bae36cee90d625bba4dbf7ed03d272b2e61");
+  })
 });
