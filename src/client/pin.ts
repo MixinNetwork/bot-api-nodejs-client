@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AuthenticationUserResponse } from './types/user';
 import { buildClient } from './utils/client';
-import { buildTipPin, getTipPin, signEd25519PIN } from './utils/pin';
+import { buildTipPin, getTipPinUpdateMsg, signEd25519PIN } from './utils/pin';
 
 /**
  * Methods to verify or update pin with keystore
@@ -20,7 +20,7 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
   function updateTipPin(firstPin: string, secondPin: string, counter: number): Promise<AuthenticationUserResponse> {
     const pubTipBuf = Buffer.from(secondPin, 'hex');
     if (pubTipBuf.byteLength !== 32) throw new Error('invalid public key');
-    const pubTipHex = getTipPin(pubTipBuf, counter).toString('hex');
+    const pubTipHex = getTipPinUpdateMsg(pubTipBuf, counter).toString('hex');
 
     const oldEncrypted = signEd25519PIN(firstPin, keystore);
     const newEncrypted = signEd25519PIN(pubTipHex, keystore);

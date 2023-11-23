@@ -1,8 +1,8 @@
 const {
   MixinApi,
   getED25519KeyPair,
+  getTipPinUpdateMsg,
   base64RawURLDecode,
-  getTipPin,
   encodeSafeTransaction,
   buildSafeTransactionRecipient,
   buildSafeTransaction,
@@ -25,7 +25,7 @@ const main = async () => {
     const tipPin = priv.toString('hex');
     privateKey = tipPin;
 
-    const b = getTipPin(pub, bot.tip_counter + 1);
+    const b = getTipPinUpdateMsg(pub, bot.tip_counter + 1);
     await client.pin.update(keystore.pin, b);
     bot = await client.pin.verifyTipPin(tipPin);
     keystore.pin = tipPin; // should update pin in your keystore file too

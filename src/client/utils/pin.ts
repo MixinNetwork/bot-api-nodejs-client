@@ -34,7 +34,7 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
   return sharedKey(privateKey, pinToken);
 };
 
-export const getTipPin = (pub: Buffer, counter: number) => {
+export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
   const enc = new Encoder(pub);
   enc.writeUint64(BigInt(counter));
   return enc.buf;
