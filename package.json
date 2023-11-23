@@ -1,6 +1,6 @@
 {
   "name": "@mixin.dev/mixin-node-sdk",
-  "version": "5.2.4",
+  "version": "6.0.0",
   "license": "MIT",
   "description": "Mixin SDK for Node.js and Javascript",
   "main": "dist/index.js",
