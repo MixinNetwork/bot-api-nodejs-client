@@ -1,5 +1,3 @@
-// @ts-ignore
-import forge from 'node-forge';
 import { v4 as uuid } from 'uuid';
 import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';

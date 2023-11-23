@@ -26,7 +26,7 @@ export const signSafeRegistration = (user_id: string, tipPin: string, privateKey
 
   const tipBody = TIPBodyForSequencerRegister(user_id, public_key);
   signData = forge.pki.ed25519.sign({
-    message: Buffer.from(tipBody, 'hex'),
+    message: tipBody,
     privateKey: Buffer.from(tipPin, 'hex'),
   });
 
