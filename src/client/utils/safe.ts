@@ -43,6 +43,7 @@ export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: num
   const p1 = ed.newPoint(B);
   const p2 = ed.scalarBaseMultToPoint(x);
   const p4 = p1.add(p2);
+  // @ts-ignore
   return Buffer.from(p4.toRawBytes());
 };
 

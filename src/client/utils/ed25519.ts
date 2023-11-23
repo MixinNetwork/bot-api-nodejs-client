@@ -44,6 +44,7 @@ const setCanonicalBytes = (x: Buffer) => {
 
 const scalarBaseMult = (x: bigint) => {
   const res = base.multiply(x);
+  // @ts-ignore
   return Buffer.from(res.toRawBytes());
 };
 
@@ -77,6 +78,7 @@ const keyMultPubPriv = (pub: Buffer, priv: Buffer) => {
   const q = newPoint(pub);
   const x = setCanonicalBytes(priv);
   const res = q.multiply(x);
+  // @ts-ignore
   return Buffer.from(res.toRawBytes());
 };
 
