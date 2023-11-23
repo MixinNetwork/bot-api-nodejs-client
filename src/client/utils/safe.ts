@@ -43,7 +43,7 @@ export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: num
   const p1 = ed.newPoint(B);
   const p2 = ed.scalarBaseMultToPoint(x);
   const p4 = p1.add(p2);
-  return Buffer.from(p4.toRawBytes())
+  return Buffer.from(p4.toRawBytes());
 };
 
 export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = '') => {
@@ -52,20 +52,20 @@ export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = 
 
   const publics = recipient.receivers.map(d => GetPublicFromMainnetAddress(d));
   if (!publics.every(p => !!p)) return undefined;
-  
+
   const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : Buffer.from(forge.random.getBytesSync(64), 'binary');
   const r = Buffer.from(ed.scalar.toBytes(ed.setUniformBytes(seed)));
   const keys = publics.map(addressPubic => {
     const spendKey = addressPubic!.subarray(0, 32);
     const viewKey = addressPubic!.subarray(32, 64);
     const k = deriveGhostPublicKey(r, viewKey, spendKey, recipient.index);
-    return k.toString("hex");
-  })
+    return k.toString('hex');
+  });
   return {
-    mask: ed.publicFromPrivate(r).toString("hex"),
-    keys
-  }
-}
+    mask: ed.publicFromPrivate(r).toString('hex'),
+    keys,
+  };
+};
 
 export const buildSafeTransactionRecipient = (members: string[], threshold: number, amount: string): SafeTransactionRecipient => ({
   members,

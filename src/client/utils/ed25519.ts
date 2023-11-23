@@ -78,23 +78,23 @@ const keyMultPubPriv = (pub: Buffer, priv: Buffer) => {
   const x = setCanonicalBytes(priv);
   const res = q.multiply(x);
   return Buffer.from(res.toRawBytes());
-}
+};
 
 const hashScalar = (k: Buffer, index: number) => {
-const tmp = Buffer.from(putUvarInt(index));
+  const tmp = Buffer.from(putUvarInt(index));
   const src = Buffer.alloc(64);
   let hash = blake3Hash(Buffer.concat([k, tmp]));
-  hash.copy(src, 0, 0, 32)
+  hash.copy(src, 0, 0, 32);
   hash = blake3Hash(hash);
-  hash.copy(src, 32, 0, 32)
-  const s = setUniformBytes(src)
+  hash.copy(src, 32, 0, 32);
+  const s = setUniformBytes(src);
 
   hash = blake3Hash(Buffer.from(numberToBytesLE(s, 32)));
-  hash.copy(src, 0, 0, 32)
+  hash.copy(src, 0, 0, 32);
   hash = blake3Hash(hash);
-  hash.copy(src, 32, 0, 32)
-  return setUniformBytes(src)
-}
+  hash.copy(src, 32, 0, 32);
+  return setUniformBytes(src);
+};
 
 export const edwards25519 = {
   scalar: fn,

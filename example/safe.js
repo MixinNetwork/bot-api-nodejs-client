@@ -23,12 +23,12 @@ const main = async () => {
     const pub = base64RawURLDecode(keys.publicKey);
     const priv = base64RawURLDecode(keys.privateKey);
     const tipPin = priv.toString('hex');
-    privateKey = tipPin
+    privateKey = tipPin;
 
     const b = getTipPin(pub, bot.tip_counter + 1);
     await client.pin.update(keystore.pin, b);
     bot = await client.pin.verifyTipPin(tipPin);
-    keystore.pin = tipPin;  // should update pin in your keystore file too
+    keystore.pin = tipPin; // should update pin in your keystore file too
     console.log('new tip pin', tipPin);
   }
 
