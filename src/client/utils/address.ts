@@ -1,7 +1,7 @@
-import { SHA3 } from 'sha3';
 import { utils } from 'ethers';
 import { stringify, parse } from 'uuid';
 import { MixAddress } from '../types';
+import { newHash } from './uniq';
 
 export const MainAddressPrefix = 'XIN';
 export const MixAddressPrefix = 'MIX';
@@ -16,7 +16,7 @@ export const GetPublicFromMainnetAddress = (address: string) => {
 
     const payload = data.subarray(0, data.length - 4);
     const msg = Buffer.concat([Buffer.from(MainAddressPrefix), Buffer.from(payload)]);
-    const checksum = new SHA3(256).update(msg).digest('binary');
+    const checksum = newHash(msg);
     if (!checksum.subarray(0, 4).equals(data.subarray(64))) return undefined;
     return Buffer.from(payload);
   } catch {
@@ -26,7 +26,7 @@ export const GetPublicFromMainnetAddress = (address: string) => {
 
 export const MainnetAddressFromPublic = (pubKey: Buffer) => {
   const msg = Buffer.concat([Buffer.from(MainAddressPrefix), pubKey]);
-  const checksum = new SHA3(256).update(msg).digest('binary');
+  const checksum = newHash(msg);
   const data = Buffer.concat([pubKey, checksum.subarray(0, 4)]);
   return `${MainAddressPrefix}${utils.base58.encode(data)}`;
 };
@@ -42,7 +42,7 @@ export const MixAddressFromString = (address: string): MixAddress | undefined =>
 
     const payload = data.subarray(0, data.length - 4);
     const msg = Buffer.concat([Buffer.from(MixAddressPrefix), Buffer.from(payload)]);
-    const checksum = new SHA3(256).update(msg).digest('binary');
+    const checksum = newHash(msg);
     if (!checksum.subarray(0, 4).equals(data.subarray(data.length - 4))) return undefined;
 
     const version = data.at(0);
@@ -110,7 +110,7 @@ export const GetMixAddress = (ma: MixAddress): string => {
   });
 
   const msg = Buffer.concat([Buffer.from(MixAddressPrefix), prefix, ...memberData]);
-  const checksum = new SHA3(256).update(msg).digest('binary');
+  const checksum = newHash(msg);
   const data = Buffer.concat([prefix, ...memberData, checksum.subarray(0, 4)]);
   return `${MixAddressPrefix}${utils.base58.encode(data)}`;
 };

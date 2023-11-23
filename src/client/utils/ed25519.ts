@@ -57,14 +57,14 @@ const publicFromPrivate = (priv: Buffer) => {
 };
 
 const sign = (msg: Buffer, key: Buffer) => {
-  const digest1 = Buffer.from(sha512Hash(key.subarray(0, 32)), 'hex');
-  const messageDigest = Buffer.from(sha512Hash(Buffer.concat([digest1.subarray(32), msg])), 'hex');
+  const digest1 = sha512Hash(key.subarray(0, 32));
+  const messageDigest = sha512Hash(Buffer.concat([digest1.subarray(32), msg]));
 
   const z = setUniformBytes(messageDigest);
   const r = scalarBaseMult(z);
 
   const pub = publicFromPrivate(key);
-  const hramDigest = Buffer.from(sha512Hash(Buffer.concat([r, pub, msg])), 'hex');
+  const hramDigest = sha512Hash(Buffer.concat([r, pub, msg]));
 
   const x = setUniformBytes(hramDigest);
   const y = setCanonicalBytes(key);

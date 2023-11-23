@@ -1,4 +1,3 @@
-import { SHA3 } from 'sha3';
 import forge from 'node-forge';
 import { FixedNumber } from 'ethers';
 import { GhostKey, GhostKeyRequest, MultisigTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
@@ -8,7 +7,7 @@ import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
 import { GetMixAddress, GetPublicFromMainnetAddress } from './address';
 import { encodeScript } from './multisigs';
-import { blake3Hash, sha512Hash } from './uniq';
+import { blake3Hash, newHash, sha512Hash } from './uniq';
 import { edwards25519 as ed } from './ed25519';
 
 export const TxVersionHashSignature = 0x05;
@@ -18,7 +17,7 @@ export const OutputTypeWithdrawalSubmit = 0xa1;
 export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
   const public_key = forge.pki.ed25519.publicKeyFromPrivateKey({ privateKey }).toString('hex');
 
-  const hash = new SHA3(256).update(user_id).digest();
+  const hash = newHash(Buffer.from(user_id));
   let signData = forge.pki.ed25519.sign({
     message: hash,
     privateKey,
@@ -184,7 +183,7 @@ export const signSafeTransaction = async (tx: MultisigTransaction, views: string
   const msg = await blake3Hash(Buffer.from(raw, 'hex'));
 
   const spenty = sha512Hash(Buffer.from(privateKey.slice(0, 64), 'hex'));
-  const y = ed.setBytesWithClamping(Buffer.from(spenty, 'hex').subarray(0, 32));
+  const y = ed.setBytesWithClamping(spenty.subarray(0, 32));
 
   const signaturesMap = [];
   for (let i = 0; i < tx.inputs.length; i++) {

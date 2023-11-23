@@ -1,16 +1,14 @@
-import JsSHA from 'jssha';
 import forge from 'node-forge';
 import { blake3 } from '@noble/hashes/blake3';
+import { sha3_256 } from '@noble/hashes/sha3';
+import { sha256 } from '@noble/hashes/sha256';
+import { sha512 } from '@noble/hashes/sha512';
 import { stringify as uuidStringify, v4 as uuid } from 'uuid';
-import { SHA3 } from 'sha3';
 
-// TODO: maybe try https://www.npmjs.com/package/node-forge#sha256
 /** Supporting multisig for tokens & collectibles */
 export const hashMembers = (ids: string[]): string => {
   const key = ids.sort().join('');
-  const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
-  sha.update(key);
-  return sha.getHash('HEX');
+  return newHash(Buffer.from(key)).toString('hex');
 };
 
 /** Generate an unique conversation id for contact */
@@ -27,9 +25,11 @@ export const uniqueConversationID = (userID: string, recipientID: string): strin
   return uuidStringify(bytes);
 };
 
-export const newHash = (data: Buffer) => new SHA3(256).update(data).digest('hex');
+export const newHash = (data: Buffer) => Buffer.from(sha3_256.create().update(data).digest());
 
-export const sha512Hash = (data: Buffer) => forge.md.sha512.create().update(data.toString('binary')).digest().toHex();
+export const sha256Hash = (data: Buffer) => Buffer.from(sha256.create().update(data).digest());
+
+export const sha512Hash = (data: Buffer) => Buffer.from(sha512.create().update(data).digest());
 
 export const blake3Hash = (data: Buffer) => Buffer.from(blake3.create({}).update(data).digest());
 
