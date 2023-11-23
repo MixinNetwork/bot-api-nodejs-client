@@ -1,4 +1,4 @@
-import utils from 'ethers/lib/utils';
+import { utils } from 'ethers';
 import { parse } from 'uuid';
 import { Aggregated, Input, Output } from './types';
 
@@ -17,6 +17,18 @@ export const integerToBytes = (x: number) => {
     i = (i / 2 ** 8) | 0;
   } while (i !== 0);
   return bytes;
+};
+
+export const putUvarInt = (x: number) => {
+  const buf = [];
+  let i = 0;
+  while (x >= 0x80) {
+    buf[i] = x | 0x80;
+    x >>= 7;
+    i++;
+  }
+  buf[i] = x;
+  return buf;
 };
 
 export class Encoder {
@@ -65,6 +77,12 @@ export class Encoder {
     this.write(buf);
   }
 
+  writeUint32(i: number) {
+    const buf = Buffer.alloc(4);
+    buf.writeUInt32BE(i);
+    this.write(buf);
+  }
+
   writeUint64(i: bigint) {
     const buf = Buffer.alloc(8);
     buf.writeBigUInt64BE(i);
@@ -87,8 +105,8 @@ export class Encoder {
 
   encodeInput(input: Input) {
     const i = input;
-    this.write(Buffer.from(i.hash!, 'hex'));
-    this.writeInt(i.index!);
+    this.write(Buffer.from(i.hash, 'hex'));
+    this.writeInt(i.index);
 
     if (!i.genesis) i.genesis = '';
     this.writeInt(i.genesis.length);
@@ -130,14 +148,16 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(utils.parseUnits(Number(o.amount!).toFixed(8), 8).toNumber());
+    this.writeInteger(utils.parseUnits(Number(o.amount).toFixed(8), 8).toNumber());
     this.writeInt(o.keys!.length);
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
 
-    this.write(Buffer.from(o.mask!, 'hex'));
+    if (!o.mask) o.mask = '';
+    this.write(Buffer.from(o.mask, 'hex'));
 
-    const s = Buffer.from(o.script!, 'hex');
+    if (!o.script) o.script = '';
+    const s = Buffer.from(o.script, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
     const w = o.withdrawal;
@@ -146,13 +166,6 @@ export class Encoder {
     } else {
       // TODO... not check...
       this.write(magic);
-      this.write(Buffer.from(w.chain, 'hex'));
-
-      const asset = Buffer.from(w.asset);
-      this.writeInt(asset.byteLength);
-      this.write(asset);
-
-      if (!w.address) w.address = '';
 
       const addr = Buffer.from(w.address);
       this.writeInt(addr.byteLength);

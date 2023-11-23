@@ -1,6 +1,6 @@
 import forge from 'node-forge';
 import { parse as UUIDParse, stringify } from 'uuid';
-import type { NFOMemo } from '../types';
+import type { CollectibleOutputsResponse, NFOMemo } from '../types';
 import type { KeystoreClientReturnType } from '../mixin-client';
 import { buildMultiSigsTransaction, encodeScript } from './multisigs';
 import { Encoder, Decoder, integerToBytes } from '../../mvm';
@@ -82,7 +82,7 @@ export const decodeNfoMemo = (hexMemo: string) => {
   return nm;
 };
 
-export const buildNfoTransferRequest = async (client: KeystoreClientReturnType, transaction_hash: string, receivers: string[], threshold: number, content = '') => {
+export const buildNfoTransferRequest = async (client: KeystoreClientReturnType, utxo: CollectibleOutputsResponse, receivers: string[], threshold: number, content = '') => {
   const keys = await client.transfer.outputs([
     {
       receivers,
@@ -95,7 +95,8 @@ export const buildNfoTransferRequest = async (client: KeystoreClientReturnType, 
     asset: DefaultNftAssetId,
     inputs: [
       {
-        hash: transaction_hash,
+        hash: utxo.transaction_hash,
+        index: utxo.output_index,
       },
     ],
     outputs: [

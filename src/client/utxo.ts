@@ -1,44 +1,58 @@
 import { AxiosInstance } from 'axios';
 import {
-  AssetResponse,
-  Deposit,
-  DepositEntryRequest,
   GhostKey,
   GhostKeyRequest,
   OutputFetchRequest,
-  OutputRequest,
-  RegisterResponse,
-  SafeRegisterRequest,
+  OutputsRequest,
+  SafeOutputsRequest,
+  SafeBalanceRequest,
+  SafeUtxoOutput,
   TransactionRequest,
-  TransactionResponse,
+  SequencerTransactionRequest,
   UtxoOutput,
 } from './types';
-import { buildClient, hashMembers } from './utils';
+import { buildClient, getTotalBalanceFromOutputs, hashMembers } from './utils';
 
 export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
-  fetchList: (params: OutputRequest): Promise<UtxoOutput[]> =>
-    axiosInstance.get<unknown, UtxoOutput[]>(`/safe/outputs`, {
+  outputs: (params: OutputsRequest): Promise<UtxoOutput[]> =>
+    axiosInstance.get<unknown, UtxoOutput[]>(`/outputs`, {
       params: {
         ...params,
         members: hashMembers(params.members),
       },
     }),
 
-  createDeposit: (params: DepositEntryRequest): Promise<Deposit[]> => axiosInstance.post<unknown, Deposit[]>('/safe/deposit_entries', params),
+  safeOutputs: (params: SafeOutputsRequest): Promise<SafeUtxoOutput[]> =>
+    axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
+      params: {
+        ...params,
+        members: hashMembers(params.members),
+      },
+    }),
 
-  registerPublicKey: (params: SafeRegisterRequest): Promise<RegisterResponse> => axiosInstance.post<unknown, RegisterResponse>('/safe/users', params),
+  safeAssetBalance: async (params: SafeBalanceRequest) => {
+    const outputs = await axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
+      params: {
+        ...params,
+        members: hashMembers(params.members),
+        state: 'unspent',
+      },
+    });
+    return getTotalBalanceFromOutputs(outputs).toString();
+  },
 
-  ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey> => axiosInstance.post<unknown, GhostKey>('/safe/keys', params),
+  fetchSafeOutputs: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
 
-  transactionRequest: (params: TransactionRequest): Promise<TransactionResponse> => axiosInstance.post<unknown, TransactionResponse>('/safe/transaction/requests', params),
+  fetchTransaction: (transactionId: string): Promise<SequencerTransactionRequest> => axiosInstance.get<unknown, SequencerTransactionRequest>(`/safe/transactions/${transactionId}`),
 
-  transactions: (params: TransactionRequest): Promise<TransactionResponse> => axiosInstance.post<unknown, TransactionResponse>('/safe/transactions', params),
+  verifyTransaction: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
+    axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transaction/requests', params),
 
-  transactionById: (transactionId: string): Promise<TransactionResponse> => axiosInstance.get<unknown, TransactionResponse>(`/safe/transactions/${transactionId}`),
+  sendTransactions: (params: TransactionRequest[]): Promise<SequencerTransactionRequest[]> =>
+    axiosInstance.post<unknown, SequencerTransactionRequest[]>('/safe/transactions', params),
 
-  fetch: (params: OutputFetchRequest): Promise<UtxoOutput[]> => axiosInstance.post<unknown, UtxoOutput[]>('/safe/outputs/fetch', params),
-
-  assetByMixinId: (mixinId: string): Promise<AssetResponse> => axiosInstance.get<unknown, AssetResponse>(`/safe/assets/${mixinId}`),
+  /** Get one-time information to transfer assets to single user or multisigs group, no required for Mixin Kernel Address */
+  ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => axiosInstance.post<unknown, GhostKey[]>('/safe/keys', params),
 });
 
 export const UtxoClient = buildClient(UtxoKeystoreClient);

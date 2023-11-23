@@ -13,15 +13,15 @@ export interface DepositData {
 }
 
 export interface WithdrawData {
-  chain: string;
-  asset: string;
   address: string;
   tag: string;
+  chain?: string;
+  asset?: string;
 }
 
 export interface Input {
-  hash?: string;
-  index?: number;
+  hash: string;
+  index: number;
   genesis?: string;
   deposit?: DepositData;
   mint?: MintData;
@@ -29,7 +29,7 @@ export interface Input {
 
 export interface Output {
   type?: number;
-  amount?: string;
+  amount: string;
   keys?: string[];
   withdrawal?: WithdrawData;
   script?: string;

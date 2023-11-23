@@ -5,6 +5,7 @@ import forge from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import Keystore from '../types/keystore';
 import { base64RawURLEncode } from './base64';
+import { Encoder } from '../../mvm';
 
 export const getNanoTime = () => {
   const now: number[] = nano.now();
@@ -33,13 +34,20 @@ export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => 
   return sharedKey(privateKey, pinToken);
 };
 
+export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
+  const enc = new Encoder(pub);
+  enc.writeUint64(BigInt(counter));
+  return enc.buf;
+};
+
 export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
   if (!keystore) {
     return '';
   }
   const blockSize = 16;
 
-  const _pin = Buffer.from(pin, 'utf8');
+  const format = pin.length > 6 ? 'hex' : 'utf8';
+  const _pin = Buffer.from(pin, format);
   const iterator = Buffer.from(new Uint64(getNanoTime()).toBuffer());
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
   const buf = Buffer.concat([_pin, time, iterator]);
@@ -63,6 +71,22 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   pinBuff.putBytes(iv);
   pinBuff.putBytes(cipher.output.getBytes());
 
-  const encryptedBytes = Buffer.from(pinBuff.getBytes(48), 'binary');
+  const len = pinBuff.length();
+  const encryptedBytes = Buffer.from(pinBuff.getBytes(len - 16), 'binary');
   return base64RawURLEncode(encryptedBytes);
+};
+
+export const buildTipPin = (pin: string) => {
+  const timestamp = getNanoTime();
+  const msg = `TIP:VERIFY:${`${timestamp}`.padStart(32, '0')}`;
+  const privateKey = Buffer.from(pin, 'hex');
+  const signData = forge.pki.ed25519.sign({
+    message: msg,
+    encoding: 'utf8',
+    privateKey,
+  });
+  return {
+    pin_base64: signData.toString('hex'),
+    timestamp,
+  };
 };

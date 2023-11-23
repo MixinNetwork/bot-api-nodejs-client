@@ -1,5 +1,5 @@
 import { Input, Output } from '../../mvm';
-import { OutputRequest, UtxoState } from './utxo';
+import { UtxoState } from './utxo';
 
 export type MultisigInitAction = 'sign' | 'unlock';
 
@@ -9,8 +9,13 @@ export type MultisigState = 'initial' | 'signed' | 'unlocked';
 
 export type MultisigOrder = 'created' | 'updated';
 
-export interface MultisigRequest extends OutputRequest {
-  order: MultisigOrder;
+export interface MultisigRequest {
+  members: string[];
+  threshold: number;
+  state?: UtxoState;
+  offset?: string;
+  limit?: number;
+  order?: MultisigOrder;
 }
 
 export interface MultisigUtxoResponse {

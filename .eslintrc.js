@@ -13,6 +13,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-continue': 'off',
     'no-bitwise': 'off',
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',

@@ -19,11 +19,11 @@ export { NetworkClient } from './network';
 export { OAuthClient } from './oauth';
 export { PaymentClient } from './payment';
 export { PinClient } from './pin';
+export { SafeClient } from './safe';
 export { TransferClient } from './transfer';
 export { UserClient } from './user';
-export { WithdrawalClient } from './withdrawal';
 export { UtxoClient } from './utxo';
-export { TokenClient } from './token';
+export { WithdrawalClient } from './withdrawal';
 
 export * from './mixin-client';
 export { mixinRequest } from './http';

@@ -18,35 +18,31 @@ export interface UtxoOutput {
   spent_at: string;
 }
 
-export interface OutputRequest {
+export interface SafeUtxoOutput extends UtxoOutput {
+  receivers: string[];
+  receivers_hash: string;
+  receivers_threshold: number;
+  senders: string[];
+  senders_hash: string;
+  senders_threshold: number;
+  sequence: number;
+}
+
+export interface OutputsRequest {
   members: string[];
   threshold: number;
   state?: UtxoState;
   offset?: string;
   limit?: number;
+  order?: 'ASC' | 'DESC';
 }
 
-export interface Deposit {
-  entry_id: string;
-  chain_id: string;
-  destination: string;
-  members: string[];
-  tag: string;
-  threshold: number;
-}
-export interface DepositEntryRequest {
-  chain_id: string;
+export interface SafeOutputsRequest extends OutputsRequest {
+  asset?: string;
 }
 
-export interface RegisterResponse {
-  user_id: string;
-  public_key: string;
-  created_at: string;
-}
-
-export interface SafeRegisterRequest {
-  public_key: string;
-  signature: string;
+export interface SafeBalanceRequest extends OutputsRequest {
+  asset: string;
 }
 
 export interface GhostKey {
@@ -60,23 +56,26 @@ export interface GhostKeyRequest {
   hint: string;
 }
 
-export interface TransactionResponse {
-  type: string;
+export interface SequencerTransactionRequest {
+  type: 'kernel_transaction_request';
   request_id: string;
-  user_id: string;
   transaction_hash: string;
   asset: string;
-  senders_hash: string;
-  senders_threshold: number;
-  senders: string[];
-  signers: string[];
+  amount: string;
   extra: string;
+  user_id: string;
   state: string;
   raw_transaction: string;
   created_at: string;
   updated_at: string;
+  snapshot_id: string;
   snapshot_hash: string;
   snapshot_at: string;
+  receivers: string[];
+  senders: string[];
+  senders_hash: string;
+  senders_threshold: number;
+  signers: string[];
   views: string[];
 }
 
