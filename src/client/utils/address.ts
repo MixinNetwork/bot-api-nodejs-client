@@ -7,7 +7,7 @@ export const MainAddressPrefix = 'XIN';
 export const MixAddressPrefix = 'MIX';
 export const MixAddressVersion = 2;
 
-export const GetPublicFromMainnetAddress = (address: string) => {
+export const getPublicFromMainnetAddress = (address: string) => {
   try {
     if (!address.startsWith(MainAddressPrefix)) return undefined;
 
@@ -24,14 +24,14 @@ export const GetPublicFromMainnetAddress = (address: string) => {
   }
 };
 
-export const MainnetAddressFromPublic = (pubKey: Buffer) => {
+export const getMainnetAddressFromPublic = (pubKey: Buffer) => {
   const msg = Buffer.concat([Buffer.from(MainAddressPrefix), pubKey]);
   const checksum = newHash(msg);
   const data = Buffer.concat([pubKey, checksum.subarray(0, 4)]);
   return `${MainAddressPrefix}${utils.base58.encode(data)}`;
 };
 
-export const MixAddressFromString = (address: string): MixAddress | undefined => {
+export const parseMixAddress = (address: string): MixAddress | undefined => {
   try {
     if (!address.startsWith(MixAddressPrefix)) return undefined;
 
@@ -66,7 +66,7 @@ export const MixAddressFromString = (address: string): MixAddress | undefined =>
     if (memberData.length === total * 64) {
       for (let i = 0; i < total; i++) {
         const pub = memberData.subarray(64 * i, 64 * (i + 1));
-        const addr = MainnetAddressFromPublic(Buffer.from(pub));
+        const addr = getMainnetAddressFromPublic(Buffer.from(pub));
         members.push(addr);
       }
       return {
@@ -81,7 +81,7 @@ export const MixAddressFromString = (address: string): MixAddress | undefined =>
   }
 };
 
-export const GetMixAddress = (ma: MixAddress): string => {
+export const buildMixAddress = (ma: MixAddress): string => {
   if (ma.members.length > 255) {
     throw new Error(`invalid members length: ${ma.members.length}`);
   }
@@ -97,7 +97,7 @@ export const GetMixAddress = (ma: MixAddress): string => {
     if (addr.startsWith(MainAddressPrefix)) {
       if (!type) type = 'xin';
       if (type !== 'xin') throw new Error(`inconsistent address type`);
-      const pub = GetPublicFromMainnetAddress(addr);
+      const pub = getPublicFromMainnetAddress(addr);
       if (!pub) throw new Error(`invalid mainnet address: ${addr}`);
       memberData.push(pub);
     } else {

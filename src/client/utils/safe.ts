@@ -1,11 +1,13 @@
 import forge from 'node-forge';
+import qs from 'qs';
+import { validate, v4 } from 'uuid';
 import { FixedNumber } from 'ethers';
-import { GhostKey, GhostKeyRequest, MultisigTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import { GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Input, Output } from '../../mvm/types';
 import { Encoder, magic } from '../../mvm';
 import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
-import { GetMixAddress, GetPublicFromMainnetAddress } from './address';
+import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress } from './address';
 import { encodeScript } from './multisigs';
 import { blake3Hash, newHash, sha512Hash } from './uniq';
 import { edwards25519 as ed } from './ed25519';
@@ -13,6 +15,38 @@ import { edwards25519 as ed } from './ed25519';
 export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
 export const OutputTypeWithdrawalSubmit = 0xa1;
+
+/**
+ * Build Payment Uri on https://mixin.one
+ * Destination can be set with
+ *   1. uuid: uuid of the Mixin user or bot
+ *   2. mainnetAddress: Mixin mainnet address started with "XIN"
+ *   3. mixAddress: address encoded with members and threshold and started with "MIX"
+ *   4. members and threshold: multisigs members' uuid or mainnet address, and threshold
+ */
+export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
+  let address = '';
+  if (params.uuid && validate(params.uuid)) address = params.uuid;
+  else if (params.mainnetAddress && getPublicFromMainnetAddress(params.mainnetAddress)) address = params.mainnetAddress;
+  else if (params.mixAddress && parseMixAddress(params.mixAddress)) address = params.mixAddress;
+  else if (params.members && params.threshold) {
+    address = buildMixAddress({
+      members: params.members,
+      threshold: params.threshold,
+    });
+  } else throw new Error('fail to get payment destination address');
+
+  const baseUrl = `https://mixin.one/pay/${address}`;
+  const p = {
+    asset: params.asset,
+    amount: params.amount,
+    memo: params.memo,
+    trace: params.trace ?? v4(),
+    return_to: params.returnTo && encodeURIComponent(params.returnTo),
+  };
+  const query = qs.stringify(p);
+  return `${baseUrl}?${query}`;
+};
 
 export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
   const public_key = forge.pki.ed25519.publicKeyFromPrivateKey({ privateKey }).toString('hex');
@@ -50,7 +84,7 @@ export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = 
   if (recipient.receivers.length === 0) return undefined;
   if (hexSeed && hexSeed.length !== 128) return undefined;
 
-  const publics = recipient.receivers.map(d => GetPublicFromMainnetAddress(d));
+  const publics = recipient.receivers.map(d => getPublicFromMainnetAddress(d));
   if (!publics.every(p => !!p)) return undefined;
 
   const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : Buffer.from(forge.random.getBytesSync(64), 'binary');
@@ -71,7 +105,7 @@ export const buildSafeTransactionRecipient = (members: string[], threshold: numb
   members,
   threshold,
   amount,
-  mixAddress: GetMixAddress({ members, threshold }),
+  mixAddress: buildMixAddress({ members, threshold }),
 });
 
 export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
