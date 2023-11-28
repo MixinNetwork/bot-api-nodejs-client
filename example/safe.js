@@ -61,7 +61,7 @@ const main = async () => {
   });
   console.log(balance);
 
-  // Get utxo inputs and change fot tx 
+  // Get utxo inputs and change fot tx
   const { utxos, change } = getUnspentOutputsForRecipients(outputs, recipients);
   if (!change.isZero() && !change.isNegative()) {
     recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
@@ -75,7 +75,7 @@ const main = async () => {
       index: i,
     })),
   );
-  console.log(ghosts)
+  console.log(ghosts);
 
   // build safe transaction raw
   const tx = buildSafeTransaction(utxos, recipients, ghosts, 'test-memo');
