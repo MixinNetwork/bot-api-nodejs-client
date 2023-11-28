@@ -24,25 +24,6 @@ export interface DepositResponse extends BaseSnapshotResponse {
   sender: string;
 }
 
-export interface WithdrawalResponse extends BaseSnapshotResponse {
-  type: 'withdrawal' | 'rebate' | 'fee';
-  receiver: string;
-  confirmations: number;
-  trace_id: string;
-  memo: string;
-}
-
-interface FeeResponse {
-  Amount: string;
-  asset_id: string;
-}
-
-export interface WithdrawalWithFeeResponse extends WithdrawalResponse {
-  type: 'fee';
-  state: string;
-  fee: FeeResponse;
-}
-
 export interface RawTransactionResponse extends BaseSnapshotResponse {
   type: 'raw';
   opponent_key: string;
@@ -53,7 +34,7 @@ export interface RawTransactionResponse extends BaseSnapshotResponse {
   state: string;
 }
 
-export type SnapshotResponse = DepositResponse | TransferResponse | WithdrawalResponse | WithdrawalWithFeeResponse | RawTransactionResponse;
+export type SnapshotResponse = DepositResponse | TransferResponse |  RawTransactionResponse;
 
 export interface SnapshotRequest {
   limit: number;
