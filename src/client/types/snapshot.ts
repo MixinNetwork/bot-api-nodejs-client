@@ -34,7 +34,7 @@ export interface RawTransactionResponse extends BaseSnapshotResponse {
   state: string;
 }
 
-export type SnapshotResponse = DepositResponse | TransferResponse |  RawTransactionResponse;
+export type SnapshotResponse = DepositResponse | TransferResponse | RawTransactionResponse;
 
 export interface SnapshotRequest {
   limit: number;
