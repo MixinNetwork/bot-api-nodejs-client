@@ -126,7 +126,42 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
   throw new Error('insufficient total input outputs');
 };
 
-export const buildSafeRawTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {
+export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] = []) => {
+  const enc = new Encoder(Buffer.from([]));
+
+  enc.write(magic);
+  enc.write(Buffer.from([0x00, tx.version]));
+  enc.write(Buffer.from(tx.asset, 'hex'));
+
+  enc.writeInt(tx.inputs.length);
+  tx.inputs.forEach(input => {
+    enc.encodeInput(input);
+  });
+
+  enc.writeInt(tx.outputs.length);
+  tx.outputs.forEach(output => {
+    enc.encodeOutput(output);
+  });
+
+  // FIXME: references
+  enc.writeInt(0);
+
+  const extra = Buffer.from(tx.extra);
+  enc.writeUint32(extra.byteLength);
+  enc.write(extra);
+
+  enc.writeInt(sigs.length);
+  sigs.forEach(s => {
+    enc.encodeSignature(s);
+  });
+
+  return enc.buf.toString('hex');
+};
+
+export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {
+  if (utxos.length === 0) throw new Error('empty inputs');
+  if (Buffer.from(extra).byteLength > 512) throw new Error('extra data is too long');
+
   let asset = '';
   const inputs: Input[] = [];
   utxos.forEach(o => {
@@ -166,50 +201,6 @@ export const buildSafeRawTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransac
     inputs,
     outputs,
   };
-};
-
-export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] = []) => {
-  const enc = new Encoder(Buffer.from([]));
-
-  enc.write(magic);
-  enc.write(Buffer.from([0x00, tx.version]));
-  enc.write(Buffer.from(tx.asset, 'hex'));
-
-  enc.writeInt(tx.inputs.length);
-  tx.inputs.forEach(input => {
-    enc.encodeInput(input);
-  });
-
-  enc.writeInt(tx.outputs.length);
-  tx.outputs.forEach(output => {
-    enc.encodeOutput(output);
-  });
-
-  // FIXME: references
-  enc.writeInt(0);
-
-  const extra = Buffer.from(tx.extra);
-  enc.writeUint32(extra.byteLength);
-  enc.write(extra);
-
-  enc.writeInt(sigs.length);
-  sigs.forEach(s => {
-    enc.encodeSignature(s);
-  });
-
-  return enc.buf.toString('hex');
-};
-
-export const buildSafeTransaction = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], memo: string) => {
-  if (outputs.length === 0) throw new Error('empty outputs');
-  if (Buffer.from(memo).byteLength > 512) throw new Error('memo data is too long');
-
-  const { utxos, change } = getUnspentOutputsForRecipients(outputs, rs);
-  if (!change.isZero() && !change.isNegative()) {
-    rs.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
-  }
-
-  return buildSafeRawTransaction(utxos, rs, gs, memo);
 };
 
 export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], privateKey: string) => {

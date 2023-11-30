@@ -4,6 +4,7 @@ const {
   getTipPinUpdateMsg,
   base64RawURLDecode,
   encodeSafeTransaction,
+  getUnspentOutputsForRecipients,
   buildSafeTransactionRecipient,
   buildSafeTransaction,
   signSafeTransaction,
@@ -35,7 +36,7 @@ const main = async () => {
   // register to safe if haven't
   // it's convinient to use the same private key as above tipPin
   if (!bot.has_safe) {
-    const resp = await client.safe.register(keystore.client_id, keystore.pin, privateKey);
+    const resp = await client.safe.register(keystore.client_id, keystore.pin, Buffer.from(privateKey, 'hex'));
     console.log(resp);
   }
 
@@ -43,16 +44,6 @@ const main = async () => {
   const members = ['7766b24c-1a03-4c3a-83a3-b4358266875d'];
   const threshold = 1;
   const recipients = [buildSafeTransactionRecipient(members, threshold, '1')];
-
-  // get ghost key to send tx to uuid multisigs
-  // For Mixin Kernel Address start with 'XIN', get ghost key with getMainnetAddressGhostKey
-  const ghosts = await client.utxo.ghostKey(
-    recipients.map((r, i) => ({
-      hint: v4(),
-      receivers: r.members,
-      index: i,
-    })),
-  );
 
   // get unspent utxos
   const outputs = await client.utxo.safeOutputs({
@@ -70,8 +61,24 @@ const main = async () => {
   });
   console.log(balance);
 
+  // Get utxo inputs and change fot tx
+  const { utxos, change } = getUnspentOutputsForRecipients(outputs, recipients);
+  if (!change.isZero() && !change.isNegative()) {
+    recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
+  }
+  // get ghost key to send tx to uuid multisigs
+  // For Mixin Kernel Address start with 'XIN', get ghost key with getMainnetAddressGhostKey
+  const ghosts = await client.utxo.ghostKey(
+    recipients.map((r, i) => ({
+      hint: v4(),
+      receivers: r.members,
+      index: i,
+    })),
+  );
+  console.log(ghosts);
+
   // build safe transaction raw
-  const tx = buildSafeTransaction(outputs, recipients, ghosts, 'test-memo');
+  const tx = buildSafeTransaction(utxos, recipients, ghosts, 'test-memo');
   console.log(tx);
   const raw = encodeSafeTransaction(tx);
   console.log(raw);
