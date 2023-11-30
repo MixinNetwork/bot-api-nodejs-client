@@ -36,7 +36,7 @@ const main = async () => {
   // register to safe if haven't
   // it's convinient to use the same private key as above tipPin
   if (!bot.has_safe) {
-    const resp = await client.safe.register(keystore.client_id, keystore.pin, privateKey);
+    const resp = await client.safe.register(keystore.client_id, keystore.pin, Buffer.from(privateKey, "hex"));
     console.log(resp);
   }
 
