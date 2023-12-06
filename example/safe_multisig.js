@@ -60,7 +60,7 @@ const main = async () => {
   // you can continue to sign this unlocked multisig tx
   const index = outputs[0].receivers.sort().findIndex(u => u === keystore.client_id);
   // sign safe multisigs with the private key registerd to safe
-  const signedRaw = await signSafeTransaction(tx, multisig[0].views, safePrivateKey, index);
+  const signedRaw = signSafeTransaction(tx, utxos, multisig[0].views, safePrivateKey, index);
   multisig = await client.multisig.signSafeMultisigs(request_id, signedRaw);
   console.log(multisig);
 };

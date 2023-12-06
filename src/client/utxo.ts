@@ -22,6 +22,9 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
       },
     }),
 
+  /**
+   * asset should be SHA256Hash of asset_id, otherwise asset param would not work
+   */
   safeOutputs: (params: SafeOutputsRequest): Promise<SafeUtxoOutput[]> =>
     axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
       params: {
