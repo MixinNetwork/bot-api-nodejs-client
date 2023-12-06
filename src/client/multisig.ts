@@ -45,17 +45,13 @@ export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
     /** Cancel my multisig request */
     cancel: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'cancel'),
 
-    createSafeMultisigs: (params: TransactionRequest[]): Promise<SafeMultisigsResponse[]> => 
-      axiosInstance.post<unknown, SafeMultisigsResponse[]>('/safe/multisigs', params),
+    createSafeMultisigs: (params: TransactionRequest[]): Promise<SafeMultisigsResponse[]> => axiosInstance.post<unknown, SafeMultisigsResponse[]>('/safe/multisigs', params),
 
-    fetchSafeMultisigs: (id: string): Promise<SafeMultisigsResponse> => 
-      axiosInstance.get<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}`),
+    fetchSafeMultisigs: (id: string): Promise<SafeMultisigsResponse> => axiosInstance.get<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}`),
 
-    signSafeMultisigs: (id: string, raw: string): Promise<SafeMultisigsResponse> => 
-      axiosInstance.post<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}/sign`, { raw }),
+    signSafeMultisigs: (id: string, raw: string): Promise<SafeMultisigsResponse> => axiosInstance.post<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}/sign`, { raw }),
 
-    unlockSafeMultisigs: (id: string): Promise<SafeMultisigsResponse> => 
-      axiosInstance.post<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}/unlock`),
+    unlockSafeMultisigs: (id: string): Promise<SafeMultisigsResponse> => axiosInstance.post<unknown, SafeMultisigsResponse>(`/safe/multisigs/${id}/unlock`),
   };
 };
 

@@ -1,11 +1,4 @@
-const {
-  MixinApi,
-  encodeSafeTransaction,
-  getUnspentOutputsForRecipients,
-  buildSafeTransactionRecipient,
-  buildSafeTransaction,
-  signSafeTransaction,
-} = require('..');
+const { MixinApi, encodeSafeTransaction, getUnspentOutputsForRecipients, buildSafeTransactionRecipient, buildSafeTransaction, signSafeTransaction } = require('..');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json'); // keystore from your bot
 
@@ -25,7 +18,7 @@ const main = async () => {
     members,
     threshold,
     asset: 'f3bed3e0f6738938c8988eb8853c5647baa263901deb217ee53586d5de831f3b',
-    state: 'unspent'
+    state: 'unspent',
   });
 
   // Get utxo inputs and change fot tx
@@ -48,21 +41,28 @@ const main = async () => {
   console.log(tx);
   const raw = encodeSafeTransaction(tx);
 
+  // create multisig tx
   const request_id = v4();
-  console.log(request_id)
+  console.log(request_id);
   let multisig = await client.multisig.createSafeMultisigs([
     {
       raw,
       request_id,
-    }
+    },
   ]);
-  console.log(multisig)
+  console.log(multisig);
 
+  // unlock multisig tx
+  const unlock = await client.multisig.unlockSafeMultisigs(request_id);
+  console.log('unlock');
+  console.log(unlock);
+
+  // you can continue to sign this unlocked multisig tx
   const index = outputs[0].receivers.sort().findIndex(u => u === keystore.client_id);
   // sign safe multisigs with the private key registerd to safe
-  const signedRaw = await signSafeTransaction(tx, multisig[0].views, safePrivateKey, outputs[0].receivers, index);
+  const signedRaw = await signSafeTransaction(tx, multisig[0].views, safePrivateKey, index);
   multisig = await client.multisig.signSafeMultisigs(request_id, signedRaw);
-  console.log(multisig)
+  console.log(multisig);
 };
 
 main();
