@@ -126,7 +126,7 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
   throw new Error('insufficient total input outputs');
 };
 
-export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] = []) => {
+export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: Record<number, string>[] = []) => {
   const enc = new Encoder(Buffer.from([]));
 
   enc.write(magic);
@@ -203,7 +203,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
   };
 };
 
-export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], privateKey: string) => {
+export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], privateKey: string, index = 0) => {
   const raw = encodeSafeTransaction(tx);
   const msg = await blake3Hash(Buffer.from(raw, 'hex'));
 
@@ -217,7 +217,8 @@ export const signSafeTransaction = async (tx: MultisigTransaction, views: string
     const t = ed.scalar.add(x, y);
     const key = Buffer.from(ed.scalar.toBytes(t));
     const sig = ed.sign(msg, key);
-    const sigs = [sig.toString('hex')]; // for 1/1 bot transaction
+    const sigs: Record<number, string> = {};
+    sigs[index] = sig.toString('hex');
     signaturesMap.push(sigs);
   }
 

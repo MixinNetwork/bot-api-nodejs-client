@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
-import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse } from './types/multisig';
+import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse, SafeMultisigsResponse, TransactionRequest } from './types';
 import { signEd25519PIN } from './utils/pin';
 import { hashMembers } from './utils/uniq';
 import { buildClient } from './utils/client';
@@ -44,6 +44,18 @@ export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: K
 
     /** Cancel my multisig request */
     cancel: (pin: string, requestID: string): Promise<MultisigRequestResponse> => initMultisig(pin, requestID, 'cancel'),
+
+    createSafeMultisigs: (params: TransactionRequest[]): Promise<SafeMultisigsResponse[]> => 
+      axiosInstance.post<unknown, SafeMultisigsResponse[]>('/safe/multisigs', params),
+
+    fetchSafeMultisigs: (id: string): Promise<SafeMultisigsResponse[]> => 
+      axiosInstance.get<unknown, SafeMultisigsResponse[]>(`/safe/multisigs/${id}`),
+
+    signSafeMultisigs: (id: string, raw: string): Promise<SafeMultisigsResponse[]> => 
+      axiosInstance.post<unknown, SafeMultisigsResponse[]>(`/safe/multisigs/${id}/sign`, { raw }),
+
+    unlockSafeMultisigs: (id: string): Promise<SafeMultisigsResponse[]> => 
+      axiosInstance.post<unknown, SafeMultisigsResponse[]>(`/safe/multisigs/${id}/unlock`),
   };
 };
 
