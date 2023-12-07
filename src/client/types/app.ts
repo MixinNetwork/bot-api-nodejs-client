@@ -40,3 +40,9 @@ export interface AppRequest {
   capabilities: string[];
   resource_patterns: string[];
 }
+
+export interface AppSafeSessionRequest {
+  public_hex?: string;
+  signature?: string;
+  session_secret: string;
+}

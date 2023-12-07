@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { AppResponse, AppPropertyResponse, AppRequest, AppSecretResponse, AppSessionResponse } from './types/app';
+import { AppResponse, AppPropertyResponse, AppRequest, AppSecretResponse, AppSessionResponse, AppSafeSessionRequest } from './types/app';
 import { buildClient } from './utils/client';
 
 // TODO add app api for developer document
@@ -50,6 +50,17 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
     };
     return axiosInstance.post<unknown, AppSessionResponse>(`/apps/${appID}/session`, data);
   },
+
+  /**
+   * Get a new app session
+   * `public_hex` and `signature` are required to upgrade to tip and register to safe if `has_tip` of the app is false
+   * the spend private key would be same as the tip private key
+   * @param session_secret: public key of ed25519 session keys
+   * @param public_hex: public key of ed25519 tip/spend keys
+   * @param signature: signature of the SHA256Hash of the app_id using ed25519 tip/spend private key
+   */
+  updateSafeSession: (appID: string, data: AppSafeSessionRequest): Promise<AppSessionResponse> =>
+    axiosInstance.post<unknown, AppSessionResponse>(`/safe/apps/${appID}/session`, data),
 
   /**
    * Add to your share list
