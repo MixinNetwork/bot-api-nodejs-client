@@ -126,7 +126,7 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
   throw new Error('insufficient total input outputs');
 };
 
-export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: string[][] = []) => {
+export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: Record<number, string>[] = []) => {
   const enc = new Encoder(Buffer.from([]));
 
   enc.write(magic);
@@ -203,21 +203,29 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
   };
 };
 
-export const signSafeTransaction = async (tx: MultisigTransaction, views: string[], privateKey: string) => {
+export const signSafeTransaction = (tx: MultisigTransaction, utxos: SafeUtxoOutput[], views: string[], privateKey: string) => {
   const raw = encodeSafeTransaction(tx);
-  const msg = await blake3Hash(Buffer.from(raw, 'hex'));
+  const msg = blake3Hash(Buffer.from(raw, 'hex'));
 
   const spenty = sha512Hash(Buffer.from(privateKey.slice(0, 64), 'hex'));
   const y = ed.setBytesWithClamping(spenty.subarray(0, 32));
 
   const signaturesMap = [];
   for (let i = 0; i < tx.inputs.length; i++) {
+    const input = tx.inputs[i];
+    const utxo = utxos[i];
+    if (!utxo || utxo.transaction_hash !== input.hash || utxo.output_index !== input.index) {
+      throw new Error(`invalid input: ${input}`);
+    }
     const viewBuffer = Buffer.from(views[i], 'hex');
     const x = ed.setCanonicalBytes(viewBuffer);
     const t = ed.scalar.add(x, y);
     const key = Buffer.from(ed.scalar.toBytes(t));
     const sig = ed.sign(msg, key);
-    const sigs = [sig.toString('hex')]; // for 1/1 bot transaction
+    const pub = ed.publicFromPrivate(key);
+    const sigs: Record<number, string> = {};
+    const index = utxo.keys.findIndex(k => k === pub.toString('hex'));
+    sigs[index] = sig.toString('hex');
     signaturesMap.push(sigs);
   }
 

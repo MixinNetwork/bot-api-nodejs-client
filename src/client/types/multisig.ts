@@ -66,3 +66,22 @@ export interface MultisigTransaction {
   outputs: Output[];
   extra: string;
 }
+
+export interface SafeMultisigsResponse {
+  type: 'transaction_request';
+  request_id: string;
+  transaction_hash: string;
+  asset_id: string; // asset uuid
+  kernel_asset_id: string; // SHA256Hash of asset uuid
+  amount: string;
+  receivers: string[];
+  senders: string[];
+  senders_hash: string;
+  senders_threshold: number;
+  signers: string[];
+  extra: string;
+  raw_transaction: string;
+  created_at: string;
+  updated_at: string;
+  views: string[];
+}

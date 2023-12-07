@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { encodeSafeTransaction, signSafeTransaction, getMainnetAddressGhostKey } from '../../src';
+import { encodeSafeTransaction, signSafeTransaction, getMainnetAddressGhostKey, SafeUtxoOutput } from '../../src';
 
 describe('Tests for safe', () => {
   test('Test for safe transaction signature', async () => {
@@ -33,7 +33,14 @@ describe('Tests for safe', () => {
     const unsignedRaw = encodeSafeTransaction(tx);
     expect(unsignedRaw).toEqual(raw1);
 
-    const signedRaw = await signSafeTransaction(tx, views, priv);
+    const utxos = [
+      {
+        keys: ['0b6c1f0d107d9b825b48d2dcd711993ad5e6b0b06501adce5db767711e97551b', 'e0d29cfc66eee800fe3fc2329fd49a93cb11006675fa39db6e64739a79d611ba'],
+        output_index: 0,
+        transaction_hash: 'c513ffcc684e9585c76bd76245aa7d2def3b9f147422b59ab91db7852c9d97dd',
+      },
+    ];
+    const signedRaw = signSafeTransaction(tx, utxos as SafeUtxoOutput[], views, priv);
     expect(signedRaw).toEqual(raw2);
   });
 

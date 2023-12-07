@@ -217,8 +217,8 @@ export class Encoder {
   }
 
   encodeSignature(sm: { [key: number]: string }) {
-    const ss = Object.keys(sm)
-      .map((j, i) => ({ index: j, sig: sm[i] }))
+    const ss = Object.entries(sm)
+      .map(([k, v]) => ({ index: k, sig: v }))
       .sort((a, b) => Number(a.index) - Number(b.index));
 
     this.writeInt(ss.length);

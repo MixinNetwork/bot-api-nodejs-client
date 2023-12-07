@@ -49,14 +49,14 @@ const main = async () => {
   const outputs = await client.utxo.safeOutputs({
     members: [keystore.client_id],
     threshold: 1,
-    asset: 'edb4fe8b-8f05-32e3-a0e0-5d2096e7a7ac',
+    asset: 'f3bed3e0f6738938c8988eb8853c5647baa263901deb217ee53586d5de831f3b',
     state: 'unspent',
   });
   console.log(outputs);
   const balance = await client.utxo.safeAssetBalance({
     members: [keystore.client_id],
     threshold: 1,
-    asset: 'edb4fe8b-8f05-32e3-a0e0-5d2096e7a7ac',
+    asset: 'f3bed3e0f6738938c8988eb8853c5647baa263901deb217ee53586d5de831f3b',
     state: 'unspent',
   });
   console.log(balance);
@@ -94,7 +94,7 @@ const main = async () => {
   console.log(verifiedTx);
 
   // sign safe transaction with the private key registerd to safe
-  const signedRaw = await signSafeTransaction(tx, verifiedTx[0].views, privateKey);
+  const signedRaw = signSafeTransaction(tx, utxos, verifiedTx[0].views, privateKey);
   console.log(signedRaw);
   const sendedTx = await client.utxo.sendTransactions([
     {
