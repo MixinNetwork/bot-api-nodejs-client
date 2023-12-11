@@ -1,4 +1,4 @@
-import { Context } from './type';
+import { Context, WebviewAsset } from './type';
 
 export const WebViewApi = () => {
   const getMixinContext = () => {
@@ -56,6 +56,66 @@ export const WebViewApi = () => {
         case 'Android':
         case 'Desktop':
           if (window.MixinContext && typeof window.MixinContext.close === 'function') window.MixinContext.close();
+          break;
+        default:
+          break;
+      }
+    },
+
+    getAssets: async (assets: string[], cb: (assets: WebviewAsset[]) => void) => {
+      switch (getMixinContext().platform) {
+        case 'iOS':
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.getAssets) {
+            window.assetsCallbackFunction = cb;
+            await window.webkit.messageHandlers.getAssets.postMessage([assets, 'assetsCallbackFunction']);
+          }
+          break;
+        case 'Android':
+        case 'Desktop':
+          if (window.MixinContext && typeof window.MixinContext.getAssets === 'function') {
+            window.assetsCallbackFunction = cb;
+            await window.MixinContext.getAssets(assets, 'assetsCallbackFunction');
+          }
+          break;
+        default:
+          break;
+      }
+    },
+
+    getTipAddress: async (chainId: string, cb: (address: string) => void) => {
+      switch (getMixinContext().platform) {
+        case 'iOS':
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.getTipAddress) {
+            window.tipAddressCallbackFunction = cb;
+            await window.webkit.messageHandlers.getTipAddress.postMessage([chainId, 'tipAddressCallbackFunction']);
+          }
+          break;
+        case 'Android':
+        case 'Desktop':
+          if (window.MixinContext && typeof window.MixinContext.getTipAddress === 'function') {
+            window.tipAddressCallbackFunction = cb;
+            await window.MixinContext.getTipAddress(chainId, 'tipAddressCallbackFunction');
+          }
+          break;
+        default:
+          break;
+      }
+    },
+
+    tipSign: async (chainId: string, msg: string, cb: (signature: string) => void) => {
+      switch (getMixinContext().platform) {
+        case 'iOS':
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tipSign) {
+            window.tipSignCallbackFunction = cb;
+            await window.webkit.messageHandlers.tipSign.postMessage([chainId, msg, 'tipSignCallbackFunction']);
+          }
+          break;
+        case 'Android':
+        case 'Desktop':
+          if (window.MixinContext && typeof window.MixinContext.tipSign === 'function') {
+            window.tipSignCallbackFunction = cb;
+            await window.MixinContext.tipSign(chainId, msg, 'tipSignCallbackFunction');
+          }
           break;
         default:
           break;
