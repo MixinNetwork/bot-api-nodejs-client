@@ -43,7 +43,7 @@ export const parseMixAddress = (address: string): MixAddress | undefined => {
     const payload = data.subarray(0, data.length - 4);
     const msg = Buffer.concat([Buffer.from(MixAddressPrefix), Buffer.from(payload)]);
     const checksum = newHash(msg);
-    if (!checksum.subarray(0, 4).equals(data.subarray(data.length - 4))) return undefined;
+    if (!checksum.subarray(0, 4).equals(Buffer.from(data.subarray(data.length - 4)))) return undefined;
 
     const version = data.at(0);
     const threshold = data.at(1);
