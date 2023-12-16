@@ -85,7 +85,7 @@ For example, you can use `vite-plugin-node-polyfills` for vite.
 
 ```js
 // vite.config.js
-import { nodePolyfills } from "vite-plugin-node-polyfills"
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 // ...
 export default defineConfig({
   // ...
@@ -93,10 +93,10 @@ export default defineConfig({
     nodePolyfills({
       globals: {
         Buffer: true,
-      }
-    })
-  ]
-})
+      },
+    }),
+  ],
+});
 ```
 
 ## License
