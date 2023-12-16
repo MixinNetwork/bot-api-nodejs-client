@@ -76,6 +76,7 @@ client.blaze.loop({
   },
 });
 ```
+
 ## Use the sdk in web browser
 
 This SDK uses node `Buffer`, which is not available in web browser. You can use polyfills to make it work.
