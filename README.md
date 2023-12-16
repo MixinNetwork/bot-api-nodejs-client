@@ -77,6 +77,28 @@ client.blaze.loop({
 });
 ```
 
+## Use the sdk in web browser
+
+This SDK uses node `Buffer`, which is not available in web browser. You can use polyfills to make it work.
+
+For example, you can use `vite-plugin-node-polyfills` for vite.
+
+```js
+// vite.config.js
+import { nodePolyfills } from "vite-plugin-node-polyfills"
+// ...
+export default defineConfig({
+  // ...
+  plugins: [
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+      }
+    })
+  ]
+})
+```
+
 ## License
 
 ```
