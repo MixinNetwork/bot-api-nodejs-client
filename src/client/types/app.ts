@@ -29,7 +29,11 @@ export interface AppSecretResponse {
 
 export interface AppSessionResponse {
   session_id: string;
-  pin_token_base64: string;
+  server_public_key: string;
+}
+
+export interface AppRegistrationResponse {
+  spend_public_key: string;
 }
 
 export interface AppRequest {

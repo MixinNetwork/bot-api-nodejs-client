@@ -1,5 +1,14 @@
 import { AxiosInstance } from 'axios';
-import { AppResponse, AppPropertyResponse, AppRequest, AppSecretResponse, AppSessionResponse, AppSafeSessionRequest, AppSafeRegistrationRequest } from './types/app';
+import {
+  AppResponse,
+  AppPropertyResponse,
+  AppRequest,
+  AppSafeSessionRequest,
+  AppSafeRegistrationRequest,
+  AppSessionResponse,
+  AppRegistrationResponse,
+  AppSecretResponse,
+} from './types/app';
 import { buildClient } from './utils/client';
 
 // TODO add app api for developer document
@@ -50,8 +59,8 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
    * @param spend_public_key: hex public key of ed25519 tip/spend keys
    * @param signature_base64: signature of the SHA256Hash of the app_id using ed25519 tip/spend private key
    */
-  registerSafe: (appID: string, data: AppSafeRegistrationRequest): Promise<AppSessionResponse> =>
-    axiosInstance.post<unknown, AppSessionResponse>(`/safe/apps/${appID}/register`, data),
+  registerSafe: (appID: string, data: AppSafeRegistrationRequest): Promise<AppRegistrationResponse> =>
+    axiosInstance.post<unknown, AppRegistrationResponse>(`/safe/apps/${appID}/register`, data),
 
   /**
    * Add to your share list
