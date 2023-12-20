@@ -13,6 +13,8 @@ export interface AppResponse {
   creator_id: string;
   app_secret: string;
   session_secret: string;
+  session_public_key: string;
+  has_safe: boolean;
   updated_at: string;
 }
 
@@ -42,7 +44,10 @@ export interface AppRequest {
 }
 
 export interface AppSafeSessionRequest {
-  public_hex?: string;
-  signature?: string;
-  session_secret: string;
+  session_public_key: string;
+}
+
+export interface AppSafeRegistrationRequest {
+  spend_public_key: string;
+  signature_base64: string;
 }
