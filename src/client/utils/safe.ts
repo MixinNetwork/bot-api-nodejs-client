@@ -256,7 +256,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
   };
 };
 
-export const signSafeTransaction = (tx: MultisigTransaction, utxos: SafeUtxoOutput[], views: string[], privateKey: string) => {
+export const signSafeTransaction = (tx: MultisigTransaction, views: string[], privateKey: string, index = 0) => {
   const raw = encodeSafeTransaction(tx);
   const msg = blake3Hash(Buffer.from(raw, 'hex'));
 
@@ -265,19 +265,12 @@ export const signSafeTransaction = (tx: MultisigTransaction, utxos: SafeUtxoOutp
 
   const signaturesMap = [];
   for (let i = 0; i < tx.inputs.length; i++) {
-    const input = tx.inputs[i];
-    const utxo = utxos[i];
-    if (!utxo || utxo.transaction_hash !== input.hash || utxo.output_index !== input.index) {
-      throw new Error(`invalid input: ${input}`);
-    }
     const viewBuffer = Buffer.from(views[i], 'hex');
     const x = ed.setCanonicalBytes(viewBuffer);
     const t = ed.scalar.add(x, y);
     const key = Buffer.from(ed.scalar.toBytes(t));
     const sig = ed.sign(msg, key);
-    const pub = ed.publicFromPrivate(key);
     const sigs: Record<number, string> = {};
-    const index = utxo.keys.findIndex(k => k === pub.toString('hex'));
     sigs[index] = sig.toString('hex');
     signaturesMap.push(sigs);
   }

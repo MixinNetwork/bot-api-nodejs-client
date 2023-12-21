@@ -94,7 +94,7 @@ const main = async () => {
   console.log(verifiedTx);
 
   // sign safe transaction with the private key registerd to safe
-  const signedRaw = signSafeTransaction(tx, utxos, verifiedTx[0].views, privateKey);
+  const signedRaw = signSafeTransaction(tx, verifiedTx[0].views, privateKey);
   console.log(signedRaw);
   const sendedTx = await client.utxo.sendTransactions([
     {
