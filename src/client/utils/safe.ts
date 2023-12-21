@@ -2,9 +2,9 @@ import forge from 'node-forge';
 import qs from 'qs';
 import { validate, v4 } from 'uuid';
 import { FixedNumber } from 'ethers';
-import { GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import { GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Input, Output } from '../../mvm/types';
-import { Encoder, magic } from '../../mvm';
+import { Decoder, Encoder, magic } from '../../mvm';
 import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
 import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress } from './address';
@@ -156,6 +156,59 @@ export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: Record<numb
   });
 
   return enc.buf.toString('hex');
+};
+
+export const decodeSafeTransaction = (raw: string): SafeTransaction => {
+  const dec = new Decoder(Buffer.from(raw, 'hex'));
+
+  const prefix = dec.subarray(0, 2);
+  if (!prefix.equals(magic)) throw new Error('invalid magic');
+  dec.read(3);
+
+  const version = dec.readByte();
+  if (version !== TxVersionHashSignature) throw new Error('invalid version');
+
+  const asset = dec.subarray(0, 32).toString('hex');
+  dec.read(32);
+
+  const lenInput = dec.readInt();
+  const inputs = [];
+  for (let i = 0; i < lenInput; i++) {
+    inputs.push(dec.decodeInput());
+  }
+
+  const lenOutput = dec.readInt();
+  const outputs = [];
+  for (let i = 0; i < lenOutput; i++) {
+    outputs.push(dec.decodeOutput());
+  }
+
+  const lenRefs = dec.readInt();
+  const refs = [];
+  for (let i = 0; i < lenRefs; i++) {
+    const hash = dec.subarray(0, 32).toString('hex');
+    dec.read(32);
+    refs.push(hash);
+  }
+
+  const lenExtra = dec.readUint32();
+  const extra = dec.subarray(0, lenExtra).toString();
+  dec.read(lenExtra);
+
+  const lenSigs = dec.readInt();
+  const signatureMap = [];
+  for (let i = 0; i < lenSigs; i++) {
+    signatureMap.push(dec.decodeSignature());
+  }
+
+  return {
+    version,
+    asset,
+    extra,
+    inputs,
+    outputs,
+    signatureMap,
+  };
 };
 
 export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {

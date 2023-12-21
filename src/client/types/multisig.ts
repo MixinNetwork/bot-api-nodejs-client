@@ -67,6 +67,10 @@ export interface MultisigTransaction {
   extra: string;
 }
 
+export interface SafeTransaction extends MultisigTransaction {
+  signatureMap: Record<number, string>[];
+}
+
 export interface SafeMultisigsResponse {
   type: 'transaction_request';
   request_id: string;
