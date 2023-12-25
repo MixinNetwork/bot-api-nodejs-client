@@ -1,44 +1,11 @@
-const {
-  MixinApi,
-  getED25519KeyPair,
-  getTipPinUpdateMsg,
-  base64RawURLDecode,
-  encodeSafeTransaction,
-  getUnspentOutputsForRecipients,
-  buildSafeTransactionRecipient,
-  buildSafeTransaction,
-  signSafeTransaction,
-} = require('..');
+const { MixinApi, encodeSafeTransaction, getUnspentOutputsForRecipients, buildSafeTransactionRecipient, buildSafeTransaction, signSafeTransaction } = require('..');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json'); // keystore from your bot
 
+let privateKey = '';
+
 const main = async () => {
   const client = MixinApi({ keystore });
-  let bot = await client.user.profile();
-
-  // private key for safe registration
-  let privateKey = '';
-  // upgrade to tip pin if haven't
-  if (!bot.tip_key_base64) {
-    const keys = getED25519KeyPair();
-    const pub = base64RawURLDecode(keys.publicKey);
-    const priv = base64RawURLDecode(keys.privateKey);
-    const tipPin = priv.toString('hex');
-    privateKey = tipPin;
-
-    const b = getTipPinUpdateMsg(pub, bot.tip_counter + 1);
-    await client.pin.update(keystore.pin, b);
-    bot = await client.pin.verifyTipPin(tipPin);
-    keystore.pin = tipPin; // should update pin in your keystore file too
-    console.log('new tip pin', tipPin);
-  }
-
-  // register to safe if haven't
-  // it's convinient to use the same private key as above tipPin
-  if (!bot.has_safe) {
-    const resp = await client.safe.register(keystore.client_id, keystore.pin, Buffer.from(privateKey, 'hex'));
-    console.log(resp);
-  }
 
   // destination
   const members = ['7766b24c-1a03-4c3a-83a3-b4358266875d'];
