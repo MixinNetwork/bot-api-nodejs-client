@@ -1,4 +1,4 @@
-import { client, keystore } from './common';
+import { client, app_pin } from './common';
 
 describe('address', () => {
   const asset_id = '43d61dcd-e413-450d-80b8-101d5e903357';
@@ -6,7 +6,7 @@ describe('address', () => {
   let tmpAddressID = '';
 
   it('create address if not exsits', async () => {
-    const receive = await client.address.create(keystore.pin, { asset_id, destination, label: 'test' });
+    const receive = await client.address.create(app_pin, { asset_id, destination, label: 'test' });
     console.log(receive);
     const res = await client.address.fetch(receive.address_id);
     expect(res.address_id).toEqual(receive.address_id);
@@ -17,11 +17,10 @@ describe('address', () => {
     const isHave = list.some(item => item.address_id === tmpAddressID);
     expect(isHave).toBeTruthy();
   });
-
   it('delete address', async () => {
     const res = await client.address.fetch(tmpAddressID);
     expect(res.address_id).toEqual(tmpAddressID);
-    const t = await client.address.delete(keystore.pin, tmpAddressID);
+    const t = await client.address.delete(app_pin, tmpAddressID);
     expect(t).toBeUndefined();
   });
 });

@@ -1,4 +1,4 @@
-import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv } from '@noble/curves/ed25519';
+import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv, x25519 } from '@noble/curves/ed25519';
 import { Field } from '@noble/curves/abstract/modular';
 import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
 import { blake3Hash, sha512Hash } from './uniq';
@@ -100,6 +100,7 @@ const hashScalar = (k: Buffer, index: number) => {
 
 export const edwards25519 = {
   scalar: fn,
+  x25519,
   edwardsToMontgomery,
   edwardsToMontgomeryPriv,
 

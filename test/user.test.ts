@@ -3,12 +3,12 @@ import { client, keystore } from './common';
 describe('user', () => {
   it('profile', async () => {
     const user = await client.user.profile();
-    expect(user.user_id).toEqual(keystore.user_id);
+    expect(user.user_id).toEqual(keystore.app_id);
   });
 
   it('fetch', async () => {
-    const user = await client.user.fetch(keystore.user_id);
-    expect(user.user_id).toEqual(keystore.user_id);
+    const user = await client.user.fetch(keystore.app_id);
+    expect(user.user_id).toEqual(keystore.app_id);
   });
 
   it('readBlockUsers', async () => {

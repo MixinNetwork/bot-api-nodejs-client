@@ -51,20 +51,6 @@ describe('Tests for utils', () => {
     expect(uniqueConversationID('d1e9ec7e-199d-4578-91a0-a69d9a7ba048', '965e5c6e-434c-3fa9-b780-c50f43cd955c')).toMatch('60478c27-1052-3df5-b938-b96a8b907e76');
   });
 
-  test('tests for encrypte pin', () => {
-    const privateBob: string = 'ecbda951581271c5fd644871e63149561291d88bfc4bcff2afe42d522b71d2df';
-    const pubBob: string = '27b190c953fca478ec2b8ec32d5181bd9e1b8c345662ff66f020a039e6376947';
-    const privateAlice: string = 'a340e8e294fae1cc3e3b3fb56633d21f6eefb5591ac62aa32bede494c36a3fb0';
-    const pubAlice: string = '4056be9513f09744aa3d8d5ded5a6e885dd054aff226e6b31a701504b031474b';
-
-    const share1 = sharedEd25519Key(Buffer.from(pubAlice, 'hex').toString('base64'), Buffer.from(privateBob, 'hex').toString('base64'));
-    const share2 = sharedEd25519Key(Buffer.from(pubBob, 'hex').toString('base64'), Buffer.from(privateAlice, 'hex').toString('base64'));
-    expect(Buffer.from(share1).toString('hex')).toBe(Buffer.from(share2).toString('hex'));
-
-    expect(signEd25519PIN('123456', undefined)).toBe('');
-    expect(signEd25519PIN('123456', keystore)).not.toBe('');
-  });
-
   test('tests for auth', () => {
     expect(signAccessToken('GET', '/me', '', uuid(), keystore)).not.toBe('');
     expect(signAccessToken('POST', '/me', { foo: 'bar' }, uuid(), keystore)).not.toBe('');

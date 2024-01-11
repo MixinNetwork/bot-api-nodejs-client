@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AuthenticationUserResponse } from './types/user';
 import { buildClient } from './utils/client';
-import { buildTipPin, getTipPinUpdateMsg, signEd25519PIN } from './utils/pin';
+import { signTipBody, getNanoTime, getTipPinUpdateMsg, getVerifyPinTipBody, signEd25519PIN } from './utils/pin';
 
 /**
  * Methods to verify or update pin with keystore
@@ -35,9 +35,13 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
     },
 
     verifyTipPin: (pin: string) => {
-      const data = buildTipPin(pin);
-      data.pin_base64 = signEd25519PIN(data.pin_base64, keystore);
-      return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', data);
+      const timestamp = getNanoTime();
+      const msg = getVerifyPinTipBody(timestamp)
+      const signedTipPin = signTipBody(pin, msg);
+      return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', {
+        pin_base64: signEd25519PIN(signedTipPin, keystore),
+        timestamp,
+      });
     },
 
     /** Change the PIN of the user, or setup a new PIN if it is not set yet */

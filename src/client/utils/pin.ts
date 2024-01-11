@@ -1,12 +1,12 @@
 // @ts-ignore
 import nano from 'nano-seconds';
-import { sharedKey } from 'curve25519-js';
 import forge from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import Keystore from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 import { Encoder } from '../../mvm';
 import { edwards25519 as ed } from './ed25519';
+import { sha256Hash } from './uniq';
 
 export const getNanoTime = () => {
   const now: number[] = nano.now();
@@ -16,7 +16,7 @@ export const getNanoTime = () => {
 export const sharedEd25519Key = (server_public_key: string, session_private_key: string) => {
   const pub = ed.edwardsToMontgomery(Buffer.from(server_public_key, 'hex'));
   const pri = ed.edwardsToMontgomeryPriv(Buffer.from(session_private_key, 'hex'));
-  return sharedKey(pri, pub);
+  return ed.x25519.getSharedSecret(pri, pub);
 };
 
 export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
@@ -60,17 +60,26 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   return base64RawURLEncode(encryptedBytes);
 };
 
-export const buildTipPin = (pin: string) => {
-  const timestamp = getNanoTime();
+export const getCreateAddressTipBody = (asset_id: string, publicKey: string, tag: string, name: string) => {
+  const msg = `TIP:ADDRESS:ADD:${asset_id+publicKey+tag+name}`;
+  return sha256Hash(Buffer.from(msg));
+};
+
+export const getRemoveAddressTipBody = (address_id: string) => {
+  const msg = `TIP:ADDRESS:REMOVE:${address_id}`;
+  return sha256Hash(Buffer.from(msg));
+};
+
+export const getVerifyPinTipBody = (timestamp: number) => {
   const msg = `TIP:VERIFY:${`${timestamp}`.padStart(32, '0')}`;
+  return Buffer.from(msg);
+};
+
+export const signTipBody = (pin: string, msg: Buffer) => {
   const privateKey = Buffer.from(pin, 'hex');
   const signData = forge.pki.ed25519.sign({
     message: msg,
-    encoding: 'utf8',
     privateKey,
   });
-  return {
-    pin_base64: signData.toString('hex'),
-    timestamp,
-  };
+  return signData.toString('hex');
 };
