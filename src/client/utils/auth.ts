@@ -36,7 +36,9 @@ const signToken = (payload: Object, private_key: string): string => {
 export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: AppKeystore) => {
   if (!keystore.session_id || !validate(keystore.session_id)) return '';
 
-  const method = methodRaw!.toLocaleUpperCase() || 'GET';
+  let method = 'GET';
+  if (methodRaw) method = methodRaw.toLocaleUpperCase();
+  
   let data: string = '';
   if (typeof params === 'object') {
     data = serialize(params, { unsafe: true });
@@ -71,7 +73,9 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 export const signOauthAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: OAuthKeystore) => {
   if (!keystore.scope) return '';
 
-  const method = methodRaw!.toLocaleUpperCase() || 'GET';
+  let method = 'GET';
+  if (methodRaw) method = methodRaw.toLocaleUpperCase();
+  
   let data: string = '';
   if (typeof params === 'object') {
     data = serialize(params, { unsafe: true });

@@ -19,12 +19,14 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
   const managerConversation = (conversationID: string, action: ConversationAction, participant: ParticipantRequest[]): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
-  const createContactConversation = (userID: string): Promise<ConversationResponse> =>
-    createConversation({
+  const createContactConversation = (userID: string): Promise<ConversationResponse> => {
+    if (!keystore) throw new Error('No Keystore Provided');
+    return createConversation({
       category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore!.user_id, userID),
+      conversation_id: uniqueConversationID(keystore?.app_id, userID),
       participants: [{ user_id: userID }],
     });
+  }
 
   const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });
