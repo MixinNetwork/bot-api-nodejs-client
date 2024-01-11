@@ -61,7 +61,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
 };
 
 export const getCreateAddressTipBody = (asset_id: string, publicKey: string, tag: string, name: string) => {
-  const msg = `TIP:ADDRESS:ADD:${asset_id+publicKey+tag+name}`;
+  const msg = `TIP:ADDRESS:ADD:${asset_id + publicKey + tag + name}`;
   return sha256Hash(Buffer.from(msg));
 };
 

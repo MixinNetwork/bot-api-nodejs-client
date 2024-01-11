@@ -36,7 +36,7 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
 
     verifyTipPin: (pin: string) => {
       const timestamp = getNanoTime();
-      const msg = getVerifyPinTipBody(timestamp)
+      const msg = getVerifyPinTipBody(timestamp);
       const signedTipPin = signTipBody(pin, msg);
       return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/verify', {
         pin_base64: signEd25519PIN(signedTipPin, keystore),

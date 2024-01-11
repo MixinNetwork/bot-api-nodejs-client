@@ -20,7 +20,7 @@ export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
 
   /** Create a new withdrawal address */
   create: (pin: string, params: AddressRequest): Promise<AddressResponse> => {
-    const msg = getCreateAddressTipBody(params.asset_id, params.destination, params.tag ?? '', params.label)
+    const msg = getCreateAddressTipBody(params.asset_id, params.destination, params.tag ?? '', params.label);
     const signedTipPin = signTipBody(pin, msg);
     const encrypted = signEd25519PIN(signedTipPin, keystore);
     return axiosInstance.post<unknown, AddressResponse>('/addresses', { ...params, pin: encrypted });

@@ -26,7 +26,7 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       conversation_id: uniqueConversationID(keystore?.app_id, userID),
       participants: [{ user_id: userID }],
     });
-  }
+  };
 
   const muteConversation = (conversationID: string, duration: number): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/mute`, { duration });

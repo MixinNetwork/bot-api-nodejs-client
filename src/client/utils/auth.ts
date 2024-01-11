@@ -38,7 +38,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 
   let method = 'GET';
   if (methodRaw) method = methodRaw.toLocaleUpperCase();
-  
+
   let data: string = '';
   if (typeof params === 'object') {
     data = serialize(params, { unsafe: true });
@@ -75,7 +75,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
 
   let method = 'GET';
   if (methodRaw) method = methodRaw.toLocaleUpperCase();
-  
+
   let data: string = '';
   if (typeof params === 'object') {
     data = serialize(params, { unsafe: true });
