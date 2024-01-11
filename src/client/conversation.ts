@@ -23,7 +23,7 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
     if (!keystore) throw new Error('No Keystore Provided');
     return createConversation({
       category: 'CONTACT',
-      conversation_id: uniqueConversationID(keystore?.app_id, userID),
+      conversation_id: uniqueConversationID(keystore.app_id, userID),
       participants: [{ user_id: userID }],
     });
   };
