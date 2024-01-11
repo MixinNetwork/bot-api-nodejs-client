@@ -1,31 +1,17 @@
-export interface Keystore {
-  user_id: string;
-  private_key: string;
-
-  // oauth
-  scope?: string;
-  authorization_id?: string;
-
-  // owner private key
-  session_id?: string;
-  pin?: string;
-  pin_token?: string;
-  client_secret?: string;
+export interface AppKeystore {
+  app_id: string;
+  session_id: string;
+  server_public_key: string;
+  session_private_key: string;
 }
-interface ClientKeystore {
-  client_id: string;
-  private_key: string;
 
-  // oauth
-  scope?: string;
-  authorization_id?: string;
-
-  // owner private key
-  session_id?: string;
-  pin?: string;
-  pin_token?: string;
-  client_secret?: string;
+export interface OAuthKeystore {
+  app_id: string;
+  scope: string;
+  authorization_id: string;
+  session_private_key: string;
 }
-export type InitKeystore = Keystore | ClientKeystore;
+
+export type Keystore = AppKeystore | OAuthKeystore;
 
 export default Keystore;

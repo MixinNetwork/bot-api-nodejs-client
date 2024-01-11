@@ -6,32 +6,17 @@ import { Uint64LE as Uint64 } from 'int64-buffer';
 import Keystore from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 import { Encoder } from '../../mvm';
+import { edwards25519 as ed } from './ed25519';
 
 export const getNanoTime = () => {
   const now: number[] = nano.now();
   return now[0] * 1e9 + now[1];
 };
 
-const privateKeyToCurve25519 = (privateKey: Buffer) => {
-  const seed = forge.util.createBuffer(privateKey.subarray(0, 32), 'raw');
-
-  const md = forge.md.sha512.create();
-  md.update(seed.getBytes());
-  const res = md.digest().getBytes();
-
-  const digest = Buffer.from(res, 'binary');
-  digest[0] &= 248;
-  digest[31] &= 127;
-  digest[31] |= 64;
-  return digest.subarray(0, 32);
-};
-
-export const sharedEd25519Key = (pinTokenRaw: string, privateKeyRaw: string) => {
-  const pinToken = Buffer.from(pinTokenRaw, 'base64');
-  let privateKey = Buffer.from(privateKeyRaw, 'base64');
-  privateKey = privateKeyToCurve25519(privateKey);
-
-  return sharedKey(privateKey, pinToken);
+export const sharedEd25519Key = (server_public_key: string, session_private_key: string) => {
+  const pub = ed.edwardsToMontgomery(Buffer.from(server_public_key, 'hex'));
+  const pri = ed.edwardsToMontgomeryPriv(Buffer.from(session_private_key, 'hex'));
+  return sharedKey(pri, pub);
 };
 
 export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
@@ -41,13 +26,12 @@ export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
 };
 
 export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
-  if (!keystore) {
+  if (!keystore || !keystore.session_private_key || !('server_public_key' in keystore)) {
     return '';
   }
   const blockSize = 16;
 
-  const format = pin.length > 6 ? 'hex' : 'utf8';
-  const _pin = Buffer.from(pin, format);
+  const _pin = Buffer.from(pin, 'hex');
   const iterator = Buffer.from(new Uint64(getNanoTime()).toBuffer());
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
   const buf = Buffer.concat([_pin, time, iterator]);
@@ -61,7 +45,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   buffer.putBytes(Buffer.from(paddings).toString('binary'));
 
   const iv = forge.random.getBytesSync(blockSize);
-  const sharedKey = sharedEd25519Key(keystore.pin_token!, keystore.private_key!);
+  const sharedKey = sharedEd25519Key(keystore.server_public_key, keystore.session_private_key);
   const cipher = forge.cipher.createCipher('AES-CBC', forge.util.createBuffer(sharedKey, 'raw'));
   cipher.start({ iv });
   cipher.update(buffer);
