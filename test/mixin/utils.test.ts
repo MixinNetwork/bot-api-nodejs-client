@@ -2,7 +2,6 @@ import { v4 as uuid } from 'uuid';
 import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
-import { sharedEd25519Key, signEd25519PIN } from '../../src/client/utils/pin';
 import { buildMixAddress, parseMixAddress } from '../../src/client/utils/address';
 import keystore from '../keystore';
 
