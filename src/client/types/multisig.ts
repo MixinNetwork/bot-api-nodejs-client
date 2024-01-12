@@ -1,4 +1,4 @@
-import { Input, Output } from '../../mvm';
+import { Input, Output } from './mixin_transaction';
 import { UtxoState } from './utxo';
 
 export type MultisigInitAction = 'sign' | 'unlock';

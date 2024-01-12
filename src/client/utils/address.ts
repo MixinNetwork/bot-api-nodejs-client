@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import bs58 from 'bs58';
 import { stringify, parse } from 'uuid';
 import { MixAddress } from '../types';
 import { newHash } from './uniq';
@@ -11,7 +11,7 @@ export const getPublicFromMainnetAddress = (address: string) => {
   try {
     if (!address.startsWith(MainAddressPrefix)) return undefined;
 
-    const data = utils.base58.decode(address.slice(3));
+    const data = bs58.decode(address.slice(3));
     if (data.length !== 68) return undefined;
 
     const payload = data.subarray(0, data.length - 4);
@@ -28,14 +28,14 @@ export const getMainnetAddressFromPublic = (pubKey: Buffer) => {
   const msg = Buffer.concat([Buffer.from(MainAddressPrefix), pubKey]);
   const checksum = newHash(msg);
   const data = Buffer.concat([pubKey, checksum.subarray(0, 4)]);
-  return `${MainAddressPrefix}${utils.base58.encode(data)}`;
+  return `${MainAddressPrefix}${bs58.encode(data)}`;
 };
 
 export const parseMixAddress = (address: string): MixAddress | undefined => {
   try {
     if (!address.startsWith(MixAddressPrefix)) return undefined;
 
-    const data = utils.base58.decode(address.slice(3));
+    const data = bs58.decode(address.slice(3));
     if (data.length < 3 + 16 + 4) {
       return undefined;
     }
@@ -112,5 +112,5 @@ export const buildMixAddress = (ma: MixAddress): string => {
   const msg = Buffer.concat([Buffer.from(MixAddressPrefix), prefix, ...memberData]);
   const checksum = newHash(msg);
   const data = Buffer.concat([prefix, ...memberData, checksum.subarray(0, 4)]);
-  return `${MixAddressPrefix}${utils.base58.encode(data)}`;
+  return `${MixAddressPrefix}${bs58.encode(data)}`;
 };

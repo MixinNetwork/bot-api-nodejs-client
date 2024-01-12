@@ -12,6 +12,7 @@ export * from './error';
 export * from './external';
 export * from './keystore';
 export * from './message';
+export * from './mixin_transaction';
 export * from './multisig';
 export * from './network';
 export * from './nfo';

@@ -4,7 +4,7 @@ import forge from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import Keystore from '../types/keystore';
 import { base64RawURLEncode } from './base64';
-import { Encoder } from '../../mvm';
+import { Encoder } from './encoder';
 import { edwards25519 as ed } from './ed25519';
 import { sha256Hash } from './uniq';
 

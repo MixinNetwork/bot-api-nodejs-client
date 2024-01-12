@@ -1,6 +1,6 @@
-import { utils } from 'ethers';
+import { Input, Output } from '../types';
 import { magic } from './encoder';
-import { Input, Output } from './types';
+import { formatUnits } from './amount';
 
 export const bytesToInterger = (b: Buffer) => {
   let x = 0;
@@ -144,7 +144,7 @@ export class Decoder {
 
     const output: Output = {
       type,
-      amount: utils.formatUnits(amount, 8),
+      amount: formatUnits(amount, 8).toString(),
       keys,
       mask,
       script,

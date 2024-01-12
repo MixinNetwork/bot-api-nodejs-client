@@ -1,10 +1,10 @@
 import forge from 'node-forge';
 import qs from 'qs';
 import { validate, v4 } from 'uuid';
-import { FixedNumber } from 'ethers';
-import { GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
-import { Input, Output } from '../../mvm/types';
-import { Decoder, Encoder, magic } from '../../mvm';
+import BigNumber from 'bignumber.js';
+import { Input, Output, GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import { Encoder, magic } from './encoder';
+import { Decoder } from './decoder';
 import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
 import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress } from './address';
@@ -109,18 +109,18 @@ export const buildSafeTransactionRecipient = (members: string[], threshold: numb
 });
 
 export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
-  const totalOutput = rs.reduce((prev, cur) => prev.addUnsafe(FixedNumber.from(cur.amount)), FixedNumber.from('0'));
+  const totalOutput = rs.reduce((prev, cur) => prev.plus(BigNumber(cur.amount)), BigNumber('0'));
 
-  let totalInput = FixedNumber.from('0');
+  let totalInput = BigNumber('0');
   for (let i = 0; i < outputs.length; i++) {
     const o = outputs[i];
     if (o.state !== 'unspent') continue;
-    totalInput = totalInput.addUnsafe(FixedNumber.from(o.amount));
-    if (totalInput.subUnsafe(totalOutput).isNegative()) continue;
+    totalInput = totalInput.plus(BigNumber(o.amount));
+    if (totalInput.plus(totalOutput).isNegative()) continue;
 
     return {
       utxos: outputs.slice(0, i + 1),
-      change: totalInput.subUnsafe(totalOutput),
+      change: totalInput.plus(totalOutput),
     };
   }
   throw new Error('insufficient total input outputs');

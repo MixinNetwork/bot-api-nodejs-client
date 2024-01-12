@@ -3,7 +3,8 @@ import { parse as UUIDParse, stringify } from 'uuid';
 import type { CollectibleOutputsResponse, NFOMemo } from '../types';
 import type { KeystoreClientReturnType } from '../mixin-client';
 import { buildMultiSigsTransaction, encodeScript } from './multisigs';
-import { Encoder, Decoder, integerToBytes } from '../../mvm';
+import { Encoder, integerToBytes } from './encoder';
+import { Decoder } from './decoder';
 
 const Prefix = 'NFO';
 const Version = 0x00;

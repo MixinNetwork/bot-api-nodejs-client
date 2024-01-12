@@ -1,6 +1,6 @@
-import { utils } from 'ethers';
 import { parse } from 'uuid';
-import { Aggregated, Input, Output } from './types';
+import { Aggregated, Input, Output } from '../types';
+import { parseUnits } from './amount';
 
 const MaximumEncodingInt = 0xffff;
 
@@ -148,7 +148,7 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(utils.parseUnits(Number(o.amount).toFixed(8), 8).toNumber());
+    this.writeInteger(parseUnits(Number(o.amount).toFixed(8), 8).toNumber());
     this.writeInt(o.keys!.length);
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
