@@ -116,11 +116,11 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
     const o = outputs[i];
     if (o.state !== 'unspent') continue;
     totalInput = totalInput.plus(BigNumber(o.amount));
-    if (totalInput.plus(totalOutput).isNegative()) continue;
+    if (totalInput.minus(totalOutput).isNegative()) continue;
 
     return {
       utxos: outputs.slice(0, i + 1),
-      change: totalInput.plus(totalOutput),
+      change: totalInput.minus(totalOutput),
     };
   }
   throw new Error('insufficient total input outputs');
