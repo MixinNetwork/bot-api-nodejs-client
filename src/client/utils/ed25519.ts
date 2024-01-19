@@ -1,8 +1,8 @@
-import { ed25519 } from '@noble/curves/ed25519';
+import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv, x25519 } from '@noble/curves/ed25519';
 import { Field } from '@noble/curves/abstract/modular';
 import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
 import { blake3Hash, sha512Hash } from './uniq';
-import { putUvarInt } from '../../mvm/encoder';
+import { putUvarInt } from './encoder';
 
 const scMinusOne = Buffer.from('ecd3f55c1a631258d69cf7a2def9de1400000000000000000000000000000010', 'hex');
 const base = ed25519.ExtendedPoint.fromHex('5866666666666666666666666666666666666666666666666666666666666666');
@@ -100,6 +100,9 @@ const hashScalar = (k: Buffer, index: number) => {
 
 export const edwards25519 = {
   scalar: fn,
+  x25519,
+  edwardsToMontgomery,
+  edwardsToMontgomeryPriv,
 
   setBytesWithClamping,
   setCanonicalBytes,

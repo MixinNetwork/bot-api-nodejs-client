@@ -30,12 +30,10 @@ yarn add @mixin.dev/mixin-node-sdk
 const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
 const keystore = {
-  user_id: '',
-  private_key: '',
+  app_id: '',
   session_id: '',
-  pin: '',
-  pin_token: '',
-  client_secret: '',
+  server_public_key: '',
+  session_private_key: '',
 };
 const client = MixinApi({ keystore });
 
@@ -54,12 +52,10 @@ async function getMe() {
 const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
 
 const keystore = {
-  user_id: '',
-  private_key: '',
+  app_id: '',
   session_id: '',
-  pin: '',
-  pin_token: '',
-  client_secret: '',
+  server_public_key: '',
+  session_private_key: '',
 };
 const config = {
   keystore,
@@ -102,7 +98,7 @@ export default defineConfig({
 ## License
 
 ```
-Copyright 2022 Mixin.
+Copyright 2024 Mixin.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

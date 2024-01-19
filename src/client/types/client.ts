@@ -1,5 +1,5 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
-import type { Keystore, InitKeystore } from './keystore';
+import type { Keystore } from './keystore';
 import { BlazeOptions } from './blaze';
 
 export interface RequestConfig
@@ -10,7 +10,7 @@ export interface RequestConfig
 
 export interface HTTPConfig {
   blazeOptions?: BlazeOptions;
-  keystore?: InitKeystore;
+  keystore?: Keystore;
   requestConfig?: RequestConfig;
 }
 

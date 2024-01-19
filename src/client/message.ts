@@ -32,12 +32,13 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
 
   const sendMsg = async (recipientID: string, category: MessageCategory, data: any): Promise<MessageRequest> => {
+    if (!keystore) throw new Error('No Keystore Provided');
     if (typeof data === 'object') data = JSON.stringify(data);
 
     const messageRequest = {
       category,
       recipient_id: recipientID,
-      conversation_id: uniqueConversationID(keystore!.user_id, recipientID),
+      conversation_id: uniqueConversationID(keystore.app_id, recipientID),
       message_id: uuid(),
       data: base64RawURLEncode(Buffer.from(data)),
     };

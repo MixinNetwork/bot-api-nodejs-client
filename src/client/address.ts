@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import Keystore from './types/keystore';
 import { AddressResponse, AddressRequest } from './types/address';
-import { signEd25519PIN } from './utils/pin';
+import { getCreateAddressTipBody, getRemoveAddressTipBody, signEd25519PIN, signTipBody } from './utils/pin';
 import { buildClient } from './utils/client';
 
 /**
@@ -20,13 +20,17 @@ export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
 
   /** Create a new withdrawal address */
   create: (pin: string, params: AddressRequest): Promise<AddressResponse> => {
-    const encrypted = signEd25519PIN(pin, keystore);
+    const msg = getCreateAddressTipBody(params.asset_id, params.destination, params.tag ?? '', params.label);
+    const signedTipPin = signTipBody(pin, msg);
+    const encrypted = signEd25519PIN(signedTipPin, keystore);
     return axiosInstance.post<unknown, AddressResponse>('/addresses', { ...params, pin: encrypted });
   },
 
   /** Delete a specified address by addressID */
   delete: (pin: string, addressID: string): Promise<any> => {
-    const encrypted = signEd25519PIN(pin, keystore);
+    const msg = getRemoveAddressTipBody(addressID);
+    const signedTipPin = signTipBody(pin, msg);
+    const encrypted = signEd25519PIN(signedTipPin, keystore);
     return axiosInstance.post<unknown, any>(`/addresses/${addressID}/delete`, { pin: encrypted });
   },
 });
