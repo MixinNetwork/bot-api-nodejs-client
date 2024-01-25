@@ -78,11 +78,11 @@ client.blaze.loop({
 ```js
 const { MixinApi, getED25519KeyPair, base64RawURLEncode } = require('@mixin.dev/mixin-node-sdk');
 
-const code = 'xxx';        // from OAuth url
-const app_id = 'xxx';      // app_id of your bot
+const code = '';           // from OAuth url
+const app_id = '';         // app_id of your bot
 const client_secret = '';  // OAuth Client Secret of your bot
 
-const { seed, publicKey } = getED25519KeyPair(); // Generate random seed and ed25519 key pairs
+const { seed, publicKey } = getED25519KeyPair();  // Generate random seed and ed25519 key pairs
 
 let client = MixinApi();
 const { scope, authorization_id } = await client.oauth.getToken({

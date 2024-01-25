@@ -104,25 +104,13 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
 };
 
 export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
-  console.log("signAccessToken", methodRaw, uri, params, requestID, keystore)
-  console.log(!keystore || !keystore.app_id || !keystore.session_private_key)
-  if (!keystore || !keystore.app_id || !keystore.session_private_key) {
-    console.error(keystore)
-    return '';
-  }
-  if (!validate(keystore.app_id)) {
-    console.error(validate(keystore.app_id))
-    return '';
-  }
+  if (!keystore || !keystore.app_id || !keystore.session_private_key) return ''; 
+  if (!validate(keystore.app_id)) return ''; 
 
   const privateKey = Buffer.from(keystore.session_private_key, 'hex');
-  if (privateKey.byteLength !== 32) {
-    console.error(privateKey.byteLength)
-    return '';  
-  } 
+  if (privateKey.byteLength !== 32) return ''; 
 
   if ('authorization_id' in keystore) {
-    console.error('authorization_id')
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
   }
   return signAuthenticationToken(methodRaw, uri, params, requestID, keystore);
