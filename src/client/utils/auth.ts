@@ -5,10 +5,12 @@ import type { Keystore, AppKeystore, OAuthKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 
 export const getED25519KeyPair = () => {
-  const keypair = forge.pki.ed25519.generateKeyPair();
+  const seed = Buffer.from(forge.random.getBytesSync(32), 'binary');
+  const keypair = forge.pki.ed25519.generateKeyPair({ seed });
   return {
-    privateKey: base64RawURLEncode(keypair.privateKey),
-    publicKey: base64RawURLEncode(keypair.publicKey),
+    privateKey: Buffer.from(keypair.privateKey),
+    publicKey: Buffer.from(keypair.publicKey),
+    seed,
   };
 };
 
@@ -102,13 +104,25 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
 };
 
 export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
-  if (!keystore || !keystore.app_id || !keystore.session_private_key) return '';
-  if (!validate(keystore.app_id)) return '';
+  console.log("signAccessToken", methodRaw, uri, params, requestID, keystore)
+  console.log(!keystore || !keystore.app_id || !keystore.session_private_key)
+  if (!keystore || !keystore.app_id || !keystore.session_private_key) {
+    console.error(keystore)
+    return '';
+  }
+  if (!validate(keystore.app_id)) {
+    console.error(validate(keystore.app_id))
+    return '';
+  }
 
   const privateKey = Buffer.from(keystore.session_private_key, 'hex');
-  if (privateKey.byteLength !== 32) return '';
+  if (privateKey.byteLength !== 32) {
+    console.error(privateKey.byteLength)
+    return '';  
+  } 
 
   if ('authorization_id' in keystore) {
+    console.error('authorization_id')
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
   }
   return signAuthenticationToken(methodRaw, uri, params, requestID, keystore);
