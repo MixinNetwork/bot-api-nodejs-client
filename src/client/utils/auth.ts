@@ -104,11 +104,11 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
 };
 
 export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
-  if (!keystore || !keystore.app_id || !keystore.session_private_key) return ''; 
-  if (!validate(keystore.app_id)) return ''; 
+  if (!keystore || !keystore.app_id || !keystore.session_private_key) return '';
+  if (!validate(keystore.app_id)) return '';
 
   const privateKey = Buffer.from(keystore.session_private_key, 'hex');
-  if (privateKey.byteLength !== 32) return ''; 
+  if (privateKey.byteLength !== 32) return '';
 
   if ('authorization_id' in keystore) {
     return signOauthAccessToken(methodRaw, uri, params, requestID, keystore);
