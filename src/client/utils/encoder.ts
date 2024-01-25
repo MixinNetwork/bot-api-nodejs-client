@@ -1,4 +1,5 @@
 import { parse } from 'uuid';
+import BigNumber from 'bignumber.js';
 import { Aggregated, Input, Output } from '../types';
 import { parseUnits } from './amount';
 
@@ -17,6 +18,16 @@ export const integerToBytes = (x: number) => {
     i = (i / 2 ** 8) | 0;
   } while (i !== 0);
   return bytes;
+};
+
+export const bigNumberToBytes = (x: BigNumber) => {
+  const bytes = [];
+  let i = x;
+  do {
+    bytes.unshift(i.mod(256).toNumber());
+    i = i.dividedToIntegerBy(256);
+  } while (!i.isZero());
+  return Buffer.from(bytes);
 };
 
 export const putUvarInt = (x: number) => {
@@ -89,10 +100,10 @@ export class Encoder {
     this.write(buf);
   }
 
-  writeInteger(i: number) {
-    const b = integerToBytes(i);
-    this.writeInt(b.length);
-    this.write(Buffer.from(b));
+  writeInteger(i: BigNumber) {
+    const b = bigNumberToBytes(i);
+    this.writeInt(b.byteLength);
+    this.write(b);
   }
 
   // TODO convert array like to array
@@ -128,7 +139,7 @@ export class Encoder {
       this.write(tx);
 
       this.writeUint64(d.index);
-      this.writeInteger(d.amount);
+      this.writeInteger(parseUnits(Number(d.amount).toFixed(8), 8));
     }
     const m = i.mint;
     if (typeof m === 'undefined') {
@@ -140,7 +151,7 @@ export class Encoder {
       this.write(Buffer.from(m.group));
 
       this.writeUint64(m.batch);
-      this.writeInteger(m.amount);
+      this.writeInteger(parseUnits(Number(m.amount).toFixed(8), 8));
     }
   }
 
@@ -148,7 +159,7 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(parseUnits(Number(o.amount).toFixed(8), 8).toNumber());
+    this.writeInteger(parseUnits(Number(o.amount).toFixed(8), 8));
     this.writeInt(o.keys!.length);
 
     o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
