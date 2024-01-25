@@ -71,6 +71,34 @@ client.blaze.loop({
 });
 ```
 
+3. OAuth 授权
+
+```js
+const { MixinApi, getED25519KeyPair, base64RawURLEncode } = require('@mixin.dev/mixin-node-sdk');
+
+const code = 'xxx';        // from OAuth url
+const app_id = 'xxx';      // app_id of your bot
+const client_secret = '';  // OAuth Client Secret of your bot
+
+const { seed, publicKey } = getED25519KeyPair(); // Generate random seed and ed25519 key pairs
+
+let client = MixinApi();
+const { scope, authorization_id } = await client.oauth.getToken({
+  client_id: app_id,
+  code,
+  ed25519: base64RawURLEncode(publicKey),
+  client_secret
+});
+const keystore = {
+  app_id,
+  scope,
+  authorization_id,
+  session_private_key: Buffer.from(seed).toString("hex"),
+};
+client = MixinApi({ keystore });
+const user = await client.user.profile();
+```
+
 ## 贡献
 
 可接受 PRs.
