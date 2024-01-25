@@ -5,10 +5,12 @@ import type { Keystore, AppKeystore, OAuthKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 
 export const getED25519KeyPair = () => {
-  const keypair = forge.pki.ed25519.generateKeyPair();
+  const seed = Buffer.from(forge.random.getBytesSync(32), 'binary');
+  const keypair = forge.pki.ed25519.generateKeyPair({ seed });
   return {
-    privateKey: base64RawURLEncode(keypair.privateKey),
-    publicKey: base64RawURLEncode(keypair.publicKey),
+    privateKey: Buffer.from(keypair.privateKey),
+    publicKey: Buffer.from(keypair.publicKey),
+    seed,
   };
 };
 
