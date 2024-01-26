@@ -9,7 +9,7 @@ const main = async () => {
   console.log('user session_private_key', session_private_key);
   const user = await client.user.createBareUser('test-user', base64RawURLEncode(sessionPublicKey));
   console.log('user_id', user.user_id);
-  console.log('user_session_id', user.session_id);
+  console.log('user session_id', user.session_id);
 
   const userClient = MixinApi({
     keystore: {
