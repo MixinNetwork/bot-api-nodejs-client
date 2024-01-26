@@ -1,7 +1,7 @@
 import serialize from 'serialize-javascript';
 import forge from 'node-forge';
 import { validate } from 'uuid';
-import type { Keystore, AppKeystore, OAuthKeystore } from '../types/keystore';
+import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 
 export const getED25519KeyPair = () => {
@@ -35,7 +35,7 @@ const signToken = (payload: Object, private_key: string): string => {
  * sign an authentication token
  * sig: sha256(method + uri + params)
  */
-export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: AppKeystore) => {
+export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: AppKeystore | NetworkUserKeystore) => {
   if (!keystore.session_id || !validate(keystore.session_id)) return '';
 
   let method = 'GET';
