@@ -2,8 +2,8 @@
 import nano from 'nano-seconds';
 import forge from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
-import Keystore from '../types/keystore';
-import { base64RawURLEncode } from './base64';
+import type { Keystore, AppKeystore, NetworkUserKeystore } from '../types/keystore';
+import { base64RawURLDecode, base64RawURLEncode } from './base64';
 import { Encoder } from './encoder';
 import { edwards25519 as ed } from './ed25519';
 import { sha256Hash } from './uniq';
@@ -13,9 +13,9 @@ export const getNanoTime = () => {
   return now[0] * 1e9 + now[1];
 };
 
-export const sharedEd25519Key = (server_public_key: string, session_private_key: string) => {
-  const pub = ed.edwardsToMontgomery(Buffer.from(server_public_key, 'hex'));
-  const pri = ed.edwardsToMontgomeryPriv(Buffer.from(session_private_key, 'hex'));
+export const sharedEd25519Key = (keystore: AppKeystore | NetworkUserKeystore) => {
+  const pub = 'server_public_key' in keystore ? ed.edwardsToMontgomery(Buffer.from(keystore.server_public_key, 'hex')) : base64RawURLDecode(keystore.pin_token_base64);
+  const pri = ed.edwardsToMontgomeryPriv(Buffer.from(keystore.session_private_key, 'hex'));
   return ed.x25519.getSharedSecret(pri, pub);
 };
 
@@ -26,9 +26,8 @@ export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
 };
 
 export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): string => {
-  if (!keystore || !keystore.session_private_key || !('server_public_key' in keystore)) {
-    return '';
-  }
+  if (!keystore || !keystore.session_private_key) return '';
+  if (!('server_public_key' in keystore) && !('pin_token_base64' in keystore)) return '';
   const blockSize = 16;
 
   const _pin = Buffer.from(pin, 'hex');
@@ -45,7 +44,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   buffer.putBytes(Buffer.from(paddings).toString('binary'));
 
   const iv = forge.random.getBytesSync(blockSize);
-  const sharedKey = sharedEd25519Key(keystore.server_public_key, keystore.session_private_key);
+  const sharedKey = sharedEd25519Key(keystore);
   const cipher = forge.cipher.createCipher('AES-CBC', forge.util.createBuffer(sharedKey, 'raw'));
   cipher.start({ iv });
   cipher.update(buffer);

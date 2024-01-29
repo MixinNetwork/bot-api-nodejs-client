@@ -12,6 +12,13 @@ export interface OAuthKeystore {
   session_private_key: string;
 }
 
-export type Keystore = AppKeystore | OAuthKeystore;
+export interface NetworkUserKeystore {
+  app_id: string;
+  session_id: string;
+  session_private_key: string;
+  pin_token_base64: string;
+}
+
+export type Keystore = AppKeystore | OAuthKeystore | NetworkUserKeystore;
 
 export default Keystore;

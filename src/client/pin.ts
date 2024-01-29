@@ -12,8 +12,8 @@ import { signTipBody, getNanoTime, getTipPinUpdateMsg, getVerifyPinTipBody, sign
  */
 export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   function updatePin(firstPin: string, secondPin = ''): Promise<AuthenticationUserResponse> {
-    const oldEncrypted = secondPin ? signEd25519PIN(firstPin, keystore) : '';
-    const newEncrypted = secondPin ? signEd25519PIN(secondPin, keystore) : signEd25519PIN(firstPin, keystore);
+    const oldEncrypted = firstPin ? signEd25519PIN(firstPin, keystore) : '';
+    const newEncrypted = signEd25519PIN(secondPin, keystore);
     return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/update', { old_pin_base64: oldEncrypted, pin_base64: newEncrypted });
   }
 
@@ -22,7 +22,7 @@ export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
     if (pubTipBuf.byteLength !== 32) throw new Error('invalid public key');
     const pubTipHex = getTipPinUpdateMsg(pubTipBuf, counter).toString('hex');
 
-    const oldEncrypted = signEd25519PIN(firstPin, keystore);
+    const oldEncrypted = firstPin ? signEd25519PIN(firstPin, keystore) : '';
     const newEncrypted = signEd25519PIN(pubTipHex, keystore);
     return axiosInstance.post<unknown, AuthenticationUserResponse>('/pin/update', { old_pin_base64: oldEncrypted, pin_base64: newEncrypted });
   }
