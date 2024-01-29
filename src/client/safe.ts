@@ -30,7 +30,7 @@ export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
 
   depositEntries: (data: SafeDepositEntriesRequest) => axiosInstance.post<unknown, SafeDepositEntryResponse[]>(`/safe/deposit/entries`, data),
 
-  createDeposit: (chain_id: string) => axiosInstance.post<unknown, SafeDepositEntryResponse[]>('/safe/deposit_entries', { chain_id }),
+  createDeposit: (chain_id: string) => axiosInstance.post<unknown, SafeDepositEntryResponse[]>('/safe/deposit/deposit_entries', { chain_id }),
 
   pendingDeposits: (params: SafePendingDepositRequest): Promise<SafePendingDepositResponse[]> =>
     axiosInstance.get<unknown, SafePendingDepositResponse[]>(`/safe/deposits`, { params }),
