@@ -226,7 +226,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
   const outputs: Output[] = [];
   for (let i = 0; i < rs.length; i++) {
     const r = rs[i];
-    if (r.destination) {
+    if ('destination' in r) {
       outputs.push({
         type: OutputTypeWithdrawalSubmit,
         amount: r.amount,
@@ -234,6 +234,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
           address: r.destination,
           tag: r.tag ?? '',
         },
+        keys: []
       });
       continue;
     }

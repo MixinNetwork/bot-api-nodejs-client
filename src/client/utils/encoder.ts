@@ -160,22 +160,21 @@ export class Encoder {
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
     this.writeInteger(parseUnits(Number(o.amount).toFixed(8), 8));
-    this.writeInt(o.keys!.length);
 
-    o.keys!.forEach(k => this.write(Buffer.from(k, 'hex')));
+    this.writeInt(o.keys.length);
+    o.keys.forEach(k => this.write(Buffer.from(k, 'hex')));
 
-    if (!o.mask) o.mask = '';
-    this.write(Buffer.from(o.mask, 'hex'));
-
+    this.write(o.mask ? Buffer.from(o.mask, 'hex') : Buffer.alloc(32, 0));
+    
     if (!o.script) o.script = '';
     const s = Buffer.from(o.script, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
+
     const w = o.withdrawal;
-    if (typeof w === 'undefined') {
+    if (!w) {
       this.write(empty);
     } else {
-      // TODO... not check...
       this.write(magic);
 
       const addr = Buffer.from(w.address);

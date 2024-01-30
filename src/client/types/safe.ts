@@ -83,11 +83,23 @@ export interface SafeWithdrawal {
   receiver: string;
 }
 
-export interface SafeTransactionRecipient {
+export interface SafeWithdrawalRecipient {
+  amount: string;
+  destination: string;
+  tag?: string;
+}
+
+export interface SafeMixinRecipient {
   members: string[];
   threshold: number;
   mixAddress: string;
   amount: string;
-  destination?: string;
-  tag?: string;
+}
+
+export type SafeTransactionRecipient = SafeWithdrawalRecipient | SafeMixinRecipient;
+
+export interface SafeWithdrawalFee {
+  type: 'withdrawal_fee';
+  amount: string;
+  asset_id: string;
 }

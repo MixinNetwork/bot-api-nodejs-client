@@ -30,7 +30,7 @@ export interface Input {
 export interface Output {
   type?: number;
   amount: string;
-  keys?: string[];
+  keys: string[];
   withdrawal?: WithdrawData;
   script?: string;
   mask?: string;

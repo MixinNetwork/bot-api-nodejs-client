@@ -9,6 +9,7 @@ import {
   SafePendingDepositResponse,
   SafeSnapshot,
   SafeSnapshotsRequest,
+  SafeWithdrawalFee,
 } from './types';
 import { buildClient, signEd25519PIN, signSafeRegistration } from './utils';
 
@@ -27,6 +28,8 @@ export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
   fetchAsset: (id: string): Promise<SafeAsset> => axiosInstance.get<unknown, SafeAsset>(`/safe/assets/${id}`),
 
   fetchAssets: (assetIds: string[]): Promise<SafeAsset[]> => axiosInstance.post<unknown, SafeAsset[]>(`/safe/assets/fetch`, assetIds),
+
+  fetchFee: (asset: string, destination: string) => axiosInstance.get<unknown, SafeWithdrawalFee[]>(`/safe/assets/${asset}/fees`, { params: { destination } }),
 
   depositEntries: (data: SafeDepositEntriesRequest) => axiosInstance.post<unknown, SafeDepositEntryResponse[]>(`/safe/deposit/entries`, data),
 

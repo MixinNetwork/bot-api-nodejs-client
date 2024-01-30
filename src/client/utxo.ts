@@ -23,13 +23,13 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
     }),
 
   /**
-   * asset should be SHA256Hash of asset_id, otherwise asset param would not work
+   * Utxos of current user will be returned, if members and threshold are not provided.
    */
   safeOutputs: (params: SafeOutputsRequest): Promise<SafeUtxoOutput[]> =>
     axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
       params: {
         ...params,
-        members: hashMembers(params.members),
+        members: params.members ? hashMembers(params.members) : undefined,
       },
     }),
 
@@ -37,7 +37,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
     const outputs = await axiosInstance.get<unknown, SafeUtxoOutput[]>(`/safe/outputs`, {
       params: {
         ...params,
-        members: hashMembers(params.members),
+        members: params.members ? hashMembers(params.members) : undefined,
         state: 'unspent',
       },
     });

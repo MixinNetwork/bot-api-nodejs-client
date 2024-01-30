@@ -37,11 +37,16 @@ export interface OutputsRequest {
   order?: 'ASC' | 'DESC';
 }
 
-export interface SafeOutputsRequest extends OutputsRequest {
+export interface SafeOutputsRequest {
   asset?: string;
+  members?: string[];
+  threshold?: number;
+  state?: UtxoState;
+  offset?: string;
+  limit?: number;
 }
 
-export interface SafeBalanceRequest extends OutputsRequest {
+export interface SafeBalanceRequest extends SafeOutputsRequest {
   asset: string;
 }
 
