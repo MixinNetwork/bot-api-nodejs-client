@@ -19,13 +19,20 @@ export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageV
   return msgObj.data;
 };
 
-export const sendRaw = (ws: WebSocket, message: BlazeMessage): boolean => {
-  const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
-  const zipped = gzip(buffer);
-
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(zipped);
-    return true;
-  }
-  return false;
-};
+export const sendRaw = (ws: WebSocket, message: BlazeMessage): Promise<boolean> =>
+  new Promise(resolve => {
+    const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
+    const zipped = gzip(buffer);
+    if (ws.readyState === WebSocket.OPEN) {
+      const timer = setTimeout(() => {
+        resolve(false);
+      }, 5000);
+      const cb = () => {
+        clearTimeout(timer);
+        resolve(true);
+      };
+      ws.send(zipped, cb);
+      return;
+    }
+    resolve(false);
+  });

@@ -37,7 +37,7 @@ export function websocket(
         action: 'ACKNOWLEDGE_MESSAGE_RECEIPT',
         params: { message_id: msg.message_id, status: 'READ' },
       };
-      sendRaw(ws, message);
+      await sendRaw(ws, message);
     }
   };
 

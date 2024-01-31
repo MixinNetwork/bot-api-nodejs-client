@@ -11,13 +11,12 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   let url = wsHostURL[0];
   let ws: WebSocket | undefined;
   let pingTimeout: ReturnType<typeof setTimeout> | undefined;
-  let onTerminate: (() => void) | undefined;
 
   const terminate = () => {
     clearTimeout(Number(pingTimeout));
     if (!ws) return;
-    ws?.terminate();
-    onTerminate?.();
+    ws.terminate();
+    ws = undefined;
   };
 
   const heartbeat = () => {
@@ -27,6 +26,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
 
   const loopBlaze = (h: BlazeHandler) => {
     const connect = () => {
+      if (ws) return;
       ws = websocket(keystore, url, h, wsOptions);
       heartbeat();
 
@@ -34,7 +34,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
 
       ws.onopen = () => {
         heartbeat();
-        sendRaw(ws!, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
+        if (ws) sendRaw(ws, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
       };
 
       ws.onclose = () => {
@@ -49,8 +49,6 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
       };
     };
 
-    onTerminate = connect;
-
     connect();
   };
 
@@ -61,9 +59,7 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
       loopBlaze(h);
     },
     stopLoop: () => {
-      onTerminate = undefined;
       terminate();
-      ws = undefined;
     },
     getWebSocket: () => ws,
   };
