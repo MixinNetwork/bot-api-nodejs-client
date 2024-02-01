@@ -25,31 +25,27 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
   };
 
   const loopBlaze = (h: BlazeHandler) => {
-    const connect = () => {
-      if (ws) return;
-      ws = websocket(keystore, url, h, wsOptions);
+    if (ws) return;
+    ws = websocket(keystore, url, h, wsOptions);
+    heartbeat();
+
+    ws.on('ping', heartbeat);
+
+    ws.onopen = () => {
       heartbeat();
-
-      ws.on('ping', heartbeat);
-
-      ws.onopen = () => {
-        heartbeat();
-        if (ws) sendRaw(ws, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
-      };
-
-      ws.onclose = () => {
-        clearTimeout(Number(pingTimeout));
-        loopBlaze(h);
-      };
-
-      ws.onerror = e => {
-        if (e.message !== 'Opening handshake has timed out') return;
-        url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
-        terminate();
-      };
+      if (ws) sendRaw(ws, { id: uuid(), action: 'LIST_PENDING_MESSAGES' });
     };
 
-    connect();
+    ws.onclose = () => {
+      terminate();
+      loopBlaze(h);
+    };
+
+    ws.onerror = e => {
+      if (e.message !== 'Opening handshake has timed out') return;
+      url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
+      terminate();
+    };
   };
 
   return {
