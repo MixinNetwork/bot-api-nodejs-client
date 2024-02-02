@@ -29,6 +29,8 @@ describe('Tests for safe', () => {
           script: 'fffe01',
         },
       ],
+      references: [],
+      signatureMap: [],
     };
     const unsignedRaw = encodeSafeTransaction(tx);
     expect(unsignedRaw).toEqual(raw1);
