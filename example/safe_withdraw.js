@@ -1,11 +1,20 @@
-const { MixinApi, MixinCashier, buildSafeTransactionRecipient, getUnspentOutputsForRecipients, buildSafeTransaction, encodeSafeTransaction, signSafeTransaction } = require('..');
+const {
+  MixinApi,
+  MixinCashier,
+  buildSafeTransactionRecipient,
+  getUnspentOutputsForRecipients,
+  buildSafeTransaction,
+  encodeSafeTransaction,
+  signSafeTransaction,
+  blake3Hash,
+} = require('..');
 const { v4 } = require('uuid');
 const keystore = require('../keystore.json');
 
-const withdrawal_asset_id = '4d8c508b-91c5-375b-92b0-ee702ed2dac5';
+const withdrawal_asset_id = 'b91e18ff-a9ae-3dc7-8679-e935d9a4b34b';
 const withdrawal_amount = '1';
-const withdrawal_destination = '0xA03A8590BB3A2cA5c747c8b99C63DA399424a055';
-const safePrivateKey = '';
+const withdrawal_destination = '';
+const spendPrivateKey = '';
 
 const main = async () => {
   const client = MixinApi({ keystore });
@@ -18,13 +27,20 @@ const main = async () => {
   const fee = assetFee ?? chainFee;
   console.log(fee);
 
+  // withdrawal with chain asset as fee
   if (fee.asset_id !== asset.asset_id) {
     const outputs = await client.utxo.safeOutputs({
       asset: withdrawal_asset_id,
+      state: 'unspent',
     });
-    console.log(outputs);
-    // withdrawal and change
+    const feeOutputs = await client.utxo.safeOutputs({
+      asset: fee.asset_id,
+      state: 'unspent',
+    });
+    console.log(outputs, feeOutputs);
+
     let recipients = [
+      // withdrawal output, must be put first
       {
         amount: withdrawal_amount,
         destination: withdrawal_destination,
@@ -32,25 +48,33 @@ const main = async () => {
     ];
     const { utxos, change } = getUnspentOutputsForRecipients(outputs, recipients);
     if (!change.isZero() && !change.isNegative()) {
+      // add change output if needed
       recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
     }
+    // the index of ghost keys must be the same with the index of outputs
+    // but withdrawal output doesnt need ghost key, so index + 1
     const ghosts = await client.utxo.ghostKey(
-      recipients.map((r, i) => ({
-        hint: v4(),
-        receivers: r.members,
-        index: i,
-      })),
+      recipients
+        .filter(r => 'members' in r)
+        .map((r, i) => ({
+          hint: v4(),
+          receivers: r.members,
+          index: i + 1,
+        })),
     );
-    const tx = buildSafeTransaction(utxos, recipients, ghosts, 'withdrawal-memo');
+    // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
+    const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], 'withdrawal-memo');
+    console.log(tx);
     const raw = encodeSafeTransaction(tx);
+    const ref = blake3Hash(Buffer.from(raw, 'hex')).toString('hex');
 
-    const feeOutputs = await client.utxo.safeOutputs({
-      asset: fee.asset_id,
-    });
-    // fee and fee change
-    const feeRecipients = [buildSafeTransactionRecipient([MixinCashier], 1, fee.amount)];
+    const feeRecipients = [
+      // fee output
+      buildSafeTransactionRecipient([MixinCashier], 1, fee.amount),
+    ];
     const { utxos: feeUtxos, change: feeChange } = getUnspentOutputsForRecipients(feeOutputs, feeRecipients);
     if (!feeChange.isZero() && !feeChange.isNegative()) {
+      // add fee change output if needed
       feeRecipients.push(buildSafeTransactionRecipient(feeOutputs[0].receivers, feeOutputs[0].receivers_threshold, feeChange.toString()));
     }
     const feeGhosts = await client.utxo.ghostKey(
@@ -60,8 +84,10 @@ const main = async () => {
         index: i,
       })),
     );
-    const feeTx = buildSafeTransaction(feeUtxos, feeRecipients, feeGhosts, 'withdrawal-fee-memo');
+    const feeTx = buildSafeTransaction(feeUtxos, feeRecipients, feeGhosts, 'withdrawal-fee-memo', [ref]);
+    console.log(feeTx);
     const feeRaw = encodeSafeTransaction(feeTx);
+    console.log(feeRaw);
 
     const txId = v4();
     const feeId = v4();
@@ -77,9 +103,8 @@ const main = async () => {
       },
     ]);
 
-    // sign safe multisigs with the private key registerd to safe
-    const signedRaw = signSafeTransaction(tx, txs[0].views, safePrivateKey);
-    const signedFeeRaw = signSafeTransaction(feeTx, txs[1].views, safePrivateKey);
+    const signedRaw = signSafeTransaction(tx, txs[0].views, spendPrivateKey);
+    const signedFeeRaw = signSafeTransaction(feeTx, txs[1].views, spendPrivateKey);
     const res = await client.utxo.sendTransactions([
       {
         raw: signedRaw,
@@ -91,33 +116,43 @@ const main = async () => {
       },
     ]);
     console.log(res);
-  } else {
+  }
+  // withdrawal with asset as fee
+  else {
     const outputs = await client.utxo.safeOutputs({
       asset: withdrawal_asset_id,
+      state: 'unspent',
     });
     console.log(outputs);
-    // withdrawal, fee and change
+
     let recipients = [
+      // withdrawal output, must be put first
       {
         amount: withdrawal_amount,
         destination: withdrawal_destination,
       },
+      // fee output
       buildSafeTransactionRecipient([MixinCashier], 1, fee.amount),
     ];
     const { utxos, change } = getUnspentOutputsForRecipients(outputs, recipients);
     if (!change.isZero() && !change.isNegative()) {
+      // add change output if needed
       recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
     }
+    // the index of ghost keys must be the same with the index of outputs
+    // but withdrawal output doesnt need ghost key, so index + 1
     const ghosts = await client.utxo.ghostKey(
-      recipients.filter(r => 'members' in r).map((r, i) => ({
-        hint: v4(),
-        receivers: r.members,
-        index: i,
-      })),
+      recipients
+        .filter(r => 'members' in r)
+        .map((r, i) => ({
+          hint: v4(),
+          receivers: r.members,
+          index: i + 1,
+        })),
     );
+    // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
     const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], 'withdrawal-memo');
-    console.log(tx)
-    tx.outputs.forEach(o => console.log(o))
+    console.log(tx);
     const raw = encodeSafeTransaction(tx);
 
     const request_id = v4();
@@ -129,7 +164,7 @@ const main = async () => {
       },
     ]);
 
-    const signedRaw = signSafeTransaction(tx, txs[0].views, safePrivateKey);
+    const signedRaw = signSafeTransaction(tx, txs[0].views, spendPrivateKey);
     const res = await client.utxo.sendTransactions([
       {
         raw: signedRaw,

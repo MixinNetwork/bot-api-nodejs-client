@@ -68,6 +68,7 @@ export interface MultisigTransaction {
 }
 
 export interface SafeTransaction extends MultisigTransaction {
+  references: string[];
   signatureMap: Record<number, string>[];
 }
 

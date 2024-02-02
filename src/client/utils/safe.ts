@@ -2,7 +2,7 @@ import forge from 'node-forge';
 import qs from 'qs';
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
-import { Input, Output, GhostKey, GhostKeyRequest, MultisigTransaction, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import { Input, Output, GhostKey, GhostKeyRequest, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Encoder, magic } from './encoder';
 import { Decoder } from './decoder';
 import { base64RawURLEncode } from './base64';
@@ -126,7 +126,7 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
   throw new Error('insufficient total input outputs');
 };
 
-export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: Record<number, string>[] = []) => {
+export const encodeSafeTransaction = (tx: SafeTransaction, sigs: Record<number, string>[] = []) => {
   const enc = new Encoder(Buffer.from([]));
 
   enc.write(magic);
@@ -143,8 +143,10 @@ export const encodeSafeTransaction = (tx: MultisigTransaction, sigs: Record<numb
     enc.encodeOutput(output);
   });
 
-  // FIXME: references
-  enc.writeInt(0);
+  enc.writeInt(tx.references.length);
+  tx.references.forEach(r => {
+    enc.write(Buffer.from(r, 'hex'));
+  });
 
   const extra = Buffer.from(tx.extra);
   enc.writeUint32(extra.byteLength);
@@ -184,11 +186,11 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
   }
 
   const lenRefs = dec.readInt();
-  const refs = [];
+  const references = [];
   for (let i = 0; i < lenRefs; i++) {
     const hash = dec.subarray(0, 32).toString('hex');
     dec.read(32);
-    refs.push(hash);
+    references.push(hash);
   }
 
   const lenExtra = dec.readUint32();
@@ -207,11 +209,12 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
     extra,
     inputs,
     outputs,
+    references,
     signatureMap,
   };
 };
 
-export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string) => {
+export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string, references: string[] = []) => {
   if (utxos.length === 0) throw new Error('empty inputs');
   if (Buffer.from(extra).byteLength > 512) throw new Error('extra data is too long');
 
@@ -234,7 +237,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
           address: r.destination,
           tag: r.tag ?? '',
         },
-        keys: []
+        keys: [],
       });
       continue;
     }
@@ -254,10 +257,11 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
     extra,
     inputs,
     outputs,
+    references,
   };
 };
 
-export const signSafeTransaction = (tx: MultisigTransaction, views: string[], privateKey: string, index = 0) => {
+export const signSafeTransaction = (tx: SafeTransaction, views: string[], privateKey: string, index = 0) => {
   const raw = encodeSafeTransaction(tx);
   const msg = blake3Hash(Buffer.from(raw, 'hex'));
 

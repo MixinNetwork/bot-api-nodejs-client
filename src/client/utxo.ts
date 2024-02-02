@@ -56,6 +56,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   /**
    * Get one-time information to transfer assets to single user or multisigs group, not required for Mixin Kernel Address
+   * index in GhostKeyRequest MUST be the same with the index of corresponding output
    * receivers will be sorted in the function
    */
   ghostKey: (params: GhostKeyRequest[]): Promise<GhostKey[]> => {

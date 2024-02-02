@@ -165,7 +165,7 @@ export class Encoder {
     o.keys.forEach(k => this.write(Buffer.from(k, 'hex')));
 
     this.write(o.mask ? Buffer.from(o.mask, 'hex') : Buffer.alloc(32, 0));
-    
+
     if (!o.script) o.script = '';
     const s = Buffer.from(o.script, 'hex');
     this.writeInt(s.byteLength);
