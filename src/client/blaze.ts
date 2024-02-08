@@ -5,10 +5,9 @@ import { BlazeOptions, BlazeHandler } from './types';
 import { websocket } from './ws';
 import { sendRaw } from './utils';
 
-const wsHostURL = ['wss://mixin-blaze.zeromesh.net', 'wss://blaze.mixin.one/'];
-
 export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
-  let url = wsHostURL[0];
+  const url = 'wss://blaze.mixin.one';
+
   let ws: WebSocket | undefined;
   let pingTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -43,7 +42,6 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
 
     ws.onerror = e => {
       if (e.message !== 'Opening handshake has timed out') return;
-      url = url === wsHostURL[0] ? wsHostURL[1] : wsHostURL[0];
       terminate();
     };
   };

@@ -7,8 +7,6 @@ import { Keystore } from './types/keystore';
 import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
 
-const hostURL = ['https://api.mixin.one', 'https://mixin-api.zeromesh.net'];
-
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
@@ -17,7 +15,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
   const retries = config?.retry || 5;
 
   const ins = axios.create({
-    baseURL: hostURL[0],
+    baseURL: 'https://api.mixin.one',
     timeout,
     ...config,
   });
@@ -57,11 +55,6 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
         Boolean(error.code) && // Prevents retrying cancelled requests
         isRetryAllowed(error)) ||
       isIdempotentRequestError(error),
-    onRetry: (_count, err, requestConfig) => {
-      if (config?.baseURL) return;
-      requestConfig.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-      ins.defaults.baseURL = err.config?.baseURL === hostURL[0] ? hostURL[1] : hostURL[0];
-    },
   });
 
   return ins;
