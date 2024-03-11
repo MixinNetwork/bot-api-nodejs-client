@@ -19,7 +19,7 @@ export const getChallenge = () => {
   const seed = Buffer.from(forge.random.getBytesSync(32), 'binary');
   const verifier = base64RawURLEncode(seed);
   const challenge = base64RawURLEncode(sha256Hash(seed));
-  return { verifier, challenge }
+  return { verifier, challenge };
 };
 
 const signToken = (payload: Object, private_key: string): string => {
