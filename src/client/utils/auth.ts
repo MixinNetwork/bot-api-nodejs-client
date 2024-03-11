@@ -3,6 +3,7 @@ import forge from 'node-forge';
 import { validate } from 'uuid';
 import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
+import { sha256Hash } from './uniq';
 
 export const getED25519KeyPair = () => {
   const seed = Buffer.from(forge.random.getBytesSync(32), 'binary');
@@ -12,6 +13,13 @@ export const getED25519KeyPair = () => {
     publicKey: Buffer.from(keypair.publicKey),
     seed,
   };
+};
+
+export const getChallenge = () => {
+  const seed = Buffer.from(forge.random.getBytesSync(32), 'binary');
+  const verifier = base64RawURLEncode(seed);
+  const challenge = base64RawURLEncode(sha256Hash(seed));
+  return { verifier, challenge }
 };
 
 const signToken = (payload: Object, private_key: string): string => {
