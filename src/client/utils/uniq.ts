@@ -1,4 +1,4 @@
-import forge from 'node-forge';
+import { md } from 'node-forge';
 import { blake3 } from '@noble/hashes/blake3';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { sha256 } from '@noble/hashes/sha256';
@@ -14,7 +14,7 @@ export const hashMembers = (ids: string[]): string => {
 /** Generate an unique conversation id for contact */
 export const uniqueConversationID = (userID: string, recipientID: string): string => {
   const [minId, maxId] = [userID, recipientID].sort();
-  const md5 = forge.md.md5.create();
+  const md5 = md.md5.create();
   md5.update(minId);
   md5.update(maxId);
   const bytes = Buffer.from(md5.digest().bytes(), 'binary');

@@ -1,6 +1,6 @@
 // @ts-ignore
-import nano from 'nano-seconds';
-import forge from 'node-forge';
+import { now as nanonow } from 'nano-seconds';
+import { util, random, cipher, pki } from 'node-forge';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import type { Keystore, AppKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
@@ -9,7 +9,7 @@ import { edwards25519 as ed } from './ed25519';
 import { sha256Hash } from './uniq';
 
 export const getNanoTime = () => {
-  const now: number[] = nano.now();
+  const now: number[] = nanonow();
   return now[0] * 1e9 + now[1];
 };
 
@@ -35,7 +35,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
   const buf = Buffer.concat([_pin, time, iterator]);
 
-  const buffer = forge.util.createBuffer(buf.toString('binary'));
+  const buffer = util.createBuffer(buf.toString('binary'));
   const paddingLen = blockSize - (buffer.length() % blockSize);
   const paddings = [];
   for (let i = 0; i < paddingLen; i += 1) {
@@ -43,16 +43,16 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   }
   buffer.putBytes(Buffer.from(paddings).toString('binary'));
 
-  const iv = forge.random.getBytesSync(blockSize);
+  const iv = random.getBytesSync(blockSize);
   const sharedKey = sharedEd25519Key(keystore);
-  const cipher = forge.cipher.createCipher('AES-CBC', forge.util.createBuffer(sharedKey, 'raw'));
-  cipher.start({ iv });
-  cipher.update(buffer);
-  cipher.finish();
+  const cp = cipher.createCipher('AES-CBC', util.createBuffer(sharedKey, 'raw'));
+  cp.start({ iv });
+  cp.update(buffer);
+  cp.finish();
 
-  const pinBuff = forge.util.createBuffer();
+  const pinBuff = util.createBuffer();
   pinBuff.putBytes(iv);
-  pinBuff.putBytes(cipher.output.getBytes());
+  pinBuff.putBytes(cp.output.getBytes());
 
   const len = pinBuff.length();
   const encryptedBytes = Buffer.from(pinBuff.getBytes(len - 16), 'binary');
@@ -76,7 +76,7 @@ export const getVerifyPinTipBody = (timestamp: number) => {
 
 export const signTipBody = (pin: string, msg: Buffer) => {
   const privateKey = Buffer.from(pin, 'hex');
-  const signData = forge.pki.ed25519.sign({
+  const signData = pki.ed25519.sign({
     message: msg,
     privateKey,
   });
