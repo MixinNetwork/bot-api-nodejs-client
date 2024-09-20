@@ -8,13 +8,14 @@ export interface AssetCommonResponse {
   type: 'asset';
   asset_id: string;
   chain_id: string;
-  fee_asset_id: string;
   symbol: string;
   name: string;
+  display_symbol: string;
+  display_name: string;
   icon_url: string;
   price_btc: string;
-  change_btc: string;
   price_usd: string;
+  change_btc: string;
   change_usd: string;
   asset_key: string;
   mixin_id: string;
