@@ -1,7 +1,7 @@
-import { pki, random } from 'node-forge';
 import { stringify } from 'qs';
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
+import { ed25519 } from '@noble/curves/ed25519';
 import { Input, Output, GhostKey, GhostKeyRequest, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Encoder, magic } from './encoder';
 import { Decoder } from './decoder';
@@ -10,7 +10,7 @@ import { TIPBodyForSequencerRegister } from './tip';
 import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress } from './address';
 import { encodeScript } from './multisigs';
 import { blake3Hash, newHash, sha512Hash } from './uniq';
-import { edwards25519 as ed } from './ed25519';
+import { edwards25519 as ed, getRandomBytes } from './ed25519';
 
 export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
@@ -49,25 +49,19 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
 };
 
 export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
-  const public_key = pki.ed25519.publicKeyFromPrivateKey({ privateKey }).toString('hex');
+  const public_key = Buffer.from(ed25519.getPublicKey(privateKey)).toString('hex');
 
   const hash = newHash(Buffer.from(user_id));
-  let signData = pki.ed25519.sign({
-    message: hash,
-    privateKey,
-  });
+  let signData = ed25519.sign(hash, privateKey)
   const signature = base64RawURLEncode(signData);
 
   const tipBody = TIPBodyForSequencerRegister(user_id, public_key);
-  signData = pki.ed25519.sign({
-    message: tipBody,
-    privateKey: Buffer.from(tipPin, 'hex'),
-  });
+  signData = ed25519.sign(tipBody, tipPin)
 
   return {
     public_key,
     signature,
-    pin_base64: signData.toString('hex'),
+    pin_base64: Buffer.from(signData).toString('hex'),
   };
 };
 
@@ -87,7 +81,7 @@ export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = 
   const publics = recipient.receivers.map(d => getPublicFromMainnetAddress(d));
   if (!publics.every(p => !!p)) return undefined;
 
-  const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : Buffer.from(random.getBytesSync(64), 'binary');
+  const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : getRandomBytes(64);
   const r = Buffer.from(ed.scalar.toBytes(ed.setUniformBytes(seed)));
   const keys = publics.map(addressPubic => {
     const spendKey = addressPubic!.subarray(0, 32);

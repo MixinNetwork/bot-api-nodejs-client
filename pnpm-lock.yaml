@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@noble/ciphers':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@noble/curves':
         specifier: ^1.2.0
         version: 1.3.0
@@ -41,9 +44,6 @@ importers:
       nano-seconds:
         specifier: ^1.2.2
         version: 1.2.2
-      node-forge:
-        specifier: ^1.3.1
-        version: 1.3.1
       pako:
         specifier: ^2.0.4
         version: 2.1.0
@@ -138,6 +138,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^4.0.0
         version: 4.2.1(eslint-config-prettier@8.10.0(eslint@8.56.0))(eslint@8.56.0)(prettier@2.8.8)
+      node-forge:
+        specifier: ^1.3.1
+        version: 1.3.1
       prettier:
         specifier: ^2.6.2
         version: 2.8.8
@@ -1018,6 +1021,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.20':
     resolution: {integrity: sha512-R8LcPeWZol2zR8mmH3JeKQ6QRCFb7XgUhV9ZlGhHLGyg4wpPiPZNQOOWhFZhxKw8u//yTbNGI42Bx/3paXEQ+Q==}
+
+  '@noble/ciphers@1.0.0':
+    resolution: {integrity: sha512-wH5EHOmLi0rEazphPbecAzmjd12I6/Yv/SiHdkA9LSycsQk7RuuTp7am5/o62qYr0RScE7Pc9icXGBbsr6cesA==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@noble/curves@1.3.0':
     resolution: {integrity: sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==}
@@ -5554,6 +5561,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@noble/ciphers@1.0.0': {}
 
   '@noble/curves@1.3.0':
     dependencies:

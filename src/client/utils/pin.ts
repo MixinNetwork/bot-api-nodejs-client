@@ -1,11 +1,12 @@
 // @ts-ignore
 import { now as nanonow } from 'nano-seconds';
-import { util, random, cipher, pki } from 'node-forge';
+import { ed25519 } from '@noble/curves/ed25519';
+import { cbc } from '@noble/ciphers/aes';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import type { Keystore, AppKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
 import { Encoder } from './encoder';
-import { edwards25519 as ed } from './ed25519';
+import { edwards25519 as ed, getRandomBytes } from './ed25519';
 import { sha256Hash } from './uniq';
 
 export const getNanoTime = () => {
@@ -33,29 +34,23 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   const _pin = Buffer.from(pin, 'hex');
   const iterator = Buffer.from(new Uint64(getNanoTime()).toBuffer());
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
-  const buf = Buffer.concat([_pin, time, iterator]);
-
-  const buffer = util.createBuffer(buf.toString('binary'));
-  const paddingLen = blockSize - (buffer.length() % blockSize);
+  let buffer = Buffer.concat([_pin, time, iterator]);
+  
+  const paddingLen = blockSize - (buffer.byteLength % blockSize);
   const paddings = [];
   for (let i = 0; i < paddingLen; i += 1) {
     paddings.push(paddingLen);
   }
-  buffer.putBytes(Buffer.from(paddings).toString('binary'));
+  buffer = Buffer.concat([buffer, Buffer.from(paddings)]);
 
-  const iv = random.getBytesSync(blockSize);
+  const iv = getRandomBytes(16);
   const sharedKey = sharedEd25519Key(keystore);
-  const cp = cipher.createCipher('AES-CBC', util.createBuffer(sharedKey, 'raw'));
-  cp.start({ iv });
-  cp.update(buffer);
-  cp.finish();
 
-  const pinBuff = util.createBuffer();
-  pinBuff.putBytes(iv);
-  pinBuff.putBytes(cp.output.getBytes());
+  const stream = cbc(sharedKey, iv);
+  const res = stream.encrypt(buffer);
 
-  const len = pinBuff.length();
-  const encryptedBytes = Buffer.from(pinBuff.getBytes(len - 16), 'binary');
+  const pinBuff = Buffer.concat([iv, res]);
+  const encryptedBytes = pinBuff.subarray(0, pinBuff.byteLength - blockSize);
   return base64RawURLEncode(encryptedBytes);
 };
 
@@ -75,10 +70,6 @@ export const getVerifyPinTipBody = (timestamp: number) => {
 };
 
 export const signTipBody = (pin: string, msg: Buffer) => {
-  const privateKey = Buffer.from(pin, 'hex');
-  const signData = pki.ed25519.sign({
-    message: msg,
-    privateKey,
-  });
+  const signData = Buffer.from(ed25519.sign(msg, pin));
   return signData.toString('hex');
 };

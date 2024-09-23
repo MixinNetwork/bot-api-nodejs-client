@@ -20,7 +20,7 @@ const main = async () => {
     },
   });
 
-  const { privateKey: spendPrivateKey, publicKey: spendPublicKey } = getED25519KeyPair();
+  const { seed: spendPrivateKey, publicKey: spendPublicKey } = getED25519KeyPair();
   const spend_private_key = spendPrivateKey.toString('hex');
   console.log('user spend_private_key', spend_private_key);
   await userClient.pin.updateTipPin('', spendPublicKey.toString('hex'), user.tip_counter + 1);

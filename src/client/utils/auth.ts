@@ -19,10 +19,9 @@ export const getChallenge = () => {
 export const signToken = (payload: Object, private_key: string): string => {
   const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
   const payloadStr = base64RawURLEncode(serialize(payload));
-
   const result = [header, payloadStr];
-  const signData = Buffer.from(ed25519.sign(Buffer.from(result.join('.')), private_key));
 
+  const signData = ed25519.sign(Buffer.from(result.join('.')), private_key);
   const sign = base64RawURLEncode(signData);
   result.push(sign);
   return result.join('.');

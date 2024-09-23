@@ -37,7 +37,6 @@ const setUniformBytes = (x: Buffer) => {
 };
 
 const setCanonicalBytes = (x: Buffer) => {
-  console.log(x.byteLength)
   if (x.byteLength !== 32) throw new Error('invalid scalar length');
   if (!isReduced(x)) throw new Error('invalid scalar encoding');
   const s = fn.create(bytesToNumberLE(x));
