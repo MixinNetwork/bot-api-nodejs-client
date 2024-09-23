@@ -1,22 +1,16 @@
 import serialize from 'serialize-javascript';
-import { random, pki, md } from 'node-forge';
+import { ed25519 } from '@noble/curves/ed25519';
+import { md } from 'node-forge';
 import { validate } from 'uuid';
 import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 import { sha256Hash } from './uniq';
+import { getKeyPair, getRandomBytes } from './ed25519';
 
-export const getED25519KeyPair = () => {
-  const seed = Buffer.from(random.getBytesSync(32), 'binary');
-  const keypair = pki.ed25519.generateKeyPair({ seed });
-  return {
-    privateKey: Buffer.from(keypair.privateKey),
-    publicKey: Buffer.from(keypair.publicKey),
-    seed,
-  };
-};
+export const getED25519KeyPair = () => getKeyPair();
 
 export const getChallenge = () => {
-  const seed = Buffer.from(random.getBytesSync(32), 'binary');
+  const seed = getRandomBytes(32);
   const verifier = base64RawURLEncode(seed);
   const challenge = base64RawURLEncode(sha256Hash(seed));
   return { verifier, challenge };
@@ -26,13 +20,8 @@ export const signToken = (payload: Object, private_key: string): string => {
   const header = base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
   const payloadStr = base64RawURLEncode(serialize(payload));
 
-  const privateKey = Buffer.from(private_key, 'hex');
   const result = [header, payloadStr];
-  const signData = pki.ed25519.sign({
-    message: result.join('.'),
-    encoding: 'utf8',
-    privateKey,
-  });
+  const signData = Buffer.from(ed25519.sign(Buffer.from(result.join('.')), private_key));
 
   const sign = base64RawURLEncode(signData);
   result.push(sign);

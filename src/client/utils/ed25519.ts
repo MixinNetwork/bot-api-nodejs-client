@@ -1,6 +1,7 @@
 import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv, x25519 } from '@noble/curves/ed25519';
 import { Field } from '@noble/curves/abstract/modular';
 import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
+import * as crypto from 'crypto'
 import { blake3Hash, sha512Hash } from './uniq';
 import { putUvarInt } from './encoder';
 
@@ -36,6 +37,7 @@ const setUniformBytes = (x: Buffer) => {
 };
 
 const setCanonicalBytes = (x: Buffer) => {
+  console.log(x.byteLength)
   if (x.byteLength !== 32) throw new Error('invalid scalar length');
   if (!isReduced(x)) throw new Error('invalid scalar encoding');
   const s = fn.create(bytesToNumberLE(x));
@@ -56,7 +58,7 @@ const publicFromPrivate = (priv: Buffer) => {
   return v;
 };
 
-const sign = (msg: Buffer, key: Buffer) => {
+export const sign = (msg: Buffer, key: Buffer) => {
   const digest1 = sha512Hash(key.subarray(0, 32));
   const messageDigest = sha512Hash(Buffer.concat([digest1.subarray(32), msg]));
 
@@ -97,6 +99,18 @@ const hashScalar = (k: Buffer, index: number) => {
   hash.copy(src, 32, 0, 32);
   return setUniformBytes(src);
 };
+
+export const getRandomBytes = (len?: number) => crypto.getRandomValues(Buffer.alloc(len ?? ed25519.CURVE.Fp.BYTES));
+
+export const getKeyPair = () => {
+  const seed = getRandomBytes();
+  const publicKey = Buffer.from(ed25519.getPublicKey(seed));
+  return {
+    privateKey: Buffer.concat([seed, publicKey]),
+    publicKey: publicKey,
+    seed,
+  };
+}
 
 export const edwards25519 = {
   scalar: fn,
