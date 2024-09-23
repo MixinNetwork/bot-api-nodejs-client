@@ -2,7 +2,6 @@ export interface AddressResponse {
   type: 'address';
   address_id: string;
   asset_id: string;
-  fee_asset_id: string;
   destination: string;
   tag: string;
   label: string;

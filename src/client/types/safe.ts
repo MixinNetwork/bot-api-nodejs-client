@@ -8,6 +8,8 @@ export interface SafeAsset {
   chain_id: string;
   symbol: string;
   name: string;
+  display_symbol: string;
+  display_name: string;
   icon_url: string;
   price_btc: string;
   price_usd: string;

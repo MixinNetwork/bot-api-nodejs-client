@@ -1,8 +1,8 @@
 const keystore = {
-  app_id: '13c79909-fd32-401b-bfe5-ecf53816ddbf',
-  session_id: '26f481d3-9fd5-47ae-acf3-dff8c94f9e87',
-  server_public_key: '63e2f06c98ca6b74fe369df18fb673c19d95821e080891666c7f46266a06e2eb',
-  session_private_key: '8608c3972c7b61a0e9edb1c8bc051bd5d2c62818c9e338bceb7413306611c722',
+  app_id: '4b79fe76-0d9d-49e6-85fd-0f6be01147da',
+  session_id: 'a03a4496-3e59-4abd-bd1e-1ab8a2acb550',
+  server_public_key: '413506980af07695d590bae4b58bafac9f381ab8c6ef02bef85fab3bee21de26',
+  session_private_key: 'c838d99617cb2543bc6b7eb4ac0a1daede5d132ed1c5442fbbcad8baaf556748',
 };
 
 export default keystore;
