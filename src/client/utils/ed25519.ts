@@ -99,7 +99,10 @@ const hashScalar = (k: Buffer, index: number) => {
   return setUniformBytes(src);
 };
 
-export const getRandomBytes = (len?: number) => crypto.getRandomValues(Buffer.alloc(len ?? ed25519.CURVE.Fp.BYTES));
+export const getRandomBytes = (len?: number) => {
+  const c = crypto ?? window.crypto;
+  return c.getRandomValues(Buffer.alloc(len ?? ed25519.CURVE.Fp.BYTES));
+}
 
 export const getKeyPair = () => {
   const seed = getRandomBytes();
