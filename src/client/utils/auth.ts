@@ -1,6 +1,5 @@
 import serialize from 'serialize-javascript';
 import { ed25519 } from '@noble/curves/ed25519';
-import { md } from 'node-forge';
 import { validate } from 'uuid';
 import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
@@ -46,8 +45,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + 3600;
-  const sha256 = md.sha256.create();
-  sha256.update(method + uri + data, 'utf8');
+  const sha256 = sha256Hash(Buffer.from(method + uri + data)).toString('hex');
 
   const payload = {
     uid: keystore.app_id,
@@ -55,7 +53,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
     iat,
     exp,
     jti: requestID,
-    sig: sha256.digest().toHex(),
+    sig: sha256,
     scp: 'FULL',
   };
 
@@ -83,8 +81,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
 
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + 3600;
-  const sha256 = md.sha256.create();
-  sha256.update(method + uri + data, 'utf8');
+  const sha256 = sha256Hash(Buffer.from(method + uri + data)).toString('hex');
 
   const payload = {
     iss: keystore.app_id,
@@ -92,7 +89,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
     iat,
     exp,
     jti: requestID,
-    sig: sha256.digest().toHex(),
+    sig: sha256,
     scp: keystore.scope,
   };
 

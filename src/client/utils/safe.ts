@@ -52,11 +52,11 @@ export const signSafeRegistration = (user_id: string, tipPin: string, privateKey
   const public_key = Buffer.from(ed25519.getPublicKey(privateKey)).toString('hex');
 
   const hash = newHash(Buffer.from(user_id));
-  let signData = ed25519.sign(hash, privateKey)
+  let signData = ed25519.sign(hash, privateKey);
   const signature = base64RawURLEncode(signData);
 
   const tipBody = TIPBodyForSequencerRegister(user_id, public_key);
-  signData = ed25519.sign(tipBody, tipPin)
+  signData = ed25519.sign(tipBody, tipPin);
 
   return {
     public_key,

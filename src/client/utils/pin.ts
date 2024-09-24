@@ -35,7 +35,7 @@ export const signEd25519PIN = (pin: string, keystore: Keystore | undefined): str
   const iterator = Buffer.from(new Uint64(getNanoTime()).toBuffer());
   const time = Buffer.from(new Uint64(Date.now() / 1000).toBuffer());
   let buffer = Buffer.concat([_pin, time, iterator]);
-  
+
   const paddingLen = blockSize - (buffer.byteLength % blockSize);
   const paddings = [];
   for (let i = 0; i < paddingLen; i += 1) {

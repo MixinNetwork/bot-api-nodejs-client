@@ -1,8 +1,9 @@
-import { pki, util, cipher  } from 'node-forge';
+import { pki, util, cipher, md } from 'node-forge';
 import { ed25519 } from '@noble/curves/ed25519';
 import { cbc } from '@noble/ciphers/aes';
 import { Uint64LE as Uint64 } from 'int64-buffer';
-import { getKeyPair, getRandomBytes, sharedEd25519Key, getNanoTime } from '../src';
+import { v4, stringify } from 'uuid';
+import { getKeyPair, getRandomBytes, sharedEd25519Key, getNanoTime, sha256Hash, uniqueConversationID } from '../src';
 import { app_pin } from './common';
 import keystore from './keystore';
 
@@ -15,7 +16,20 @@ const getED25519KeyPair = (seed: Buffer) => {
   };
 };
 
-describe('hash', () => {
+const forgeUniqueConversationID = (userID: string, recipientID: string): string => {
+  const [minId, maxId] = [userID, recipientID].sort();
+  const md5 = md.md5.create();
+  md5.update(minId);
+  md5.update(maxId);
+  const bytes = Buffer.from(md5.digest().bytes(), 'binary');
+
+  bytes[6] = (bytes[6] & 0x0f) | 0x30;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  return stringify(bytes);
+};
+
+describe('forge', () => {
   it('sign', async () => {
     const nobleKeyPar = getKeyPair();
     const forgeKeyPar = getED25519KeyPair(nobleKeyPar.seed);
@@ -42,15 +56,35 @@ describe('hash', () => {
 
     const iv = getRandomBytes(16);
     const sharedKey = sharedEd25519Key(keystore);
-    
+
     const cp = cipher.createCipher('AES-CBC', util.createBuffer(sharedKey, 'raw'));
     cp.start({ iv: iv.toString('binary') });
     cp.update(util.createBuffer(buffer));
     cp.finish();
-    const resForge = cp.output.getBytes()
+    const resForge = cp.output.getBytes();
 
     const stream = cbc(sharedKey, iv);
     const resNoble = Buffer.from(stream.encrypt(buffer));
     expect(resNoble.toString('binary')).toEqual(resForge);
+  });
+
+  it('md5', async () => {
+    const id1 = v4();
+    const id2 = v4();
+
+    const resForge = forgeUniqueConversationID(id1, id2);
+    const res = uniqueConversationID(id1, id2);
+    expect(res).toEqual(resForge);
+  });
+
+  it('sha256', async () => {
+    const id = v4();
+
+    const sha256 = md.sha256.create();
+    sha256.update(id, 'utf8');
+    const resForge = sha256.digest().toHex();
+
+    const res = sha256Hash(Buffer.from(id)).toString('hex');
+    expect(res).toEqual(resForge);
   });
 });

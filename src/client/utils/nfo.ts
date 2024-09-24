@@ -1,4 +1,4 @@
-import { md } from 'node-forge';
+import md5 from 'md5';
 import { parse as UUIDParse, stringify } from 'uuid';
 import type { CollectibleOutputsResponse, NFOMemo } from '../types';
 import type { KeystoreClientReturnType } from '../mixin-client';
@@ -16,9 +16,8 @@ export const DefaultNftAssetId = '1700941284a95f31b25ec8c546008f208f88eee4419ccd
 export function buildTokenId(collection_id: string, token: number): string {
   const tokenStr = Buffer.from(integerToBytes(token)).toString('hex');
   const msg = DefaultChain.replaceAll('-', '') + DefaultClass + collection_id.replaceAll('-', '') + tokenStr;
-  const md5 = md.md5.create();
-  md5.update(Buffer.from(msg, 'hex').toString('binary'));
-  const bytes = Buffer.from(md5.digest().bytes(), 'binary');
+  const res = md5(Buffer.from(msg, 'hex'));
+  const bytes = Buffer.from(res, 'hex');
   bytes[6] = (bytes[6] & 0x0f) | 0x30;
   bytes[8] = (bytes[8] & 0x3f) | 0x80;
   return stringify(bytes);
