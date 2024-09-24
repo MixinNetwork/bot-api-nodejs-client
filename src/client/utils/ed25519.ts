@@ -1,7 +1,7 @@
 import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv, x25519 } from '@noble/curves/ed25519';
 import { Field } from '@noble/curves/abstract/modular';
 import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
-import * as crypto from 'crypto';
+import { randomBytes } from '@noble/hashes/utils';
 import { blake3Hash, sha512Hash } from './uniq';
 import { putUvarInt } from './encoder';
 
@@ -99,10 +99,7 @@ const hashScalar = (k: Buffer, index: number) => {
   return setUniformBytes(src);
 };
 
-export const getRandomBytes = (len?: number) => {
-  const c = crypto ?? window.crypto;
-  return c.getRandomValues(Buffer.alloc(len ?? ed25519.CURVE.Fp.BYTES));
-};
+export const getRandomBytes = (len?: number) => Buffer.from(randomBytes(len ?? ed25519.CURVE.Fp.BYTES));
 
 export const getKeyPair = () => {
   const seed = getRandomBytes();
