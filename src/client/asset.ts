@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios';
-import { type AssetResponse } from './types/asset';
+import type { AssetResponse } from './types/asset';
 import type { SnapshotResponse } from './types/snapshot';
 import { buildClient } from './utils/client';
 
