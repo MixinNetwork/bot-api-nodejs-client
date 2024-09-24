@@ -1,4 +1,3 @@
-import { stringify } from 'qs';
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
 import { ed25519 } from '@noble/curves/ed25519';
@@ -44,7 +43,10 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
     trace: params.trace ?? v4(),
     return_to: params.returnTo && encodeURIComponent(params.returnTo),
   };
-  const query = stringify(p);
+  const query = Object.entries(p)
+    .filter(([_, value]) => !!value)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
   return `${baseUrl}?${query}`;
 };
 
