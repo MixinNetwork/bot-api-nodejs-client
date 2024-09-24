@@ -1,6 +1,6 @@
 import { parse } from 'uuid';
 import BigNumber from 'bignumber.js';
-import { Aggregated, Input, Output } from '../types';
+import type { Aggregated, Input, Output } from '../types';
 import { parseUnits } from './amount';
 
 const MaximumEncodingInt = 0xffff;

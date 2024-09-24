@@ -1,5 +1,5 @@
-import { AxiosInstance } from 'axios';
-import { CircleResponse, CircleRequest, CircleConversationResponse } from './types/circle';
+import type { AxiosInstance } from 'axios';
+import type { CircleResponse, CircleRequest, CircleConversationResponse } from './types/circle';
 import { buildClient } from './utils/client';
 
 /**

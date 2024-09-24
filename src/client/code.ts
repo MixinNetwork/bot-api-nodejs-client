@@ -1,5 +1,5 @@
-import { AxiosInstance } from 'axios';
-import { CodeResponse } from './types/code';
+import type { AxiosInstance } from 'axios';
+import type { CodeResponse } from './types/code';
 import { buildClient } from './utils/client';
 
 /**

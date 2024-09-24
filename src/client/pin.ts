@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
-import { AuthenticationUserResponse } from './types/user';
+import type { AxiosInstance } from 'axios';
+import type Keystore from './types/keystore';
+import type { AuthenticationUserResponse } from './types/user';
 import { buildClient } from './utils/client';
 import { signTipBody, getNanoTime, getTipPinUpdateMsg, getVerifyPinTipBody, signEd25519PIN } from './utils/pin';
 

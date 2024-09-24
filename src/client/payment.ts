@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
+import type { PaymentRequestResponse, RawTransactionRequest, TransferRequest } from './types';
 import { buildClient } from './utils/client';
-import { PaymentRequestResponse, RawTransactionRequest, TransferRequest } from './types';
 
 export const PaymentBaseClient = (axiosInstance: AxiosInstance) => {
   const payment = (params: TransferRequest | RawTransactionRequest) => axiosInstance.post<unknown, PaymentRequestResponse>('/payments', params);

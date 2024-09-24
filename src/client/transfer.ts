@@ -1,8 +1,8 @@
-import { AxiosInstance } from 'axios';
-import { Keystore } from './types/keystore';
-import { SnapshotRequest, SnapshotResponse } from './types/snapshot';
-import { TransferRequest } from './types/transfer';
-import { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
+import type { AxiosInstance } from 'axios';
+import type { Keystore } from './types/keystore';
+import type { SnapshotRequest, SnapshotResponse } from './types/snapshot';
+import type { TransferRequest } from './types/transfer';
+import type { GhostInputRequest, RawTransactionRequest, GhostKeysResponse } from './types/transaction';
 import { signEd25519PIN } from './utils/pin';
 import { buildClient } from './utils/client';
 

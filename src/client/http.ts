@@ -1,10 +1,11 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry, { isIdempotentRequestError } from 'axios-retry';
 import { v4 as uuid } from 'uuid';
 import isRetryAllowed from 'is-retry-allowed';
+import type { Keystore } from './types/keystore';
+import type { RequestConfig } from './types/client';
 import { ResponseError } from './error';
-import { Keystore } from './types/keystore';
-import { RequestConfig } from './types/client';
 import { signAccessToken } from './utils/auth';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';

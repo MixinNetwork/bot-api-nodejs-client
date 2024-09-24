@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import { AssetResponse } from './types/asset';
-import { NetworkSnapshotRequest, NetworkInfoResponse, NetworkChainResponse, NetworkAssetResponse, NetworkPriceResponse, NetworkSnapshotResponse } from './types/network';
+import type { AxiosInstance } from 'axios';
+import type { AssetResponse } from './types/asset';
+import type { NetworkSnapshotRequest, NetworkInfoResponse, NetworkChainResponse, NetworkAssetResponse, NetworkPriceResponse, NetworkSnapshotResponse } from './types/network';
 import { buildClient } from './utils/client';
 
 /**

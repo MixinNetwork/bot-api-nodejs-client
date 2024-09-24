@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
-import { ConversationRequest, ConversationResponse, ConversationAction, ParticipantRequest } from './types/conversation';
+import type { AxiosInstance } from 'axios';
+import type Keystore from './types/keystore';
+import type { ConversationRequest, ConversationResponse, ConversationAction, ParticipantRequest } from './types/conversation';
 import { uniqueConversationID } from './utils/uniq';
 import { buildClient } from './utils/client';
 

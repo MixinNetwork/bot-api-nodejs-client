@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios';
-import { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest, RelationshipAddRequest, LogRequest, LogResponse } from './types/user';
+import type { AxiosInstance } from 'axios';
+import type { AuthenticationUserResponse, UserResponse, PreferenceRequest, RelationshipRequest, RelationshipAddRequest, LogRequest, LogResponse } from './types/user';
+import type { AtLeastOne } from '../types';
 import { buildClient } from './utils/client';
-import { AtLeastOne } from '../types';
 
 /** Methods to obtain or edit users' profile and relationships */
 export const UserKeystoreClient = (axiosInstance: AxiosInstance) => ({

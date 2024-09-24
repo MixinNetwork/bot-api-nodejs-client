@@ -1,5 +1,5 @@
-import { AxiosInstance } from 'axios';
-import { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, RequestConfig, UnionKeystoreClient } from '../types/client';
+import type { AxiosInstance } from 'axios';
+import type { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, RequestConfig, UnionKeystoreClient } from '../types/client';
 import type { Keystore } from '../types/keystore';
 import { http } from '../http';
 

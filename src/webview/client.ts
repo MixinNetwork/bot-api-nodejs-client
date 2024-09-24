@@ -1,4 +1,4 @@
-import { Context, WebviewAsset } from './type';
+import type { Context, WebviewAsset } from './type';
 
 export const WebViewApi = () => {
   const getMixinContext = () => {

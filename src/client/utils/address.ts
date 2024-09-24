@@ -1,6 +1,6 @@
 import bs58 from 'bs58';
 import { stringify, parse } from 'uuid';
-import { MixAddress } from '../types';
+import type { MixAddress } from '../types';
 import { newHash } from './uniq';
 
 export const MainAddressPrefix = 'XIN';

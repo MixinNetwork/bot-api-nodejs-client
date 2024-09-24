@@ -1,5 +1,5 @@
-import { AxiosInstance } from 'axios';
-import { AccessTokenRequest, AccessTokenResponse, AuthorizationResponse, AuthorizeRequest } from './types/oauth';
+import type { AxiosInstance } from 'axios';
+import type { AccessTokenRequest, AccessTokenResponse, AuthorizationResponse, AuthorizeRequest } from './types/oauth';
 import { buildClient } from './utils/client';
 
 /**

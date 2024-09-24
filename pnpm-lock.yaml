@@ -100,9 +100,6 @@ devDependencies:
   '@types/prettier':
     specifier: ^2.6.3
     version: 2.7.3
-  '@types/qs':
-    specifier: ^6.9.10
-    version: 6.9.16
   '@types/serialize-javascript':
     specifier: ^5.0.3
     version: 5.0.4
@@ -2312,10 +2309,6 @@ packages:
 
   /@types/prettier@2.7.3:
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
-    dev: true
-
-  /@types/qs@6.9.16:
-    resolution: {integrity: sha512-7i+zxXdPD0T4cKDuxCUXJ4wHcsJLwENa6Z3dCu8cfCK743OGy5Nu1RmAGqDPsoTDINVEcdXKRvR/zre+P2Ku1A==}
     dev: true
 
   /@types/resolve@1.17.1:

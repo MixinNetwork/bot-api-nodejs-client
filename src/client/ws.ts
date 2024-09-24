@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
-import Keystore from './types/keystore';
-import { BlazeHandler, BlazeOptions } from './types';
+import type Keystore from './types/keystore';
+import type { BlazeHandler, BlazeOptions } from './types';
 import { signAccessToken, decodeMessage, sendRaw } from './utils';
 
 export function websocket(

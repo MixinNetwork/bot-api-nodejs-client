@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
-import { AddressResponse, AddressRequest } from './types/address';
+import type { AxiosInstance } from 'axios';
+import type Keystore from './types/keystore';
+import type { AddressResponse, AddressRequest } from './types/address';
 import { getCreateAddressTipBody, getRemoveAddressTipBody, signEd25519PIN, signTipBody } from './utils/pin';
 import { buildClient } from './utils/client';
 

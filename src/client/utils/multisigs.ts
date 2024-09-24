@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { MultisigTransaction, UtxoOutput } from '../types';
+import type { MultisigTransaction, UtxoOutput } from '../types';
 import { Encoder, magic } from './encoder';
 
 export const TxVersion = 0x02;

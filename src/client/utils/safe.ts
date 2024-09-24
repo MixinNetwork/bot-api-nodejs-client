@@ -1,7 +1,7 @@
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
 import { ed25519 } from '@noble/curves/ed25519';
-import { Input, Output, GhostKey, GhostKeyRequest, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import type { Input, Output, GhostKey, GhostKeyRequest, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
 import { Encoder, magic } from './encoder';
 import { Decoder } from './decoder';
 import { base64RawURLEncode } from './base64';

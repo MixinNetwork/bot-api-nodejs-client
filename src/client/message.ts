@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
 import { v4 as uuid } from 'uuid';
-import Keystore from './types/keystore';
-import {
+import type Keystore from './types/keystore';
+import type {
   AcknowledgementRequest,
   AcknowledgementResponse,
   MessageCategory,

@@ -1,6 +1,6 @@
-import { AxiosInstance } from 'axios';
-import Keystore from './types/keystore';
-import { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse, SafeMultisigsResponse, TransactionRequest } from './types';
+import type { AxiosInstance } from 'axios';
+import type Keystore from './types/keystore';
+import type { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse, SafeMultisigsResponse, TransactionRequest } from './types';
 import { signEd25519PIN } from './utils/pin';
 import { hashMembers } from './utils/uniq';
 import { buildClient } from './utils/client';

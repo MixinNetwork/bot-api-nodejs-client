@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { gzip, ungzip } from 'pako';
-import { MessageView, BlazeMessage, BlazeOptions } from '../types';
+import type { MessageView, BlazeMessage, BlazeOptions } from '../types';
 
 export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageView => {
   const t = ungzip(data, { to: 'string' });
