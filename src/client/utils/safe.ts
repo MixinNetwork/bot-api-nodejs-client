@@ -44,7 +44,7 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
     return_to: params.returnTo && encodeURIComponent(params.returnTo),
   };
   const query = Object.entries(p)
-    .filter(([_, value]) => !!value)
+    .filter(([key, value]) => key && value)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
   return `${baseUrl}?${query}`;

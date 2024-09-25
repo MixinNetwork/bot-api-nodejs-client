@@ -106,7 +106,7 @@ export const getKeyPair = () => {
   const publicKey = Buffer.from(ed25519.getPublicKey(seed));
   return {
     privateKey: Buffer.concat([seed, publicKey]),
-    publicKey: publicKey,
+    publicKey,
     seed,
   };
 };
