@@ -43,7 +43,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
 
   ins.interceptors.response.use(undefined, async (e: any) => {
     await config?.responseCallback?.(e);
-
+    await config?.errorMap?.(e);
     return Promise.reject(e);
   });
 

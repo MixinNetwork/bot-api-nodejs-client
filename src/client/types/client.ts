@@ -4,7 +4,8 @@ import { BlazeOptions } from './blaze';
 
 export interface RequestConfig
   extends Partial<Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>> {
-  responseCallback?: (rep: unknown) => void;
+  responseCallback?: (rep: unknown) => void; // deprecated
+  errorMap?: (error: any) => void;
   retry?: number;
 }
 
