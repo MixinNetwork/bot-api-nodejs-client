@@ -13,4 +13,3 @@ export * from './safe';
 export * from './sleep';
 export * from './tip';
 export * from './uniq';
-export * from './ws';

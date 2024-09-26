@@ -20,7 +20,7 @@ import { PaymentBaseClient } from './payment';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
-import { BlazeKeystoreClient } from './blaze';
+import { BlazeKeystoreClient } from '../blaze/client';
 import { UtxoKeystoreClient } from './utxo';
 import { SafeKeystoreClient } from './safe';
 

@@ -1,4 +1,4 @@
-import { MessageView } from './message';
+import { MessageView } from '../client/types/message';
 
 export type MessageType = MessageView | TransferView | SystemConversationPayload;
 

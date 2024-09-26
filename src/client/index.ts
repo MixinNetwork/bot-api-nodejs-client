@@ -7,7 +7,7 @@ export { AddressClient } from './address';
 export { AppClient } from './app';
 export { AssetClient } from './asset';
 export { AttachmentClient } from './attachment';
-export { BlazeClient } from './blaze';
+export { BlazeClient } from '../blaze/client';
 export { CircleClient } from './circle';
 export { CodeClient } from './code';
 export { CollectibleClient, MintMinimumCost, GroupMembers, GroupThreshold } from './collectible';

@@ -1,9 +1,8 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
-import type Keystore from './types/keystore';
-import type { BlazeOptions, BlazeHandler } from './types';
-import { websocket } from './ws';
-import { sendRaw } from './utils';
+import type Keystore from '../client/types/keystore';
+import type { BlazeOptions, BlazeHandler } from './type';
+import { websocket, sendRaw } from './utils';
 
 export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
   const url = 'wss://blaze.mixin.one';
