@@ -139,7 +139,7 @@ export class Encoder {
       this.write(tx);
 
       this.writeUint64(d.index);
-      this.writeInteger(parseUnits(Number(d.amount).toFixed(8), 8));
+      this.writeInteger(parseUnits(d.amount, 8));
     }
     const m = i.mint;
     if (typeof m === 'undefined') {
@@ -151,7 +151,7 @@ export class Encoder {
       this.write(Buffer.from(m.group));
 
       this.writeUint64(m.batch);
-      this.writeInteger(parseUnits(Number(m.amount).toFixed(8), 8));
+      this.writeInteger(parseUnits(m.amount, 8));
     }
   }
 
@@ -159,7 +159,7 @@ export class Encoder {
     const o = output;
     if (!o.type) o.type = 0;
     this.write(Buffer.from([0x00, o.type]));
-    this.writeInteger(parseUnits(Number(o.amount).toFixed(8), 8));
+    this.writeInteger(parseUnits(o.amount, 8));
 
     this.writeInt(o.keys.length);
     o.keys.forEach(k => this.write(Buffer.from(k, 'hex')));

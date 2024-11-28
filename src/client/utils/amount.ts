@@ -13,5 +13,5 @@ export const formatUnits = (amount: string | number, unit: number) => {
 };
 export const parseUnits = (amount: string | number, unit: number) => {
   const m = getMultiplier(unit);
-  return BigNumber(amount).times(m);
+  return BigNumber(amount).times(m).integerValue(BigNumber.ROUND_FLOOR);
 };
