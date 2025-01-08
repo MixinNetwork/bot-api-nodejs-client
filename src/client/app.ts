@@ -37,7 +37,7 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
   properties: (): Promise<AppPropertyResponse> => axiosInstance.get<unknown, AppPropertyResponse>(`/apps/property`),
 
   /** Get app billing */
-  billing: (appID: string): Promise<AppBillingResponse> => axiosInstance.get<unknown, AppBillingResponse>(`/apps/${appID}/property`),
+  billing: (appID: string): Promise<AppBillingResponse> => axiosInstance.get<unknown, AppBillingResponse>(`/safe/apps/${appID}/billing`),
 
   /** Get user's app share list */
   favorites: (userID: string): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
