@@ -8,6 +8,7 @@ import type {
   AppSessionResponse,
   AppRegistrationResponse,
   AppSecretResponse,
+  AppBillingResponse,
 } from './types/app';
 import { buildClient } from './utils/client';
 
@@ -34,6 +35,9 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
    * Available for mixin official developer app only
    */
   properties: (): Promise<AppPropertyResponse> => axiosInstance.get<unknown, AppPropertyResponse>(`/apps/property`),
+
+  /** Get app billing */
+  billing: (appID: string): Promise<AppBillingResponse> => axiosInstance.get<unknown, AppBillingResponse>(`/apps/${appID}/property`),
 
   /** Get user's app share list */
   favorites: (userID: string): Promise<AppResponse[]> => axiosInstance.get<unknown, AppResponse[]>(`/users/${userID}/apps/favorite`),
