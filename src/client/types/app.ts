@@ -25,9 +25,14 @@ export interface AppPropertyResponse {
   price: string;
 }
 
+export interface AppBillingCostResponse {
+  users: string;
+  resources: string;
+}
+
 export interface AppBillingResponse {
   app_id: string;
-  cost: string;
+  cost: AppBillingCostResponse;
   credit: string;
 }
 
