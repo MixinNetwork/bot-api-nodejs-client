@@ -47,7 +47,7 @@ export class Decoder {
     this.read(len);
     return value;
   }
-  
+
   readSubarray(end: number) {
     const value = this.buf.subarray(0, end);
     this.read(end);
