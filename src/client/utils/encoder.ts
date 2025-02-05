@@ -52,6 +52,10 @@ export class Encoder {
     }
   }
 
+  buffer() {
+    return this.buf;
+  }
+
   hex() {
     return this.buf.toString('hex');
   }

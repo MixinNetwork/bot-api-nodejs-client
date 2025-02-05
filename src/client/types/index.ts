@@ -10,6 +10,7 @@ export * from './collectible';
 export * from './conversation';
 export * from './error';
 export * from './external';
+export * from './invoice';
 export * from './keystore';
 export * from './message';
 export * from './mixin_transaction';

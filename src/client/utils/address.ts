@@ -81,7 +81,7 @@ export const parseMixAddress = (address: string): MixAddress | undefined => {
   }
 };
 
-export const buildMixAddress = (ma: MixAddress): string => {
+export const getMixAddressBuffer = (ma: MixAddress) => {
   if (ma.members.length > 255) {
     throw new Error(`invalid members length: ${ma.members.length}`);
   }
@@ -108,9 +108,13 @@ export const buildMixAddress = (ma: MixAddress): string => {
       memberData.push(Buffer.from(Uint8Array.from(id)));
     }
   });
+  return Buffer.concat([prefix, ...memberData]);
+};
 
-  const msg = Buffer.concat([Buffer.from(MixAddressPrefix), prefix, ...memberData]);
+export const buildMixAddress = (ma: MixAddress): string => {
+  const data = getMixAddressBuffer(ma);
+  const msg = Buffer.concat([Buffer.from(MixAddressPrefix), data]);
   const checksum = newHash(msg);
-  const data = Buffer.concat([prefix, ...memberData, checksum.subarray(0, 4)]);
-  return `${MixAddressPrefix}${bs58.encode(data)}`;
+  const buffer =  Buffer.concat([data, checksum.subarray(0, 4)]);
+  return `${MixAddressPrefix}${bs58.encode(buffer)}`;
 };

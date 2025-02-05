@@ -6,6 +6,7 @@ export * from './client';
 export * from './decoder';
 export * from './ed25519';
 export * from './encoder';
+export * from './invoice';
 export * from './multisigs';
 export * from './nfo';
 export * from './pin';
