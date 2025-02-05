@@ -30,6 +30,7 @@ import { uniqueConversationID, base64RawURLEncode, buildClient } from './utils';
  */
 export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
+  const sendLegacy = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', message);
 
   const sendMsg = async (recipientID: string, category: MessageCategory, data: any): Promise<MessageRequest> => {
     if (!keystore) throw new Error('No Keystore Provided');
@@ -94,6 +95,8 @@ export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
     sendTransfer: (userID: string, transfer: TransferMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'SYSTEM_ACCOUNT_SNAPSHOT', transfer),
 
     sendRecall: (userID: string, message: RecallMessageRequest): Promise<MessageRequest> => sendMsg(userID, 'MESSAGE_RECALL', message),
+
+    sendLegacy: (message: MessageRequest) => sendLegacy(message),
   };
 };
 

@@ -48,12 +48,14 @@ export interface MessageView {
 
 export interface MessageRequest {
   conversation_id: string;
+  recipient_id?: string;
   message_id: string;
   category: MessageCategory;
   data_base64: string;
-  recipient_id?: string;
   representative_id?: string;
   quote_message_id?: string;
+  silent?: boolean;
+  expire_in?: number;
 }
 
 export interface StickerMessageRequest {
