@@ -111,10 +111,14 @@ export const getMixAddressBuffer = (ma: MixAddress) => {
   return Buffer.concat([prefix, ...memberData]);
 };
 
-export const buildMixAddress = (ma: MixAddress): string => {
-  const data = getMixAddressBuffer(ma);
+export const getMixAddressStringFromBuffer = (data: Buffer) => {
   const msg = Buffer.concat([Buffer.from(MixAddressPrefix), data]);
   const checksum = newHash(msg);
-  const buffer =  Buffer.concat([data, checksum.subarray(0, 4)]);
+  const buffer=  Buffer.concat([data, checksum.subarray(0, 4)]);
   return `${MixAddressPrefix}${bs58.encode(buffer)}`;
+}
+
+export const buildMixAddress = (ma: MixAddress): string => {
+  const data = getMixAddressBuffer(ma);
+  return getMixAddressStringFromBuffer(data);
 };

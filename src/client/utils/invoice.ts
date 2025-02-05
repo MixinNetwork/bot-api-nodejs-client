@@ -1,12 +1,69 @@
 import type { InvoiceEntry, MixinInvoice } from '../types';
 import Encoder from './encoder';
-import { getMixAddressBuffer, parseMixAddress } from './address';
+import { getMixAddressBuffer, getMixAddressStringFromBuffer, parseMixAddress } from './address';
 import { newHash } from './uniq';
-import { base64RawURLEncode } from './base64';
+import { base64RawURLDecode, base64RawURLEncode } from './base64';
 import { ExtraSizeStorageCapacity, ReferencesCountLimit } from '../../constant';
+import { Decoder } from './decoder';
 
 export const MixinInvoicePrefix = 'MIN';
 export const MixinInvoiceVersion = 0;
+
+export const parseMixinInvoice = (s: string) => {
+    try {
+      if (!s.startsWith(MixinInvoicePrefix)) return undefined;
+  
+      const data = base64RawURLDecode(s.slice(3));
+      if (data.length < 3 + 23 + 1) return undefined;
+  
+      const payload = data.subarray(0, data.length - 4);
+      const msg = Buffer.concat([Buffer.from(MixinInvoicePrefix), Buffer.from(payload)]);
+      const checksum = newHash(msg);
+      if (!checksum.subarray(0, 4).equals(Buffer.from(data.subarray(data.length - 4)))) return undefined;
+  
+      const dec = new Decoder(data);
+      const version = dec.readByte()
+      if (version !== MixinInvoiceVersion) return undefined;
+      const rl = dec.readInt()
+      const rb = dec.readSubarray(rl);
+      const recipient = getMixAddressStringFromBuffer(rb);
+      const mi = newMixinInvoice(recipient);
+      if (!mi) return undefined;
+
+      const el = dec.readByte()
+      for (let i = 0; i < el; i++) {
+        const trace_id = dec.readUUID();
+        const asset_id = dec.readUUID();
+        const amount = dec.readBytesBuffer().toString();
+        const el = dec.readInt()
+        const extra = dec.readSubarray(el);
+        const entry: InvoiceEntry = {
+            trace_id,
+            asset_id,
+            amount,
+            extra,
+            index_references: [],
+            hash_references: []
+        }
+        const rl = dec.readByte();
+        for (let j = 0; j < rl; j++) {
+            const flag = dec.readByte();
+            if (flag === 1) {
+                const ref = dec.readByte();
+                entry.index_references.push(ref)
+            } else if (flag === 0) {
+                const hash = dec.readSubarray(32).toString('hex');
+                entry.hash_references.push(hash)
+            } else return undefined;
+        }
+        mi.entries.push(entry);
+      }
+  
+      return mi;
+    } catch {
+      return undefined;
+    }
+}
 
 export const newMixinInvoice = (recipient: string) => {
   const r = parseMixAddress(recipient);
@@ -37,7 +94,8 @@ export const getInvoiceBuffer = (invoice: MixinInvoice) => {
   if (r.byteLength > 1024) {
     throw new Error(`invalid recipient length: ${r.byteLength}`);
   }
-  enc.writeBytes(r);
+  enc.writeUint16(r.byteLength)
+  enc.write(r);
 
   if (invoice.entries.length > 128) {
     throw new Error(`invalid count of entries: ${r.byteLength}`);

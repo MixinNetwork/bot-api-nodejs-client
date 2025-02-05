@@ -66,7 +66,7 @@ export const decodeNfoMemo = (hexMemo: string) => {
     nm.mask = Number(decoder.readUInt64());
     if (nm.mask !== 1) throw Error(`Invalid NFO memo mask: ${nm.mask}`);
 
-    nm.chain = stringify(decoder.readUUID());
+    nm.chain = decoder.readUUID();
     if (nm.chain !== DefaultChain) throw Error(`Invalid NFO memo chain: ${nm.chain}`);
 
     nm.class = decoder.readBytes();

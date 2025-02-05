@@ -1,3 +1,4 @@
+import { stringify } from 'uuid';
 import type { Input, Output } from '../types';
 import { magic } from './encoder';
 import { formatUnits } from './amount';
@@ -40,6 +41,19 @@ export class Decoder {
     return value;
   }
 
+  readBytesBuffer() {
+    const len = this.readByte();
+    const value = this.buf.subarray(0, len);
+    this.read(len);
+    return value;
+  }
+  
+  readSubarray(end: number) {
+    const value = this.buf.subarray(0, end);
+    this.read(end);
+    return value;
+  }
+
   readInt() {
     const value = this.buf.readUInt16BE();
     this.read(2);
@@ -61,7 +75,7 @@ export class Decoder {
   readUUID() {
     const value = this.buf.subarray(0, 16);
     this.read(16);
-    return value;
+    return stringify(value);
   }
 
   readInteger() {
