@@ -3,7 +3,6 @@ const keystore = require('../keystore.json');
 const { v4 } = require('uuid');
 
 const main = async () => {
-
   console.log(keystore);
 
   const client = MixinApi({ keystore });
