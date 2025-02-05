@@ -1,8 +1,10 @@
 import { v4 as uuid } from 'uuid';
+import type { MixinInvoice } from '../../src/client/types/invoice';
 import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
 import { buildMixAddress, parseMixAddress } from '../../src/client/utils/address';
+import { attachInvoiceEntry, getInvoiceString, MixinInvoiceVersion, newMixinInvoice, parseMixinInvoice, } from '../../src/client/utils/invoice';
 import keystore from '../keystore';
 
 describe('Tests for utils', () => {
@@ -108,5 +110,68 @@ describe('Tests for utils', () => {
     expect(ma).not.toBe(undefined);
     expect(ma!.members.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(2);
+  });
+
+  test('tests for invoice', () => {
+
+	const BTC          = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
+	const ETH          = "43d61dcd-e413-450d-80b8-101d5e903357"
+
+    const recipient = "MIX4fwusRK88p5GexHWddUQuYJbKMJTAuBvhudgahRXKndvaM8FdPHS2Hgeo7DQxNVoSkKSEDyZeD8TYBhiwiea9PvCzay1A9Vx1C2nugc4iAmhwLGGv4h3GnABeCXHTwWEto9wEe1MWB49jLzy3nuoM81tqE2XnLvUWv"
+    let mi = newMixinInvoice(recipient)
+    expect(mi).not.toBeUndefined();
+
+    const trace1 = "772e6bef-3bff-4fcc-987d-29bafca74d63"
+    const amt1 = "0.12345678"
+    const ref1  = "7ecf9fc49ff4d2e36424b8e53e67aed8cc4e9d08d7cbdca7d8bdb153ed2fcdde"
+    attachInvoiceEntry(mi as MixinInvoice, {
+      trace_id: trace1,
+      asset_id: BTC,
+      amount: amt1,
+      extra: Buffer.from("extra one"),
+      index_references: [],
+      hash_references: [ref1]
+    })
+  
+    const trace2 = "3552d116-b29d-4d72-9b24-3ca3b2e0f9c2"
+    const amt2 = "0.23345678"
+    const ref2  = "4a5f79c76872524c6a4a81b174338584e790f09fb059c39cf2a894de1b3c31c6"
+    attachInvoiceEntry(mi as MixinInvoice, {
+      trace_id: trace2,
+      asset_id: ETH,
+      amount: amt2,
+      extra: Buffer.from("extra two"),
+      index_references: [0],
+      hash_references: [ref2]
+    })
+  
+    const str = getInvoiceString(mi as MixinInvoice)
+    expect(str).toEqual("MINAABzAgQHZ6h4KBj1RqG2zMcql6d8Q8lKyI9GcTl2tgoJBk8YEejG0McoJiRCm44N2dGbZZL6Z6h4KBj1RqG2zMcql6d8Q8lKyI9GcTl2tgoJBk8YEejG0McoJiRCm44N2dGbZZL6Z6h4KBj1RqG2zMcql6d8QwJ3LmvvO_9PzJh9Kbr8p01jxtDHKCYkQpuODdnRm2WS-gowLjEyMzQ1Njc4AAlleHRyYSBvbmUBAH7Pn8Sf9NLjZCS45T5nrtjMTp0I18vcp9i9sVPtL83eNVLRFrKdTXKbJDyjsuD5wkPWHc3kE0UNgLgQHV6QM1cKMC4yMzM0NTY3OAAJZXh0cmEgdHdvAgEAAEpfecdoclJMakqBsXQzhYTnkPCfsFnDnPKolN4bPDHGTTpvYA")
+  
+    mi = parseMixinInvoice(str)
+    expect(mi).not.toBeUndefined();
+    mi = mi as MixinInvoice;
+    expect(mi.version).toEqual(MixinInvoiceVersion)
+    expect(buildMixAddress(mi.recipient)).toEqual(recipient)
+    expect(mi.entries).toHaveLength(2)
+  
+    const e1 = mi.entries[0]
+    expect(e1.trace_id).toEqual(trace1)
+    expect(e1.asset_id).toEqual(BTC)
+    expect(e1.amount).toEqual(amt1)
+    expect(e1.extra).toEqual(Buffer.from("extra one"))
+    expect(e1.index_references).toHaveLength(0)
+    expect(e1.hash_references).toHaveLength(1)
+    expect(e1.hash_references[0]).toEqual(ref1)
+  
+    const e2 = mi.entries[1]
+    expect(e2.trace_id).toEqual(trace2)
+    expect(e2.asset_id).toEqual(ETH)
+    expect(e2.amount).toEqual(amt2)
+    expect(e2.extra).toEqual(Buffer.from("extra two"))
+    expect(e2.index_references).toHaveLength(1)
+    expect(e2.index_references[0]).toEqual(0)
+    expect(e2.hash_references).toHaveLength(1)
+    expect(e2.hash_references[0]).toEqual(ref2)
   });
 });
