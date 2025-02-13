@@ -45,7 +45,7 @@ const main = async () => {
   );
 
   // build safe transaction raw
-  const tx = buildSafeTransaction(utxos, recipients, ghosts, 'multisigs-test-memo');
+  const tx = buildSafeTransaction(utxos, recipients, ghosts, Buffer.from('multisigs-test-memo'));
   console.log(tx);
   const raw = encodeSafeTransaction(tx);
 

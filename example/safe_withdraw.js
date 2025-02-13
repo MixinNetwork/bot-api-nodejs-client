@@ -65,7 +65,7 @@ const main = async () => {
         })),
     );
     // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
-    const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], 'mainnet-transaction-extra');
+    const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], Buffer.from('mainnet-transaction-extra'));
     console.log(tx);
     const raw = encodeSafeTransaction(tx);
     const ref = blake3Hash(Buffer.from(raw, 'hex')).toString('hex');
@@ -86,7 +86,7 @@ const main = async () => {
         index: i,
       })),
     );
-    const feeTx = buildSafeTransaction(feeUtxos, feeRecipients, feeGhosts, 'mainnet-fee-transaction-extra', [ref]);
+    const feeTx = buildSafeTransaction(feeUtxos, feeRecipients, feeGhosts, Buffer.from('mainnet-fee-transaction-extra'), [ref]);
     console.log(feeTx);
     const feeRaw = encodeSafeTransaction(feeTx);
     console.log(feeRaw);
@@ -154,7 +154,7 @@ const main = async () => {
         })),
     );
     // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
-    const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], 'mainnet-transaction-extra');
+    const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], Buffer.from('mainnet-transaction-extra'));
     console.log(tx);
     const raw = encodeSafeTransaction(tx);
 

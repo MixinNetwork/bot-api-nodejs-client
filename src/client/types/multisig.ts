@@ -67,7 +67,13 @@ export interface MultisigTransaction {
   extra: string;
 }
 
-export interface SafeTransaction extends MultisigTransaction {
+export interface SafeTransaction {
+  /** 5 */
+  version: number;
+  asset: string;
+  inputs: Input[];
+  outputs: Output[];
+  extra: Buffer;
   references: string[];
   signatureMap?: Record<number, string>[];
 }

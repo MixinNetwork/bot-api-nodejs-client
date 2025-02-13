@@ -11,6 +11,11 @@ import { encodeScript } from './multisigs';
 import { blake3Hash, newHash, sha512Hash } from './uniq';
 import { edwards25519 as ed, getRandomBytes } from './ed25519';
 
+export const ExtraSizeGeneralLimit = 256;
+export const ExtraSizeStorageCapacity = 1024 * 1024 * 4;
+export const ExtraSizeStorageStep = 1024
+export const ExtraStoragePriceStep = "0.0001";
+
 export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
 export const OutputTypeWithdrawalSubmit = 0xa1;
@@ -190,7 +195,7 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
   }
 
   const lenExtra = dec.readUint32();
-  const extra = dec.subarray(0, lenExtra).toString();
+  const extra = dec.subarray(0, lenExtra);
   dec.read(lenExtra);
 
   const lenSigs = dec.readInt();
@@ -210,9 +215,22 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
   };
 };
 
-export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: string, references: string[] = []): SafeTransaction => {
+export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: Buffer, references: string[] = []): SafeTransaction => {
   if (utxos.length === 0) throw new Error('empty inputs');
-  if (Buffer.from(extra).byteLength > 512) throw new Error('extra data is too long');
+  if (extra.byteLength > ExtraSizeGeneralLimit) {
+    const r = rs[0];
+    const mix = 'mixAddress' in r ? parseMixAddress(r.mixAddress) : undefined;
+    const amount = getAmountForStorage(extra);
+    if (
+      extra.byteLength > ExtraSizeStorageCapacity ||
+      'destination' in r ||
+      r.threshold !== 64 ||
+      !mix ||
+      mix.threshold !== 1 ||
+      amount.comparedTo(r.amount) === 1
+    ) 
+      throw new Error('extra data is too long');
+  }
 
   let asset = '';
   const inputs: Input[] = [];
@@ -279,3 +297,9 @@ export const signSafeTransaction = (tx: SafeTransaction, views: string[], privat
 
   return encodeSafeTransaction(tx, signaturesMap);
 };
+
+export const getAmountForStorage = (extra: Buffer) => {
+  const unit = BigNumber(ExtraStoragePriceStep);
+  const step = BigNumber(extra.byteLength).dividedToIntegerBy(ExtraSizeStorageStep).plus(1);
+  return unit.times(step);
+}

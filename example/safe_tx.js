@@ -45,7 +45,7 @@ const main = async () => {
   console.log(ghosts);
 
   // build safe transaction raw
-  const tx = buildSafeTransaction(utxos, recipients, ghosts, 'test-memo');
+  const tx = buildSafeTransaction(utxos, recipients, ghosts, Buffer.from('test-memo'));
   console.log(tx);
   const raw = encodeSafeTransaction(tx);
   console.log(raw);
