@@ -1,7 +1,6 @@
 const { MixinApi } = require('..');
 const keystore = require('../keystore.json'); // keystore from your bot
 
-keystore.user_id = keystore.client_id;
 const client = MixinApi({
   keystore,
   blazeOptions: {

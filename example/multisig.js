@@ -2,7 +2,6 @@ const { v4 } = require('uuid');
 const { MixinApi, buildMultiSigsTransaction, sleep, encodeScript } = require('..');
 const keystore = require('../keystore.json');
 
-keystore.user_id = keystore.client_id;
 const client = MixinApi({
   requestConfig: {
     responseCallback: err => {
@@ -35,7 +34,7 @@ const main = async () => {
   const bot = await client.user.profile();
   const asset_id = '965e5c6e-434c-3fa9-b780-c50f43cd955c';
   const amount = '0.0001';
-  const members = [bot.app.creator_id, keystore.user_id];
+  const members = [bot.app.creator_id, keystore.app_id];
   const threshold = 1;
 
   // 1. send to multisig account
@@ -63,7 +62,7 @@ const main = async () => {
   const asset = await client.asset.fetch(asset_id);
   const receivers = await client.transfer.outputs([
     {
-      receivers: [keystore.user_id],
+      receivers: [keystore.app_id],
       index: 0,
     },
   ]);

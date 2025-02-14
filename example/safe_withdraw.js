@@ -54,16 +54,11 @@ const main = async () => {
       recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
     }
     // the index of ghost keys must be the same with the index of outputs
-    // but withdrawal output doesnt need ghost key, so index + 1
-    const ghosts = await client.utxo.ghostKey(
-      recipients
-        .filter(r => 'members' in r)
-        .map((r, i) => ({
-          hint: v4(),
-          receivers: r.members,
-          index: i + 1,
-        })),
-    );
+    // but withdrawal output doesnt need ghost key
+    // get ghost key to send tx
+    const txId = v4();
+    const ghosts = await client.utxo.ghostKey(recipients, txId, spendPrivateKey);
+
     // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
     const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], Buffer.from('mainnet-transaction-extra'));
     console.log(tx);
@@ -79,20 +74,13 @@ const main = async () => {
       // add fee change output if needed
       feeRecipients.push(buildSafeTransactionRecipient(feeOutputs[0].receivers, feeOutputs[0].receivers_threshold, feeChange.toString()));
     }
-    const feeGhosts = await client.utxo.ghostKey(
-      feeRecipients.map((r, i) => ({
-        hint: v4(),
-        receivers: r.members,
-        index: i,
-      })),
-    );
+    const feeId = v4();
+    const feeGhosts = await client.utxo.ghostKey(feeRecipients, feeId, spendPrivateKey);
     const feeTx = buildSafeTransaction(feeUtxos, feeRecipients, feeGhosts, Buffer.from('mainnet-fee-transaction-extra'), [ref]);
     console.log(feeTx);
     const feeRaw = encodeSafeTransaction(feeTx);
     console.log(feeRaw);
 
-    const txId = v4();
-    const feeId = v4();
     console.log(txId, feeId);
     let txs = await client.utxo.verifyTransaction([
       {
@@ -143,23 +131,15 @@ const main = async () => {
       recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
     }
     // the index of ghost keys must be the same with the index of outputs
-    // but withdrawal output doesnt need ghost key, so index + 1
-    const ghosts = await client.utxo.ghostKey(
-      recipients
-        .filter(r => 'members' in r)
-        .map((r, i) => ({
-          hint: v4(),
-          receivers: r.members,
-          index: i + 1,
-        })),
-    );
+    // but withdrawal output doesnt need ghost key
+    const request_id = v4();
+    console.log(request_id);
+    const ghosts = await client.utxo.ghostKey(recipients, request_id, spendPrivateKey);
     // spare the 0 inedx for withdrawal output, withdrawal output doesnt need ghost key
     const tx = buildSafeTransaction(utxos, recipients, [undefined, ...ghosts], Buffer.from('mainnet-transaction-extra'));
     console.log(tx);
     const raw = encodeSafeTransaction(tx);
 
-    const request_id = v4();
-    console.log(request_id);
     let txs = await client.utxo.verifyTransaction([
       {
         raw,

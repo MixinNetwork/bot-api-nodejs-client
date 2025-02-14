@@ -1,12 +1,11 @@
 const { MixinApi, sleep, buildTokenId, buildNfoTransferRequest } = require('..');
 const botKeystore = require('../keystore.json');
-botKeystore.user_id = botKeystore.client_id;
 
 const owner = 'user'; // bot
 
 // If it's the mixin user owns the nft, get user oauth using /oauth/token api
 const keystore = {
-  user_id: botKeystore.user_id,
+  app_id: botKeystore.app_id,
   scope: 'PROFILE:READ COLLECTIBLES:READ',
   authorization_id: '',
   private_key: '',
@@ -44,7 +43,7 @@ const readCollectibleOutput = async (id, receivers, offset = '') => {
 async function main() {
   const user = await client.user.profile();
   // The mixin user or multisigs account that user want transfer the nft to
-  const receivers = [owner === 'user' ? botKeystore.user_id : '7766b24c-1a03-4c3a-83a3-b4358266875d'];
+  const receivers = [owner === 'user' ? botKeystore.app_id : '7766b24c-1a03-4c3a-83a3-b4358266875d'];
   const threshold = 1;
 
   // The nft token information that user owns
@@ -53,7 +52,7 @@ async function main() {
   const tokenUuid = buildTokenId(collectionId, tokenId);
 
   // Fetch the transaction that user received nft token
-  const utxo = await readCollectibleOutput(tokenUuid, [user.user_id]);
+  const utxo = await readCollectibleOutput(tokenUuid, [user.app_id]);
   console.log(utxo);
 
   const multisig = await buildNfoTransferRequest(client, utxo, receivers, threshold, Buffer.from('test').toString('hex'));

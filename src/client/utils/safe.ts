@@ -219,7 +219,7 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
   };
 };
 
-export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: GhostKey[], extra: Buffer, references: string[] = []): SafeTransaction => {
+export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: (GhostKey| undefined)[], extra: Buffer, references: string[] = []): SafeTransaction => {
   if (utxos.length === 0) throw new Error('empty inputs');
   if (extra.byteLength > ExtraSizeGeneralLimit) {
     const r = rs[0];
@@ -255,12 +255,14 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
       });
       continue;
     }
+    const ghost = gs[i]
+    if (!ghost) throw new Error('invalid ghost key for normal outptus');
 
     outputs.push({
       type: OutputTypeScript,
       amount: r.amount,
-      keys: gs[i].keys,
-      mask: gs[i].mask,
+      keys: ghost.keys,
+      mask: ghost.mask,
       script: encodeScript(r.mixAddress.threshold),
     });
   }

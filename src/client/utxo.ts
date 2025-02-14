@@ -61,14 +61,14 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
    * index in GhostKeyRequest MUST be the same with the index of corresponding output
    * receivers will be sorted in the function
    */
-  ghostKey: async (recipients: SafeTransactionRecipient[], trace: string, spendPrivateKey: string): Promise<GhostKey[]> => {
+  ghostKey: async (recipients: SafeTransactionRecipient[], trace: string, spendPrivateKey: string): Promise<(GhostKey | undefined)[]> => {
     const traceHash = blake3Hash(Buffer.from(trace));
     const privSpend = Buffer.from(spendPrivateKey, 'hex');
-    const res: Record<string, GhostKey> = {};
+    const ghostKeys: (GhostKey | undefined)[] = new Array(recipients.length).fill(undefined);
     const uuidRequests: GhostKeyRequest[] = []
 
     recipients.forEach((r, i) => {
-      if ('destination' in r) return;
+      if ('destination' in r) return
 
       const ma = r.mixAddress
       const seedHash = blake3Hash(Buffer.concat([traceHash, Buffer.from(integerToBytes(i))]))
@@ -83,7 +83,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
           const k = deriveGhostPublicKey(key, viewKey, spendKey, i);
           return k.toString('hex');
         });
-        res[i] = {
+        ghostKeys[i] = {
           mask,
           keys
         }
@@ -100,10 +100,10 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
       const ghosts = await axiosInstance.post<unknown, GhostKey[]>('/safe/keys', uuidRequests)
       ghosts.forEach((ghost, i) => {
         const index = uuidRequests[i].index;
-        res[index] = ghost
+        ghostKeys[index] = ghost
       });
     }
-    return Object.values(res);
+    return ghostKeys;
   },
 });
 

@@ -34,15 +34,9 @@ const main = async () => {
   if (!change.isZero() && !change.isNegative()) {
     recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
   }
-  // get ghost key to send tx to uuid multisigs
-  // For Mixin Kernel Address start with 'XIN', get ghost key with getMainnetAddressGhostKey
-  const ghosts = await client.utxo.ghostKey(
-    recipients.map((r, i) => ({
-      hint: v4(),
-      receivers: r.members,
-      index: i,
-    })),
-  );
+  // get ghost key to send tx
+  const request_id = v4();
+  const ghosts = await client.utxo.ghostKey(recipients, request_id, safePrivateKey);
 
   // build safe transaction raw
   const tx = buildSafeTransaction(utxos, recipients, ghosts, Buffer.from('multisigs-test-memo'));
@@ -50,7 +44,6 @@ const main = async () => {
   const raw = encodeSafeTransaction(tx);
 
   // create multisig tx
-  const request_id = v4();
   console.log(request_id);
   let multisig = await client.multisig.createSafeMultisigs([
     {
