@@ -124,11 +124,13 @@ describe('Tests for safe', () => {
       },
     ];
 
-    const res = await client.utxo.ghostKey(rs, trace, key.toString('hex'));
-    expect(res).toHaveLength(2);
-    expect(res[0].mask).toBe('8084fd07352c375b70811ff4e107230f8afbe1bdd8cc812c69885d80d11f2bc1');
-    expect(res[0].keys.join(',')).toBe('d12872616e533da045518baabdffd6aa0a17c23f01d82cc1c1e480067aaa5937');
-    expect(res[1].mask).toBe('e6aec07aec6a60d4173784c3b7aaae541edd61dc6b08c1bc23ccdb554d133829');
-    expect(res[1].keys.join(',')).toBe('1c241e7500766edf7b998eaffd25173320d15f74c0a5ebc18ebf9e21bac88ee6,c244a3802638aec132eab23322bf6261b4defd2e3af497d95675270bb3b604e8');
+    const keys = await client.utxo.ghostKey(rs, trace, key.toString('hex'));
+    expect(keys).toHaveLength(2);
+    expect(keys[0]).not.toBeUndefined();
+    expect(keys[1]).not.toBeUndefined();
+    expect(keys[0]!.mask).toBe('8084fd07352c375b70811ff4e107230f8afbe1bdd8cc812c69885d80d11f2bc1');
+    expect(keys[0]!.keys.join(',')).toBe('d12872616e533da045518baabdffd6aa0a17c23f01d82cc1c1e480067aaa5937');
+    expect(keys[1]!.mask).toBe('e6aec07aec6a60d4173784c3b7aaae541edd61dc6b08c1bc23ccdb554d133829');
+    expect(keys[1]!.keys.join(',')).toBe('1c241e7500766edf7b998eaffd25173320d15f74c0a5ebc18ebf9e21bac88ee6,c244a3802638aec132eab23322bf6261b4defd2e3af497d95675270bb3b604e8');
   });
 });
