@@ -92,14 +92,14 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
         uuidRequests.push({
           receivers: ma.uuidMembers.sort(),
           index: i,
-          hint: hint,
+          hint,
         });
       }
     });
     if (uuidRequests.length) {
       const ghosts = await axiosInstance.post<unknown, GhostKey[]>('/safe/keys', uuidRequests);
       ghosts.forEach((ghost, i) => {
-        const index = uuidRequests[i].index;
+        const { index } = uuidRequests[i];
         ghostKeys[index] = ghost;
       });
     }
