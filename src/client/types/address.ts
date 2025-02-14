@@ -21,6 +21,8 @@ export interface AddressRequest {
 }
 
 export interface MixAddress {
-  members: string[];
+  version: number;
+  uuidMembers: string[];
+  xinMembers: string[];
   threshold: number;
 }

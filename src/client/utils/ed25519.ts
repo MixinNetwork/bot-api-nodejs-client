@@ -51,7 +51,7 @@ const scalarBaseMult = (x: bigint) => {
 
 const scalarBaseMultToPoint = (x: bigint) => base.multiply(x);
 
-const publicFromPrivate = (priv: Buffer) => {
+export const publicFromPrivate = (priv: Buffer) => {
   const x = setCanonicalBytes(priv);
   const v = scalarBaseMult(x);
   return v;
@@ -111,6 +111,11 @@ export const getKeyPair = () => {
   };
 };
 
+export const newKeyFromSeed = (seed: Buffer) => {
+  const s = setUniformBytes(seed);
+  return Buffer.from(numberToBytesLE(s, 32));
+}
+
 export const edwards25519 = {
   scalar: fn,
   x25519,
@@ -125,6 +130,8 @@ export const edwards25519 = {
   publicFromPrivate,
   scalarBaseMult,
   scalarBaseMultToPoint,
+
+  newKeyFromSeed,
   sign,
 
   newPoint,

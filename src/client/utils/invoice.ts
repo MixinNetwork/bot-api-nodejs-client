@@ -3,8 +3,8 @@ import Encoder from './encoder';
 import { getMixAddressBuffer, getMixAddressStringFromBuffer, parseMixAddress } from './address';
 import { newHash } from './uniq';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
-import { ExtraSizeStorageCapacity, ReferencesCountLimit } from '../../constant';
 import { Decoder } from './decoder';
+import { ExtraSizeStorageCapacity, ReferencesCountLimit } from './safe';
 
 export const MixinInvoicePrefix = 'MIN';
 export const MixinInvoiceVersion = 0;

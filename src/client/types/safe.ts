@@ -1,3 +1,5 @@
+import { MixAddress } from "./address";
+
 // field for:
 // GET safe/assets
 // GET safe/assets/:id
@@ -92,9 +94,7 @@ export interface SafeWithdrawalRecipient {
 }
 
 export interface SafeMixinRecipient {
-  members: string[];
-  threshold: number;
-  mixAddress: string;
+  mixAddress: MixAddress;
   amount: string;
 }
 

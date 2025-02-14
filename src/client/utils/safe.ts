@@ -1,16 +1,17 @@
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
 import { ed25519 } from '@noble/curves/ed25519';
-import type { Input, Output, GhostKey, GhostKeyRequest, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput } from '../types';
+import type { Input, Output, GhostKey, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput, MixAddress } from '../types';
 import { Encoder, magic } from './encoder';
 import { Decoder } from './decoder';
 import { base64RawURLEncode } from './base64';
 import { TIPBodyForSequencerRegister } from './tip';
-import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress } from './address';
+import { getPublicFromMainnetAddress, buildMixAddress, parseMixAddress, getMainnetAddressFromSeed, MainAddressPrefix } from './address';
 import { encodeScript } from './multisigs';
 import { blake3Hash, newHash, sha512Hash } from './uniq';
-import { edwards25519 as ed, getRandomBytes } from './ed25519';
+import { edwards25519 as ed } from './ed25519';
 
+export const ReferencesCountLimit = 2;
 export const ExtraSizeGeneralLimit = 256;
 export const ExtraSizeStorageCapacity = 1024 * 1024 * 4;
 export const ExtraSizeStorageStep = 1024
@@ -33,11 +34,21 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
   if (params.uuid && validate(params.uuid)) address = params.uuid;
   else if (params.mainnetAddress && getPublicFromMainnetAddress(params.mainnetAddress)) address = params.mainnetAddress;
   else if (params.mixAddress && parseMixAddress(params.mixAddress)) address = params.mixAddress;
-  else if (params.members && params.threshold) {
-    address = buildMixAddress({
-      members: params.members,
-      threshold: params.threshold,
-    });
+  else if (params.threshold) {
+    if (params.xinMembers) 
+      address = buildMixAddress({
+      version: 2,
+        xinMembers: params.xinMembers,
+        uuidMembers: [],
+        threshold: params.threshold,
+      });
+    if (params.uuidMembers)
+      address = buildMixAddress({
+      version: 2,
+        xinMembers: [],
+        uuidMembers: params.uuidMembers,
+        threshold: params.threshold,
+      });
   } else throw new Error('fail to get payment destination address');
 
   const baseUrl = `https://mixin.one/pay/${address}`;
@@ -81,34 +92,6 @@ export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: num
   return Buffer.from(p4.toRawBytes());
 };
 
-export const getMainnetAddressGhostKey = (recipient: GhostKeyRequest, hexSeed = '') => {
-  if (recipient.receivers.length === 0) return undefined;
-  if (hexSeed && hexSeed.length !== 128) return undefined;
-
-  const publics = recipient.receivers.map(d => getPublicFromMainnetAddress(d));
-  if (!publics.every(p => !!p)) return undefined;
-
-  const seed = hexSeed ? Buffer.from(hexSeed, 'hex') : getRandomBytes(64);
-  const r = Buffer.from(ed.scalar.toBytes(ed.setUniformBytes(seed)));
-  const keys = publics.map(addressPubic => {
-    const spendKey = addressPubic!.subarray(0, 32);
-    const viewKey = addressPubic!.subarray(32, 64);
-    const k = deriveGhostPublicKey(r, viewKey, spendKey, recipient.index);
-    return k.toString('hex');
-  });
-  return {
-    mask: ed.publicFromPrivate(r).toString('hex'),
-    keys,
-  };
-};
-
-export const buildSafeTransactionRecipient = (members: string[], threshold: number, amount: string): SafeTransactionRecipient => ({
-  members,
-  threshold,
-  amount,
-  mixAddress: buildMixAddress({ members, threshold }),
-});
-
 export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
   const totalOutput = rs.reduce((prev, cur) => prev.plus(BigNumber(cur.amount)), BigNumber('0'));
 
@@ -125,6 +108,27 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
     };
   }
   throw new Error('insufficient total input outputs');
+};
+
+export const buildSafeTransactionRecipient = (members: string[], threshold: number, amount: string): SafeTransactionRecipient => {
+  const mixAddress = {
+    version: 2,
+    threshold,
+    xinMembers: [],
+    uuidMembers: [],
+  } as MixAddress;
+
+  if (members.every(m => m.startsWith(MainAddressPrefix))) 
+    mixAddress.xinMembers = members;
+  if (members.every(m => validate(m))) 
+    mixAddress.uuidMembers = members;
+  if (mixAddress.uuidMembers.length === 0 && mixAddress.xinMembers.length === 0) 
+    throw new Error("empty members to build safe transaction recipient");
+
+  return {
+    mixAddress,
+    amount
+  }
 };
 
 export const encodeSafeTransaction = (tx: SafeTransaction, sigs: Record<number, string>[] = []) => {
@@ -219,14 +223,10 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
   if (utxos.length === 0) throw new Error('empty inputs');
   if (extra.byteLength > ExtraSizeGeneralLimit) {
     const r = rs[0];
-    const mix = 'mixAddress' in r ? parseMixAddress(r.mixAddress) : undefined;
     const amount = getAmountForStorage(extra);
     if (
       extra.byteLength > ExtraSizeStorageCapacity ||
       'destination' in r ||
-      r.threshold !== 64 ||
-      !mix ||
-      mix.threshold !== 1 ||
       amount.comparedTo(r.amount) === 1
     ) 
       throw new Error('extra data is too long');
@@ -261,7 +261,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
       amount: r.amount,
       keys: gs[i].keys,
       mask: gs[i].mask,
-      script: encodeScript(r.threshold),
+      script: encodeScript(r.mixAddress.threshold),
     });
   }
 
@@ -302,4 +302,19 @@ export const getAmountForStorage = (extra: Buffer) => {
   const unit = BigNumber(ExtraStoragePriceStep);
   const step = BigNumber(extra.byteLength).dividedToIntegerBy(ExtraSizeStorageStep).plus(1);
   return unit.times(step);
+}
+
+export const getRecipientForStorage = (extra: Buffer) => {
+  const amount = getAmountForStorage(extra).toString();
+  const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1))
+  const mixAddress = {
+    version: 2,
+    xinMembers: [addr],
+    uuidMembers: [],
+    threshold: 64
+  } as MixAddress
+  return {
+    amount,
+    mixAddress
+  } as SafeTransactionRecipient
 }

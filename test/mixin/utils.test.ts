@@ -3,7 +3,7 @@ import type { MixinInvoice } from '../../src/client/types/invoice';
 import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
-import { buildMixAddress, parseMixAddress } from '../../src/client/utils/address';
+import { buildMixAddress, getMainnetAddressFromSeed, parseMixAddress } from '../../src/client/utils/address';
 import { attachInvoiceEntry, getInvoiceString, MixinInvoiceVersion, newMixinInvoice, parseMixinInvoice } from '../../src/client/utils/invoice';
 import keystore from '../keystore';
 
@@ -59,12 +59,12 @@ describe('Tests for utils', () => {
 
   test('tests for mix address', () => {
     let members = ['67a87828-18f5-46a1-b6cc-c72a97a77c43'];
-    let address = buildMixAddress({ members, threshold: 1 });
+    let address = buildMixAddress({ version: 2, uuidMembers: members, threshold: 1, xinMembers: [] });
     expect('MIX3QEeg1WkLrjvjxyMQf6Xc8dxs81tpPc').toBe(address);
 
     let ma = parseMixAddress('MIX3QEeg1WkLrjvjxyMQf6Xc8dxs81tpPc');
     expect(ma).not.toBe(undefined);
-    expect(ma!.members.join(',')).toBe(members.join(','));
+    expect(ma!.uuidMembers.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(1);
 
     members = [
@@ -76,7 +76,7 @@ describe('Tests for utils', () => {
       'c6d0c728-2624-429b-8e0d-d9d19b6592fa',
       '67a87828-18f5-46a1-b6cc-c72a97a77c43',
     ];
-    address = buildMixAddress({ members, threshold: 4 });
+    address = buildMixAddress({ version: 2, uuidMembers: members, threshold: 4, xinMembers: [] });
     expect(
       'MIX4fwusRK88p5GexHWddUQuYJbKMJTAuBvhudgahRXKndvaM8FdPHS2Hgeo7DQxNVoSkKSEDyZeD8TYBhiwiea9PvCzay1A9Vx1C2nugc4iAmhwLGGv4h3GnABeCXHTwWEto9wEe1MWB49jLzy3nuoM81tqE2XnLvUWv',
     ).toBe(address);
@@ -84,15 +84,15 @@ describe('Tests for utils', () => {
       'MIX4fwusRK88p5GexHWddUQuYJbKMJTAuBvhudgahRXKndvaM8FdPHS2Hgeo7DQxNVoSkKSEDyZeD8TYBhiwiea9PvCzay1A9Vx1C2nugc4iAmhwLGGv4h3GnABeCXHTwWEto9wEe1MWB49jLzy3nuoM81tqE2XnLvUWv',
     );
     expect(ma).not.toBe(undefined);
-    expect(ma!.members.join(',')).toBe(members.join(','));
+    expect(ma!.uuidMembers.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(4);
 
     members = ['XIN3BMNy9pQyj5XWDJtTbaBVE2zQ66zBo2weyc43iL286asdqwApWswAzQC5qba26fh3fzHK9iMoxyx1q3Lgj45KJftzGD9q'];
-    address = buildMixAddress({ members, threshold: 1 });
+    address = buildMixAddress({ version: 2, uuidMembers: [], threshold: 1, xinMembers: members });
     expect('MIXPYWwhjxKsbFRzAP2Dcb2mMjj7sQQo4MpCSv3NYaYCdQ2kEcbcimpPT81gaxtuNhunLWPx7Sv7fawjZ8DhRmEj8E2hrQM4Z6e').toBe(address);
     ma = parseMixAddress('MIXPYWwhjxKsbFRzAP2Dcb2mMjj7sQQo4MpCSv3NYaYCdQ2kEcbcimpPT81gaxtuNhunLWPx7Sv7fawjZ8DhRmEj8E2hrQM4Z6e');
     expect(ma).not.toBe(undefined);
-    expect(ma!.members.join(',')).toBe(members.join(','));
+    expect(ma!.xinMembers.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(1);
 
     members = [
@@ -100,7 +100,7 @@ describe('Tests for utils', () => {
       'XINMd9kCbxEoEetZuDM8gGJS11X3TVrRLwzhnqgMr65qjJBkCncNqSAngESpC7Hddnsw1D9Jo2QJakbFPr8WyrM6VkskGkB8',
       'XINLM7VuMYSjvKiEQPyLpaG7NDLDPngWWFBZpVJjhGamMsgPbmeSsGs3fQzNoqSr6syBTyLM3i69T7iSN8Tru7aQadiKLkSV',
     ];
-    address = buildMixAddress({ members, threshold: 2 });
+    address = buildMixAddress({ version: 2, uuidMembers: [], threshold: 2, xinMembers: members });
     expect(
       'MIXBCirWksVv9nuphqbtNRZZvwKsXHHMUnB5hVrVY1P7f4eBdLpDoLwiQoHYPvXia2wFepnX6hJwTjHybzBiroWVEMaFHeRFfLpcU244tzRM8smak9iRAD4PJRHN1MLHRWFtErottp9t7piaRVZBzsQXpSsaSgagj93voQdUuXhuQGZNj3Fme5YYMHfJBWjoRFHis4mnhBgxkyEGRUHAVYnfej2FhrypJmMDu74irRTdj2xjQYr6ovBJSUBYDBcvAyLPE3cEKc4JsPz7b9',
     ).toBe(address);
@@ -108,7 +108,7 @@ describe('Tests for utils', () => {
       'MIXBCirWksVv9nuphqbtNRZZvwKsXHHMUnB5hVrVY1P7f4eBdLpDoLwiQoHYPvXia2wFepnX6hJwTjHybzBiroWVEMaFHeRFfLpcU244tzRM8smak9iRAD4PJRHN1MLHRWFtErottp9t7piaRVZBzsQXpSsaSgagj93voQdUuXhuQGZNj3Fme5YYMHfJBWjoRFHis4mnhBgxkyEGRUHAVYnfej2FhrypJmMDu74irRTdj2xjQYr6ovBJSUBYDBcvAyLPE3cEKc4JsPz7b9',
     );
     expect(ma).not.toBe(undefined);
-    expect(ma!.members.join(',')).toBe(members.join(','));
+    expect(ma!.xinMembers.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(2);
   });
 
@@ -176,4 +176,9 @@ describe('Tests for utils', () => {
     expect(e2.hash_references).toHaveLength(1);
     expect(e2.hash_references[0]).toEqual(ref2);
   });
+
+  test('tests for mainnet address', () => {
+    const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1))
+    expect(addr).toEqual("XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB");
+  })
 });

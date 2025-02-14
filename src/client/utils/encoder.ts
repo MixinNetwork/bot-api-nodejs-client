@@ -11,7 +11,8 @@ export const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
 export const integerToBytes = (x: number) => {
-  const bytes = [];
+  const bytes: number[] = [];
+  if (x === 0) return bytes;
   let i = x;
   do {
     bytes.unshift(i & 255);

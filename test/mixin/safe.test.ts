@@ -1,5 +1,4 @@
-import { v4 } from 'uuid';
-import { encodeSafeTransaction, decodeSafeTransaction, signSafeTransaction, getMainnetAddressGhostKey } from '../../src';
+import { encodeSafeTransaction, decodeSafeTransaction, signSafeTransaction, MixinApi, newKeyFromSeed, getMainnetAddressFromSeed, SafeTransactionRecipient } from '../../src';
 
 describe('Tests for safe', () => {
   test('Test for safe transaction signature', async () => {
@@ -13,7 +12,7 @@ describe('Tests for safe', () => {
     const tx = {
       version: 5,
       asset: 'b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d8',
-      extra: 'test-memo',
+      extra: Buffer.from('test-memo'),
       inputs: [
         {
           hash: 'c513ffcc684e9585c76bd76245aa7d2def3b9f147422b59ab91db7852c9d97dd',
@@ -45,7 +44,7 @@ describe('Tests for safe', () => {
     const tx = decodeSafeTransaction(raw);
 
     expect(tx.asset).toBe('f3bed3e0f6738938c8988eb8853c5647baa263901deb217ee53586d5de831f3b');
-    expect(tx.extra).toBe('multisigs-test-memo');
+    expect(tx.extra.toString()).toBe('multisigs-test-memo');
 
     expect(tx.inputs).toHaveLength(1);
     expect(tx.inputs[0].hash).toBe('b5ecd453883aebc2a0dfe6c3f005c06c59156b70c532c363c7dff6ca4329d0ed');
@@ -92,16 +91,44 @@ describe('Tests for safe', () => {
     );
   });
 
-  test('Test for safe ghost key for mainnet address', () => {
-    const ghostKey = getMainnetAddressGhostKey(
+  test('Test for safe ghost key for mainnet address', async () => {
+    const client = MixinApi();
+    const seed = Buffer.alloc(64).fill(1);
+
+    const trace = "9dc60d4c-f301-48ef-97f2-32e9195648cb";
+    const key = newKeyFromSeed(seed);
+    expect(key.toString('hex')).toBe("4fe2a684e0e6c5e370ca0d89f5e2cb0da1e2ecd4028fa2d395fbca4e33f25805")
+    const addr1 = getMainnetAddressFromSeed(seed);
+    expect(addr1).toBe("XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB")
+    const addr2 = getMainnetAddressFromSeed(Buffer.alloc(64).fill(2));
+    expect(addr2).toBe("XINPDSvrzuxs25wN8pWT7iiDBExA532LbCbUxYLzQboWtca7NKCtPZaphpWWkc98iDPcKkLFT9UHFbXrM5iR5GcTU5tZq4bG")
+
+    const rs: SafeTransactionRecipient[] = [
       {
-        receivers: ['XINJkpCdwVk3qFqmS3AAAoTmC5Gm2fR3iRF7Rtt7hayuaLXNrtztS3LGPSxTmq5KQh3KJ2qYXYE5a9w8BWXhZAdsJKXqcvUr'],
-        index: 255,
-        hint: v4(),
+        mixAddress: {
+          version: 2,
+          xinMembers: [addr1],
+          uuidMembers: [],
+          threshold: 64
+        },
+        amount: "0.0001"
       },
-      '518fad2b5eb4ddbd64d2bd5537a73266451ac0eeaff044d6d4e1adfe09da9373ce6ad9b1bc2b55e371c452f84472d741c927989dc3ea91773964492618c02ece',
-    );
-    expect(ghostKey?.mask).toEqual('f2459f77513526c156a5cf2ec831e849b75514f0614e2bd7acdde70afc224f40');
-    expect(ghostKey?.keys[0]).toEqual('40567a0c5696cd3c7160f910248e9bae36cee90d625bba4dbf7ed03d272b2e61');
+      {
+        mixAddress: {
+          version: 2,
+          xinMembers: [addr1, addr2],
+          uuidMembers: [],
+          threshold: 64
+        },
+        amount: "0.0001"
+      }
+    ]
+
+    const res = await client.utxo.ghostKey(rs, trace, key.toString('hex'))
+    expect(res).toHaveLength(2);
+    expect(res[0].mask).toBe("8084fd07352c375b70811ff4e107230f8afbe1bdd8cc812c69885d80d11f2bc1")
+    expect(res[0].keys.join(",")).toBe("d12872616e533da045518baabdffd6aa0a17c23f01d82cc1c1e480067aaa5937")
+    expect(res[1].mask).toBe("e6aec07aec6a60d4173784c3b7aaae541edd61dc6b08c1bc23ccdb554d133829")
+    expect(res[1].keys.join(",")).toBe("1c241e7500766edf7b998eaffd25173320d15f74c0a5ebc18ebf9e21bac88ee6,c244a3802638aec132eab23322bf6261b4defd2e3af497d95675270bb3b604e8")
   });
 });

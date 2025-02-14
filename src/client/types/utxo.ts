@@ -100,7 +100,8 @@ export interface PaymentParams {
   uuid?: string;
   mainnetAddress?: string;
   mixAddress?: string;
-  members?: string[];
+  xinMembers?: string[];
+  uuidMembers?: string[];
   threshold?: number;
 
   asset?: string;
