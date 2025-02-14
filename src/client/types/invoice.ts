@@ -1,4 +1,4 @@
-import { MixAddress } from './address';
+import type { MixAddress } from './address';
 
 export interface InvoiceEntry {
   trace_id: string;
