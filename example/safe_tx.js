@@ -34,7 +34,7 @@ const main = async () => {
     recipients.push(buildSafeTransactionRecipient(outputs[0].receivers, outputs[0].receivers_threshold, change.toString()));
   }
 
-  // get ghost key to send tx 
+  // get ghost key to send tx
   const request_id = v4();
   const ghosts = await client.utxo.ghostKey(recipients, request_id, privateKey);
   console.log(ghosts);

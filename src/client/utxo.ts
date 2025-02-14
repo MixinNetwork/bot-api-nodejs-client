@@ -65,17 +65,17 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
     const traceHash = blake3Hash(Buffer.from(trace));
     const privSpend = Buffer.from(spendPrivateKey, 'hex');
     const ghostKeys: (GhostKey | undefined)[] = new Array(recipients.length).fill(undefined);
-    const uuidRequests: GhostKeyRequest[] = []
+    const uuidRequests: GhostKeyRequest[] = [];
 
     recipients.forEach((r, i) => {
-      if ('destination' in r) return
+      if ('destination' in r) return;
 
-      const ma = r.mixAddress
-      const seedHash = blake3Hash(Buffer.concat([traceHash, Buffer.from(integerToBytes(i))]))
+      const ma = r.mixAddress;
+      const seedHash = blake3Hash(Buffer.concat([traceHash, Buffer.from(integerToBytes(i))]));
       if (ma.xinMembers.length) {
-        const privHash = blake3Hash(Buffer.concat([seedHash, privSpend]))
-        const key = newKeyFromSeed(Buffer.concat([traceHash, privHash]))
-        const mask = ed.publicFromPrivate(key).toString('hex')
+        const privHash = blake3Hash(Buffer.concat([seedHash, privSpend]));
+        const key = newKeyFromSeed(Buffer.concat([traceHash, privHash]));
+        const mask = ed.publicFromPrivate(key).toString('hex');
         const keys = ma.xinMembers.map(member => {
           const pub = getPublicFromMainnetAddress(member);
           const spendKey = pub!.subarray(0, 32);
@@ -85,22 +85,22 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
         });
         ghostKeys[i] = {
           mask,
-          keys
-        }
+          keys,
+        };
       } else {
-        const hint = uniqueConversationID(traceHash.toString('hex'), seedHash.toString('hex'))
+        const hint = uniqueConversationID(traceHash.toString('hex'), seedHash.toString('hex'));
         uuidRequests.push({
           receivers: ma.uuidMembers.sort(),
-          index:     i,
-          hint:      hint,
-        })
+          index: i,
+          hint: hint,
+        });
       }
-    })
+    });
     if (uuidRequests.length) {
-      const ghosts = await axiosInstance.post<unknown, GhostKey[]>('/safe/keys', uuidRequests)
+      const ghosts = await axiosInstance.post<unknown, GhostKey[]>('/safe/keys', uuidRequests);
       ghosts.forEach((ghost, i) => {
         const index = uuidRequests[i].index;
-        ghostKeys[index] = ghost
+        ghostKeys[index] = ghost;
       });
     }
     return ghostKeys;

@@ -1,4 +1,4 @@
-import { MixAddress } from "./address";
+import { MixAddress } from './address';
 
 // field for:
 // GET safe/assets

@@ -33,14 +33,14 @@ export const getMainnetAddressFromPublic = (pubKey: Buffer) => {
 };
 
 export const getMainnetAddressFromSeed = (seed: Buffer) => {
-	const hash1 = newHash(seed)
-	const hash2 = newHash(hash1)
-	const src = Buffer.concat([hash1, hash2])
-	const spend = newKeyFromSeed(seed)
-	const view = newKeyFromSeed(src)
+  const hash1 = newHash(seed);
+  const hash2 = newHash(hash1);
+  const src = Buffer.concat([hash1, hash2]);
+  const spend = newKeyFromSeed(seed);
+  const view = newKeyFromSeed(src);
   const pub = Buffer.concat([publicFromPrivate(spend), publicFromPrivate(view)]);
   return getMainnetAddressFromPublic(pub);
-}
+};
 
 export const parseMixAddress = (address: string): MixAddress | undefined => {
   try {
@@ -108,19 +108,19 @@ export const getMixAddressBuffer = (ma: MixAddress) => {
   const prefix = Buffer.concat([Buffer.from([MixAddressVersion]), Buffer.from([ma.threshold]), Buffer.from([members.length])]);
 
   const memberData: Buffer[] = [];
-  if (ma.uuidMembers.length) 
+  if (ma.uuidMembers.length)
     members.forEach(addr => {
       const id = parse(addr);
       if (!id) throw new Error(`invalid uuid address: ${addr}`);
       memberData.push(Buffer.from(Uint8Array.from(id)));
-    })
-  else if (ma.xinMembers) 
+    });
+  else if (ma.xinMembers)
     members.forEach(addr => {
       const pub = getPublicFromMainnetAddress(addr);
       if (!pub) throw new Error(`invalid mainnet address: ${addr}`);
       memberData.push(pub);
-    })
-  
+    });
+
   return Buffer.concat([prefix, ...memberData]);
 };
 

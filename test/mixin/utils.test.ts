@@ -178,7 +178,7 @@ describe('Tests for utils', () => {
   });
 
   test('tests for mainnet address', () => {
-    const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1))
-    expect(addr).toEqual("XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB");
-  })
+    const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1));
+    expect(addr).toEqual('XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB');
+  });
 });

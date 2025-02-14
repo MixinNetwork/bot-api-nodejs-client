@@ -14,8 +14,8 @@ import { edwards25519 as ed } from './ed25519';
 export const ReferencesCountLimit = 2;
 export const ExtraSizeGeneralLimit = 256;
 export const ExtraSizeStorageCapacity = 1024 * 1024 * 4;
-export const ExtraSizeStorageStep = 1024
-export const ExtraStoragePriceStep = "0.0001";
+export const ExtraSizeStorageStep = 1024;
+export const ExtraStoragePriceStep = '0.0001';
 
 export const TxVersionHashSignature = 0x05;
 export const OutputTypeScript = 0x00;
@@ -35,16 +35,16 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
   else if (params.mainnetAddress && getPublicFromMainnetAddress(params.mainnetAddress)) address = params.mainnetAddress;
   else if (params.mixAddress && parseMixAddress(params.mixAddress)) address = params.mixAddress;
   else if (params.threshold) {
-    if (params.xinMembers) 
+    if (params.xinMembers)
       address = buildMixAddress({
-      version: 2,
+        version: 2,
         xinMembers: params.xinMembers,
         uuidMembers: [],
         threshold: params.threshold,
       });
     if (params.uuidMembers)
       address = buildMixAddress({
-      version: 2,
+        version: 2,
         xinMembers: [],
         uuidMembers: params.uuidMembers,
         threshold: params.threshold,
@@ -118,17 +118,14 @@ export const buildSafeTransactionRecipient = (members: string[], threshold: numb
     uuidMembers: [],
   } as MixAddress;
 
-  if (members.every(m => m.startsWith(MainAddressPrefix))) 
-    mixAddress.xinMembers = members;
-  if (members.every(m => validate(m))) 
-    mixAddress.uuidMembers = members;
-  if (mixAddress.uuidMembers.length === 0 && mixAddress.xinMembers.length === 0) 
-    throw new Error("empty members to build safe transaction recipient");
+  if (members.every(m => m.startsWith(MainAddressPrefix))) mixAddress.xinMembers = members;
+  if (members.every(m => validate(m))) mixAddress.uuidMembers = members;
+  if (mixAddress.uuidMembers.length === 0 && mixAddress.xinMembers.length === 0) throw new Error('empty members to build safe transaction recipient');
 
   return {
     mixAddress,
-    amount
-  }
+    amount,
+  };
 };
 
 export const encodeSafeTransaction = (tx: SafeTransaction, sigs: Record<number, string>[] = []) => {
@@ -219,17 +216,18 @@ export const decodeSafeTransaction = (raw: string): SafeTransaction => {
   };
 };
 
-export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactionRecipient[], gs: (GhostKey| undefined)[], extra: Buffer, references: string[] = []): SafeTransaction => {
+export const buildSafeTransaction = (
+  utxos: SafeUtxoOutput[],
+  rs: SafeTransactionRecipient[],
+  gs: (GhostKey | undefined)[],
+  extra: Buffer,
+  references: string[] = [],
+): SafeTransaction => {
   if (utxos.length === 0) throw new Error('empty inputs');
   if (extra.byteLength > ExtraSizeGeneralLimit) {
     const r = rs[0];
     const amount = getAmountForStorage(extra);
-    if (
-      extra.byteLength > ExtraSizeStorageCapacity ||
-      'destination' in r ||
-      amount.comparedTo(r.amount) === 1
-    ) 
-      throw new Error('extra data is too long');
+    if (extra.byteLength > ExtraSizeStorageCapacity || 'destination' in r || amount.comparedTo(r.amount) === 1) throw new Error('extra data is too long');
   }
 
   let asset = '';
@@ -255,7 +253,7 @@ export const buildSafeTransaction = (utxos: SafeUtxoOutput[], rs: SafeTransactio
       });
       continue;
     }
-    const ghost = gs[i]
+    const ghost = gs[i];
     if (!ghost) throw new Error('invalid ghost key for normal outptus');
 
     outputs.push({
@@ -304,19 +302,19 @@ export const getAmountForStorage = (extra: Buffer) => {
   const unit = BigNumber(ExtraStoragePriceStep);
   const step = BigNumber(extra.byteLength).dividedToIntegerBy(ExtraSizeStorageStep).plus(1);
   return unit.times(step);
-}
+};
 
 export const getRecipientForStorage = (extra: Buffer) => {
   const amount = getAmountForStorage(extra).toString();
-  const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1))
+  const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1));
   const mixAddress = {
     version: 2,
     xinMembers: [addr],
     uuidMembers: [],
-    threshold: 64
-  } as MixAddress
+    threshold: 64,
+  } as MixAddress;
   return {
     amount,
-    mixAddress
-  } as SafeTransactionRecipient
-}
+    mixAddress,
+  } as SafeTransactionRecipient;
+};

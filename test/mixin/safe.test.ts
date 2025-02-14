@@ -95,13 +95,13 @@ describe('Tests for safe', () => {
     const client = MixinApi();
     const seed = Buffer.alloc(64).fill(1);
 
-    const trace = "9dc60d4c-f301-48ef-97f2-32e9195648cb";
+    const trace = '9dc60d4c-f301-48ef-97f2-32e9195648cb';
     const key = newKeyFromSeed(seed);
-    expect(key.toString('hex')).toBe("4fe2a684e0e6c5e370ca0d89f5e2cb0da1e2ecd4028fa2d395fbca4e33f25805")
+    expect(key.toString('hex')).toBe('4fe2a684e0e6c5e370ca0d89f5e2cb0da1e2ecd4028fa2d395fbca4e33f25805');
     const addr1 = getMainnetAddressFromSeed(seed);
-    expect(addr1).toBe("XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB")
+    expect(addr1).toBe('XINSwYaJPnKiwBWqXm4i3e3My9GKguReMRyB1sRSexeHcQ7V66RWsicAiR2dokcQ5kiJsfY5QbEjTcqRQRCxkEyENBaz4AeB');
     const addr2 = getMainnetAddressFromSeed(Buffer.alloc(64).fill(2));
-    expect(addr2).toBe("XINPDSvrzuxs25wN8pWT7iiDBExA532LbCbUxYLzQboWtca7NKCtPZaphpWWkc98iDPcKkLFT9UHFbXrM5iR5GcTU5tZq4bG")
+    expect(addr2).toBe('XINPDSvrzuxs25wN8pWT7iiDBExA532LbCbUxYLzQboWtca7NKCtPZaphpWWkc98iDPcKkLFT9UHFbXrM5iR5GcTU5tZq4bG');
 
     const rs: SafeTransactionRecipient[] = [
       {
@@ -109,26 +109,26 @@ describe('Tests for safe', () => {
           version: 2,
           xinMembers: [addr1],
           uuidMembers: [],
-          threshold: 64
+          threshold: 64,
         },
-        amount: "0.0001"
+        amount: '0.0001',
       },
       {
         mixAddress: {
           version: 2,
           xinMembers: [addr1, addr2],
           uuidMembers: [],
-          threshold: 64
+          threshold: 64,
         },
-        amount: "0.0001"
-      }
-    ]
+        amount: '0.0001',
+      },
+    ];
 
-    const res = await client.utxo.ghostKey(rs, trace, key.toString('hex'))
+    const res = await client.utxo.ghostKey(rs, trace, key.toString('hex'));
     expect(res).toHaveLength(2);
-    expect(res[0].mask).toBe("8084fd07352c375b70811ff4e107230f8afbe1bdd8cc812c69885d80d11f2bc1")
-    expect(res[0].keys.join(",")).toBe("d12872616e533da045518baabdffd6aa0a17c23f01d82cc1c1e480067aaa5937")
-    expect(res[1].mask).toBe("e6aec07aec6a60d4173784c3b7aaae541edd61dc6b08c1bc23ccdb554d133829")
-    expect(res[1].keys.join(",")).toBe("1c241e7500766edf7b998eaffd25173320d15f74c0a5ebc18ebf9e21bac88ee6,c244a3802638aec132eab23322bf6261b4defd2e3af497d95675270bb3b604e8")
+    expect(res[0].mask).toBe('8084fd07352c375b70811ff4e107230f8afbe1bdd8cc812c69885d80d11f2bc1');
+    expect(res[0].keys.join(',')).toBe('d12872616e533da045518baabdffd6aa0a17c23f01d82cc1c1e480067aaa5937');
+    expect(res[1].mask).toBe('e6aec07aec6a60d4173784c3b7aaae541edd61dc6b08c1bc23ccdb554d133829');
+    expect(res[1].keys.join(',')).toBe('1c241e7500766edf7b998eaffd25173320d15f74c0a5ebc18ebf9e21bac88ee6,c244a3802638aec132eab23322bf6261b4defd2e3af497d95675270bb3b604e8');
   });
 });

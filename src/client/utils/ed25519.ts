@@ -114,7 +114,7 @@ export const getKeyPair = () => {
 export const newKeyFromSeed = (seed: Buffer) => {
   const s = setUniformBytes(seed);
   return Buffer.from(numberToBytesLE(s, 32));
-}
+};
 
 export const edwards25519 = {
   scalar: fn,
