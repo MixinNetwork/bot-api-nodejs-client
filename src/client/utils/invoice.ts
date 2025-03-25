@@ -5,7 +5,8 @@ import { getMixAddressBuffer, getMixAddressStringFromBuffer, parseMixAddress } f
 import { newHash } from './uniq';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
 import { Decoder } from './decoder';
-import { ExtraSizeStorageCapacity, ReferencesCountLimit } from './safe';
+import { ExtraSizeGeneralLimit, ExtraSizeStorageCapacity, estimateStorageCost, ReferencesCountLimit } from './safe';
+import { XINAssetID } from '../../constant';
 
 export const MixinInvoicePrefix = 'MIN';
 export const MixinInvoiceVersion = 0;
@@ -77,6 +78,9 @@ export const newMixinInvoice = (recipient: string) => {
 };
 
 export const attachInvoiceEntry = (invoice: MixinInvoice, entry: InvoiceEntry) => {
+  if (entry.extra.byteLength >= ExtraSizeGeneralLimit) {
+    throw new Error('invalid extra length');
+  }
   if (entry.hash_references.length + entry.index_references.length > ReferencesCountLimit) {
     throw new Error('too many references');
   }
@@ -86,6 +90,25 @@ export const attachInvoiceEntry = (invoice: MixinInvoice, entry: InvoiceEntry) =
     }
   });
   invoice.entries.push(entry);
+};
+
+export const attachStorageEntry = (invoice: MixinInvoice, trace_id: string, extra: Buffer) => {
+  const amount = estimateStorageCost(extra).toString();
+  const entry: InvoiceEntry = {
+    trace_id,
+    asset_id: XINAssetID,
+    amount,
+    extra,
+    index_references: [],
+    hash_references: [],
+  };
+  invoice.entries.push(entry);
+};
+
+export const isStorageEntry = (entry: InvoiceEntry) => {
+  const expect = estimateStorageCost(entry.extra);
+  const actual = BigNumber(entry.amount);
+  return entry.asset_id === XINAssetID && entry.extra.byteLength > ExtraSizeGeneralLimit && expect.comparedTo(actual) === 0;
 };
 
 export const getInvoiceBuffer = (invoice: MixinInvoice) => {

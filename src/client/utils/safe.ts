@@ -226,7 +226,7 @@ export const buildSafeTransaction = (
   if (utxos.length === 0) throw new Error('empty inputs');
   if (extra.byteLength > ExtraSizeGeneralLimit) {
     const r = rs[0];
-    const amount = getAmountForStorage(extra);
+    const amount = estimateStorageCost(extra);
     if (extra.byteLength > ExtraSizeStorageCapacity || 'destination' in r || amount.comparedTo(r.amount) === 1) throw new Error('extra data is too long');
   }
 
@@ -298,14 +298,14 @@ export const signSafeTransaction = (tx: SafeTransaction, views: string[], privat
   return encodeSafeTransaction(tx, signaturesMap);
 };
 
-export const getAmountForStorage = (extra: Buffer) => {
+export const estimateStorageCost = (extra: Buffer) => {
   const unit = BigNumber(ExtraStoragePriceStep);
   const step = BigNumber(extra.byteLength).dividedToIntegerBy(ExtraSizeStorageStep).plus(1);
   return unit.times(step);
 };
 
 export const getRecipientForStorage = (extra: Buffer) => {
-  const amount = getAmountForStorage(extra).toString();
+  const amount = estimateStorageCost(extra).toString();
   const addr = getMainnetAddressFromSeed(Buffer.alloc(64).fill(1));
   const mixAddress = {
     version: 2,
