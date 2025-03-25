@@ -6,3 +6,9 @@ import { UserResponse } from './user';
 import { AuthorizationResponse } from './oauth';
 
 export type CodeResponse = ConversationResponse | MultisigRequestResponse | CollectibleTransactionResponse | PaymentRequestResponse | UserResponse | AuthorizationResponse;
+
+export interface SchemeResponse {
+  type: 'scheme';
+  scheme_id: string;
+  target: string;
+}

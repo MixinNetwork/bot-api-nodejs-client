@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios';
-import type { CodeResponse } from './types/code';
+import type { CodeResponse, SchemeResponse } from './types/code';
 import { buildClient } from './utils/client';
 
 /**
@@ -8,6 +8,8 @@ import { buildClient } from './utils/client';
  */
 export const CodeKeystoreClient = (axiosInstance: AxiosInstance) => ({
   fetch: (codeID: string): Promise<CodeResponse> => axiosInstance.get<unknown, CodeResponse>(`/codes/${codeID}`),
+
+  schemes: (target: string): Promise<SchemeResponse> => axiosInstance.post<unknown, SchemeResponse>(`/schemes`, { target }),
 });
 
 export const CodeClient = buildClient(CodeKeystoreClient);
