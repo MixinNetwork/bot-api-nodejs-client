@@ -18,7 +18,6 @@ export const base64RawURLEncode = (raw: Buffer | Uint8Array | string): string =>
 };
 
 export const base64RawURLDecode = (raw: string | Buffer): Buffer => {
-  let data = raw instanceof Buffer ? raw.toString() : raw;
-  data = data.replaceAll('-', '+').replaceAll('_', '/');
+  const data = raw.toString().replaceAll('-', '+').replaceAll('_', '/');
   return Buffer.from(data, 'base64');
 };
