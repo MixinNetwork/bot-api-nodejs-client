@@ -11,7 +11,7 @@ import { encodeScript } from './multisigs';
 import { blake3Hash, newHash, sha512Hash } from './uniq';
 import { edwards25519 as ed } from './ed25519';
 
-export const ReferencesCountLimit = 2;
+export const ReferencesCountLimit = 16;
 export const ExtraSizeGeneralLimit = 256;
 export const ExtraSizeStorageCapacity = 1024 * 1024 * 4;
 export const ExtraSizeStorageStep = 1024;
