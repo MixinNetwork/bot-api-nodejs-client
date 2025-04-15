@@ -13,7 +13,7 @@ describe('address', () => {
     tmpAddressID = receive.address_id;
   });
   it('read addresses', async () => {
-    const list = await client.address.fetchList(asset_id);
+    const list = await client.address.fetchListOfChain(asset_id);
     const isHave = list.some(item => item.address_id === tmpAddressID);
     expect(isHave).toBeTruthy();
   });

@@ -15,8 +15,11 @@ export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Ke
   /** Get an address by addressID */
   fetch: (addressID: string): Promise<AddressResponse> => axiosInstance.get<unknown, AddressResponse>(`/addresses/${addressID}`),
 
+  /** @deprecated Use fetchListOfChain() instead */
   /** Get a list of withdrawal addresses for the given asset */
   fetchList: (assetID: string): Promise<AddressResponse[]> => axiosInstance.get<unknown, AddressResponse[]>(`/assets/${assetID}/addresses`),
+
+  fetchListOfChain: (chainID: string): Promise<AddressResponse[]> => axiosInstance.get<unknown, AddressResponse[]>(`/safe/addresses?chain=${chainID}`),
 
   /** Create a new withdrawal address */
   create: (pin: string, params: AddressRequest): Promise<AddressResponse> => {
