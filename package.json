@@ -91,7 +91,7 @@
     "@noble/curves": "^1.2.0",
     "@noble/hashes": "^1.5.0",
     "axios": "1.8.2",
-    "axios-retry": "3.4.0",
+    "axios-retry": "4.5.0",
     "bignumber.js": "^9.1.2",
     "bs58": "^5.0.0",
     "int64-buffer": "^1.0.1",
