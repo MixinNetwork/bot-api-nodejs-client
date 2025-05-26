@@ -89,7 +89,7 @@ importers:
         version: 2.3.5
       '@types/node':
         specifier: ^22.15.3
-        version: 22.15.3
+        version: 22.15.21
       '@types/node-forge':
         specifier: ^1.3.8
         version: 1.3.11
@@ -149,7 +149,7 @@ importers:
         version: 11.2.0
       tsdx:
         specifier: ^0.14.1
-        version: 0.14.1(@types/babel__core@7.20.5)(@types/node@22.15.3)(eslint-import-resolver-typescript@4.3.4)
+        version: 0.14.1(@types/babel__core@7.20.5)(@types/node@22.15.21)(eslint-import-resolver-typescript@4.3.4)
       tslib:
         specifier: ^2.4.0
         version: 2.8.1
@@ -1254,8 +1254,8 @@ packages:
   '@types/node-forge@1.3.11':
     resolution: {integrity: sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==}
 
-  '@types/node@22.15.3':
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
+  '@types/node@22.15.21':
+    resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -5907,7 +5907,10 @@ snapshots:
       jest-runner: 25.5.4
       jest-runtime: 25.5.4
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - utf-8-validate
 
   '@jest/transform@25.5.1':
     dependencies:
@@ -5942,7 +5945,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -6117,7 +6120,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -6158,9 +6161,9 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
-  '@types/node@22.15.3':
+  '@types/node@22.15.21':
     dependencies:
       undici-types: 6.21.0
 
@@ -6178,7 +6181,7 @@ snapshots:
 
   '@types/resolve@1.17.1':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
   '@types/semver@7.5.8': {}
 
@@ -6192,7 +6195,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -8667,7 +8670,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -9513,13 +9516,13 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
-  rollup-plugin-sourcemaps@0.6.3(@types/node@22.15.3)(rollup@1.32.1):
+  rollup-plugin-sourcemaps@0.6.3(@types/node@22.15.21)(rollup@1.32.1):
     dependencies:
       '@rollup/pluginutils': 3.1.0(rollup@1.32.1)
       rollup: 1.32.1
       source-map-resolve: 0.6.0
     optionalDependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
   rollup-plugin-terser@5.3.1(rollup@1.32.1):
     dependencies:
@@ -9547,7 +9550,7 @@ snapshots:
   rollup@1.32.1:
     dependencies:
       '@types/estree': 1.0.6
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
       acorn: 7.4.1
 
   rsvp@4.8.5: {}
@@ -10064,7 +10067,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdx@0.14.1(@types/babel__core@7.20.5)(@types/node@22.15.3)(eslint-import-resolver-typescript@4.3.4):
+  tsdx@0.14.1(@types/babel__core@7.20.5)(@types/node@22.15.21)(eslint-import-resolver-typescript@4.3.4):
     dependencies:
       '@babel/core': 7.23.7
       '@babel/helper-module-imports': 7.22.15
@@ -10112,7 +10115,7 @@ snapshots:
       progress-estimator: 0.2.2
       regenerator-runtime: 0.13.11
       rollup: 1.32.1
-      rollup-plugin-sourcemaps: 0.6.3(@types/node@22.15.3)(rollup@1.32.1)
+      rollup-plugin-sourcemaps: 0.6.3(@types/node@22.15.21)(rollup@1.32.1)
       rollup-plugin-terser: 5.3.1(rollup@1.32.1)
       rollup-plugin-typescript2: 0.27.3(rollup@1.32.1)(typescript@3.9.10)
       sade: 1.8.1
