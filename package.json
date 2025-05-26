@@ -101,7 +101,7 @@
     "nano-seconds": "^1.2.2",
     "pako": "^2.0.4",
     "serialize-javascript": "^6.0.0",
-    "uuid": "^9.0.0",
+    "uuid": "^11.1.0",
     "ws": "^8.7.0"
   },
   "directories": {

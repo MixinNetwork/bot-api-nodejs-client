@@ -51,8 +51,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.2
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.1.0
+        version: 11.1.0
       ws:
         specifier: ^8.7.0
         version: 8.18.2
@@ -4652,13 +4652,13 @@ packages:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
 
+  uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
-    hasBin: true
-
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
   v8-compile-cache@2.4.0:
@@ -5907,7 +5907,10 @@ snapshots:
       jest-runner: 25.5.4
       jest-runtime: 25.5.4
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - utf-8-validate
 
   '@jest/transform@25.5.1':
     dependencies:
@@ -10285,9 +10288,9 @@ snapshots:
 
   use@3.1.1: {}
 
-  uuid@3.4.0: {}
+  uuid@11.1.0: {}
 
-  uuid@9.0.1: {}
+  uuid@3.4.0: {}
 
   v8-compile-cache@2.4.0: {}
 
