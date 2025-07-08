@@ -137,13 +137,13 @@ importers:
         version: 27.9.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(typescript@4.9.5))(eslint@8.57.1)(jest@25.5.4)(typescript@4.9.5)
       eslint-plugin-prettier:
         specifier: ^5.2.6
-        version: 5.4.0(@types/eslint@8.56.12)(eslint-config-prettier@10.1.5(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.3)
+        version: 5.4.0(@types/eslint@8.56.12)(eslint-config-prettier@10.1.5(eslint@8.57.1))(eslint@8.57.1)(prettier@3.6.2)
       node-forge:
         specifier: ^1.3.1
         version: 1.3.1
       prettier:
         specifier: ^3.3.3
-        version: 3.5.3
+        version: 3.6.2
       size-limit:
         specifier: 11.2.0
         version: 11.2.0
@@ -3863,8 +3863,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  prettier@3.5.3:
-    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+  prettier@3.6.2:
+    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -6197,7 +6197,7 @@ snapshots:
 
   '@types/prettier@3.0.0':
     dependencies:
-      prettier: 3.5.3
+      prettier: 3.6.2
 
   '@types/resolve@1.17.1':
     dependencies:
@@ -7493,10 +7493,10 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 6.15.0(eslint@6.8.0)
 
-  eslint-plugin-prettier@5.4.0(@types/eslint@8.56.12)(eslint-config-prettier@10.1.5(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.3):
+  eslint-plugin-prettier@5.4.0(@types/eslint@8.56.12)(eslint-config-prettier@10.1.5(eslint@8.57.1))(eslint@8.57.1)(prettier@3.6.2):
     dependencies:
       eslint: 8.57.1
-      prettier: 3.5.3
+      prettier: 3.6.2
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.4
     optionalDependencies:
@@ -9328,7 +9328,7 @@ snapshots:
 
   prettier@1.19.1: {}
 
-  prettier@3.5.3: {}
+  prettier@3.6.2: {}
 
   pretty-format@25.5.0:
     dependencies:
