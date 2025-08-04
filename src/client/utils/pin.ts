@@ -69,6 +69,11 @@ export const getVerifyPinTipBody = (timestamp: number) => {
   return Buffer.from(msg);
 };
 
+export const getOwnershipTransferTipBody = (user_id: string) => {
+  const msg = `TIP:APP:OWNERSHIP:TRANSFER:${user_id}`;
+  return sha256Hash(Buffer.from(msg));
+};
+
 export const signTipBody = (pin: string, msg: Buffer) => {
   const signData = Buffer.from(ed25519.sign(msg, pin));
   return signData.toString('hex');

@@ -19,9 +19,9 @@ export interface UtxoOutput {
 }
 
 export interface KernelDeposit {
-	chain: string;
-	deposit_hash: string;
-	deposit_index: number;
+  chain: string;
+  deposit_hash: string;
+  deposit_index: number;
 }
 
 export interface SafeUtxoOutput extends UtxoOutput {

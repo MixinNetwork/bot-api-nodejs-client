@@ -26,7 +26,7 @@ import { SafeKeystoreClient } from './safe';
 
 const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
-  app: AppKeystoreClient(axiosInstance),
+  app: AppKeystoreClient(axiosInstance, keystore),
   asset: AssetKeystoreClient(axiosInstance),
   blaze: BlazeKeystoreClient(keystore, config.blazeOptions),
   attachment: AttachmentKeystoreClient(axiosInstance),

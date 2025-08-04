@@ -10,7 +10,9 @@ import type {
   AppSecretResponse,
   AppBillingResponse,
 } from './types/app';
+import { Keystore } from './types';
 import { buildClient } from './utils/client';
+import { getOwnershipTransferTipBody, signEd25519PIN, signTipBody } from './utils';
 
 // TODO add app api for developer document
 /**
@@ -20,7 +22,7 @@ import { buildClient } from './utils/client';
  * * Each Mixin user can only create two free apps
  * https://developers.mixin.one/
  */
-export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
+export const AppKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   /** Get information of current user's a specific app */
   fetch: (appID: string): Promise<AppResponse> => axiosInstance.get<unknown, AppResponse>(`/apps/${appID}`),
 
@@ -74,6 +76,19 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance) => ({
 
   /** Removing from your share list */
   unfavorite: (appID: string): Promise<any> => axiosInstance.post<unknown, any>(`/apps/${appID}/unfavorite`),
+
+  // Migrate app to receiver id with the keystore of this app
+  // pin is the spend private key of this app
+  migrate: (pin: string, receiverID: string) => {
+    if (!keystore) throw new Error('invalid keystore to migrate app');
+    const msg = getOwnershipTransferTipBody(receiverID);
+    const signedTipPin = signTipBody(pin, msg);
+    const pin_base64 = signEd25519PIN(signedTipPin, keystore);
+    return axiosInstance.post<unknown, AppResponse>(`/apps/${keystore.app_id}/transfer`, {
+      pin_base64,
+      user_id: receiverID,
+    });
+  },
 });
 
 export const AppClient = buildClient(AppKeystoreClient);
