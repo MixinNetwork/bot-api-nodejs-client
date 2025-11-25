@@ -125,5 +125,23 @@ export const WebViewApi = () => {
           break;
       }
     },
+
+    signBotSignature: (appId: string, reloadPublicKey: boolean, method: string, path: string, body: string, callbackFunction: string) => {
+      switch (getMixinContext().platform) {
+        case 'iOS':
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.signBotSignature) {
+            window.webkit.messageHandlers.signBotSignature.postMessage([appId, reloadPublicKey, method, path, body, callbackFunction]);
+          }
+          break;
+        case 'Android':
+        case 'Desktop':
+          if (window.MixinContext && typeof window.MixinContext.signBotSignature === 'function') {
+            window.MixinContext.signBotSignature([appId, reloadPublicKey, method, path, body, callbackFunction]);
+          }
+          break;
+        default:
+          break;
+      }
+    },
   };
 };

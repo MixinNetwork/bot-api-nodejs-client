@@ -25,6 +25,7 @@ export interface Messengers {
   getAssets: (assets: string[], globalCallBackFuncName: string) => void;
   getTipAddress: (chainId: string, globalCallBackFuncName: string) => void;
   tipSign: (chainId: string, message: string, globalCallBackFuncName: string) => void;
+  signBotSignature: (args: [string, boolean, string, string, string, string]) => void;
 }
 
 declare global {
@@ -37,7 +38,8 @@ declare global {
         close?: { postMessage: Messengers['close'] };
         getAssets?: { postMessage: ([params, globalCallBackFuncName]: [string[], string]) => void };
         getTipAddress?: { postMessage: ([chainId, globalCallBackFuncName]: [string, string]) => void };
-        tipSign?: { postMessage: ([chainId, message, globalCallBackFuncName]: [string, string, string]) => void };
+        tipSign?: { postMessage: ([chainId, message, globalCallBackFuncName]: [string, string, string]) => void };        
+        signBotSignature?: { postMessage: ([appId, reloadPublicKey, method, path, body, callbackFunctionName]: [string, boolean, string, string, string, string]) => void };
       };
     };
     MixinContext?: {
@@ -48,6 +50,7 @@ declare global {
       getAssets?: Messengers['getAssets'];
       getTipAddress?: Messengers['getTipAddress'];
       tipSign?: Messengers['tipSign'];
+      signBotSignature: Messengers['signBotSignature'];
     };
     assetsCallbackFunction?: (res: string) => void;
     tipAddressCallbackFunction?: (address: string) => void;
