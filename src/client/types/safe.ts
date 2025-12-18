@@ -105,4 +105,5 @@ export interface SafeWithdrawalFee {
   type: 'withdrawal_fee';
   amount: string;
   asset_id: string;
+  priority: number;
 }
