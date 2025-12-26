@@ -107,3 +107,33 @@ export interface SafeWithdrawalFee {
   asset_id: string;
   priority: number;
 }
+
+export interface SafeCollection {
+  asset_key: string;
+  collection_hash: string;
+  description: string;
+  icon_url: string;
+  kernel_asset_id: string;
+  minimum_price: string;
+  name: string;
+  supply: string;
+  symbol: string;
+  type: string;
+  unit: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SafeCollectible {
+  collection_hash: string;
+  content_type: string;
+  content_url: string;
+  inscription_hash: string;
+  occupied_by: string;
+  owner: string;
+  recipient: string;
+  sequence: number;
+  type: string;
+  created_at: string;
+  updated_at: string;
+}

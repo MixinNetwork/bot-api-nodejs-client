@@ -7,6 +7,8 @@ import type {
   SafeDepositEntryResponse,
   SafePendingDepositRequest,
   SafePendingDepositResponse,
+  SafeCollection,
+  SafeCollectible,
   SafeSnapshot,
   SafeSnapshotsRequest,
   SafeWithdrawalFee,
@@ -48,6 +50,15 @@ export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
     }),
 
   fetchSafeSnapshot: (id: string): Promise<SafeSnapshot> => axiosInstance.get<unknown, SafeSnapshot>(`/safe/snapshots/${id}`),
+
+  fetchInscriptionCollection: (collectionHash: string): Promise<SafeCollection> => axiosInstance.get<unknown, SafeCollection>(`/safe/inscriptions/collections/${collectionHash}`),
+
+  fetchInscriptionItem: (inscriptionHash: string): Promise<SafeCollectible> => axiosInstance.get<unknown, SafeCollectible>(`/safe/inscriptions/items/${inscriptionHash}`),
+
+  fetchInscriptionItems: (collectionHash: string, offset?: number): Promise<SafeCollectible[]> =>
+    axiosInstance.get<unknown, SafeCollectible[]>(`/safe/inscriptions/collections/${collectionHash}/items`, {
+      params: offset && offset > 0 ? { offset } : undefined,
+    }),
 });
 export const SafeClient = buildClient(SafeKeystoreClient);
 
