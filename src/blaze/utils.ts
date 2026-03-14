@@ -54,7 +54,7 @@ export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageV
 
     try {
       msgObj.data.data = JSON.parse(msgObj.data.data);
-    } catch (e) {
+    } catch {
       // ignore error
     }
   }

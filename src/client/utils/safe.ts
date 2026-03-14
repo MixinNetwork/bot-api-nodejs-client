@@ -1,6 +1,6 @@
 import { validate, v4 } from 'uuid';
 import BigNumber from 'bignumber.js';
-import { ed25519 } from '@noble/curves/ed25519';
+import { ed25519 } from '@noble/curves/ed25519.js';
 import type { Input, Output, GhostKey, PaymentParams, SafeTransaction, SafeTransactionRecipient, SafeUtxoOutput, MixAddress } from '../types';
 import { Encoder, magic } from './encoder';
 import { Decoder } from './decoder';
@@ -67,14 +67,14 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
 };
 
 export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
-  const public_key = Buffer.from(ed25519.getPublicKey(privateKey)).toString('hex');
+  const public_key = Buffer.from(ed25519.getPublicKey(new Uint8Array(privateKey))).toString('hex');
 
   const hash = newHash(Buffer.from(user_id));
-  let signData = ed25519.sign(hash, privateKey);
+  let signData = ed25519.sign(new Uint8Array(hash), new Uint8Array(privateKey));
   const signature = base64RawURLEncode(signData);
 
   const tipBody = TIPBodyForSequencerRegister(user_id, public_key);
-  signData = ed25519.sign(tipBody, tipPin);
+  signData = ed25519.sign(new Uint8Array(tipBody), Buffer.from(tipPin, 'hex'));
 
   return {
     public_key,
@@ -88,8 +88,7 @@ export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: num
   const p1 = ed.newPoint(B);
   const p2 = ed.scalarBaseMultToPoint(x);
   const p4 = p1.add(p2);
-  // @ts-ignore
-  return Buffer.from(p4.toRawBytes());
+  return Buffer.from(p4.toBytes());
 };
 
 export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {

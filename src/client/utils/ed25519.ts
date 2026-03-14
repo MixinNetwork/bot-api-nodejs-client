@@ -1,13 +1,13 @@
-import { ed25519, edwardsToMontgomery, edwardsToMontgomeryPriv, x25519 } from '@noble/curves/ed25519';
-import { Field } from '@noble/curves/abstract/modular';
-import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/abstract/utils';
-import { randomBytes } from '@noble/hashes/utils';
+import { ed25519, x25519 } from '@noble/curves/ed25519.js';
+import { numberToBytesLE, bytesToNumberLE } from '@noble/curves/utils.js';
+import { randomBytes } from '@noble/hashes/utils.js';
 import { blake3Hash, sha512Hash } from './uniq';
 import { putUvarInt } from './encoder';
 
 const scMinusOne = Buffer.from('ecd3f55c1a631258d69cf7a2def9de1400000000000000000000000000000010', 'hex');
-const base = ed25519.ExtendedPoint.fromHex('5866666666666666666666666666666666666666666666666666666666666666');
-const fn = Field(ed25519.CURVE.n, undefined, true);
+const base = ed25519.Point.BASE;
+const fn = ed25519.Point.Fn;
+const toBytes = (data: Buffer | Uint8Array) => new Uint8Array(data);
 
 const isReduced = (x: Buffer) => {
   for (let i = x.byteLength - 1; i >= 0; i--) {
@@ -24,7 +24,7 @@ const setBytesWithClamping = (x: Buffer) => {
   wideBytes[0] &= 248;
   wideBytes[31] &= 63;
   wideBytes[31] |= 64;
-  const m = fn.create(bytesToNumberLE(wideBytes.subarray(0, 32)));
+  const m = fn.create(bytesToNumberLE(toBytes(wideBytes.subarray(0, 32))));
   return m;
 };
 
@@ -32,21 +32,20 @@ const setUniformBytes = (x: Buffer) => {
   if (x.byteLength !== 64) throw new Error('edwards25519: invalid setUniformBytes input length');
   const wideBytes = Buffer.alloc(64);
   x.copy(wideBytes);
-  const m = fn.create(bytesToNumberLE(wideBytes));
+  const m = fn.create(bytesToNumberLE(toBytes(wideBytes)));
   return m;
 };
 
 const setCanonicalBytes = (x: Buffer) => {
   if (x.byteLength !== 32) throw new Error('invalid scalar length');
   if (!isReduced(x)) throw new Error('invalid scalar encoding');
-  const s = fn.create(bytesToNumberLE(x));
+  const s = fn.create(bytesToNumberLE(toBytes(x)));
   return s;
 };
 
 const scalarBaseMult = (x: bigint) => {
   const res = base.multiply(x);
-  // @ts-ignore
-  return Buffer.from(res.toRawBytes());
+  return Buffer.from(res.toBytes());
 };
 
 const scalarBaseMultToPoint = (x: bigint) => base.multiply(x);
@@ -73,14 +72,13 @@ export const sign = (msg: Buffer, key: Buffer) => {
   return Buffer.concat([r, s]);
 };
 
-const newPoint = (x: Buffer) => ed25519.ExtendedPoint.fromHex(x.toString('hex'));
+const newPoint = (x: Buffer) => ed25519.Point.fromBytes(toBytes(x));
 
 const keyMultPubPriv = (pub: Buffer, priv: Buffer) => {
   const q = newPoint(pub);
   const x = setCanonicalBytes(priv);
   const res = q.multiply(x);
-  // @ts-ignore
-  return Buffer.from(res.toRawBytes());
+  return Buffer.from(res.toBytes());
 };
 
 const hashScalar = (k: Buffer, index: number) => {
@@ -99,11 +97,11 @@ const hashScalar = (k: Buffer, index: number) => {
   return setUniformBytes(src);
 };
 
-export const getRandomBytes = (len?: number) => Buffer.from(randomBytes(len ?? ed25519.CURVE.Fp.BYTES));
+export const getRandomBytes = (len?: number) => Buffer.from(randomBytes(len ?? ed25519.Point.Fp.BYTES));
 
 export const getKeyPair = () => {
   const seed = getRandomBytes();
-  const publicKey = Buffer.from(ed25519.getPublicKey(seed));
+  const publicKey = Buffer.from(ed25519.getPublicKey(toBytes(seed)));
   return {
     privateKey: Buffer.concat([seed, publicKey]),
     publicKey,
@@ -119,8 +117,8 @@ export const newKeyFromSeed = (seed: Buffer) => {
 export const edwards25519 = {
   scalar: fn,
   x25519,
-  edwardsToMontgomery,
-  edwardsToMontgomeryPriv,
+  edwardsToMontgomery: (point: Buffer) => Buffer.from(ed25519.utils.toMontgomery(toBytes(point))),
+  edwardsToMontgomeryPriv: (secret: Buffer) => Buffer.from(ed25519.utils.toMontgomerySecret(toBytes(secret))),
 
   setBytesWithClamping,
   setCanonicalBytes,

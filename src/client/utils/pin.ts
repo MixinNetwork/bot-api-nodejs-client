@@ -1,7 +1,7 @@
 // @ts-ignore
 import { now as nanonow } from 'nano-seconds';
-import { ed25519 } from '@noble/curves/ed25519';
-import { cbc } from '@noble/ciphers/aes';
+import { ed25519 } from '@noble/curves/ed25519.js';
+import { cbc } from '@noble/ciphers/aes.js';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import type { Keystore, AppKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLDecode, base64RawURLEncode } from './base64';
@@ -17,7 +17,7 @@ export const getNanoTime = () => {
 export const sharedEd25519Key = (keystore: AppKeystore | NetworkUserKeystore) => {
   const pub = 'server_public_key' in keystore ? ed.edwardsToMontgomery(Buffer.from(keystore.server_public_key, 'hex')) : base64RawURLDecode(keystore.pin_token_base64);
   const pri = ed.edwardsToMontgomeryPriv(Buffer.from(keystore.session_private_key, 'hex'));
-  return ed.x25519.getSharedSecret(pri, pub);
+  return Buffer.from(ed.x25519.getSharedSecret(new Uint8Array(pri), new Uint8Array(pub)));
 };
 
 export const getTipPinUpdateMsg = (pub: Buffer, counter: number) => {
@@ -75,6 +75,6 @@ export const getOwnershipTransferTipBody = (user_id: string) => {
 };
 
 export const signTipBody = (pin: string, msg: Buffer) => {
-  const signData = Buffer.from(ed25519.sign(msg, pin));
+  const signData = Buffer.from(ed25519.sign(new Uint8Array(msg), Buffer.from(pin, 'hex')));
   return signData.toString('hex');
 };

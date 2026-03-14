@@ -1,5 +1,5 @@
 import serialize from 'serialize-javascript';
-import { ed25519 } from '@noble/curves/ed25519';
+import { ed25519 } from '@noble/curves/ed25519.js';
 import { validate } from 'uuid';
 import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
@@ -20,7 +20,7 @@ export const signToken = (payload: Object, private_key: string): string => {
   const payloadStr = base64RawURLEncode(serialize(payload));
   const result = [header, payloadStr];
 
-  const signData = ed25519.sign(Buffer.from(result.join('.')), private_key);
+  const signData = ed25519.sign(new Uint8Array(Buffer.from(result.join('.'))), Buffer.from(private_key, 'hex'));
   const sign = base64RawURLEncode(signData);
   result.push(sign);
   return result.join('.');

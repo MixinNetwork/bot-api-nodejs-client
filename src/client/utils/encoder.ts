@@ -224,7 +224,7 @@ export class Encoder {
 
     const masks = Buffer.alloc((((max / 8) | 0) + 1) | 0);
     js.signers.forEach(m => {
-      masks[(m / 8) | 0] ^= 1 << (m % 8 | 0);
+      masks[(m / 8) | 0] ^= 1 << ((m % 8) | 0);
     });
     this.write(Buffer.from([0x00]));
     this.writeInt(masks.length);
