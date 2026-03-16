@@ -1,6 +1,6 @@
 import { pki, util, cipher, md } from 'node-forge';
-import { ed25519 } from '@noble/curves/ed25519';
-import { cbc } from '@noble/ciphers/aes';
+import { ed25519 } from '@noble/curves/ed25519.js';
+import { cbc } from '@noble/ciphers/aes.js';
 import { Uint64LE as Uint64 } from 'int64-buffer';
 import { v4, stringify } from 'uuid';
 import { getKeyPair, getRandomBytes, sharedEd25519Key, getNanoTime, sha256Hash, uniqueConversationID } from '../src';

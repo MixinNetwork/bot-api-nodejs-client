@@ -1,8 +1,10 @@
 const nodeCrypto = require('crypto');
 
-// @ts-ignore
-window.crypto = {
-  getRandomValues: function (buffer) {
-    return nodeCrypto.randomFillSync(buffer);
+Object.defineProperty(globalThis, 'crypto', {
+  configurable: true,
+  value: nodeCrypto.webcrypto ?? {
+    getRandomValues(buffer) {
+      return nodeCrypto.randomFillSync(buffer);
+    },
   },
-};
+});
