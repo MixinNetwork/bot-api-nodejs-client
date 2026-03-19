@@ -8,9 +8,6 @@ import type { RequestConfig } from './types/client';
 import { ResponseError } from './error';
 import { signAccessToken } from './utils/auth';
 
-axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.defaults.headers.put['Content-Type'] = 'application/json';
-axios.defaults.headers.patch['Content-Type'] = 'application/json';
 export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
   const timeout = config?.timeout || 3000;
   const retries = config?.retry || 5;
@@ -19,6 +16,12 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
     baseURL: 'https://api.mixin.one',
     timeout,
     ...config,
+    headers: {
+      post: { 'Content-Type': 'application/json' },
+      put: { 'Content-Type': 'application/json' },
+      patch: { 'Content-Type': 'application/json' },
+      ...(config?.headers ?? {}),
+    },
   });
 
   ins.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -60,5 +63,3 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
 
   return ins;
 }
-
-export const mixinRequest = http();

@@ -25,6 +25,5 @@ export { UserClient } from './user';
 export { UtxoClient } from './utxo';
 
 export * from './mixin-client';
-export { mixinRequest } from './http';
 export { ResponseError } from './error';
 export * from './utils';
