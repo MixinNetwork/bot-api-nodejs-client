@@ -2,7 +2,6 @@ export * from './address';
 export * from './app';
 export * from './asset';
 export * from './attachment';
-export * from '../../blaze/type';
 export * from './circle';
 export * from './client';
 export * from './code';
