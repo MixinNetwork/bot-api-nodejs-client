@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "start": "bunchee --watch --runtime node --format cjs --output dist/index.js",
-    "build": "rm -rf dist && bunchee --runtime node --format cjs --output dist/index.js && bunchee --runtime browser --format esm --output dist/mixin-node-sdk.esm.js --no-clean && bunchee --runtime browser --format cjs --output dist/mixin-node-sdk.cjs.production.min.js --minify --no-clean --no-dts",
+    "build": "rm -rf dist && bunchee --runtime node --format cjs --output dist/index.js && bunchee --runtime browser --format esm --output dist/mixin-node-sdk.esm.js --no-clean --no-dts && bunchee --runtime browser --format cjs --output dist/mixin-node-sdk.cjs.production.min.js --minify --no-clean --no-dts",
     "build:umd": "bunchee --runtime browser --format umd --output dist/mixin-node-sdk.umd.js",
     "test": "vitest run",
     "test:watch": "vitest",
