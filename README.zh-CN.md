@@ -47,7 +47,7 @@ async function getMe() {
 2. 使用 Mixin 的消息功能
 
 ```js
-const { MixinApi } = require('@mixin.dev/mixin-node-sdk');
+const { BlazeKeystoreClient } = require('@mixin.dev/mixin-node-sdk/blaze');
 
 const keystore = {
   app_id: '',
@@ -55,16 +55,13 @@ const keystore = {
   server_public_key: '',
   session_private_key: '',
 };
-const config = {
-  keystore,
-  blazeOptions: {
-    parse: true,
-    syncAck: true,
-  },
+const config = blazeOptions: {
+  parse: true,
+  syncAck: true,
 };
 
-const client = MixinApi(config);
-client.blaze.loop({
+const client = BlazeKeystoreClient(keystore, config);
+client.loop({
   onMessage(msg) {
     console.log(msg);
   },
