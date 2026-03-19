@@ -1,7 +1,8 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
 import type Keystore from '../client/types/keystore';
-import type { BlazeHandler, BlazeOptions, MessageView, BlazeMessage } from '../client/types';
+import type { MessageView } from '../client/types/message';
+import type { BlazeHandler, BlazeOptions, BlazeMessage } from './type';
 import { signAccessToken } from '../client/utils/auth';
 
 type PakoModule = typeof import('pako');
