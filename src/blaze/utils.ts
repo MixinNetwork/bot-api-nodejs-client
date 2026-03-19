@@ -1,9 +1,17 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
-import { gzip, ungzip } from 'pako';
 import type Keystore from '../client/types/keystore';
 import type { BlazeHandler, BlazeOptions, MessageView, BlazeMessage } from '../client/types';
-import { signAccessToken } from '../client/utils';
+import { signAccessToken } from '../client/utils/auth';
+
+type PakoModule = typeof import('pako');
+
+let pakoPromise: Promise<PakoModule> | undefined;
+
+const loadPako = async (): Promise<PakoModule> => {
+  if (!pakoPromise) pakoPromise = import('pako');
+  return pakoPromise;
+};
 
 export function websocket(
   keystore: Keystore | undefined,
@@ -24,7 +32,7 @@ export function websocket(
   });
 
   ws.onmessage = async event => {
-    const msg = decodeMessage(event.data as Uint8Array, option);
+    const msg = await decodeMessage(event.data as Uint8Array, option);
     if (!msg) return;
 
     if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && handler.onAckReceipt) await handler.onAckReceipt(msg);
@@ -45,7 +53,8 @@ export function websocket(
   return ws;
 }
 
-export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageView => {
+export const decodeMessage = async (data: Uint8Array, options: BlazeOptions): Promise<MessageView> => {
+  const { ungzip } = await loadPako();
   const t = ungzip(data, { to: 'string' });
   const msgObj = JSON.parse(t);
 
@@ -62,8 +71,10 @@ export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageV
   return msgObj.data;
 };
 
-export const sendRaw = (ws: WebSocket, message: BlazeMessage): Promise<boolean> =>
-  new Promise(resolve => {
+export const sendRaw = async (ws: WebSocket, message: BlazeMessage): Promise<boolean> => {
+  const { gzip } = await loadPako();
+
+  return new Promise(resolve => {
     const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
     const zipped = gzip(buffer);
     if (ws.readyState === WebSocket.OPEN) {
@@ -79,3 +90,4 @@ export const sendRaw = (ws: WebSocket, message: BlazeMessage): Promise<boolean> 
     }
     resolve(false);
   });
+};

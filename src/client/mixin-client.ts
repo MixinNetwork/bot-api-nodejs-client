@@ -20,15 +20,13 @@ import { PaymentBaseClient } from './payment';
 import { PinKeystoreClient } from './pin';
 import { TransferKeystoreClient } from './transfer';
 import { UserKeystoreClient } from './user';
-import { BlazeKeystoreClient } from '../blaze/client';
 import { UtxoKeystoreClient } from './utxo';
 import { SafeKeystoreClient } from './safe';
 
-const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, config: HTTPConfig) => ({
+const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined, _: HTTPConfig) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
   app: AppKeystoreClient(axiosInstance, keystore),
   asset: AssetKeystoreClient(axiosInstance),
-  blaze: BlazeKeystoreClient(keystore, config.blazeOptions),
   attachment: AttachmentKeystoreClient(axiosInstance),
   circle: CircleKeystoreClient(axiosInstance),
   code: CodeKeystoreClient(axiosInstance),
