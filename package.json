@@ -5,6 +5,21 @@
   "description": "Mixin SDK for Node.js and Javascript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mixin-node-sdk.esm.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./blaze": {
+      "types": "./dist/blaze/index.d.ts",
+      "import": "./dist/blaze/index.mjs",
+      "require": "./dist/blaze/index.js",
+      "default": "./dist/blaze/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "src"
@@ -28,8 +43,8 @@
     "js"
   ],
   "scripts": {
-    "start": "bunchee --watch --runtime node --format cjs --output dist/index.js",
-    "build": "rm -rf dist && bunchee --runtime node --format cjs --output dist/index.js && bunchee --runtime browser --format esm --output dist/mixin-node-sdk.esm.js --no-clean --no-dts && bunchee --runtime browser --format cjs --output dist/mixin-node-sdk.cjs.production.min.js --minify --no-clean --no-dts",
+    "start": "bunchee --watch",
+    "build": "rm -rf dist && bunchee && esbuild dist/index.js --minify --format=cjs --outfile=dist/mixin-node-sdk.cjs.production.min.js",
     "build:umd": "bunchee --runtime browser --format umd --output dist/mixin-node-sdk.umd.js",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -40,14 +55,14 @@
     "analyze": "size-limit --why"
   },
   "author": "contact@mixin.one",
-  "module": "dist/mixin-node-sdk.esm.js",
+  "module": "dist/mixin-node-sdk.esm.mjs",
   "size-limit": [
     {
       "path": "dist/mixin-node-sdk.cjs.production.min.js",
       "limit": "90 KB"
     },
     {
-      "path": "dist/mixin-node-sdk.esm.js",
+      "path": "dist/mixin-node-sdk.esm.mjs",
       "limit": "75 KB"
     }
   ],
