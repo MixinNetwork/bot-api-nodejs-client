@@ -1,8 +1,9 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import type { Keystore } from './keystore';
 
-export interface RequestConfig
-  extends Partial<Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>> {
+export interface RequestConfig extends Partial<
+  Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>
+> {
   responseCallback?: (rep: unknown) => void; // deprecated
   errorMap?: (error: any) => void;
   retry?: number;
