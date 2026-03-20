@@ -1,9 +1,9 @@
 const { MixinApi } = require('..');
-const mb = require('../dist/blaze');
+const { BlazeKeystoreClient } = require('../dist/blaze');
 const keystore = require('../keystore.json'); // keystore from your bot
 
 const client = MixinApi({ keystore });
-const blaze = mb.BlazeKeystoreClient(keystore, {
+const blaze = BlazeKeystoreClient(keystore, {
   parse: true, // parse the message content by sdk
   syncAck: true, // automatically send read status after receiving message
 });
