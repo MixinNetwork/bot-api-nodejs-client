@@ -47,7 +47,7 @@
   ],
   "scripts": {
     "start": "bunchee --watch",
-    "build": "rm -rf dist && bunchee && esbuild dist/index.js --minify --format=cjs --outfile=dist/mixin-node-sdk.cjs.production.min.js",
+    "build": "rm -rf dist && bunchee",
     "build:umd": "bunchee --runtime browser --format umd --output dist/mixin-node-sdk.umd.js",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -61,12 +61,12 @@
   "module": "dist/mixin-node-sdk.esm.mjs",
   "size-limit": [
     {
-      "path": "dist/mixin-node-sdk.cjs.production.min.js",
-      "limit": "90 KB"
+      "path": "dist/index.js",
+      "limit": "80 KB"
     },
     {
       "path": "dist/mixin-node-sdk.esm.mjs",
-      "limit": "75 KB"
+      "limit": "65 KB"
     }
   ],
   "devDependencies": {
