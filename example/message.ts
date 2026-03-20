@@ -7,7 +7,7 @@ const main = async () => {
 
   const client = MixinApi({ keystore });
 
-  const conv = await client.conversation.createContact("opponent-id")
+  const conv = await client.conversation.createContact('opponent-id');
 
   const resp = await client.message.sendLegacy({
     conversation_id: conv.conversation_id,

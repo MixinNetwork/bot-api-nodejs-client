@@ -1,17 +1,9 @@
 import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
+import { gzip, ungzip } from 'pako';
 import type Keystore from '../client/types/keystore';
 import type { MessageView, BlazeHandler, BlazeOptions, BlazeMessage } from './type';
 import { signAccessToken } from '../client/utils/auth';
-
-type PakoModule = typeof import('pako');
-
-let pakoPromise: Promise<PakoModule> | undefined;
-
-const loadPako = async (): Promise<PakoModule> => {
-  if (!pakoPromise) pakoPromise = import('pako');
-  return pakoPromise;
-};
 
 export function websocket(
   keystore: Keystore | undefined,
@@ -54,7 +46,6 @@ export function websocket(
 }
 
 export const decodeMessage = async (data: Uint8Array, options: BlazeOptions): Promise<MessageView> => {
-  const { ungzip } = await loadPako();
   const t = ungzip(data, { to: 'string' });
   const msgObj = JSON.parse(t);
 
@@ -72,8 +63,6 @@ export const decodeMessage = async (data: Uint8Array, options: BlazeOptions): Pr
 };
 
 export const sendRaw = async (ws: WebSocket, message: BlazeMessage): Promise<boolean> => {
-  const { gzip } = await loadPako();
-
   return new Promise(resolve => {
     const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
     const zipped = gzip(buffer);

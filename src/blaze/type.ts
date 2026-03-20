@@ -1,9 +1,9 @@
-import { MessageCategory, MessageStatus } from "../client/types/message";
+import { MessageCategory, MessageStatus } from '../client/types/message';
 
 export type MessageType = MessageView | TransferView | SystemConversationPayload;
 
 export interface TransferData {
-  type: 'transaction',
+  type: 'transaction';
   snapshot_id: string;
   transaction_hash: string;
   user_id: string;
