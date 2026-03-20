@@ -24,7 +24,7 @@ export function websocket(
   });
 
   ws.onmessage = async event => {
-    const msg = await decodeMessage(event.data as Uint8Array, option);
+    const msg = decodeMessage(event.data as Uint8Array, option);
     if (!msg) return;
 
     if (msg.source === 'ACKNOWLEDGE_MESSAGE_RECEIPT' && handler.onAckReceipt) await handler.onAckReceipt(msg);
@@ -45,7 +45,7 @@ export function websocket(
   return ws;
 }
 
-export const decodeMessage = async (data: Uint8Array, options: BlazeOptions): Promise<MessageView> => {
+export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageView => {
   const t = ungzip(data, { to: 'string' });
   const msgObj = JSON.parse(t);
 
@@ -62,8 +62,8 @@ export const decodeMessage = async (data: Uint8Array, options: BlazeOptions): Pr
   return msgObj.data;
 };
 
-export const sendRaw = async (ws: WebSocket, message: BlazeMessage): Promise<boolean> => {
-  return new Promise(resolve => {
+export const sendRaw = (ws: WebSocket, message: BlazeMessage): Promise<boolean> =>
+  new Promise(resolve => {
     const buffer = Buffer.from(JSON.stringify(message), 'utf-8');
     const zipped = gzip(buffer);
     if (ws.readyState === WebSocket.OPEN) {
@@ -79,4 +79,3 @@ export const sendRaw = async (ws: WebSocket, message: BlazeMessage): Promise<boo
     }
     resolve(false);
   });
-};
