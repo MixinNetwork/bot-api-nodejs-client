@@ -57,7 +57,7 @@ const keystore = {
   server_public_key: '',
   session_private_key: '',
 };
-const config = blazeOptions: {
+const config = {
   parse: true,
   syncAck: true,
 };
