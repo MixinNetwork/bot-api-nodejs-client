@@ -5,10 +5,28 @@
   "description": "Mixin SDK for Node.js and Javascript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mixin-node-sdk.esm.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./blaze": {
+      "types": "./dist/blaze/index.d.ts",
+      "import": "./dist/blaze/index.mjs",
+      "require": "./dist/blaze/index.js",
+      "default": "./dist/blaze/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
-    "src"
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
   ],
+  "sideEffects": false,
   "engines": {
     "node": ">=20"
   },
@@ -28,8 +46,8 @@
     "js"
   ],
   "scripts": {
-    "start": "bunchee --watch --runtime node --format cjs --output dist/index.js",
-    "build": "rm -rf dist && bunchee --runtime node --format cjs --output dist/index.js && bunchee --runtime browser --format esm --output dist/mixin-node-sdk.esm.js --no-clean && bunchee --runtime browser --format cjs --output dist/mixin-node-sdk.cjs.production.min.js --minify --no-clean --no-dts",
+    "start": "bunchee --watch",
+    "build": "rm -rf dist && bunchee",
     "build:umd": "bunchee --runtime browser --format umd --output dist/mixin-node-sdk.umd.js",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -40,15 +58,15 @@
     "analyze": "size-limit --why"
   },
   "author": "contact@mixin.one",
-  "module": "dist/mixin-node-sdk.esm.js",
+  "module": "dist/mixin-node-sdk.esm.mjs",
   "size-limit": [
     {
-      "path": "dist/mixin-node-sdk.cjs.production.min.js",
-      "limit": "90 KB"
+      "path": "dist/index.js",
+      "limit": "80 KB"
     },
     {
-      "path": "dist/mixin-node-sdk.esm.js",
-      "limit": "75 KB"
+      "path": "dist/mixin-node-sdk.esm.mjs",
+      "limit": "65 KB"
     }
   ],
   "devDependencies": {
@@ -56,7 +74,6 @@
     "@size-limit/esbuild": "^12.0.1",
     "@size-limit/esbuild-why": "^12.0.1",
     "@size-limit/preset-small-lib": "^12.0.1",
-    "@types/lodash.merge": "^4.6.7",
     "@types/md5": "^2.3.5",
     "@types/node": "^25.5.0",
     "@types/node-forge": "^1.3.8",
@@ -73,7 +90,7 @@
     "jiti": "^2.6.1",
     "jsdom": "^28.1.0",
     "node-forge": "^1.3.1",
-    "prettier": "^3.3.3",
+    "prettier": "^3.8.1",
     "size-limit": "^12.0.1",
     "tslib": "^2.4.0",
     "typescript": "^5.9.3",
@@ -89,7 +106,6 @@
     "bs58": "^6.0.0",
     "int64-buffer": "^1.0.1",
     "is-retry-allowed": "^3.0.0",
-    "lodash.merge": "^4.6.2",
     "md5": "^2.3.0",
     "nano-seconds": "^1.2.2",
     "pako": "^2.0.4",

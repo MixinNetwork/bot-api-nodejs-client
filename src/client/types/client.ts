@@ -1,6 +1,5 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import type { Keystore } from './keystore';
-import { BlazeOptions } from '../../blaze/type';
 
 export interface RequestConfig extends Partial<
   Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>
@@ -11,7 +10,6 @@ export interface RequestConfig extends Partial<
 }
 
 export interface HTTPConfig {
-  blazeOptions?: BlazeOptions;
   keystore?: Keystore;
   requestConfig?: RequestConfig;
 }

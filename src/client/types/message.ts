@@ -29,23 +29,6 @@ export interface AcknowledgementRequest {
   status: string;
 }
 
-export interface MessageView {
-  type: 'message';
-  representative_id: string;
-  quote_message_id: string;
-  conversation_id: string;
-  user_id: string;
-  session_id: string;
-  message_id: string;
-  category: MessageCategory;
-  data: string;
-  data_base64: string;
-  status: MessageStatus;
-  source: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface MessageRequest {
   conversation_id: string;
   recipient_id?: string;

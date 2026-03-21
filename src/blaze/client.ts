@@ -57,7 +57,3 @@ export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: B
     getWebSocket: () => ws,
   };
 };
-
-export const BlazeClient = (keystore: Keystore, wsOptions?: BlazeOptions) => ({ blaze: BlazeKeystoreClient(keystore, wsOptions) });
-
-export default BlazeClient;

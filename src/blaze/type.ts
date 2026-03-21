@@ -1,8 +1,37 @@
-import { MessageView } from '../client/types/message';
+import { MessageCategory, MessageStatus } from '../client/types/message';
 
 export type MessageType = MessageView | TransferView | SystemConversationPayload;
 
-interface TransferView {
+export interface TransferData {
+  type: 'transaction';
+  snapshot_id: string;
+  transaction_hash: string;
+  user_id: string;
+  opponent_id: string;
+  asset_id: string;
+  amount: string;
+  memo: string;
+  created_at: string;
+}
+
+export interface MessageView {
+  type: 'message';
+  representative_id: string;
+  quote_message_id: string;
+  conversation_id: string;
+  user_id: string;
+  session_id: string;
+  message_id: string;
+  category: MessageCategory;
+  data: string | TransferData;
+  data_base64: string;
+  status: MessageStatus;
+  source: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TransferView {
   type: 'transfer';
   snapshot_id: string;
   counter_user_id: string;
@@ -13,7 +42,7 @@ interface TransferView {
   created_at: string;
 }
 
-interface SystemConversationPayload {
+export interface SystemConversationPayload {
   action: string;
   participant_id: string;
   user_id?: string;

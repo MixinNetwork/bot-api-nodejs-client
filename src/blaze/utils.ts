@@ -2,8 +2,8 @@ import WebSocket from 'ws';
 import { v4 as uuid } from 'uuid';
 import { gzip, ungzip } from 'pako';
 import type Keystore from '../client/types/keystore';
-import type { BlazeHandler, BlazeOptions, MessageView, BlazeMessage } from '../client/types';
-import { signAccessToken } from '../client/utils';
+import type { MessageView, BlazeHandler, BlazeOptions, BlazeMessage } from './type';
+import { signAccessToken } from '../client/utils/auth';
 
 export function websocket(
   keystore: Keystore | undefined,
