@@ -6,12 +6,14 @@ export interface AccessTokenResponse {
   scope: string;
   authorization_id: string;
   /** public key from server */
-  ed25519: string;
+  ed25519?: string;
+  access_token?: string;
 }
+
 export interface AccessTokenRequest {
   client_id: string;
   code: string;
-  ed25519: string;
+  ed25519?: string;
   client_secret?: string;
   code_verifier?: string;
 }
