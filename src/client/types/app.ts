@@ -15,6 +15,7 @@ export interface AppResponse {
   session_secret: string;
   session_public_key: string;
   has_safe: boolean;
+  is_verified: boolean;
   spend_public_key: string;
   safe_created_at: string;
   updated_at: string;
