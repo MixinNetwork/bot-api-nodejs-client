@@ -62,29 +62,40 @@ export const WebViewApi = () => {
       }
     },
 
-    getAssets: async (assets: string[], cb: (assets: WebviewAsset[]) => void) => {
-      const cbf = (str: string) => {
-        const assets = JSON.parse(str) as WebviewAsset[];
-        cb(assets);
-      };
-      switch (getMixinContext().platform) {
-        case 'iOS':
-          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.getAssets) {
-            window.assetsCallbackFunction = cbf;
-            await window.webkit.messageHandlers.getAssets.postMessage([assets, 'assetsCallbackFunction']);
+    getAssets: (assets: string[], cb: (assets: WebviewAsset[]) => void) =>
+      new Promise<void>((resolve, reject) => {
+        const callbackName = `mixinAssetsCallback_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+        const callbacks = window as unknown as Record<string, ((response: string) => void) | undefined>;
+
+        callbacks[callbackName] = response => {
+          delete callbacks[callbackName];
+
+          try {
+            cb(JSON.parse(response) as WebviewAsset[]);
+            resolve();
+          } catch (error) {
+            reject(error);
           }
-          break;
-        case 'Android':
-        case 'Desktop':
+        };
+
+        try {
+          if (window.webkit?.messageHandlers?.getAssets) {
+            window.webkit.messageHandlers.getAssets.postMessage([assets, callbackName]);
+            return;
+          }
+
           if (window.MixinContext && typeof window.MixinContext.getAssets === 'function') {
-            window.assetsCallbackFunction = cbf;
-            await window.MixinContext.getAssets(assets, 'assetsCallbackFunction');
+            window.MixinContext.getAssets(assets, callbackName);
+            return;
           }
-          break;
-        default:
-          break;
-      }
-    },
+
+          delete callbacks[callbackName];
+          resolve();
+        } catch (error) {
+          delete callbacks[callbackName];
+          reject(error);
+        }
+      }),
 
     getTipAddress: async (chainId: string, cb: (address: string) => void) => {
       switch (getMixinContext().platform) {
