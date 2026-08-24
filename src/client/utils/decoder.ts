@@ -184,6 +184,7 @@ export class Decoder {
     for (let i = 0; i < len; i++) {
       const index = this.readInt();
       const sig = this.buf.subarray(0, 64).toString('hex');
+      this.read(64);
       sigs[index] = sig;
     }
     return sigs;
