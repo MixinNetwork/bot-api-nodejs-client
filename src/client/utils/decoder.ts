@@ -1,4 +1,5 @@
 import { stringify } from 'uuid';
+import BigNumber from 'bignumber.js';
 import type { Input, Output } from '../types';
 import { magic } from './encoder';
 import { formatUnits } from './amount';
@@ -12,6 +13,8 @@ export const bytesToInterger = (b: Buffer) => {
   }
   return x;
 };
+
+const bytesToBigNumber = (b: Buffer) => BigNumber(b.length ? b.toString('hex') : '0', 16);
 
 export class Decoder {
   buf: Buffer;
@@ -85,6 +88,13 @@ export class Decoder {
     return bytesToInterger(value);
   }
 
+  readBigInteger() {
+    const len = this.readInt();
+    const value = this.buf.subarray(0, len);
+    this.read(len);
+    return bytesToBigNumber(value);
+  }
+
   decodeInput() {
     const hash = this.subarray(0, 32).toString('hex');
     this.read(32);
@@ -105,10 +115,12 @@ export class Decoder {
     if (depositPrefix.equals(magic)) {
       const chain = this.subarray(0, 32).toString('hex');
       this.read(32);
-      const asset = this.readBytes();
-      const transaction = this.readBytes();
+      const assetLength = this.readInt();
+      const asset = this.readSubarray(assetLength).toString();
+      const transactionLength = this.readInt();
+      const transaction = this.readSubarray(transactionLength).toString();
       const index = this.readUInt64();
-      const amount = this.readInteger();
+      const amount = formatUnits(this.readBigInteger(), 8).toNumber();
 
       input.deposit = {
         chain,
@@ -122,9 +134,10 @@ export class Decoder {
     const mintPrefix = this.subarray(0, 2);
     this.read(2);
     if (mintPrefix.equals(magic)) {
-      const group = this.readBytes();
+      const groupLength = this.readInt();
+      const group = this.readSubarray(groupLength).toString();
       const batch = this.readUInt64();
-      const amount = this.readInteger();
+      const amount = formatUnits(this.readBigInteger(), 8).toNumber();
 
       input.mint = {
         group,
@@ -141,7 +154,7 @@ export class Decoder {
     this.read(2);
     if (t.at(0) !== 0) throw new Error(`invalid output type ${t.at(0)}`);
     const type = t.at(1);
-    const amount = this.readInteger();
+    const amount = this.readBigInteger();
 
     const lenKey = this.readInt();
     const keys = [];
@@ -167,8 +180,10 @@ export class Decoder {
     const prefix = this.subarray(0, 2);
     this.read(2);
     if (prefix.equals(magic)) {
-      const address = this.readBytes();
-      const tag = this.readBytes();
+      const addressLength = this.readInt();
+      const address = this.readSubarray(addressLength).toString();
+      const tagLength = this.readInt();
+      const tag = this.readSubarray(tagLength).toString();
       output.withdrawal = {
         address,
         tag,

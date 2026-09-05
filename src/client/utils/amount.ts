@@ -7,11 +7,11 @@ while (zeros.length < 256) {
 
 const getMultiplier = (n: number) => BigNumber(`1${zeros.substring(0, n)}`);
 
-export const formatUnits = (amount: string | number, unit: number) => {
+export const formatUnits = (amount: BigNumber.Value, unit: number) => {
   const m = getMultiplier(unit);
   return BigNumber(amount).dividedBy(m);
 };
-export const parseUnits = (amount: string | number, unit: number) => {
+export const parseUnits = (amount: BigNumber.Value, unit: number) => {
   const m = getMultiplier(unit);
   return BigNumber(amount).times(m).integerValue(BigNumber.ROUND_FLOOR);
 };

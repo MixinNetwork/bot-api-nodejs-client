@@ -30,7 +30,7 @@ export function buildCollectibleMemo(content: string, collection_id?: string, to
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
 
-  if (collection_id && token_id) {
+  if (collection_id && token_id !== undefined) {
     encoder.write(Buffer.from([1]));
     encoder.writeUint64(BigInt(1));
     encoder.writeUUID(DefaultChain);
@@ -75,7 +75,8 @@ export const decodeNfoMemo = (hexMemo: string) => {
     const collection = Buffer.from(decoder.readBytes(), 'hex');
     nm.collection = stringify(collection);
 
-    nm.token = parseInt(decoder.readBytes(), 16);
+    const token = decoder.readBytes();
+    nm.token = token ? parseInt(token, 16) : 0;
   }
 
   nm.extra = Buffer.from(decoder.readBytes(), 'hex').toString();

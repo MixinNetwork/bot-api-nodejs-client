@@ -11,12 +11,13 @@ export const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
 export const integerToBytes = (x: number) => {
+  if (!Number.isSafeInteger(x) || x < 0) throw new Error(`invalid integer ${x}`);
   const bytes: number[] = [];
   if (x === 0) return bytes;
   let i = x;
   do {
-    bytes.unshift(i & 255);
-    i = (i / 2 ** 8) | 0;
+    bytes.unshift(i % 256);
+    i = Math.floor(i / 256);
   } while (i !== 0);
   return bytes;
 };
@@ -32,11 +33,12 @@ export const bigNumberToBytes = (x: BigNumber) => {
 };
 
 export const putUvarInt = (x: number) => {
+  if (!Number.isSafeInteger(x) || x < 0) throw new Error(`invalid integer ${x}`);
   const buf = [];
   let i = 0;
   while (x >= 0x80) {
-    buf[i] = x | 0x80;
-    x >>= 7;
+    buf[i] = (x % 0x80) | 0x80;
+    x = Math.floor(x / 0x80);
     i++;
   }
   buf[i] = x;
@@ -124,9 +126,9 @@ export class Encoder {
     this.write(Buffer.from(i.hash, 'hex'));
     this.writeInt(i.index);
 
-    if (!i.genesis) i.genesis = '';
-    this.writeInt(i.genesis.length);
-    this.write(Buffer.from(i.genesis));
+    const genesis = i.genesis ?? '';
+    this.writeInt(genesis.length);
+    this.write(Buffer.from(genesis));
     const d = i.deposit;
     if (typeof d === 'undefined') {
       this.write(empty);
@@ -151,9 +153,9 @@ export class Encoder {
       this.write(empty);
     } else {
       this.write(magic);
-      if (!m.group) m.group = '';
-      this.writeInt(m.group.length);
-      this.write(Buffer.from(m.group));
+      const group = m.group ?? '';
+      this.writeInt(group.length);
+      this.write(Buffer.from(group));
 
       this.writeUint64(m.batch);
       this.writeInteger(parseUnits(m.amount, 8));

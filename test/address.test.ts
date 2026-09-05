@@ -1,6 +1,7 @@
 import { client, app_pin } from './common';
+import { describeIntegration } from './integration';
 
-describe('address', () => {
+describeIntegration('address', () => {
   const asset_id = '43d61dcd-e413-450d-80b8-101d5e903357';
   const destination = '0xF2e6D6BB9E6D31B873bC23649A25A76f8852e3f5';
   let tmpAddressID = '';

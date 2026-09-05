@@ -43,8 +43,10 @@ describe('Tests for utils', () => {
     hash = hashMembers(ids);
     expect(hash).toBe('6064ec68a229a7d2fe2be652d11477f21705a742e08b75564fd085650f1deaeb');
     const reverseIds = ['d1e9ec7e-199d-4578-91a0-a69d9a7ba048', '965e5c6e-434c-3fa9-b780-c50f43cd955c'];
+    const originalOrder = [...reverseIds];
     hash = hashMembers(reverseIds);
     expect(hash).toBe('6064ec68a229a7d2fe2be652d11477f21705a742e08b75564fd085650f1deaeb');
+    expect(reverseIds).toEqual(originalOrder);
   });
 
   test('tests for uniqueConversationID', () => {

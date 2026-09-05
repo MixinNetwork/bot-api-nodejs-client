@@ -15,4 +15,13 @@ describe('Tests for nfo', () => {
       expect(res.slice(0, res.length - 2)).toEqual(memo.slice(0, memo.length - 66));
     }
   });
+
+  test('preserves token ID zero in collectible metadata', () => {
+    const collection = '3552d116-b29d-4d72-9b24-3ca3b2e0f9c2';
+
+    const nfo = decodeNfoMemo(buildCollectibleMemo('', collection, 0));
+
+    expect(nfo.collection).toBe(collection);
+    expect(nfo.token).toBe(0);
+  });
 });
