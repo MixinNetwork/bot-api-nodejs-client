@@ -6,7 +6,8 @@ import { http } from '../http';
 export const createAxiosClient = (keystore?: Keystore, requestConfig?: RequestConfig) => http(keystore, requestConfig);
 
 export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient => ({
-  request: config => axiosInstance.request(config),
+  // The HTTP response interceptor unwraps the API payload.
+  request: <T>(config: Parameters<RequestClient['request']>[0]) => axiosInstance.request<unknown, T>(config) as Promise<T>,
 });
 
 export const buildClient: BuildClient =
