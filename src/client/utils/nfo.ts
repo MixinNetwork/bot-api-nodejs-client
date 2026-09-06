@@ -17,8 +17,8 @@ const tokenToBytes = (token: string | number | bigint) => {
   if (typeof token === 'number' && !Number.isSafeInteger(token)) throw new Error(`invalid token ${token}`);
   if (typeof token === 'string' && !/^\d+$/.test(token)) throw new Error(`invalid token ${token}`);
   const integer = BigInt(token);
-  if (integer < 0n) throw new Error(`invalid token ${token}`);
-  if (integer === 0n) return Buffer.alloc(0);
+  if (integer < BigInt(0)) throw new Error(`invalid token ${token}`);
+  if (integer === BigInt(0)) return Buffer.alloc(0);
   const hex = integer.toString(16);
   return Buffer.from(hex.length % 2 ? `0${hex}` : hex, 'hex');
 };
