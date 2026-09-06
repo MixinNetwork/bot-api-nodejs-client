@@ -9,6 +9,11 @@ export const OperationTypeSystemCall = 2;
 export const OperationTypeUserDeposit = 3;
 
 export const userIdToBytes = (uid: string) => {
+  // User IDs are uint64 decimal strings. Reject hex/exponent/whitespace that
+  // BigNumber would otherwise coerce (e.g. '0x10' -> 16, '1e3' -> 1000).
+  if (typeof uid === 'string' && !/^\d+$/.test(uid)) {
+    throw new Error(`invalid user id: ${uid}`);
+  }
   let x: BigNumber;
   try {
     x = BigNumber(uid);

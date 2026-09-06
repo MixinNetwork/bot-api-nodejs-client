@@ -22,7 +22,7 @@ describe('computer utilities', () => {
     expect(userIdToBytes('18446744073709551615').toString('hex')).toBe('ffffffffffffffff');
   });
 
-  it.each(['invalid', '-1', '1.5', '18446744073709551616'])('rejects an invalid user ID: %s', userID => {
+  it.each(['invalid', '', '-1', '1.5', '0x10', '1e3', ' 1 ', '+1', '18446744073709551616'])('rejects an invalid user ID: %s', userID => {
     expect(() => userIdToBytes(userID)).toThrow('invalid user id');
   });
 

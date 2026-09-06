@@ -61,4 +61,17 @@ describe('Tests for nfo', () => {
     expect(() => buildCollectibleMemo('', collection, token)).toThrow('invalid token');
     expect(() => buildTokenId(collection, token)).toThrow('invalid token');
   });
+
+  test.each([true, null])('rejects a non-numeric token: %s', token => {
+    const collection = '3552d116-b29d-4d72-9b24-3ca3b2e0f9c2';
+
+    expect(() => buildCollectibleMemo('', collection, token as any)).toThrow('invalid token');
+    expect(() => buildTokenId(collection, token as any)).toThrow('invalid token');
+  });
+
+  test('rejects an undefined token ID', () => {
+    const collection = '3552d116-b29d-4d72-9b24-3ca3b2e0f9c2';
+
+    expect(() => buildTokenId(collection, undefined as any)).toThrow('invalid token');
+  });
 });

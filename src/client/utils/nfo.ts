@@ -14,6 +14,7 @@ export const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
 export const DefaultNftAssetId = '1700941284a95f31b25ec8c546008f208f88eee4419ccdcdbe6e3195e60128ca';
 
 const tokenToBytes = (token: string | number | bigint) => {
+  if (typeof token !== 'string' && typeof token !== 'number' && typeof token !== 'bigint') throw new Error(`invalid token ${token}`);
   if (typeof token === 'number' && !Number.isSafeInteger(token)) throw new Error(`invalid token ${token}`);
   if (typeof token === 'string' && !/^\d+$/.test(token)) throw new Error(`invalid token ${token}`);
   const integer = BigInt(token);

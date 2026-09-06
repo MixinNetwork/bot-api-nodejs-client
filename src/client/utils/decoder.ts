@@ -123,7 +123,8 @@ export class Decoder {
       const transactionLength = this.readInt();
       const transaction = this.readSubarray(transactionLength).toString();
       const index = this.readUInt64();
-      const amount = formatUnits(this.readBigInteger(), 8).toString();
+      // toFixed() renders plain decimals; toString() would give "1e-8" for dust.
+      const amount = formatUnits(this.readBigInteger(), 8).toFixed();
 
       input.deposit = {
         chain,
@@ -140,7 +141,8 @@ export class Decoder {
       const groupLength = this.readInt();
       const group = this.readSubarray(groupLength).toString();
       const batch = this.readUInt64();
-      const amount = formatUnits(this.readBigInteger(), 8).toString();
+      // toFixed() renders plain decimals; toString() would give "1e-8" for dust.
+      const amount = formatUnits(this.readBigInteger(), 8).toFixed();
 
       input.mint = {
         group,
@@ -174,7 +176,8 @@ export class Decoder {
 
     const output: Output = {
       type,
-      amount: formatUnits(amount, 8).toString(),
+      // toFixed() renders plain decimals; toString() would give "1e-8" for dust.
+      amount: formatUnits(amount, 8).toFixed(),
       keys,
       mask,
       script,

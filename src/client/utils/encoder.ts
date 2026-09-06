@@ -129,7 +129,7 @@ export class Encoder {
     this.writeInt(i.index);
 
     const genesis = i.genesis ?? '';
-    this.writeInt(genesis.length);
+    this.writeInt(Buffer.byteLength(genesis));
     this.write(Buffer.from(genesis));
     const d = i.deposit;
     if (typeof d === 'undefined') {
@@ -156,7 +156,7 @@ export class Encoder {
     } else {
       this.write(magic);
       const group = m.group ?? '';
-      this.writeInt(group.length);
+      this.writeInt(Buffer.byteLength(group));
       this.write(Buffer.from(group));
 
       this.writeUint64(m.batch);
@@ -166,17 +166,27 @@ export class Encoder {
 
   encodeOutput(output: Output) {
     const o = output;
-    if (!o.type) o.type = 0;
-    this.write(Buffer.from([0x00, o.type]));
+    const type = o.type ?? 0;
+    if (!Number.isInteger(type) || type < 0 || type > 255) throw new Error(`invalid output type ${o.type}`);
+    this.write(Buffer.from([0x00, type]));
     this.writeInteger(parseUnits(o.amount, 8));
 
     this.writeInt(o.keys.length);
-    o.keys.forEach(k => this.write(Buffer.from(k, 'hex')));
+    o.keys.forEach(k => {
+      // Buffer.from(k, 'hex') silently drops non-hex chars, so a typo'd key
+      // would shift the whole framing and burn funds to a wrong key.
+      const kb = Buffer.from(k, 'hex');
+      if (kb.byteLength !== 32) throw new Error(`invalid output key ${k}`);
+      this.write(kb);
+    });
 
-    this.write(o.mask ? Buffer.from(o.mask, 'hex') : Buffer.alloc(32, 0));
+    const maskHex = o.mask || '';
+    const mask = maskHex ? Buffer.from(maskHex, 'hex') : Buffer.alloc(32, 0);
+    if (mask.byteLength !== 32) throw new Error(`invalid output mask ${o.mask}`);
+    this.write(mask);
 
-    if (!o.script) o.script = '';
-    const s = Buffer.from(o.script, 'hex');
+    const scriptHex = o.script || '';
+    const s = Buffer.from(scriptHex, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
 

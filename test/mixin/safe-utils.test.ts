@@ -4,6 +4,8 @@ import { getMainnetAddressFromSeed } from '../../src/client/utils/address';
 import {
   buildSafeTransaction,
   buildSafeTransactionRecipient,
+  decodeSafeTransaction,
+  encodeSafeTransaction,
   estimateStorageCost,
   ExtraSizeGeneralLimit,
   ExtraSizeStorageCapacity,
@@ -93,6 +95,29 @@ describe('safe transaction utilities', () => {
         script: 'fffe00',
       },
     ]);
+  });
+
+  it('round-trips a full safe transaction through encoding', () => {
+    const utxo = { ...output('unspent', '1.5', 1), asset: 'aa'.repeat(32) };
+    const normal = buildSafeTransactionRecipient([userID], 1, '1');
+    const withdrawal: SafeTransactionRecipient = { destination: 'external-address', tag: 'memo', amount: '0.00000001' };
+    const ghost = { mask: 'bb'.repeat(32), keys: ['cc'.repeat(32)] };
+
+    const transaction = buildSafeTransaction([utxo], [normal, withdrawal], [ghost, undefined], Buffer.from('memo'), ['dd'.repeat(32)]);
+    const signatures = [{ 0: '11'.repeat(64) }];
+    const raw = encodeSafeTransaction(transaction, signatures);
+    const decoded = decodeSafeTransaction(raw);
+
+    expect(decoded.version).toBe(transaction.version);
+    expect(decoded.asset).toBe(transaction.asset);
+    expect(decoded.inputs).toEqual(transaction.inputs);
+    expect(decoded.outputs[0]).toEqual(transaction.outputs[0]);
+    expect(decoded.outputs[1].withdrawal).toEqual({ address: 'external-address', tag: 'memo' });
+    expect(decoded.outputs[1].amount).toBe('0.00000001');
+    expect(decoded.references).toEqual(transaction.references);
+    expect(Buffer.from(decoded.extra).toString()).toBe('memo');
+    expect(decoded.signatureMap).toEqual(signatures);
+    expect(encodeSafeTransaction(decoded, decoded.signatureMap)).toBe(raw);
   });
 
   it('validates transaction inputs, recipients, assets, ghosts, and extra size', () => {

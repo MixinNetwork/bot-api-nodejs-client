@@ -121,6 +121,82 @@ describe('transaction codec', () => {
     expect(new Decoder(encoder.buffer()).decodeOutput().amount).toBe(output.amount);
   });
 
+  it.each([
+    { amount: '0.00000001' },
+    { amount: '0.0000001' },
+  ])('decodes dust output amounts as plain decimals, not exponential ($amount)', ({ amount }) => {
+    const output = {
+      type: 0,
+      amount,
+      keys: [],
+      mask: '00'.repeat(32),
+      script: '',
+    };
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    encoder.encodeOutput(output);
+
+    const decoded = new Decoder(encoder.buffer()).decodeOutput();
+    expect(decoded.amount).toBe(amount);
+    expect(decoded.amount).not.toContain('e');
+  });
+
+  it('decodes dust deposit amounts as plain decimals', () => {
+    const input: Input = {
+      hash: '11'.repeat(32),
+      index: 7,
+      deposit: {
+        chain: '22'.repeat(32),
+        asset: 'asset-key',
+        transaction: 'transaction-hash',
+        index: 9n,
+        amount: '0.00000001',
+      },
+    };
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    encoder.encodeInput(input);
+
+    expect(new Decoder(encoder.buffer()).decodeInput().deposit?.amount).toBe('0.00000001');
+  });
+
+  it('round-trips non-ASCII mint groups without corrupting batch and amount', () => {
+    const input: Input = {
+      hash: '33'.repeat(32),
+      index: 3,
+      mint: {
+        group: 'é',
+        batch: 42n,
+        amount: '2.5',
+      },
+    };
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    encoder.encodeInput(input);
+
+    expect(new Decoder(encoder.buffer()).decodeInput()).toEqual(input);
+  });
+
+  it.each([256, 300, -1, 1.5, NaN])('rejects an invalid output type: %s', type => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    expect(() => encoder.encodeOutput({ type, amount: '1', keys: [] })).toThrow('invalid output type');
+  });
+
+  it.each([['zz'], ['44'.repeat(31)], ['abc']])('rejects an output with a malformed key: %s', key => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    // Buffer.from(key, 'hex') silently truncates, which would shift the
+    // framing and burn funds to a wrong key.
+    expect(() => encoder.encodeOutput({ amount: '1', keys: [key] })).toThrow('invalid output key');
+  });
+
+  it.each(['zz', '44'.repeat(31)])('rejects an output with a malformed mask: %s', mask => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    expect(() => encoder.encodeOutput({ amount: '1', keys: [], mask })).toThrow('invalid output mask');
+  });
+
   it('round-trips sorted signature entries', () => {
     const signatures = { 2: '22'.repeat(64), 0: '11'.repeat(64) };
     const encoder = new Encoder(Buffer.alloc(0));

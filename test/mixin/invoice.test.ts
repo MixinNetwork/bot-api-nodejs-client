@@ -35,6 +35,19 @@ describe('Mixin invoices', () => {
     expect(() => attachInvoiceEntry(invoice, entry({ index_references: [0] }))).not.toThrow();
   });
 
+  it('round-trips a valid invoice with index and hash references', () => {
+    const invoice = newMixinInvoice(recipient) as MixinInvoice;
+    attachInvoiceEntry(invoice, entry());
+    attachInvoiceEntry(invoice, entry({ index_references: [0], hash_references: ['00'.repeat(32)] }));
+
+    const parsed = parseMixinInvoice(getInvoiceString(invoice)) as MixinInvoice;
+
+    expect(parsed.entries).toHaveLength(2);
+    expect(parsed.entries[0].amount).toBe('1.00000000');
+    expect(parsed.entries[1].index_references).toEqual([0]);
+    expect(parsed.entries[1].hash_references).toEqual(['00'.repeat(32)]);
+  });
+
   it('rejects a semantically invalid reference while parsing', () => {
     const invoice = newMixinInvoice(recipient) as MixinInvoice;
     invoice.entries.push(entry({ index_references: [0] }));
