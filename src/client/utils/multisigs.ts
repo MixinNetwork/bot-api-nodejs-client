@@ -7,9 +7,9 @@ export const TxVersion = 0x02;
 export const getTotalBalanceFromOutputs = (outputs: UtxoOutput[]) => outputs.reduce((prev, cur) => prev.plus(BigNumber(cur.amount)), BigNumber('0'));
 
 export const encodeScript = (threshold: number) => {
+  if (!Number.isInteger(threshold) || threshold < 0 || threshold > 255) throw new Error(`INVALID THRESHOLD ${threshold}`);
   let s = threshold.toString(16);
   if (s.length === 1) s = `0${s}`;
-  if (s.length > 2) throw new Error(`INVALID THRESHOLD ${threshold}`);
 
   return `fffe${s}`;
 };

@@ -52,6 +52,7 @@ export const parseMixinInvoice = (s: string) => {
         const flag = dec.readByte();
         if (flag === 1) {
           const ref = dec.readByte();
+          if (ref >= mi.entries.length) return undefined;
           entry.index_references.push(ref);
         } else if (flag === 0) {
           const hash = dec.readSubarray(32).toString('hex');
@@ -85,7 +86,7 @@ export const attachInvoiceEntry = (invoice: MixinInvoice, entry: InvoiceEntry) =
     throw new Error('too many references');
   }
   entry.index_references.forEach(ref => {
-    if (ref > invoice.entries.length) {
+    if (!Number.isInteger(ref) || ref < 0 || ref >= invoice.entries.length) {
       throw new Error(`invalid entry index reference: ${ref}`);
     }
   });

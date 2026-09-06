@@ -3,7 +3,7 @@ import { parse as UUIDParse, stringify } from 'uuid';
 import type { CollectibleOutputsResponse, NFOMemo } from '../types';
 import type { KeystoreClientReturnType } from '../mixin-client';
 import { buildMultiSigsTransaction, encodeScript } from './multisigs';
-import { Encoder, integerToBytes } from './encoder';
+import { Encoder } from './encoder';
 import { Decoder } from './decoder';
 
 const Prefix = 'NFO';
@@ -13,8 +13,19 @@ export const DefaultChain = '43d61dcd-e413-450d-80b8-101d5e903357';
 export const DefaultClass = '3c8c161a18ae2c8b14fda1216fff7da88c419b5d';
 export const DefaultNftAssetId = '1700941284a95f31b25ec8c546008f208f88eee4419ccdcdbe6e3195e60128ca';
 
-export function buildTokenId(collection_id: string, token: number): string {
-  const tokenStr = Buffer.from(integerToBytes(token)).toString('hex');
+const tokenToBytes = (token: string | number | bigint) => {
+  if (typeof token === 'number' && !Number.isSafeInteger(token)) throw new Error(`invalid token ${token}`);
+  if (typeof token === 'string' && !/^\d+$/.test(token)) throw new Error(`invalid token ${token}`);
+  const integer = BigInt(token);
+  if (integer < BigInt(0)) throw new Error(`invalid token ${token}`);
+  if (integer === BigInt(0)) return Buffer.alloc(0);
+  const hex = integer.toString(16);
+  return Buffer.from(hex.length % 2 ? `0${hex}` : hex, 'hex');
+};
+
+/** Use a decimal string or bigint for token IDs above Number.MAX_SAFE_INTEGER. */
+export function buildTokenId(collection_id: string, token: string | number | bigint): string {
+  const tokenStr = tokenToBytes(token).toString('hex');
   const msg = DefaultChain.replaceAll('-', '') + DefaultClass + collection_id.replaceAll('-', '') + tokenStr;
   const res = md5(Buffer.from(msg, 'hex'));
   const bytes = Buffer.from(res, 'hex');
@@ -24,20 +35,21 @@ export function buildTokenId(collection_id: string, token: number): string {
 }
 
 /**
- * Content must be hex string without '0x'
+ * Content must be hex string without '0x'.
+ * Use a decimal string or bigint for token IDs above Number.MAX_SAFE_INTEGER.
  * */
-export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: number): string {
+export function buildCollectibleMemo(content: string, collection_id?: string, token_id?: string | number | bigint): string {
   const encoder = new Encoder(Buffer.from(Prefix, 'utf8'));
   encoder.write(Buffer.from([Version]));
 
-  if (collection_id && token_id) {
+  if (collection_id && token_id !== undefined) {
     encoder.write(Buffer.from([1]));
     encoder.writeUint64(BigInt(1));
     encoder.writeUUID(DefaultChain);
 
     encoder.writeSlice(Buffer.from(DefaultClass, 'hex'));
     encoder.writeSlice(Buffer.from(UUIDParse(collection_id) as Buffer));
-    encoder.writeSlice(Buffer.from(integerToBytes(token_id)));
+    encoder.writeSlice(tokenToBytes(token_id));
   } else {
     encoder.write(Buffer.from([0]));
   }
@@ -75,7 +87,8 @@ export const decodeNfoMemo = (hexMemo: string) => {
     const collection = Buffer.from(decoder.readBytes(), 'hex');
     nm.collection = stringify(collection);
 
-    nm.token = parseInt(decoder.readBytes(), 16);
+    const token = decoder.readBytes();
+    nm.token = token ? BigInt(`0x${token}`).toString() : '0';
   }
 
   nm.extra = Buffer.from(decoder.readBytes(), 'hex').toString();
