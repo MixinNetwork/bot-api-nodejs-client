@@ -1,17 +1,14 @@
 import BigNumber from 'bignumber.js';
 
-let zeros = '0';
-while (zeros.length < 256) {
-  zeros += zeros;
-}
-
-const getMultiplier = (n: number) => BigNumber(`1${zeros.substring(0, n)}`);
+const validateUnit = (unit: number) => {
+  if (!Number.isSafeInteger(unit) || unit < 0) throw new Error(`invalid unit: ${unit}`);
+};
 
 export const formatUnits = (amount: BigNumber.Value, unit: number) => {
-  const m = getMultiplier(unit);
-  return BigNumber(amount).dividedBy(m);
+  validateUnit(unit);
+  return BigNumber(amount).shiftedBy(-unit);
 };
 export const parseUnits = (amount: BigNumber.Value, unit: number) => {
-  const m = getMultiplier(unit);
-  return BigNumber(amount).times(m).integerValue(BigNumber.ROUND_FLOOR);
+  validateUnit(unit);
+  return BigNumber(amount).shiftedBy(unit).integerValue(BigNumber.ROUND_FLOOR);
 };

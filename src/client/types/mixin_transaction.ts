@@ -1,7 +1,8 @@
 export interface MintData {
   group: string;
   batch: bigint;
-  amount: number;
+  /** Use a decimal string for exact amounts. Decoding always returns a string. */
+  amount: string | number;
 }
 
 export interface DepositData {
@@ -9,7 +10,8 @@ export interface DepositData {
   asset: string;
   transaction: string;
   index: bigint;
-  amount: number;
+  /** Use a decimal string for exact amounts. Decoding always returns a string. */
+  amount: string | number;
 }
 
 export interface WithdrawData {

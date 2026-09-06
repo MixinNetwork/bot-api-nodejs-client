@@ -1,11 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import BigNumber from 'bignumber.js';
+import { describe, expect, it, vi } from 'vitest';
 import type { Input } from '../../src/client/types';
-import { Decoder } from '../../src/client/utils/decoder';
-import { Encoder, integerToBytes, putUvarInt } from '../../src/client/utils/encoder';
+import { bytesToInterger, Decoder } from '../../src/client/utils/decoder';
+import { bigNumberToBytes, Encoder, integerToBytes, putUvarInt } from '../../src/client/utils/encoder';
 import { buildMultiSigsTransaction, encodeScript, getTotalBalanceFromOutputs } from '../../src/client/utils/multisigs';
 
 describe('transaction codec', () => {
-  it('round-trips a deposit input', () => {
+  it('accepts a numeric deposit amount and decodes it as a string', () => {
     const input: Input = {
       hash: '11'.repeat(32),
       index: 7,
@@ -21,10 +22,13 @@ describe('transaction codec', () => {
 
     encoder.encodeInput(input);
 
-    expect(new Decoder(encoder.buffer()).decodeInput()).toEqual(input);
+    expect(new Decoder(encoder.buffer()).decodeInput()).toEqual({
+      ...input,
+      deposit: { ...input.deposit, amount: '1.25' },
+    });
   });
 
-  it('round-trips a mint input', () => {
+  it('accepts a numeric mint amount and decodes it as a string', () => {
     const input: Input = {
       hash: '33'.repeat(32),
       index: 3,
@@ -38,7 +42,42 @@ describe('transaction codec', () => {
 
     encoder.encodeInput(input);
 
-    expect(new Decoder(encoder.buffer()).decodeInput()).toEqual(input);
+    expect(new Decoder(encoder.buffer()).decodeInput()).toEqual({
+      ...input,
+      mint: { ...input.mint, amount: '2.5' },
+    });
+  });
+
+  describe.each([
+    {
+      kind: 'deposit' as const,
+      prefix: '11'.repeat(32) + '000700007777' + '22'.repeat(32) + '000961737365742d6b657900107472616e73616374696f6e2d686173680000000000000009',
+      suffix: '0000',
+    },
+    {
+      kind: 'mint' as const,
+      prefix: '33'.repeat(32) + '00030000000077770009756e6976657273616c000000000000002a',
+      suffix: '',
+    },
+  ])('$kind amount precision', ({ kind, prefix, suffix }) => {
+    it.each([
+      { amount: '70000000.00000002', baseUnitsHex: '18de76816d8002' },
+      { amount: '90071992.54740993', baseUnitsHex: '20000000000001' },
+    ])('preserves $amount when decoding and re-encoding', ({ amount, baseUnitsHex }) => {
+      // Fixed wire amounts cover base-unit integers below and above Number.MAX_SAFE_INTEGER.
+      const raw = Buffer.from(`${prefix}0007${baseUnitsHex}${suffix}`, 'hex');
+      const decoder = new Decoder(raw);
+
+      const input = decoder.decodeInput();
+
+      expect(input[kind]?.amount).toBe(amount);
+      expect(decoder.buf).toHaveLength(0);
+
+      const encoder = new Encoder(Buffer.alloc(0));
+      encoder.encodeInput(input);
+
+      expect(encoder.buffer()).toEqual(raw);
+    });
   });
 
   it('encodes safe integers without signed 32-bit truncation', () => {
@@ -98,6 +137,72 @@ describe('transaction codec', () => {
 
     expect(() => encoder.writeInt(0x10000)).toThrow('invalid integer');
     expect(() => encoder.writeSlice(Buffer.alloc(129))).toThrow('slice too long');
+  });
+
+  it.each(['writeInt', 'writeUint16', 'writeUint32'] as const)('%s rejects invalid integers instead of truncating them', method => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    for (const value of [NaN, Infinity, -1, 1.5]) {
+      expect(() => encoder[method](value)).toThrow('invalid integer');
+    }
+    expect(encoder.buffer()).toHaveLength(0);
+  });
+
+  it('preserves fixed-width integer boundaries', () => {
+    const encoder = new Encoder(Buffer.alloc(0));
+    encoder.writeInt(0);
+    encoder.writeUint16(0xffff);
+    encoder.writeUint32(0xffffffff);
+
+    expect(encoder.hex()).toBe('0000ffffffffffff');
+    expect(() => encoder.writeUint16(0x10000)).toThrow('invalid integer');
+    expect(() => encoder.writeUint32(0x100000000)).toThrow('invalid integer');
+  });
+
+  it.each([-1, 1.5, NaN])('rejects an invalid aggregated signer index: %s', index => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    expect(() => encoder.encodeAggregatedSignature({ signature: '11'.repeat(64), signers: [index] })).toThrow('invalid signer');
+  });
+
+  it.each(['-1', '-0.00000001'])('rejects a negative output amount: %s', amount => {
+    const encoder = new Encoder(Buffer.alloc(0));
+
+    expect(() => encoder.encodeOutput({ amount, keys: [] })).toThrow('invalid integer');
+  });
+
+  it('rejects fractional big integers without changing valid encodings', () => {
+    expect(() => bigNumberToBytes(BigNumber('1.5'))).toThrow('invalid integer');
+    expect(bigNumberToBytes(BigNumber(0)).toString('hex')).toBe('00');
+    expect(bigNumberToBytes(BigNumber('9007199254740993')).toString('hex')).toBe('20000000000001');
+  });
+
+  it.each(['NaN', 'Infinity', '-Infinity'])('rejects %s before entering the byte conversion loop', amount => {
+    // Make a regression fail immediately instead of hanging the test process.
+    const mod = vi.spyOn(BigNumber.prototype, 'mod').mockImplementation(() => {
+      throw new Error('non-finite value reached byte conversion');
+    });
+    try {
+      expect(() => bigNumberToBytes(BigNumber(amount))).toThrow('invalid integer');
+      expect(() => new Encoder(Buffer.alloc(0)).encodeOutput({ amount, keys: [] })).toThrow('invalid integer');
+      expect(mod).not.toHaveBeenCalled();
+    } finally {
+      mod.mockRestore();
+    }
+  });
+
+  it('keeps legacy integer decoding exact within the safe range', () => {
+    expect(bytesToInterger(Buffer.alloc(0))).toBe(0);
+    expect(bytesToInterger(Buffer.from('001fffffffffffff', 'hex'))).toBe(Number.MAX_SAFE_INTEGER);
+    expect(new Decoder(Buffer.from('00071fffffffffffff', 'hex')).readInteger()).toBe(Number.MAX_SAFE_INTEGER);
+  });
+
+  it.each(['20000000000000', '20000000000001', 'ffffffffffffff'])('rejects legacy integer overflow for %s and offers an exact decoder', hex => {
+    const raw = Buffer.from(`0007${hex}`, 'hex');
+
+    expect(() => bytesToInterger(Buffer.from(hex, 'hex'))).toThrow('Number.MAX_SAFE_INTEGER');
+    expect(() => new Decoder(raw).readInteger()).toThrow('Number.MAX_SAFE_INTEGER');
+    expect(new Decoder(raw).readBigInteger().toFixed()).toBe(BigInt(`0x${hex}`).toString());
   });
 });
 

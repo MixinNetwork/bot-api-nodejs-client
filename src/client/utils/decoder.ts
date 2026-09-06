@@ -4,12 +4,14 @@ import type { Input, Output } from '../types';
 import { magic } from './encoder';
 import { formatUnits } from './amount';
 
+/** Decodes a safe integer, rejecting values above Number.MAX_SAFE_INTEGER. */
 export const bytesToInterger = (b: Buffer) => {
   let x = 0;
   for (let i = 0; i < b.byteLength; i++) {
     const byte = b.at(i);
     x *= 0x100;
     if (byte) x += byte;
+    if (!Number.isSafeInteger(x)) throw new RangeError('integer exceeds Number.MAX_SAFE_INTEGER; use Decoder.readBigInteger() for large values');
   }
   return x;
 };
@@ -81,6 +83,7 @@ export class Decoder {
     return stringify(value);
   }
 
+  /** Decodes a safe integer. Use readBigInteger() for larger values. */
   readInteger() {
     const len = this.readInt();
     const value = this.buf.subarray(0, len);
@@ -120,7 +123,7 @@ export class Decoder {
       const transactionLength = this.readInt();
       const transaction = this.readSubarray(transactionLength).toString();
       const index = this.readUInt64();
-      const amount = formatUnits(this.readBigInteger(), 8).toNumber();
+      const amount = formatUnits(this.readBigInteger(), 8).toString();
 
       input.deposit = {
         chain,
@@ -137,7 +140,7 @@ export class Decoder {
       const groupLength = this.readInt();
       const group = this.readSubarray(groupLength).toString();
       const batch = this.readUInt64();
-      const amount = formatUnits(this.readBigInteger(), 8).toNumber();
+      const amount = formatUnits(this.readBigInteger(), 8).toString();
 
       input.mint = {
         group,

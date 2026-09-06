@@ -23,6 +23,7 @@ export const integerToBytes = (x: number) => {
 };
 
 export const bigNumberToBytes = (x: BigNumber) => {
+  if (!x.isInteger() || x.isLessThan(0)) throw new Error(`invalid integer ${x}`);
   const bytes = [];
   let i = x;
   do {
@@ -81,7 +82,11 @@ export class Encoder {
   }
 
   writeInt(i: number) {
-    if (i > MaximumEncodingInt) {
+    this.writeUint16(i);
+  }
+
+  writeUint16(i: number) {
+    if (!Number.isInteger(i) || i < 0 || i > MaximumEncodingInt) {
       throw new Error(`invalid integer ${i}, maximum ${MaximumEncodingInt}`);
     }
     const buf = Buffer.alloc(2);
@@ -89,13 +94,10 @@ export class Encoder {
     this.write(buf);
   }
 
-  writeUint16(i: number) {
-    const buf = Buffer.alloc(2);
-    buf.writeUInt16BE(i);
-    this.write(buf);
-  }
-
   writeUint32(i: number) {
+    if (!Number.isInteger(i) || i < 0 || i > 0xffffffff) {
+      throw new Error(`invalid integer ${i}, maximum ${0xffffffff}`);
+    }
     const buf = Buffer.alloc(4);
     buf.writeUInt32BE(i);
     this.write(buf);
@@ -206,6 +208,9 @@ export class Encoder {
     }
 
     js.signers.forEach((m, i) => {
+      if (!Number.isInteger(m) || m < 0) {
+        throw new Error(`invalid signer ${m}`);
+      }
       if (i > 0 && m <= js.signers[i - 1]) {
         throw new Error('signers not sorted');
       }
