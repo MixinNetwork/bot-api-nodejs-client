@@ -92,10 +92,7 @@ export class Decoder {
   }
 
   readBigInteger() {
-    const len = this.readInt();
-    const value = this.buf.subarray(0, len);
-    this.read(len);
-    return bytesToBigNumber(value);
+    return bytesToBigNumber(this.readSubarray(this.readInt()));
   }
 
   decodeInput() {
