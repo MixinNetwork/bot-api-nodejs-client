@@ -121,10 +121,7 @@ describe('transaction codec', () => {
     expect(new Decoder(encoder.buffer()).decodeOutput().amount).toBe(output.amount);
   });
 
-  it.each([
-    { amount: '0.00000001' },
-    { amount: '0.0000001' },
-  ])('decodes dust output amounts as plain decimals, not exponential ($amount)', ({ amount }) => {
+  it.each([{ amount: '0.00000001' }, { amount: '0.0000001' }])('decodes dust output amounts as plain decimals, not exponential ($amount)', ({ amount }) => {
     const output = {
       type: 0,
       amount,
