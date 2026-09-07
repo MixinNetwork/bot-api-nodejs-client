@@ -180,7 +180,7 @@ describe('transaction codec', () => {
     expect(() => encoder.encodeOutput({ type, amount: '1', keys: [] })).toThrow('invalid output type');
   });
 
-  it.each([['zz'], ['44'.repeat(31)], ['abc']])('rejects an output with a malformed key: %s', key => {
+  it.each(['zz', '44'.repeat(31), 'abc', `${'44'.repeat(32)}f`, `${'44'.repeat(32)}zz`])('rejects an output with a malformed key: %s', key => {
     const encoder = new Encoder(Buffer.alloc(0));
 
     // Buffer.from(key, 'hex') silently truncates, which would shift the
@@ -188,10 +188,19 @@ describe('transaction codec', () => {
     expect(() => encoder.encodeOutput({ amount: '1', keys: [key] })).toThrow('invalid output key');
   });
 
-  it.each(['zz', '44'.repeat(31)])('rejects an output with a malformed mask: %s', mask => {
+  it.each(['zz', '44'.repeat(31), `${'44'.repeat(32)}f`, `${'44'.repeat(32)}zz`])('rejects an output with a malformed mask: %s', mask => {
     const encoder = new Encoder(Buffer.alloc(0));
 
     expect(() => encoder.encodeOutput({ amount: '1', keys: [], mask })).toThrow('invalid output mask');
+  });
+
+  it.each([undefined, '', 'Ab'.repeat(32)])('accepts uppercase hex and an optional mask: %s', mask => {
+    const encoder = new Encoder(Buffer.alloc(0));
+    encoder.encodeOutput({ amount: '1', keys: ['Ab'.repeat(32)], mask });
+    expect(new Decoder(encoder.buffer()).decodeOutput()).toMatchObject({
+      keys: ['ab'.repeat(32)],
+      mask: mask ? 'ab'.repeat(32) : '00'.repeat(32),
+    });
   });
 
   it('round-trips sorted signature entries', () => {
