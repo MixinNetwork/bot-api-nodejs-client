@@ -31,6 +31,10 @@ describe('computer utilities', () => {
     expect(checkSystemCallSize(Buffer.alloc(MAX_SOLANA_TX_SIZE + 1))).toBe(false);
   });
 
+  it.each([1, Number.MAX_SAFE_INTEGER + 1, BigInt(1), null, undefined, true])('rejects a non-string user ID: %s', userID => {
+    expect(() => userIdToBytes(userID as unknown as string)).toThrow('invalid user id');
+  });
+
   it('builds system call extras with and without a fee ID', () => {
     const base = Buffer.concat([userIdToBytes('1'), Buffer.from(parseUUID(callID)), Buffer.from([1])]);
 

@@ -175,14 +175,13 @@ export class Encoder {
     o.keys.forEach(k => {
       // Buffer.from(k, 'hex') silently drops non-hex chars, so a typo'd key
       // would shift the whole framing and burn funds to a wrong key.
-      const kb = Buffer.from(k, 'hex');
-      if (kb.byteLength !== 32) throw new Error(`invalid output key ${k}`);
-      this.write(kb);
+      if (!/^[0-9a-fA-F]{64}$/.test(k)) throw new Error(`invalid output key ${k}`);
+      this.write(Buffer.from(k, 'hex'));
     });
 
     const maskHex = o.mask || '';
+    if (maskHex && !/^[0-9a-fA-F]{64}$/.test(maskHex)) throw new Error(`invalid output mask ${o.mask}`);
     const mask = maskHex ? Buffer.from(maskHex, 'hex') : Buffer.alloc(32, 0);
-    if (mask.byteLength !== 32) throw new Error(`invalid output mask ${o.mask}`);
     this.write(mask);
 
     const scriptHex = o.script || '';
