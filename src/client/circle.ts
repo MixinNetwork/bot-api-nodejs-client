@@ -28,19 +28,20 @@ export const CircleKeystoreClient = (axiosInstance: AxiosInstance) => ({
   delete: (circleID: string): Promise<any> => axiosInstance.post<unknown, any>(`/circles/${circleID}/delete`),
 
   /** Add the user to  a circle */
-  addUser: (userID: string, circleID: string): Promise<CircleResponse[]> => axiosInstance.post<unknown, CircleResponse[]>(`/users/${userID}/circles`, { circleID, action: 'ADD' }),
+  addUser: (userID: string, circleID: string): Promise<CircleResponse[]> =>
+    axiosInstance.post<unknown, CircleResponse[]>(`/users/${userID}/circles`, { circle_id: circleID, action: 'ADD' }),
 
   /** Remove the user from a circle */
   removeUser: (userID: string, circleID: string): Promise<CircleResponse[]> =>
-    axiosInstance.post<unknown, CircleResponse[]>(`/users/${userID}/circles`, { circleID, action: 'REMOVE' }),
+    axiosInstance.post<unknown, CircleResponse[]>(`/users/${userID}/circles`, { circle_id: circleID, action: 'REMOVE' }),
 
   /** Add the group from a certain circle */
   addConversation: (conversationID: string, circleID: string): Promise<CircleResponse[]> =>
-    axiosInstance.post<unknown, CircleResponse[]>(`/conversations/${conversationID}/circles`, { circleID, action: 'ADD' }),
+    axiosInstance.post<unknown, CircleResponse[]>(`/conversations/${conversationID}/circles`, { circle_id: circleID, action: 'ADD' }),
 
   /** Remove the group from a certain circle */
   removeConversation: (conversation_id: string, circleID: string): Promise<CircleResponse[]> =>
-    axiosInstance.post<unknown, CircleResponse[]>(`/conversations/${conversation_id}/circles`, { circleID, action: 'REMOVE' }),
+    axiosInstance.post<unknown, CircleResponse[]>(`/conversations/${conversation_id}/circles`, { circle_id: circleID, action: 'REMOVE' }),
 });
 
 export const CircleClient = buildClient(CircleKeystoreClient);

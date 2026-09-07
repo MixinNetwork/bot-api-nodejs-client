@@ -8,7 +8,7 @@ const toBytes = (data: Buffer) => new Uint8Array(data);
 
 /** Supporting multisig for tokens & collectibles */
 export const hashMembers = (ids: string[]): string => {
-  const key = ids.sort().join('');
+  const key = [...ids].sort().join('');
   return newHash(Buffer.from(key)).toString('hex');
 };
 

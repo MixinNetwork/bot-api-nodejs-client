@@ -1,6 +1,7 @@
 import { client, keystore } from './common';
+import { describeIntegration } from './integration';
 
-describe('user', () => {
+describeIntegration('user', () => {
   it('profile', async () => {
     const user = await client.user.profile();
     expect(user.user_id).toEqual(keystore.app_id);

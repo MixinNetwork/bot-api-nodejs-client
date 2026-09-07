@@ -11,5 +11,17 @@ module.exports = defineConfig({
     globals: true,
     setupFiles: ['./setup.jest.js', './test/crypto.ts'],
     testTimeout: 15000,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary'],
+      reportsDirectory: 'coverage',
+      exclude: ['test/**'],
+      thresholds: {
+        statements: 70,
+        branches: 55,
+        functions: 45,
+        lines: 70,
+      },
+    },
   },
 });

@@ -9,8 +9,8 @@ import { ResponseError } from './error';
 import { signAccessToken } from './utils/auth';
 
 export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
-  const timeout = config?.timeout || 3000;
-  const retries = config?.retry || 5;
+  const timeout = config?.timeout ?? 3000;
+  const retries = config?.retry ?? 5;
 
   const ins = axios.create({
     baseURL: 'https://api.mixin.one',
@@ -32,7 +32,7 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
       const requestID = uuid();
       config.headers['X-Request-Id'] = requestID;
       const jwtToken = signAccessToken(method, url, data, requestID, keystore);
-      config.headers.Authorization = `Bearer ${jwtToken}`;
+      if (jwtToken) config.headers.Authorization = `Bearer ${jwtToken}`;
     }
 
     return config;

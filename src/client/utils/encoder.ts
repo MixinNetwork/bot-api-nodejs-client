@@ -11,17 +11,19 @@ export const magic = Buffer.from([0x77, 0x77]);
 const empty = Buffer.from([0x00, 0x00]);
 
 export const integerToBytes = (x: number) => {
+  if (!Number.isSafeInteger(x) || x < 0) throw new Error(`invalid integer ${x}`);
   const bytes: number[] = [];
   if (x === 0) return bytes;
   let i = x;
   do {
-    bytes.unshift(i & 255);
-    i = (i / 2 ** 8) | 0;
+    bytes.unshift(i % 256);
+    i = Math.floor(i / 256);
   } while (i !== 0);
   return bytes;
 };
 
 export const bigNumberToBytes = (x: BigNumber) => {
+  if (!x.isInteger() || x.isLessThan(0)) throw new Error(`invalid integer ${x}`);
   const bytes = [];
   let i = x;
   do {
@@ -32,11 +34,12 @@ export const bigNumberToBytes = (x: BigNumber) => {
 };
 
 export const putUvarInt = (x: number) => {
+  if (!Number.isSafeInteger(x) || x < 0) throw new Error(`invalid integer ${x}`);
   const buf = [];
   let i = 0;
   while (x >= 0x80) {
-    buf[i] = x | 0x80;
-    x >>= 7;
+    buf[i] = (x % 0x80) | 0x80;
+    x = Math.floor(x / 0x80);
     i++;
   }
   buf[i] = x;
@@ -79,7 +82,11 @@ export class Encoder {
   }
 
   writeInt(i: number) {
-    if (i > MaximumEncodingInt) {
+    this.writeUint16(i);
+  }
+
+  writeUint16(i: number) {
+    if (!Number.isInteger(i) || i < 0 || i > MaximumEncodingInt) {
       throw new Error(`invalid integer ${i}, maximum ${MaximumEncodingInt}`);
     }
     const buf = Buffer.alloc(2);
@@ -87,13 +94,10 @@ export class Encoder {
     this.write(buf);
   }
 
-  writeUint16(i: number) {
-    const buf = Buffer.alloc(2);
-    buf.writeUInt16BE(i);
-    this.write(buf);
-  }
-
   writeUint32(i: number) {
+    if (!Number.isInteger(i) || i < 0 || i > 0xffffffff) {
+      throw new Error(`invalid integer ${i}, maximum ${0xffffffff}`);
+    }
     const buf = Buffer.alloc(4);
     buf.writeUInt32BE(i);
     this.write(buf);
@@ -124,9 +128,9 @@ export class Encoder {
     this.write(Buffer.from(i.hash, 'hex'));
     this.writeInt(i.index);
 
-    if (!i.genesis) i.genesis = '';
-    this.writeInt(i.genesis.length);
-    this.write(Buffer.from(i.genesis));
+    const genesis = i.genesis ?? '';
+    this.writeInt(Buffer.byteLength(genesis));
+    this.write(Buffer.from(genesis));
     const d = i.deposit;
     if (typeof d === 'undefined') {
       this.write(empty);
@@ -151,9 +155,9 @@ export class Encoder {
       this.write(empty);
     } else {
       this.write(magic);
-      if (!m.group) m.group = '';
-      this.writeInt(m.group.length);
-      this.write(Buffer.from(m.group));
+      const group = m.group ?? '';
+      this.writeInt(Buffer.byteLength(group));
+      this.write(Buffer.from(group));
 
       this.writeUint64(m.batch);
       this.writeInteger(parseUnits(m.amount, 8));
@@ -162,17 +166,27 @@ export class Encoder {
 
   encodeOutput(output: Output) {
     const o = output;
-    if (!o.type) o.type = 0;
-    this.write(Buffer.from([0x00, o.type]));
+    const type = o.type ?? 0;
+    if (!Number.isInteger(type) || type < 0 || type > 255) throw new Error(`invalid output type ${o.type}`);
+    this.write(Buffer.from([0x00, type]));
     this.writeInteger(parseUnits(o.amount, 8));
 
     this.writeInt(o.keys.length);
-    o.keys.forEach(k => this.write(Buffer.from(k, 'hex')));
+    o.keys.forEach(k => {
+      // Buffer.from(k, 'hex') silently drops non-hex chars, so a typo'd key
+      // would shift the whole framing and burn funds to a wrong key.
+      const kb = Buffer.from(k, 'hex');
+      if (kb.byteLength !== 32) throw new Error(`invalid output key ${k}`);
+      this.write(kb);
+    });
 
-    this.write(o.mask ? Buffer.from(o.mask, 'hex') : Buffer.alloc(32, 0));
+    const maskHex = o.mask || '';
+    const mask = maskHex ? Buffer.from(maskHex, 'hex') : Buffer.alloc(32, 0);
+    if (mask.byteLength !== 32) throw new Error(`invalid output mask ${o.mask}`);
+    this.write(mask);
 
-    if (!o.script) o.script = '';
-    const s = Buffer.from(o.script, 'hex');
+    const scriptHex = o.script || '';
+    const s = Buffer.from(scriptHex, 'hex');
     this.writeInt(s.byteLength);
     this.write(s);
 
@@ -204,6 +218,9 @@ export class Encoder {
     }
 
     js.signers.forEach((m, i) => {
+      if (!Number.isInteger(m) || m < 0) {
+        throw new Error(`invalid signer ${m}`);
+      }
       if (i > 0 && m <= js.signers[i - 1]) {
         throw new Error('signers not sorted');
       }

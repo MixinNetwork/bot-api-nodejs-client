@@ -101,7 +101,7 @@ export const getMixAddressBuffer = (ma: MixAddress) => {
   if (members.length > 255) {
     throw new Error(`invalid members length: ${members.length}`);
   }
-  if (ma.threshold === 0 || ma.threshold > members.length) {
+  if (!Number.isInteger(ma.threshold) || ma.threshold < 1 || ma.threshold > members.length) {
     throw new Error(`invalid threshold: ${ma.threshold}`);
   }
 

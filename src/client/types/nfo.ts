@@ -6,6 +6,7 @@ export interface NFOMemo {
   chain?: string /** chain uuid */;
   class?: string /** contract address */;
   collection?: string /** collection uuid */;
-  token?: number;
+  /** Exact token ID as a decimal integer string. */
+  token?: string;
   extra: string;
 }

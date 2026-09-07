@@ -4,6 +4,7 @@ import { signAccessToken } from '../../src/client/utils/auth';
 import { base64RawURLEncode, base64RawURLDecode } from '../../src/client/utils/base64';
 import { hashMembers, uniqueConversationID } from '../../src/client/utils/uniq';
 import { buildMixAddress, getMainnetAddressFromSeed, parseMixAddress } from '../../src/client/utils/address';
+import { buildMixinOneSafePaymentUri } from '../../src/client/utils/safe';
 import { attachInvoiceEntry, getInvoiceString, MixinInvoiceVersion, newMixinInvoice, parseMixinInvoice } from '../../src/client/utils/invoice';
 import keystore from '../keystore';
 
@@ -43,8 +44,10 @@ describe('Tests for utils', () => {
     hash = hashMembers(ids);
     expect(hash).toBe('6064ec68a229a7d2fe2be652d11477f21705a742e08b75564fd085650f1deaeb');
     const reverseIds = ['d1e9ec7e-199d-4578-91a0-a69d9a7ba048', '965e5c6e-434c-3fa9-b780-c50f43cd955c'];
+    const originalOrder = [...reverseIds];
     hash = hashMembers(reverseIds);
     expect(hash).toBe('6064ec68a229a7d2fe2be652d11477f21705a742e08b75564fd085650f1deaeb');
+    expect(reverseIds).toEqual(originalOrder);
   });
 
   test('tests for uniqueConversationID', () => {
@@ -110,6 +113,25 @@ describe('Tests for utils', () => {
     expect(ma).not.toBe(undefined);
     expect(ma!.xinMembers.join(',')).toBe(members.join(','));
     expect(ma!.threshold).toBe(2);
+  });
+
+  test.each([-1, 0, 1.5, NaN, Infinity, 3])('rejects an invalid MIX address threshold: %s', threshold => {
+    const members = ['67a87828-18f5-46a1-b6cc-c72a97a77c43', '965e5c6e-434c-3fa9-b780-c50f43cd955c'];
+
+    expect(() => buildMixAddress({ version: 2, uuidMembers: members, xinMembers: [], threshold })).toThrow('invalid threshold');
+  });
+
+  test('rejects fractional thresholds in payment URIs', () => {
+    const params = {
+      asset: 'c6d0c728-2624-429b-8e0d-d9d19b6592fa',
+      amount: '1',
+      uuidMembers: ['67a87828-18f5-46a1-b6cc-c72a97a77c43', '965e5c6e-434c-3fa9-b780-c50f43cd955c'],
+    };
+
+    expect(() => buildMixinOneSafePaymentUri({ ...params, threshold: 1.5 })).toThrow('invalid threshold');
+    const uri = buildMixinOneSafePaymentUri({ ...params, threshold: 2 });
+    const address = new URL(uri).pathname.split('/').pop()!;
+    expect(parseMixAddress(address)?.threshold).toBe(2);
   });
 
   test('tests for invoice', () => {

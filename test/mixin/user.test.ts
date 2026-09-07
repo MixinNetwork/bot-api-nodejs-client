@@ -2,8 +2,9 @@ import User from '../../src/client/user';
 import Pin from '../../src/client/pin';
 import keystore from '../keystore';
 import { app_pin } from '../common';
+import { describeIntegration } from '../integration';
 
-describe('Tests for users', () => {
+describeIntegration('Tests for users', () => {
   const user = User({ keystore });
   test('Test for read user`s profile', async () => {
     const resp = await user.profile();

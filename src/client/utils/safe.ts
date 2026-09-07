@@ -95,14 +95,15 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
   const totalOutput = rs.reduce((prev, cur) => prev.plus(BigNumber(cur.amount)), BigNumber('0'));
 
   let totalInput = BigNumber('0');
-  for (let i = 0; i < outputs.length; i++) {
-    const o = outputs[i];
+  const utxos: SafeUtxoOutput[] = [];
+  for (const o of outputs) {
     if (o.state !== 'unspent') continue;
+    utxos.push(o);
     totalInput = totalInput.plus(BigNumber(o.amount));
     if (totalInput.minus(totalOutput).isNegative()) continue;
 
     return {
-      utxos: outputs.slice(0, i + 1),
+      utxos,
       change: totalInput.minus(totalOutput),
     };
   }
@@ -110,6 +111,9 @@ export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: Sa
 };
 
 export const buildSafeTransactionRecipient = (members: string[], threshold: number, amount: string): SafeTransactionRecipient => {
+  if (members.length === 0) throw new Error('empty members to build safe transaction recipient');
+  if (!Number.isInteger(threshold) || threshold < 0 || threshold > 255) throw new Error(`invalid threshold: ${threshold}`);
+
   const mixAddress = {
     version: 2,
     threshold,
@@ -117,8 +121,11 @@ export const buildSafeTransactionRecipient = (members: string[], threshold: numb
     uuidMembers: [],
   } as MixAddress;
 
-  if (members.every(m => m.startsWith(MainAddressPrefix))) mixAddress.xinMembers = members;
-  if (members.every(m => validate(m))) mixAddress.uuidMembers = members;
+  if (members.every(m => m.startsWith(MainAddressPrefix) && getPublicFromMainnetAddress(m))) mixAddress.xinMembers = members;
+  if (members.every(m => validate(m))) {
+    if (threshold < 1 || threshold > members.length) throw new Error(`invalid threshold: ${threshold}`);
+    mixAddress.uuidMembers = members;
+  }
   if (mixAddress.uuidMembers.length === 0 && mixAddress.xinMembers.length === 0) throw new Error('empty members to build safe transaction recipient');
 
   return {
@@ -223,6 +230,7 @@ export const buildSafeTransaction = (
   references: string[] = [],
 ): SafeTransaction => {
   if (utxos.length === 0) throw new Error('empty inputs');
+  if (rs.length === 0) throw new Error('empty recipients');
   if (extra.byteLength > ExtraSizeGeneralLimit) {
     const r = rs[0];
     const amount = estimateStorageCost(extra);

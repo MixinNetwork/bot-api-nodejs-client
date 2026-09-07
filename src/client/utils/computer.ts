@@ -9,16 +9,29 @@ export const OperationTypeSystemCall = 2;
 export const OperationTypeUserDeposit = 3;
 
 export const userIdToBytes = (uid: string) => {
-  const x = BigNumber(uid);
+  // User IDs are uint64 decimal strings. Reject hex/exponent/whitespace that
+  // BigNumber would otherwise coerce (e.g. '0x10' -> 16, '1e3' -> 1000).
+  if (typeof uid === 'string' && !/^\d+$/.test(uid)) {
+    throw new Error(`invalid user id: ${uid}`);
+  }
+  let x: BigNumber;
+  try {
+    x = BigNumber(uid);
+  } catch {
+    throw new Error(`invalid user id: ${uid}`);
+  }
+  if (!x.isInteger() || x.isNegative() || x.isGreaterThan(BigNumber(2).pow(64).minus(1))) {
+    throw new Error(`invalid user id: ${uid}`);
+  }
   const bytes = [];
   let i = x;
   do {
     bytes.unshift(i.mod(256).toNumber());
     i = i.dividedToIntegerBy(256);
   } while (!i.isZero());
-  do {
+  while (bytes.length < 8) {
     bytes.unshift(0);
-  } while (bytes.length < 8);
+  }
   return Buffer.from(bytes);
 };
 

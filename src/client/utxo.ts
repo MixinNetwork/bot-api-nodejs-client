@@ -90,7 +90,7 @@ export const UtxoKeystoreClient = (axiosInstance: AxiosInstance) => ({
       } else {
         const hint = uniqueConversationID(traceHash.toString('hex'), seedHash.toString('hex'));
         uuidRequests.push({
-          receivers: ma.uuidMembers.sort(),
+          receivers: [...ma.uuidMembers].sort(),
           index: i,
           hint,
         });

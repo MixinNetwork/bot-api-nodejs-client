@@ -2,8 +2,9 @@ import { v4 as uuid } from 'uuid';
 import { client } from './common';
 import { MintMinimumCost, GroupMembers, GroupThreshold } from '../src/client/collectible';
 import { buildCollectibleMemo, MixinAssetID } from '../src';
+import { describeIntegration } from './integration';
 
-describe('address', () => {
+describeIntegration('address', () => {
   it('create nft', async () => {
     const id = uuid();
     const tr = {
