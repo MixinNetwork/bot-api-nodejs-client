@@ -119,4 +119,8 @@ export interface PaymentParams {
   memo?: string;
   trace?: string;
   returnTo?: string;
+  /** hash of the inscription (NFT collectible) to be paid to the destination */
+  inscription?: string;
+  /** hash of the inscription collection, lets the payer pick a collectible from it */
+  inscriptionCollection?: string;
 }

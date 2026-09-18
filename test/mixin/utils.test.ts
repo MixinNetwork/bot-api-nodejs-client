@@ -134,6 +134,52 @@ describe('Tests for utils', () => {
     expect(parseMixAddress(address)?.threshold).toBe(2);
   });
 
+  test('builds an inscription payment URI for NFT collectibles', () => {
+    const inscriptionHash = '7ecf9fc49ff4d2e36424b8e53e67aed8cc4e9d08d7cbdca7d8bdb153ed2fcdde';
+    const trace = '772e6bef-3bff-4fcc-987d-29bafca74d63';
+    const uuid = '06bb6333-26d1-48a4-b775-89e0e4b609ea';
+
+    const uri = buildMixinOneSafePaymentUri({
+      uuid,
+      inscription: inscriptionHash,
+      trace,
+    });
+    const url = new URL(uri);
+    expect(`${url.origin}${url.pathname}`).toBe(`https://mixin.one/pay/${uuid}`);
+    expect(url.searchParams.get('inscription')).toBe(inscriptionHash);
+    expect(url.searchParams.get('trace')).toBe(trace);
+    expect(url.searchParams.get('asset')).toBeNull();
+    expect(url.searchParams.get('amount')).toBeNull();
+
+    // without inscription, the param should be absent as before
+    const plainUri = buildMixinOneSafePaymentUri({
+      uuid,
+      asset: 'c6d0c728-2624-429b-8e0d-d9d19b6592fa',
+      amount: '1',
+      trace,
+    });
+    expect(new URL(plainUri).searchParams.get('inscription')).toBeNull();
+  });
+
+  test('builds an inscription_collection payment URI to pick a collectible from a collection', () => {
+    const collectionHash = '4a5f79c76872524c6a4a81b174338584e790f09fb059c39cf2a894de1b3c31c6';
+    const trace = '3552d116-b29d-4d72-9b24-3ca3b2e0f9c2';
+    const uuid = '06bb6333-26d1-48a4-b775-89e0e4b609ea';
+
+    const uri = buildMixinOneSafePaymentUri({
+      uuid,
+      inscriptionCollection: collectionHash,
+      memo: 'pick one from the collection',
+      trace,
+    });
+    const url = new URL(uri);
+    expect(`${url.origin}${url.pathname}`).toBe(`https://mixin.one/pay/${uuid}`);
+    expect(url.searchParams.get('inscription_collection')).toBe(collectionHash);
+    expect(url.searchParams.get('inscription')).toBeNull();
+    expect(url.searchParams.get('trace')).toBe(trace);
+    expect(url.searchParams.get('memo')).toBe('pick one from the collection');
+  });
+
   test('tests for invoice', () => {
     const BTC = 'c6d0c728-2624-429b-8e0d-d9d19b6592fa';
     const ETH = '43d61dcd-e413-450d-80b8-101d5e903357';

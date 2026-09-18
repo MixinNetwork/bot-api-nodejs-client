@@ -56,6 +56,8 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
     asset: params.asset,
     amount: params.amount,
     memo: params.memo,
+    inscription: params.inscription,
+    inscription_collection: params.inscriptionCollection,
     trace: params.trace ?? v4(),
     return_to: params.returnTo && encodeURIComponent(params.returnTo),
   };
