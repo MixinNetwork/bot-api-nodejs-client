@@ -65,8 +65,12 @@ describe('inscription operation extras', () => {
     } as const;
     expect(decodeInscriptionOperationExtra(buildInscriptionOperationExtra(deploy).toString('hex'))).toEqual(deploy);
 
-    const distribute = { operation: 'distribute', sequence: 0 } as const;
+    const distribute = { distribute: 'distribute', sequence: 0 } as const;
     expect(decodeInscriptionOperationExtra(buildInscriptionOperationExtra(distribute))).toEqual(distribute);
+    expect(buildInscriptionOperationExtra(distribute).toString()).toBe(JSON.stringify({ distribute: 'distribute', sequence: 0 }));
+
+    const occupy = { operation: 'occupy', sequence: 3 } as const;
+    expect(decodeInscriptionOperationExtra(buildInscriptionOperationExtra(occupy))).toEqual(occupy);
   });
 
   it('rejects invalid or unknown operation extras', () => {
@@ -74,7 +78,9 @@ describe('inscription operation extras', () => {
     expect(() => decodeInscriptionOperationExtra(Buffer.from('"text"'))).toThrow('invalid inscription operation extra');
     expect(() => decodeInscriptionOperationExtra(Buffer.from('{}'))).toThrow('unknown inscription operation');
     expect(() => decodeInscriptionOperationExtra(Buffer.from(JSON.stringify({ operation: 'inscribe' })))).toThrow('unknown inscription operation');
+    expect(() => decodeInscriptionOperationExtra(Buffer.from(JSON.stringify({ operation: 'distribute', sequence: 0 })))).toThrow('unknown inscription operation');
     expect(() => decodeInscriptionOperationExtra(Buffer.from(JSON.stringify({ operation: 'distribute', sequence: 'x' })))).toThrow('unknown inscription operation');
+    expect(() => decodeInscriptionOperationExtra(Buffer.from(JSON.stringify({ distribute: 'distribute', sequence: 'x' })))).toThrow('unknown inscription operation');
     expect(() => decodeInscriptionOperationExtra(Buffer.from(JSON.stringify({ version: 2, mode: 1 })))).toThrow('unknown inscription operation');
   });
 });

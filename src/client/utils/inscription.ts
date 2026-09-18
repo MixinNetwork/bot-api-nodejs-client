@@ -2,7 +2,9 @@ import { v4 } from 'uuid';
 import type {
   GhostKey,
   InscriptionDeploy,
+  InscriptionDistribute,
   InscriptionInscribe,
+  InscriptionOccupy,
   InscriptionOperation,
   SafeOutputsRequest,
   SafeTransactionRecipient,
@@ -36,7 +38,8 @@ export const decodeInscriptionOperationExtra = (extra: Buffer | string): Inscrip
 
   const op = operation as Record<string, unknown>;
   if (op.operation === 'inscribe' && typeof op.recipient === 'string') return operation as InscriptionInscribe;
-  if ((op.operation === 'distribute' || op.operation === 'occupy') && Number.isInteger(op.sequence)) return operation as InscriptionOperation;
+  if (op.distribute === 'distribute' && Number.isInteger(op.sequence)) return operation as InscriptionDistribute;
+  if (op.operation === 'occupy' && Number.isInteger(op.sequence)) return operation as InscriptionOccupy;
   if (op.version === 1 && (op.mode === InscriptionModeInstant || op.mode === InscriptionModeDone)) return operation as InscriptionDeploy;
   throw new Error('unknown inscription operation');
 };

@@ -24,7 +24,8 @@ export interface InscriptionInscribe {
 }
 
 export interface InscriptionDistribute {
-  operation: 'distribute';
+  /** the JSON key aligns with the Go SDK tag json:"distribute", the value must be the literal "distribute" */
+  distribute: 'distribute';
   sequence: number;
 }
 
