@@ -15,7 +15,9 @@ export type MessageCategory =
   | 'APP_BUTTON_GROUP'
   | 'MESSAGE_RECALL'
   | 'SYSTEM_CONVERSATION'
-  | 'SYSTEM_ACCOUNT_SNAPSHOT';
+  | 'SYSTEM_ACCOUNT_SNAPSHOT'
+  | 'SYSTEM_SAFE_SNAPSHOT'
+  | 'SYSTEM_SAFE_INSCRIPTION';
 
 export type EncryptedMessageStatus = 'SUCCESS' | 'FAILED';
 

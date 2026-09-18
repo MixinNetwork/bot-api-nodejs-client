@@ -1,4 +1,5 @@
 import type { MixAddress } from './address';
+import type { InscriptionTreasury } from './inscription';
 
 // field for:
 // GET safe/assets
@@ -77,6 +78,7 @@ export interface SafeSnapshot {
   closing_balance: string | null;
   deposit: SafeDeposit | null;
   withdrawal: SafeWithdrawal | null;
+  inscription_hash?: string;
 }
 
 export interface SafeDeposit {
@@ -120,6 +122,7 @@ export interface SafeCollection {
   symbol: string;
   type: string;
   unit: string;
+  treasury?: InscriptionTreasury;
   created_at: string;
   updated_at: string;
 }

@@ -56,6 +56,8 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
     asset: params.asset,
     amount: params.amount,
     memo: params.memo,
+    inscription: params.inscription,
+    inscription_collection: params.inscriptionCollection,
     trace: params.trace ?? v4(),
     return_to: params.returnTo && encodeURIComponent(params.returnTo),
   };
@@ -91,13 +93,14 @@ export const deriveGhostPublicKey = (r: Buffer, A: Buffer, B: Buffer, index: num
   return Buffer.from(p4.toBytes());
 };
 
-export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[]) => {
+export const getUnspentOutputsForRecipients = (outputs: SafeUtxoOutput[], rs: SafeTransactionRecipient[], options: { includeInscriptions?: boolean } = {}) => {
   const totalOutput = rs.reduce((prev, cur) => prev.plus(BigNumber(cur.amount)), BigNumber('0'));
 
   let totalInput = BigNumber('0');
   const utxos: SafeUtxoOutput[] = [];
   for (const o of outputs) {
     if (o.state !== 'unspent') continue;
+    if (!options.includeInscriptions && o.inscription_hash) continue;
     utxos.push(o);
     totalInput = totalInput.plus(BigNumber(o.amount));
     if (totalInput.minus(totalOutput).isNegative()) continue;

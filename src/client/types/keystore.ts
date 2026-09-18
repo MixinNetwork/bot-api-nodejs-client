@@ -3,6 +3,7 @@ export interface AppKeystore {
   session_id: string;
   server_public_key: string;
   session_private_key: string;
+  spend_private_key?: string;
 }
 
 export interface OAuthKeystore {
