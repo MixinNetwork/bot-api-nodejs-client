@@ -7,6 +7,7 @@ export * from './computer';
 export * from './decoder';
 export * from './ed25519';
 export * from './encoder';
+export * from './inscription';
 export * from './invoice';
 export * from './multisigs';
 export * from './nfo';

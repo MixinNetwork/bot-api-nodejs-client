@@ -12,8 +12,10 @@ import type {
   SafeSnapshot,
   SafeSnapshotsRequest,
   SafeWithdrawalFee,
+  SequencerTransactionRequest,
 } from './types';
-import { buildClient, signEd25519PIN, signSafeRegistration } from './utils';
+import { buildClient, signEd25519PIN, signSafeRegistration, transferInscription, type SafeTransferInscriptionRequest } from './utils';
+import { UtxoKeystoreClient } from './utxo';
 
 export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
   /** If you want to register safe user, you need to upgrade TIP PIN first. */
@@ -59,6 +61,16 @@ export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keyst
     axiosInstance.get<unknown, SafeCollectible[]>(`/safe/inscriptions/collections/${collectionHash}/items`, {
       params: offset && offset > 0 ? { offset } : undefined,
     }),
+
+  /**
+   * Transfer an inscription (collectible) to a recipient. The spend private
+   * key defaults to the spend_private_key in the keystore.
+   */
+  transferInscription: (data: SafeTransferInscriptionRequest): Promise<SequencerTransactionRequest[]> => {
+    const spendPrivateKey = data.spendPrivateKey ?? (keystore as { spend_private_key?: string } | undefined)?.spend_private_key;
+    if (!spendPrivateKey) return Promise.reject(new Error('spend private key is required, set it in the keystore or pass spendPrivateKey'));
+    return transferInscription(UtxoKeystoreClient(axiosInstance), { ...data, spendPrivateKey });
+  },
 });
 export const SafeClient = buildClient(SafeKeystoreClient);
 

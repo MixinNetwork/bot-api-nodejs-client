@@ -104,4 +104,5 @@ export interface SafeMultisigsResponse {
   created_at: string;
   updated_at: string;
   views: string[];
+  inscription_hash?: string;
 }
