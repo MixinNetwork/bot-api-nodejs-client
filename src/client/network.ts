@@ -4,7 +4,7 @@ import type { NetworkSnapshotRequest, NetworkInfoResponse, NetworkChainResponse,
 import { buildClient } from './utils/client';
 
 /**
- * Public methods that need no permission
+ * Network methods require API authorization, including public information endpoints.
  * Docs: https://developers.mixin.one/docs/api/transfer/snapshots
  */
 export const NetworkBaseClient = (axiosInstance: AxiosInstance) => ({

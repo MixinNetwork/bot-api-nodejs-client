@@ -1,9 +1,9 @@
 import type { AxiosInstance } from 'axios';
-import type { BaseClient, BuildClient, HTTPConfig, KeystoreClient, RequestClient, RequestConfig, UnionKeystoreClient } from '../types/client';
+import type { BaseClient, BuildClient, HTTPConfig, UnionKeystoreClient, RequestClient, RequestConfig } from '../types/client';
 import type { Keystore } from '../types/keystore';
 import { http } from '../http';
 
-export const createAxiosClient = (keystore?: Keystore, requestConfig?: RequestConfig) => http(keystore, requestConfig);
+export const createAxiosClient = (keystore: Keystore, requestConfig?: RequestConfig) => http(keystore, requestConfig);
 
 export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient => ({
   // The HTTP response interceptor unwraps the API payload.
@@ -12,13 +12,13 @@ export const createRequestClient = (axiosInstance: AxiosInstance): RequestClient
 
 export const buildClient: BuildClient =
   <KeystoreReturnType extends object>(KeystoreClient: UnionKeystoreClient<KeystoreReturnType>): BaseClient<KeystoreReturnType> =>
-  (config: HTTPConfig = {}): any => {
+  (config: HTTPConfig) => {
     if (!KeystoreClient) throw new Error('keystore client is required');
 
     const { keystore, requestConfig } = config;
     const axiosInstance = createAxiosClient(keystore, requestConfig);
     const requestClient = createRequestClient(axiosInstance);
-    const keystoreClient = (KeystoreClient as KeystoreClient<KeystoreReturnType>)(axiosInstance, keystore);
+    const keystoreClient = KeystoreClient(axiosInstance, keystore);
 
     return Object.assign(keystoreClient, requestClient);
   };

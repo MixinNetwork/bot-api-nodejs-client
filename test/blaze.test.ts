@@ -1,11 +1,15 @@
 import WebSocket from 'ws';
 import { gzip, ungzip } from 'pako';
 import { describe, expect, it, vi } from 'vitest';
-import { decodeMessage, sendRaw } from '../src/blaze/utils';
+import { decodeMessage, sendRaw, websocket } from '../src/blaze/utils';
 
 const encodedEnvelope = (data: Record<string, unknown>) => gzip(Buffer.from(JSON.stringify({ data })));
 
 describe('Blaze utilities', () => {
+  it('rejects a handshake without valid credentials before opening a socket', () => {
+    expect(() => websocket(undefined as never, 'wss://blaze.mixin.one', { onMessage: async () => {} })).toThrow('A valid keystore is required for Blaze authorization');
+  });
+
   it('decodes an envelope without changing message data by default', () => {
     const message = { message_id: 'message-id', data: Buffer.from('hello').toString('base64') };
 

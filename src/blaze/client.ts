@@ -4,7 +4,7 @@ import type Keystore from '../client/types/keystore';
 import type { BlazeOptions, BlazeHandler } from './type';
 import { websocket, sendRaw } from './utils';
 
-export const BlazeKeystoreClient = (keystore: Keystore | undefined, wsOptions: BlazeOptions | undefined) => {
+export const BlazeKeystoreClient = (keystore: Keystore, wsOptions: BlazeOptions | undefined) => {
   const url = 'wss://blaze.mixin.one';
 
   let ws: WebSocket | undefined;

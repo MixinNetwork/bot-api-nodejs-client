@@ -116,7 +116,7 @@ describe('Tests for safe', () => {
   });
 
   test('Test for safe ghost key for mainnet address', async () => {
-    const client = MixinApi();
+    const client = MixinApi({ keystore: { app_id: '4b79fe76-0d9d-49e6-85fd-0f6be01147da', session_private_key: '01'.repeat(32) } });
     const seed = Buffer.alloc(64).fill(1);
 
     const trace = '9dc60d4c-f301-48ef-97f2-32e9195648cb';

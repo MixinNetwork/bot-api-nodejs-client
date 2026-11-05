@@ -10,17 +10,16 @@ export interface RequestConfig extends Partial<
 }
 
 export interface HTTPConfig {
-  keystore?: Keystore;
+  keystore: Keystore;
   requestConfig?: RequestConfig;
 }
 
 export interface BaseClient<KeystoreReturnType> {
-  (): KeystoreReturnType & RequestClient;
   (config: HTTPConfig): KeystoreReturnType & RequestClient;
 }
 
+export type KeystoreClient<KeystoreReturnType extends object> = (axiosInstance: AxiosInstance, keystore: Keystore) => KeystoreReturnType;
 export type BaseInnerClient<KeystoreReturnType extends object> = (axiosInstance: AxiosInstance) => KeystoreReturnType;
-export type KeystoreClient<KeystoreReturnType extends object> = (axiosInstance: AxiosInstance, keystore?: Keystore) => KeystoreReturnType;
 export type UnionKeystoreClient<KeystoreReturnType extends object> = BaseInnerClient<KeystoreReturnType> | KeystoreClient<KeystoreReturnType>;
 
 export interface BuildClient {

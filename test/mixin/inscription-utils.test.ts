@@ -120,7 +120,7 @@ describe('getInscriptionOutput', () => {
     const pages = [[inscriptionOutput(3), inscriptionOutput(2), inscriptionOutput(1)], [target]];
     const safeOutputs = vi.fn(async () => pages.shift() ?? []);
 
-    const found = await getInscriptionOutput({ safeOutputs } as InscriptionUtxoClient, 'dd'.repeat(32), { limit: 3 });
+    const found = await getInscriptionOutput({ safeOutputs } as unknown as InscriptionUtxoClient, 'dd'.repeat(32), { limit: 3 });
 
     expect(found).toEqual(target);
     expect(safeOutputs).toHaveBeenCalledTimes(2);
@@ -130,7 +130,7 @@ describe('getInscriptionOutput', () => {
   it('throws when the inscription is nowhere unspent', async () => {
     const safeOutputs = vi.fn(async () => [inscriptionOutput(0)]);
 
-    await expect(getInscriptionOutput({ safeOutputs } as InscriptionUtxoClient, 'dd'.repeat(32))).rejects.toThrow('unspent inscription output not found');
+    await expect(getInscriptionOutput({ safeOutputs } as unknown as InscriptionUtxoClient, 'dd'.repeat(32))).rejects.toThrow('unspent inscription output not found');
   });
 });
 
@@ -143,7 +143,7 @@ describe('transferInscription', () => {
       client: {
         safeOutputs: vi.fn(async () => [utxo]),
         ghostKey: vi.fn(async () => [ghost]),
-        verifyTransaction: vi.fn(async () => [{ views: [viewKey] }]) as unknown as Promise<SequencerTransactionRequest[]>,
+        verifyTransaction: vi.fn(async () => [{ views: [viewKey] }] as SequencerTransactionRequest[]),
         sendTransactions,
       } as InscriptionUtxoClient,
       sendTransactions,

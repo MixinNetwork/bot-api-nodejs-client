@@ -1,8 +1,13 @@
-export interface AppKeystore {
+/** Credentials used to sign requests, including before a session is issued. */
+export interface SessionKeystore {
   app_id: string;
+  session_private_key: string;
+  session_id?: string;
+}
+
+export interface AppKeystore extends SessionKeystore {
   session_id: string;
   server_public_key: string;
-  session_private_key: string;
   spend_private_key?: string;
 }
 
@@ -13,13 +18,11 @@ export interface OAuthKeystore {
   session_private_key: string;
 }
 
-export interface NetworkUserKeystore {
-  app_id: string;
+export interface NetworkUserKeystore extends SessionKeystore {
   session_id: string;
-  session_private_key: string;
   pin_token_base64: string;
 }
 
-export type Keystore = AppKeystore | OAuthKeystore | NetworkUserKeystore;
+export type Keystore = SessionKeystore | AppKeystore | OAuthKeystore | NetworkUserKeystore;
 
 export default Keystore;

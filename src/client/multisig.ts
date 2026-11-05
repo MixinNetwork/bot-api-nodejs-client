@@ -13,7 +13,7 @@ import { buildClient } from './utils/client';
  * * only uncompleted sign transaction can be unlocked.
  * Docs: https://developers.mixin.one/docs/api/multisigs/request
  */
-export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
   const initMultisig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests/${requestID}/${action}`, { pin: encrypted });

@@ -8,7 +8,7 @@ import type { RequestConfig } from './types/client';
 import { ResponseError } from './error';
 import { signAccessToken } from './utils/auth';
 
-export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance {
+export function http(keystore: Keystore, config?: RequestConfig): AxiosInstance {
   const timeout = config?.timeout ?? 3000;
   const retries = config?.retry ?? 5;
 
@@ -26,14 +26,14 @@ export function http(keystore?: Keystore, config?: RequestConfig): AxiosInstance
 
   ins.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const { method, data } = config;
-    const url = axios.getUri(config).slice(config.baseURL?.length);
+    const { pathname, search } = new URL(axios.getUri(config), 'https://api.mixin.one');
+    const url = pathname + search;
 
-    if (config.headers) {
-      const requestID = uuid();
-      config.headers['X-Request-Id'] = requestID;
-      const jwtToken = signAccessToken(method, url, data, requestID, keystore);
-      if (jwtToken) config.headers.Authorization = `Bearer ${jwtToken}`;
-    }
+    const requestID = uuid();
+    config.headers['X-Request-Id'] = requestID;
+    const token = signAccessToken(method, url, data, requestID, keystore);
+    if (!token) throw new Error('Invalid keystore: unable to sign API request');
+    config.headers.set('Authorization', `Bearer ${token}`, true);
 
     return config;
   });

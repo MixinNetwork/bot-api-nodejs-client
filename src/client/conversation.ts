@@ -13,14 +13,13 @@ import { buildClient } from './utils/client';
  * * for group conversation, creator will be the owner and can't be changed.
  * Docs: https://developers.mixin.one/docs/api/conversations/read
  */
-export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
   const createConversation = (params: ConversationRequest): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>('/conversations', params);
 
   const managerConversation = (conversationID: string, action: ConversationAction, participant: ParticipantRequest[]): Promise<ConversationResponse> =>
     axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/participants/${action}`, participant);
 
   const createContactConversation = (userID: string): Promise<ConversationResponse> => {
-    if (!keystore) throw new Error('No Keystore Provided');
     return createConversation({
       category: 'CONTACT',
       conversation_id: uniqueConversationID(keystore.app_id, userID),

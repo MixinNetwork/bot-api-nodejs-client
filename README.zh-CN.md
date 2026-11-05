@@ -44,6 +44,10 @@ async function getMe() {
 }
 ```
 
+所有 Mixin API 请求（包括网络查询和 OAuth token 交换）都必须传入 keystore。`MixinApi({ keystore })` 和独立客户端均要求该参数，Authorization 请求头不能代替 keystore。SDK 会自动签名请求。
+
+请求签名使用 `SessionKeystore`：包含 `app_id`、`session_private_key` 和可选的 `session_id`。登录前尚未获取 session 时，JWT 的 `sid` 为空字符串，与 Go 客户端保持一致。OAuth 登录后使用已有的 `OAuthKeystore`，传入 `authorization_id` 和 `scope`。`AppKeystore` 和 `NetworkUserKeystore` 继续保留 PIN、Safe 操作需要的额外字段。
+
 2. 使用 Mixin 的消息功能
 
 ```js
@@ -79,7 +83,10 @@ const client_secret = ''; // OAuth Client Secret of your bot
 
 const { seed, publicKey } = getED25519KeyPair(); // Generate random seed and ed25519 key pairs
 
-let client = MixinApi();
+// 登录前使用刚生成的私钥为 token 交换请求签名，此时还没有 session。
+let client = MixinApi({
+  keystore: { app_id, session_private_key: Buffer.from(seed).toString('hex') },
+});
 const { scope, authorization_id } = await client.oauth.getToken({
   client_id: app_id,
   code,

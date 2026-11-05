@@ -33,7 +33,7 @@ export const GroupThreshold = 5;
  * * only uncompleted sign transaction can be unlocked.
  * Docs: https://developers.mixin.one/docs/api/collectibles/request
  */
-export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
   const manageRequest = (pin: string, requestID: string, action: CollectibleRequestAction): Promise<CollectibleTransactionResponse> => {
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, CollectibleTransactionResponse>(`/collectibles/requests/${requestID}/${action}`, { pin: encrypted });
