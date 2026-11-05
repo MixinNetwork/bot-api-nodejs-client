@@ -8,12 +8,25 @@ import type { RequestConfig } from './types/client';
 import { ResponseError } from './error';
 import { signAccessToken } from './utils/auth';
 
+const API_ORIGIN = 'https://api.mixin.one';
+
+const validatePath = (uri: string) => {
+  let pathEnd = uri.search(/[?#]/);
+  if (pathEnd === -1) {
+    pathEnd = uri.length;
+    // WHATWG URL parsing trims trailing C0 controls and ASCII spaces.
+    while (pathEnd > 0 && uri.charCodeAt(pathEnd - 1) <= 0x20) pathEnd -= 1;
+  }
+  const path = uri.slice(0, pathEnd).replace(/[\t\n\r]/g, '');
+  if (/(?:^|[/\\])(?:\.|%2e){1,2}(?:[/\\]|$)/i.test(path)) throw new Error('Invalid API path: dot segments are not allowed');
+};
+
 export function http(keystore: Keystore, config?: RequestConfig): AxiosInstance {
   const timeout = config?.timeout ?? 3000;
   const retries = config?.retry ?? 5;
 
   const ins = axios.create({
-    baseURL: 'https://api.mixin.one',
+    baseURL: API_ORIGIN,
     timeout,
     ...config,
     headers: {
@@ -26,7 +39,13 @@ export function http(keystore: Keystore, config?: RequestConfig): AxiosInstance 
 
   ins.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const { method, data } = config;
-    const { pathname, search } = new URL(axios.getUri(config), 'https://api.mixin.one');
+    // Check before URL normalization, both before and after query parameters are added.
+    validatePath(axios.getUri({ ...config, params: null }));
+    const uri = axios.getUri(config);
+    validatePath(uri);
+    // Require an absolute URL so browser transports cannot resolve it against the page's origin.
+    const { origin, pathname, search } = new URL(uri);
+    if (origin !== API_ORIGIN) throw new Error(`Invalid API origin: requests must target ${API_ORIGIN}`);
     const url = pathname + search;
 
     const requestID = uuid();

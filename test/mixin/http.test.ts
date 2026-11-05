@@ -54,12 +54,71 @@ describe('HTTP client', () => {
     expect(adapter.mock.calls[0][0].headers.get('Authorization')).toMatch(/^Bearer ey/);
   });
 
-  it.each(['/resource/a%2Fb?name=hello%20world', 'https://example.test/api/resource/a%2Fb?name=hello%20world'])(
+  it.each([
+    { url: '/search/../me' },
+    { url: '/search/..' },
+    { url: '/search/%2e%2e/me' },
+    { url: '/search/.%2E/me' },
+    { url: '/search/%2e./me' },
+    { url: '/search/..\\me' },
+    { url: '/search\\..\\me' },
+    { url: '/search/.\t./me' },
+    { url: '/search/.\n./me' },
+    { url: '/search/.\r./me' },
+    { url: '/search/.. ' },
+    { url: '/search/..\u0000' },
+    { url: '/search/..\u001f' },
+    { url: '/search/./me' },
+    { url: '/search/%2e/me' },
+    { url: 'https://api.mixin.one/search/../me' },
+    { url: '/search/%2E%2E?kind=ALL' },
+    { url: '/search/.. ', params: { kind: 'ALL' } },
+    { url: '/search/..\u0000', params: { kind: 'ALL' } },
+    { url: '/search/%2e%2e ', params: { kind: 'ALL' } },
+    { url: '/me', baseURL: 'https://api.mixin.one/search/%2e%2e' },
+  ])('rejects dot path segments before signing or sending: %j', async config => {
+    const adapter = vi.fn();
+    const errorMap = vi.fn();
+    const client = http({} as Keystore, { retry: 0, errorMap, adapter } as Parameters<typeof http>[1]);
+
+    await expect(client.request(config)).rejects.toThrow('Invalid API path: dot segments are not allowed');
+    expect(adapter).not.toHaveBeenCalled();
+    expect(errorMap).toHaveBeenCalledOnce();
+  });
+
+  it.each(['https://api.mixin.one/search/..', 'https://api.mixin.one/search/%2e%2e'])('rejects dot segments in the configured baseURL: %s', async baseURL => {
+    const adapter = vi.fn();
+    const client = http(keystore, { baseURL, retry: 0, adapter } as Parameters<typeof http>[1]);
+
+    await expect(client.get('/me')).rejects.toThrow('Invalid API path');
+    expect(adapter).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    '/search/foo..bar',
+    '/search/...',
+    '/search/..%2Fme',
+    '/search/%252e%252e/me',
+    '/search/..\u00a0',
+    '/search/.. ?kind=ALL',
+    '/search/bitcoin?q=../me',
+    '/search/bitcoin?q=..\\me',
+    '/search/bitcoin#/../me',
+  ])('preserves ordinary paths and dot sequences in query strings or fragments: %s', async url => {
+    const adapter = vi.fn(async (config: InternalAxiosRequestConfig) => response(config, { data: true }));
+    const client = http(keystore, { retry: 0, adapter } as Parameters<typeof http>[1]);
+
+    await expect(client.get(url)).resolves.toBe(true);
+    expect(adapter).toHaveBeenCalledOnce();
+    expect(adapter.mock.calls[0][0].headers.get('Authorization')).toMatch(/^Bearer ey/);
+  });
+
+  it.each(['/resource/a%2Fb?name=hello%20world', 'https://api.mixin.one/api/resource/a%2Fb?name=hello%20world', 'HTTPS://API.MIXIN.ONE:443/api/resource/a%2Fb?name=hello%20world'])(
     'signs the full request URI and transmitted body for %s',
     async url => {
       const adapter = vi.fn(async (config: InternalAxiosRequestConfig) => response(config, { data: true }));
       const client = http(keystore, {
-        baseURL: 'https://example.test/api',
+        baseURL: 'https://api.mixin.one/api',
         headers: { authorization: 'Bearer external' },
         retry: 0,
         adapter,
@@ -78,10 +137,46 @@ describe('HTTP client', () => {
     },
   );
 
+  it.each([
+    'https://example.test/me',
+    'https://api.mixin.one.example.test/me',
+    'https://api.mixin.one@evil.test/me',
+    'https://api.mixin.one:8443/me',
+    'http://api.mixin.one/me',
+    'https://api.mixin.one./me',
+  ])('rejects an untrusted absolute URL before sending: %s', async url => {
+    const adapter = vi.fn();
+    const errorMap = vi.fn();
+    const client = http(keystore, { retry: 0, errorMap, adapter } as Parameters<typeof http>[1]);
+
+    await expect(client.get(url)).rejects.toThrow('Invalid API origin');
+    expect(adapter).not.toHaveBeenCalled();
+    expect(errorMap).toHaveBeenCalledOnce();
+  });
+
+  it.each(['https://example.test', 'http://api.mixin.one', 'https://api.mixin.one:8443'])('rejects an untrusted configured baseURL before sending: %s', async baseURL => {
+    const adapter = vi.fn();
+    const client = http(keystore, { baseURL, retry: 0, adapter } as Parameters<typeof http>[1]);
+
+    await expect(client.get('/me')).rejects.toThrow('Invalid API origin');
+    expect(adapter).not.toHaveBeenCalled();
+  });
+
+  it.each([{ url: '/me', baseURL: '' }, { url: '/me', baseURL: '/api' }, { url: '/me', baseURL: '//api.mixin.one' }, { url: '//api.mixin.one/me' }, { url: '//example.test/me' }])(
+    'rejects a URL that a browser could resolve against its own origin or protocol: %j',
+    async config => {
+      const adapter = vi.fn();
+      const client = http(keystore, { retry: 0, adapter } as Parameters<typeof http>[1]);
+
+      await expect(client.request(config)).rejects.toThrow();
+      expect(adapter).not.toHaveBeenCalled();
+    },
+  );
+
   it('adds request metadata, unwraps data, and honors retry: 0', async () => {
     const adapter = vi.fn(async (config: InternalAxiosRequestConfig) => response(config, { data: { ok: true } }));
     const client = http(keystore, {
-      baseURL: 'https://example.test',
+      baseURL: 'https://api.mixin.one',
       headers: { 'X-Client': 'test', Authorization: 'Bearer external' },
       retry: 0,
       timeout: 0,
