@@ -48,6 +48,12 @@ async function getMe() {
 
 Every Mixin API request requires a keystore, including network queries and OAuth token exchange. `MixinApi({ keystore })` and individual clients require this argument; an Authorization header cannot replace it. Requests are signed automatically.
 
+Pass `userAgent` in `requestConfig` to identify your application in HTTP requests. This option also works with individual clients and takes precedence over `requestConfig.headers['User-Agent']`. When omitted, the existing header behavior is preserved.
+
+```js
+const client = MixinApi({ keystore, requestConfig: { userAgent: 'my-app/1.0' } });
+```
+
 Use `SessionKeystore` for signing credentials: `app_id`, `session_private_key`, and an optional `session_id`. Before login, a session may not have been issued, so its JWT `sid` is an empty string, matching the Go client. After OAuth login, use the existing `OAuthKeystore` with `authorization_id` and `scope`. `AppKeystore` and `NetworkUserKeystore` retain their additional PIN and Safe fields.
 
 2. Receive Mixin Messenger messages

@@ -46,6 +46,12 @@ async function getMe() {
 
 所有 Mixin API 请求（包括网络查询和 OAuth token 交换）都必须传入 keystore。`MixinApi({ keystore })` 和独立客户端均要求该参数，Authorization 请求头不能代替 keystore。SDK 会自动签名请求。
 
+在 `requestConfig` 中传入 `userAgent`，即可设置 HTTP 请求的 User-Agent。独立客户端也支持此选项，其优先级高于 `requestConfig.headers['User-Agent']`。未设置时保持现有请求头行为。
+
+```js
+const client = MixinApi({ keystore, requestConfig: { userAgent: 'my-app/1.0' } });
+```
+
 请求签名使用 `SessionKeystore`：包含 `app_id`、`session_private_key` 和可选的 `session_id`。登录前尚未获取 session 时，JWT 的 `sid` 为空字符串，与 Go 客户端保持一致。OAuth 登录后使用已有的 `OAuthKeystore`，传入 `authorization_id` 和 `scope`。`AppKeystore` 和 `NetworkUserKeystore` 继续保留 PIN、Safe 操作需要的额外字段。
 
 2. 使用 Mixin 的消息功能

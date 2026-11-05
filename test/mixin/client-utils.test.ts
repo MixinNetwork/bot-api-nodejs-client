@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AppKeystore, Keystore } from '../../src/client/types';
 import { buildClient } from '../../src/client/utils/client';
 import { MixinApi } from '../../src/client/mixin-client';
+import { NetworkClient } from '../../src/client/network';
 import { base64RawURLDecode } from '../../src/client/utils/base64';
 import { sha256Hash } from '../../src/client/utils/uniq';
 
@@ -16,6 +17,35 @@ const keystore: AppKeystore = {
 };
 
 describe('client builders', () => {
+  describe.each([
+    ['MixinApi', MixinApi],
+    ['NetworkClient', NetworkClient],
+  ] as const)('%s User-Agent', (_name, createClient) => {
+    it.each([
+      { userAgent: 'my-app/1.0', expected: 'my-app/1.0' },
+      { userAgent: undefined, expected: 'header-agent/1.0' },
+    ])('honors userAgent=$userAgent and preserves other headers', async ({ userAgent, expected }) => {
+      const adapter = vi.fn(async (config: InternalAxiosRequestConfig) => ({ config, data: { data: true }, headers: {}, status: 200, statusText: 'OK' }));
+      const client = createClient({
+        keystore,
+        requestConfig: {
+          userAgent,
+          retry: 0,
+          headers: { 'user-agent': 'header-agent/1.0', 'X-Client': 'test' },
+          adapter,
+        } as Parameters<typeof createClient>[0]['requestConfig'],
+      });
+
+      await expect(client.request({ method: 'GET', url: '/network' })).resolves.toBe(true);
+      const headers = adapter.mock.calls[0][0].headers;
+      expect(headers.get('User-Agent')).toBe(expected);
+      expect(headers.get('X-Client')).toBe('test');
+
+      await client.request({ method: 'GET', url: '/network', headers: { 'User-Agent': 'request-agent/1.0' } });
+      expect(adapter.mock.calls[1][0].headers.get('User-Agent')).toBe('request-agent/1.0');
+    });
+  });
+
   it('combines domain methods with the generic request method', async () => {
     const adapter = vi.fn(async (config: InternalAxiosRequestConfig) => ({
       config,

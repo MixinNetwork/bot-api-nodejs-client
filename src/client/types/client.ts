@@ -4,6 +4,8 @@ import type { Keystore } from './keystore';
 export interface RequestConfig extends Partial<
   Pick<AxiosRequestConfig, 'baseURL' | 'headers' | 'timeout' | 'httpAgent' | 'httpsAgent' | 'onDownloadProgress' | 'onUploadProgress' | 'proxy'>
 > {
+  /** User-Agent header for HTTP requests made by this client. */
+  userAgent?: string;
   responseCallback?: (rep: unknown) => void; // deprecated
   errorMap?: (error: any) => void;
   retry?: number;

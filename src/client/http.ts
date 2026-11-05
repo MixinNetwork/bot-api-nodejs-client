@@ -34,6 +34,7 @@ export function http(keystore: Keystore, config?: RequestConfig): AxiosInstance 
       put: { 'Content-Type': 'application/json' },
       patch: { 'Content-Type': 'application/json' },
       ...(config?.headers ?? {}),
+      ...(config?.userAgent !== undefined ? { 'User-Agent': config.userAgent } : {}),
     },
   });
 
