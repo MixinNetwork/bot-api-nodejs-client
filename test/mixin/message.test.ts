@@ -40,14 +40,6 @@ describe('message client', () => {
     expect(JSON.parse(base64RawURLDecode(message.data_base64).toString())).toEqual({ sticker_id: 'sticker-id' });
   });
 
-  it('rejects convenience sends without a keystore', async () => {
-    const post = vi.fn();
-    const client = MessageKeystoreClient({ post } as unknown as AxiosInstance, undefined);
-
-    await expect(client.sendText(recipientID, 'hello')).rejects.toThrow('No Keystore Provided');
-    expect(post).not.toHaveBeenCalled();
-  });
-
   it('forwards acknowledgement, batch, one, and legacy payload shapes', async () => {
     const post = vi.fn().mockResolvedValue(undefined);
     const client = MessageKeystoreClient({ post } as unknown as AxiosInstance, keystore);

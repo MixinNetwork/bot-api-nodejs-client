@@ -6,7 +6,7 @@ import type { MessageView, BlazeHandler, BlazeOptions, BlazeMessage } from './ty
 import { signAccessToken } from '../client/utils/auth';
 
 export function websocket(
-  keystore: Keystore | undefined,
+  keystore: Keystore,
   url: string,
   handler: BlazeHandler,
   option: BlazeOptions = {
@@ -14,7 +14,8 @@ export function websocket(
     syncAck: false,
   },
 ): WebSocket {
-  const jwtToken = signAccessToken('GET', '/', '', uuid(), keystore) || '';
+  const jwtToken = signAccessToken('GET', '/', '', uuid(), keystore);
+  if (!jwtToken) throw new Error('A valid keystore is required for Blaze authorization');
   const headers = {
     Authorization: `Bearer ${jwtToken}`,
   };

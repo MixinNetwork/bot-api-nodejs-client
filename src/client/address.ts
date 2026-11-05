@@ -11,7 +11,7 @@ import { buildClient } from './utils/client';
  * tag or memo can be blank.
  * Detail: https://developers.mixin.one/docs/api/withdrawal/address-add
  */
-export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+export const AddressKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => ({
   /** Get an address by addressID */
   fetch: (addressID: string): Promise<AddressResponse> => axiosInstance.get<unknown, AddressResponse>(`/addresses/${addressID}`),
 

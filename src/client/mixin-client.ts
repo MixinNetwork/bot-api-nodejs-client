@@ -22,7 +22,7 @@ import { UserKeystoreClient } from './user';
 import { UtxoKeystoreClient } from './utxo';
 import { SafeKeystoreClient } from './safe';
 
-const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => ({
   address: AddressKeystoreClient(axiosInstance, keystore),
   app: AppKeystoreClient(axiosInstance, keystore),
   asset: AssetKeystoreClient(axiosInstance),
@@ -46,7 +46,7 @@ const KeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undef
 
 export type KeystoreClientReturnType = ReturnType<typeof KeystoreClient>;
 
-export function MixinApi(config: HTTPConfig = {}): KeystoreClientReturnType & RequestClient {
+export function MixinApi(config: HTTPConfig): KeystoreClientReturnType & RequestClient {
   const { keystore, requestConfig } = config;
 
   const axiosInstance = createAxiosClient(keystore, requestConfig);

@@ -1,7 +1,7 @@
 import serialize from 'serialize-javascript';
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { validate } from 'uuid';
-import type { Keystore, AppKeystore, OAuthKeystore, NetworkUserKeystore } from '../types/keystore';
+import type { Keystore, SessionKeystore, OAuthKeystore } from '../types/keystore';
 import { base64RawURLEncode } from './base64';
 import { sha256Hash } from './uniq';
 import { getKeyPair, getRandomBytes } from './ed25519';
@@ -30,8 +30,8 @@ export const signToken = (payload: Object, private_key: string): string => {
  * sign an authentication token
  * sig: sha256(method + uri + params)
  */
-export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: AppKeystore | NetworkUserKeystore) => {
-  if (!keystore.session_id || !validate(keystore.session_id)) return '';
+export const signAuthenticationToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: SessionKeystore) => {
+  if (keystore.session_id && !validate(keystore.session_id)) return '';
 
   let method = 'GET';
   if (methodRaw) method = methodRaw.toLocaleUpperCase();
@@ -49,7 +49,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
 
   const payload = {
     uid: keystore.app_id,
-    sid: keystore.session_id,
+    sid: keystore.session_id ?? '',
     iat,
     exp,
     jti: requestID,
@@ -96,7 +96,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
   return signToken(payload, keystore.session_private_key);
 };
 
-export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore | undefined) => {
+export const signAccessToken = (methodRaw: string | undefined, uri: string, params: Object | string, requestID: string, keystore: Keystore) => {
   if (!keystore || !keystore.app_id || !keystore.session_private_key) return '';
   if (!validate(keystore.app_id)) return '';
 

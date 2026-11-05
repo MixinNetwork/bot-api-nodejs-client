@@ -28,12 +28,11 @@ import { uniqueConversationID, base64RawURLEncode, buildClient } from './utils';
  *   After receiving the message via WebSocket, you need to acknowledge the message to Mixin message service,
  *   otherwise it will keep pushing the message.
  */
-export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const MessageKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
   const send = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', [message]);
   const sendLegacy = (message: MessageRequest) => axiosInstance.post<unknown, any>('/messages', message);
 
   const sendMsg = async (recipientID: string, category: MessageCategory, data: any): Promise<MessageRequest> => {
-    if (!keystore) throw new Error('No Keystore Provided');
     if (typeof data === 'object') data = JSON.stringify(data);
 
     const messageRequest = {

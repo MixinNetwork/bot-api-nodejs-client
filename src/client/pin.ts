@@ -10,7 +10,7 @@ import { signTipBody, getNanoTime, getTipPinUpdateMsg, getVerifyPinTipBody, sign
  * * If you forget your PIN, there is no way to retrieve or restore it
  * Docs: https://developers.mixin.one/docs/api/pin/pin-update
  */
-export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => {
+export const PinKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
   function updatePin(firstPin: string, secondPin = ''): Promise<AuthenticationUserResponse> {
     const oldEncrypted = firstPin ? signEd25519PIN(firstPin, keystore) : '';
     const newEncrypted = signEd25519PIN(secondPin, keystore);

@@ -46,6 +46,10 @@ async function getMe() {
 }
 ```
 
+Every Mixin API request requires a keystore, including network queries and OAuth token exchange. `MixinApi({ keystore })` and individual clients require this argument; an Authorization header cannot replace it. Requests are signed automatically.
+
+Use `SessionKeystore` for signing credentials: `app_id`, `session_private_key`, and an optional `session_id`. Before login, a session may not have been issued, so its JWT `sid` is an empty string, matching the Go client. After OAuth login, use the existing `OAuthKeystore` with `authorization_id` and `scope`. `AppKeystore` and `NetworkUserKeystore` retain their additional PIN and Safe fields.
+
 2. Receive Mixin Messenger messages
 
 ```js
@@ -81,7 +85,10 @@ const client_secret = ''; // OAuth Client Secret of your bot
 
 const { seed, publicKey } = getED25519KeyPair(); // Generate random seed and ed25519 key pairs
 
-let client = MixinApi();
+// Sign the token exchange with the newly generated key before a session exists.
+let client = MixinApi({
+  keystore: { app_id, session_private_key: Buffer.from(seed).toString('hex') },
+});
 const { scope, authorization_id } = await client.oauth.getToken({
   client_id: app_id,
   code,

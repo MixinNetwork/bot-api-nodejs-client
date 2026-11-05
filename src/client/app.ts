@@ -22,7 +22,7 @@ import { getOwnershipTransferTipBody, signEd25519PIN, signTipBody } from './util
  * * Each Mixin user can only create two free apps
  * https://developers.mixin.one/
  */
-export const AppKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+export const AppKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => ({
   /** Get information of current user's a specific app */
   fetch: (appID: string): Promise<AppResponse> => axiosInstance.get<unknown, AppResponse>(`/apps/${appID}`),
 
@@ -80,7 +80,6 @@ export const AppKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keysto
   // Migrate app to receiver id with the keystore of this app
   // pin is the spend private key of this app
   migrate: (pin: string, receiverID: string) => {
-    if (!keystore) throw new Error('invalid keystore to migrate app');
     const msg = getOwnershipTransferTipBody(receiverID);
     const signedTipPin = signTipBody(pin, msg);
     const pin_base64 = signEd25519PIN(signedTipPin, keystore);

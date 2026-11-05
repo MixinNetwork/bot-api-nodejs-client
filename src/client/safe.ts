@@ -17,7 +17,7 @@ import type {
 import { buildClient, signEd25519PIN, signSafeRegistration, transferInscription, type SafeTransferInscriptionRequest } from './utils';
 import { UtxoKeystoreClient } from './utxo';
 
-export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore | undefined) => ({
+export const SafeKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => ({
   /** If you want to register safe user, you need to upgrade TIP PIN first. */
   register: (user_id: string, tipPin: string, priv: Buffer): Promise<AuthenticationUserResponse> => {
     const data = signSafeRegistration(user_id, tipPin, priv);

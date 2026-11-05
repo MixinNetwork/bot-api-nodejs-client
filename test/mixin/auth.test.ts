@@ -77,7 +77,7 @@ describe('authentication utilities', () => {
     { app_id: appID, session_id: 'invalid', session_private_key: privateKey, server_public_key: '02'.repeat(32) },
     { app_id: appID, authorization_id: sessionID, scope: '', session_private_key: privateKey },
   ])('returns an empty token for incomplete or invalid credentials', keystore => {
-    expect(signAccessToken('GET', '/me', '', requestID, keystore as Keystore | undefined)).toBe('');
+    expect(signAccessToken('GET', '/me', '', requestID, keystore as Keystore)).toBe('');
   });
 
   it('creates a PKCE verifier and its SHA-256 challenge', () => {

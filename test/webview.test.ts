@@ -160,7 +160,7 @@ describe('WebViewApi bridge routing', () => {
   });
 
   it('reads iOS context from prompt and supplies the default platform', () => {
-    testWindow.webkit = { messageHandlers: { MixinContext: {} } };
+    testWindow.webkit = { messageHandlers: { MixinContext: { postMessage: vi.fn(() => '') } } };
     const prompt = vi.fn(() => JSON.stringify({ conversation_id: 'conversation-id' }));
     Object.assign(globalThis, { prompt });
 
@@ -199,7 +199,7 @@ describe('WebViewApi bridge routing', () => {
 
   it('routes commands to iOS handlers', async () => {
     const handlers = {
-      MixinContext: {},
+      MixinContext: { postMessage: vi.fn(() => '') },
       reloadTheme: { postMessage: vi.fn() },
       playlist: { postMessage: vi.fn() },
       close: { postMessage: vi.fn() },
