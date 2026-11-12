@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { validate } from 'uuid';
 import type Keystore from './types/keystore';
 import type { ConversationRequest, ConversationResponse, ConversationAction, ParticipantRequest } from './types/conversation';
 import { uniqueConversationID } from './utils/uniq';
@@ -54,7 +55,10 @@ export const ConversationKeystoreClient = (axiosInstance: AxiosInstance, keystor
       }),
 
     /** Join a group by codeID */
-    joinGroup: (codeID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeID}/join`),
+    joinGroup: async (codeID: string): Promise<ConversationResponse> => {
+      if (!validate(codeID)) throw new Error('invalid code id');
+      return axiosInstance.post<unknown, ConversationResponse>(`/conversations/${codeID}/join`);
+    },
 
     /** Exit a group */
     exitGroup: (conversationID: string): Promise<ConversationResponse> => axiosInstance.post<unknown, ConversationResponse>(`/conversations/${conversationID}/exit`),

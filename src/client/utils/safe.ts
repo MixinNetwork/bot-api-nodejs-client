@@ -51,7 +51,7 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
       });
   } else throw new Error('fail to get payment destination address');
 
-  const baseUrl = `https://mixin.one/pay/${address}`;
+  const url = new URL(`https://mixin.one/pay/${address}`);
   const p = {
     asset: params.asset,
     amount: params.amount,
@@ -61,11 +61,10 @@ export const buildMixinOneSafePaymentUri = (params: PaymentParams) => {
     trace: params.trace ?? v4(),
     return_to: params.returnTo && encodeURIComponent(params.returnTo),
   };
-  const query = Object.entries(p)
-    .filter(([key, value]) => key && value)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
-  return `${baseUrl}?${query}`;
+  for (const [key, value] of Object.entries(p)) {
+    if (value) url.searchParams.set(key, value);
+  }
+  return url.toString();
 };
 
 export const signSafeRegistration = (user_id: string, tipPin: string, privateKey: Buffer) => {
