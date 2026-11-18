@@ -44,7 +44,7 @@ export const signAuthenticationToken = (methodRaw: string | undefined, uri: stri
   }
 
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 3600;
+  const exp = iat + 300;
   const sha256 = sha256Hash(Buffer.from(method + uri + data)).toString('hex');
 
   const payload = {
@@ -80,7 +80,7 @@ export const signOauthAccessToken = (methodRaw: string | undefined, uri: string,
   }
 
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 3600;
+  const exp = iat + 300;
   const sha256 = sha256Hash(Buffer.from(method + uri + data)).toString('hex');
 
   const payload = {

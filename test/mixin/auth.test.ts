@@ -43,7 +43,7 @@ describe('authentication utilities', () => {
       uid: appID,
       sid: sessionID,
       iat: 1767323045,
-      exp: 1767326645,
+      exp: 1767323345,
       jti: requestID,
       scp: 'FULL',
       sig: sha256Hash(Buffer.from(`POST/resource${serialize(body, { unsafe: true })}`)).toString('hex'),
