@@ -1,7 +1,9 @@
 import type { AxiosInstance } from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import { CircleKeystoreClient } from '../../src/client/circle';
+import { CollectibleKeystoreClient } from '../../src/client/collectible';
 import { ConversationKeystoreClient } from '../../src/client/conversation';
+import { MultisigKeystoreClient } from '../../src/client/multisig';
 import keystore from '../keystore';
 
 describe('API clients', () => {
@@ -48,5 +50,31 @@ describe('API clients', () => {
     await client[method]('user-id', 'circle-id');
 
     expect(post).toHaveBeenCalledWith(path, { circle_id: 'circle-id', action });
+  });
+});
+
+describe.each([
+  { path: '/multisigs/requests', createClient: MultisigKeystoreClient },
+  { path: '/collectibles/requests', createClient: CollectibleKeystoreClient },
+])('$path', ({ path, createClient }) => {
+  const requestID = '67a87828-18f5-46a1-b6cc-c72a97a77c43';
+
+  it.each(['not-a-uuid', `${requestID}/extra#details`, `${requestID}%2Fextra%23details`, `${requestID}\n`, null])('rejects an invalid request ID: %s', async invalidID => {
+    const post = vi.fn();
+    const client = createClient({ post } as unknown as AxiosInstance, { ...keystore, server_public_key: '' });
+
+    for (const action of ['sign', 'unlock', 'cancel'] as const) {
+      await expect(client[action]('123456', invalidID as string)).rejects.toThrow('invalid request id');
+    }
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it.each(['sign', 'unlock', 'cancel'] as const)('sends the requested %s action with the encrypted PIN', async action => {
+    const post = vi.fn().mockResolvedValue({});
+    const client = createClient({ post } as unknown as AxiosInstance, keystore);
+
+    await client[action]('123456', requestID);
+
+    expect(post).toHaveBeenCalledExactlyOnceWith(`${path}/${requestID}/${action}`, { pin: expect.stringMatching(/^[A-Za-z0-9_-]+$/) });
   });
 });

@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { validate } from 'uuid';
 import type Keystore from './types/keystore';
 import type { MultisigAction, MultisigInitAction, MultisigRequest, MultisigUtxoResponse, MultisigRequestResponse, SafeMultisigsResponse, TransactionRequest } from './types';
 import { signEd25519PIN } from './utils/pin';
@@ -14,7 +15,8 @@ import { buildClient } from './utils/client';
  * Docs: https://developers.mixin.one/docs/api/multisigs/request
  */
 export const MultisigKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
-  const initMultisig = (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
+  const initMultisig = async (pin: string, requestID: string, action: MultisigAction): Promise<MultisigRequestResponse> => {
+    if (!validate(requestID)) throw new Error('invalid request id');
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, MultisigRequestResponse>(`/multisigs/requests/${requestID}/${action}`, { pin: encrypted });
   };

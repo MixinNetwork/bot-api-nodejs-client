@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { validate } from 'uuid';
 import type Keystore from './types/keystore';
 import type { MultisigInitAction } from './types/multisig';
 import type {
@@ -34,7 +35,8 @@ export const GroupThreshold = 5;
  * Docs: https://developers.mixin.one/docs/api/collectibles/request
  */
 export const CollectibleKeystoreClient = (axiosInstance: AxiosInstance, keystore: Keystore) => {
-  const manageRequest = (pin: string, requestID: string, action: CollectibleRequestAction): Promise<CollectibleTransactionResponse> => {
+  const manageRequest = async (pin: string, requestID: string, action: CollectibleRequestAction): Promise<CollectibleTransactionResponse> => {
+    if (!validate(requestID)) throw new Error('invalid request id');
     const encrypted = signEd25519PIN(pin, keystore);
     return axiosInstance.post<unknown, CollectibleTransactionResponse>(`/collectibles/requests/${requestID}/${action}`, { pin: encrypted });
   };
