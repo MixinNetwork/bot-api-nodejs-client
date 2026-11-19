@@ -27,7 +27,7 @@ describe('Blaze utilities', () => {
   it('sends a compressed JSON message on an open socket', async () => {
     const message = { id: 'request-id', action: 'LIST_PENDING_MESSAGES' };
     const send = vi.fn((data: Uint8Array, callback: () => void) => {
-      expect(JSON.parse(ungzip(data, { to: 'string' }))).toEqual(message);
+      expect(JSON.parse(ungzip(data, { toText: true }))).toEqual(message);
       callback();
     });
     const socket = { readyState: WebSocket.OPEN, send } as unknown as WebSocket;

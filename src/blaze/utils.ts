@@ -47,7 +47,7 @@ export function websocket(
 }
 
 export const decodeMessage = (data: Uint8Array, options: BlazeOptions): MessageView => {
-  const t = ungzip(data, { to: 'string' });
+  const t = ungzip(data, { toText: true });
   const msgObj = JSON.parse(t);
 
   if (options.parse && msgObj.data && msgObj.data.data) {

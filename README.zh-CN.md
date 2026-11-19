@@ -10,6 +10,8 @@ mixin 的 js 版 sdk
 
 ## 安装
 
+需要 Node.js 24.15.0 或更高版本。
+
 ```shell
 npm install @mixin.dev/mixin-node-sdk
 ```

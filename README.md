@@ -12,6 +12,8 @@ The Node.js version of the mixin SDK [https://developers.mixin.one/docs/api-over
 
 ## Install
 
+Requires Node.js 24.15.0 or later.
+
 ```shell
 npm install @mixin.dev/mixin-node-sdk
 ```
