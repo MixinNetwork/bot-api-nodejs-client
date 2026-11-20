@@ -15,7 +15,7 @@ const main = async () => {
     keystore: {
       app_id: user.user_id,
       session_id: user.session_id,
-      pin_token_base64: user.pin_token_base64,
+      server_public_key: user.server_public_key,
       session_private_key,
     },
   });
@@ -23,7 +23,7 @@ const main = async () => {
   const { seed: spendPrivateKey, publicKey: spendPublicKey } = getED25519KeyPair();
   const spend_private_key = spendPrivateKey.toString('hex');
   console.log('user spend_private_key', spend_private_key);
-  await userClient.pin.updateTipPin('', spendPublicKey.toString('hex'), user.tip_counter + 1);
+  await userClient.pin.updateTipPin('', spendPublicKey.toString('hex'), 1);
   console.log('tip pin updated');
   await userClient.pin.verifyTipPin(spendPrivateKey);
   console.log('tip pin verified');
